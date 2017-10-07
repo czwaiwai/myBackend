@@ -1,0 +1,102 @@
+<% layout('layout/layout') %>
+<% block('header').append(`<style>
+#send_content{
+    width: 100%;
+    height: 200px;
+    display:flex;
+}
+.chat_content{
+    flex:1;
+    width: 100%;
+    height: 200px;
+    border: 1px solid #e3e3e3;
+    background: #FFF;
+    overflow-y:auto;
+}
+.chat_content ul{
+    list-style:none;
+    padding:0;
+    margin:0;
+}
+
+.chat_user{
+    width:100px;
+    margin-left:10px;
+    height: 200px;
+    border: 1px solid #e3e3e3;
+    background: #FFF;
+}
+.chat_user ul{
+    list-style:none;
+    padding:0;
+    margin:0;
+}
+</style>`)%>
+<div class="page_content">
+  <div id="send_content">
+    <div class="chat_content">
+      <ul>
+      </ul>
+    </div>
+     <div class="chat_user">
+       <ul>
+       </ul>
+     </div>
+  </div>
+  <div>
+    <form id="sendForm"><input id="sendTxt" name="send" type="text" style="width:80%;" /><button>发送</button></form></div>
+</div>
+<% block('footer').append('<script src="/js/socket.io.js"></script>') %>
+<% block('footer').append(`<script>
+     var socket =io.connect();
+//     $('');
+//    socket
+     var userId=$.guidGenerator();
+     var form= document.getElementById('sendForm');
+     var sendTxt= document.getElementById('sendTxt');
+     var $chatContent= $('.chat_content ul');
+     var  $userList=$('.chat_user ul');
+     function addContent(userId,msg){
+         $chatContent.append('<li><dl><dt>'+userId+'</dt><dd>'+msg+'</dd></dl></li>');
+         $chatContent.parent()[0].scrollTop=$chatContent[0].scrollHeight;
+     }
+     function addSysContent(msg){
+         $chatContent.append('<li>'+msg+'</li>');
+     }
+     function updateUserList(users){
+         var cdf=document.createDocumentFragment();
+         for(var i=0;i<users.length;i++){
+            var li=$('<li>'+users[i]+'</li>');
+            cdf.appendChild(li[0]);
+         }
+         $userList.empty().append(cdf);
+     }
+
+     form.onsubmit=function(e){
+         e.preventDefault();
+         addContent("me",sendTxt.value);
+         socket.emit('sendMsg',sendTxt.value);
+         sendTxt.value="";
+         return false;
+     }
+     //链接成功
+     socket.on('connect',function(){
+         console.log(userId);
+         addSysContent("欢迎来到聊天室");
+         socket.emit('login',userId);
+     });
+
+     socket.on('newMsg',function(userId,newMsg){
+         addContent(userId,newMsg);
+     });
+
+     socket.on('sys',function(userId,users,way){
+         if(way=="login"){
+             addSysContent(userId+"已经登录了")
+         }
+         if(way=="logout"){
+             addSysContent(userId+"已经退出了");
+         }
+         updateUserList(users);
+     });
+</script>`)%>

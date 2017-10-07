@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<!--
+This is a starter template page. Use this page to start your new project from
+scratch. This page gets rid of all links and provides the needed markup only.
+-->
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title><%= title %></title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.6 -->
+  <link rel="stylesheet" href="/js/bootstrap/css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="css/ionicons/ionicons.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="css/AdminLTE.min.css">
+  <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
+        page. However, you can choose any other skin. Make sure you
+        apply the skin class to the body tag so the changes take effect.
+  -->
+  <link rel="stylesheet" href="css/skins/skin-blue.min.css">
+  <link rel="stylesheet" href="css/main.css">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="js/html5shiv.min.js"></script>
+  <script src="js/respond.min.js"></script>
+  <![endif]-->
+</head>
+<body class="hold-transition login-page">
+<div class="login-box">
+  <div class="login-logo">
+    <a href="/admin/"><b>Wai</b>LTE</a>
+  </div>
+  <!-- /.login-logo -->
+  <div class="login-box-body">
+    <p class="login-box-msg">后台登录</p>
+
+    <form  id="form"  method="post" novalidate>
+      <div class="form-group has-feedback">
+        <input type="text" class="form-control" name="userName" placeholder="用户名" >
+        <span class="glyphicon glyphicon-user form-control-feedback"></span>
+      </div>
+      <div class="form-group has-feedback">
+        <input type="password" class="form-control" name="password" placeholder="密码" >
+        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+      </div>
+      <div class="form-group has-feedback">
+        <input type="text" class="form-control" name="verifyCode" placeholder="验证码" >
+        <span class="img_code form-control-feedback">
+          <img src="/imgCode?time=<%=Date.now() %>" onclick="this.src='/imgCode?time='+Date.now()" style="max-width:100%;" >
+        </span>
+      </div>
+      <div class="row">
+        <div class="col-xs-8">
+            <% if(error){ %><p class="text-red"><i class="fa  fa-warning"></i> <%=error %></p><% } %>
+        </div>
+        <!-- /.col -->
+        <div class="col-xs-4">
+          <button type="submit" class="btn btn-primary btn-block btn-flat">登录</button>
+        </div>
+        <!-- /.col -->
+      </div>
+    </form>
+  </div>
+  <!-- /.login-box-body -->
+</div>
+<!-- /.login-box -->
+
+<!-- jQuery 2.2.3 -->
+<script src="<%=assetsPath %>/js/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="<%=assetsPath %>/js/bootstrap/js/bootstrap.min.js"></script>
+</body>
+</html>

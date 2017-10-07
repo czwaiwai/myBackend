@@ -1,0 +1,322 @@
+<% layout('layout/layout') %>
+<% block('header').append(`<style>
+#send_content{
+    width: 100%;
+    height: 200px;
+    display:flex;
+}
+.chat_content{
+    flex:1;
+    width: 100%;
+    height: 200px;
+    border: 1px solid #e3e3e3;
+    background: #FFF;
+    overflow-y:auto;
+}
+.chat_content ul{
+    list-style:none;
+    padding:0;
+    margin:0;
+}
+
+.chat_user{
+    width:100px;
+    margin-left:10px;
+    height: 200px;
+    border: 1px solid #e3e3e3;
+    background: #FFF;
+}
+.chat_user ul{
+    list-style:none;
+    padding:0;
+    margin:0;
+}
+    	.panel-user .panel-body{
+    		background: #2e3238;
+    		color:#FFF;
+    		padding:0;
+    		height:400px;
+    		overflow-y:auto;
+    	}
+    	.user_list{
+    		list-style:none;
+    		margin:0;
+    		padding:0;
+
+    	}
+    	.user_list li{
+    		height:64px;
+    		padding:10px 15px;
+    		cursor: pointer;
+    	}
+    	.user_list li.active {
+    		background:#3a3f45;
+    	}
+    	.user_list li.active .user_item_content p.user_last_talk{
+
+    		color:#FFF;
+    	}
+    	.user_list li + li{
+    		border-top:1px solid #292c33;
+    	}
+    	.user_item{
+    		display:flex;
+    	}
+    	.user_item .user_item_img{
+    		width:40px;
+    		height:40px;
+    		background:#FFF;
+    		border-radius:5px;
+    		position:relative;
+    	}
+    	.user_item .user_item_content{
+    		flex:1;
+    		padding-left:10px;
+    	}
+    	.user_item .user_item_content p{
+    		line-height:20px;
+    		margin:0;
+    		color:#FFF;
+    	}
+    	.user_item .user_item_content p.user_last_talk{
+    		color:#989898;
+    	}
+
+    	.panel_chat .panel-body{
+    		padding:0;
+    		height:400px;
+    		overflow-y:auto;
+    	}
+    	.chat_list{
+    		list-style:none;
+    		margin:0;
+    		padding:0 15px;
+    	}
+    	.panel-body{
+    		background:#eee;
+    	}
+    	.chat_list li{
+    		display:flex;
+    		margin-bottom:10px;
+    	}
+    	.chat_list li .talk{
+    		flex:1;
+    	}
+    	.chat_list li .headimg{
+    		width:40px;
+    		height:40px;
+    		border-radius:100%;
+    		border:1px solid #e3e3e3;
+    		background:#f7f7f7;
+    	}
+
+    	.chat_list li.me{
+    		padding-left:160px;
+    	}
+
+    	.chat_list li.me .talk{
+    		text-align:right;
+    		padding-right:15px;
+    	}
+    	.chat_list li.me .talk p.bl{
+   		    padding: 10px;
+		    background: #b2e281;
+		    color: #000;
+		    display: inline-block;
+		    border-radius:5px;
+		    position:relative;
+    	}
+    	.chat_list li.me .talk  p.bl:after {
+		    content: "";
+		    border-bottom: 5px solid transparent;
+		    border-left: 5px solid #b2e281;
+		    border-top: 5px solid transparent;
+		    position: absolute;
+		    top:15px;
+		    right: -5px;
+		}
+    	.chat_list li.other .talk{
+    		text-align:left;
+    		padding-left:15px;
+    	}
+    	.chat_list li.other p.bl{
+    		padding: 10px;
+		    background: #FFF;
+		    color: #000;
+		    display: inline-block;
+		    border-radius:5px;
+		    position:relative;
+    	}
+    	.chat_list li.other  p.bl:after {
+		    content: "";
+		    border-bottom: 5px solid transparent;
+		    border-right: 5px solid #FFF;
+		    border-top: 5px solid transparent;
+		    position: absolute;
+		    left: -5px;
+		     top:15px;
+		}
+    	.chat_list li.other{
+    		padding-right:160px;
+    	}
+    	.chat_list li.sys .line{
+    	    text-align: center;
+		    margin: 10px auto;
+		    max-width: 50%;
+		    font-size: 12px;
+		    padding: 1px 18px;
+		    color: #b2b2b2;
+    	}
+    	.flex{
+    		display:flex;
+    	}
+    	.flex_item{
+    		flex:1;
+    	}
+    	i.point{
+    	    background: red;
+		    position: absolute;
+		    font-size: 12px;
+		    display: inline-block;
+		    font-style: normal;
+		    padding: 0 3px;
+		    border-radius: 10px;
+		    right: -5px;
+		    top: -5px;
+    	}
+</style>`)%>
+<div class="row">
+  <div class="col-xs-8">
+    <div style="width:900px;margin:0 auto;" >
+      <div class="col col-md-3  col-xs-3" style="padding:0;">
+        <div class="panel panel-user panel-default">
+          <div class="panel-heading">
+            <strong>用户列表</strong>
+          </div>
+          <div class="panel-body">
+            <ul id="userList" class="user_list">
+              <li class="user_item">
+                <div class="user_item_img"></div>
+                <div class="user_item_content">
+                  <p class="user_item_title">歪歪</p>
+                  <p class="user_last_talk">哈哈哈</p>
+                </div>
+              </li>
+              <li class="user_item">
+                <div class="user_item_img"></div>
+                <div class="user_item_content">
+                  <p class="user_item_title">伟生</p>
+                  <p class="user_last_talk">嘻嘻嘻</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div class="panel-footer"></div>
+        </div>
+      </div>
+      <div class="col col-md-9 col-xs-9">
+
+        <div id="chat" class="panel panel_chat panel-default">
+          <div class="panel-heading">
+            <strong>聊天窗口</strong>
+          </div>
+          <div class="panel-body">
+            <ul id="chatList" class="chat_list">
+              <li class="sys">
+                <div class="line">你已登录</div>
+              </li>
+              <li class="me">
+                <div class="talk">
+                  <p class="bl">打扫房间定时会计分录看电视六块腹肌</p>
+                </div>
+                <div class="headimg" ></div>
+              </li>
+              <li class="other">
+                <div class="headimg" ></div>
+                <div class="talk">
+                  <p class="bl">胜多负少的方式得到双方都是</p>
+                </div>
+              </li>
+
+            </ul>
+          </div>
+          <div class="panel-footer">
+            <form id="form" action="" method="post" novalidate >
+              <div class="flex">
+                <div class="flex_item " style="padding-right:10px;">
+                  <input id="send" name="content" type="text" style="width:100%;" >
+                </div>
+                <button type="submit">发送</button>
+              </div>
+
+
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<% block('footer').append('<script src="js/socket.io.js"></script>') %>
+<% block('footer').append(`<script>
+     var socket =io.connect();
+//     $('');
+//    socket
+     var userId=$.guidGenerator();
+     var form= document.getElementById('sendForm');
+     var sendTxt= document.getElementById('sendTxt');
+     var $chatContent= $('.direct-chat-messages');
+     var  $userList=$('.chat_user ul');
+     function addContent(userId,msg){
+//         $chatContent.append('<li><dl><dt>'+userId+'</dt><dd>'+msg+'</dd></dl></li>');
+         $chatContent.append('<div class="direct-chat-msg right">'+
+          '<div class="direct-chat-info clearfix">'+
+            '<span class="direct-chat-name pull-right">'+userId+'</span>'+
+            '<span class="direct-chat-timestamp pull-left">23 Jan 2:05 pm</span>'+
+          '</div>'+
+          '<img class="direct-chat-img" src="img/user3-128x128.jpg" alt="Message User Image">'+
+          '<div class="direct-chat-text">'+msg+'</div>'+
+        '</div>');
+         $chatContent.parent()[0].scrollTop=$chatContent[0].scrollHeight;
+     }
+     function addSysContent(msg){
+         $chatContent.append('<li>'+msg+'</li>');
+     }
+     function updateUserList(users){
+         var cdf=document.createDocumentFragment();
+         for(var i=0;i<users.length;i++){
+            var li=$('<li>'+users[i]+'</li>');
+            cdf.appendChild(li[0]);
+         }
+         $userList.empty().append(cdf);
+     }
+
+     form.onsubmit=function(e){
+         e.preventDefault();
+         addContent("me",sendTxt.value);
+         socket.emit('sendMsg',sendTxt.value);
+         sendTxt.value="";
+         return false;
+     }
+     //链接成功
+     socket.on('connect',function(){
+         console.log(userId);
+         addSysContent("欢迎来到聊天室");
+         socket.emit('login',userId);
+     });
+
+     socket.on('newMsg',function(userId,newMsg){
+         addContent(userId,newMsg);
+     });
+
+     socket.on('sys',function(userId,users,way){
+         if(way=="login"){
+             addSysContent(userId+"已经登录了")
+         }
+         if(way=="logout"){
+             addSysContent(userId+"已经退出了");
+         }
+         updateUserList(users);
+     });
+</script>`)%>

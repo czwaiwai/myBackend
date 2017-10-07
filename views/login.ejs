@@ -1,0 +1,79 @@
+<% layout('layout/layout') %>
+<% block('header').append(`<style>
+input,input::-webkit-input-placeholder {
+    font-size: 11px;
+    padding-top: 3px;
+}
+.main-login{
+ 	background-color: #fff;
+    /* shadows and rounded borders */
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    -moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+}
+.main-center{
+ 	margin-top: 30px;
+ 	margin: 0 auto;
+ 	max-width: 330px;
+    padding:25px;
+
+}
+
+.login-button{
+	margin-top: 5px;
+}
+
+.login-register{
+	font-size: 11px;
+	text-align: center;
+}
+.input-group{
+  width:100%;
+}
+</style>`)%>
+<div class="container">
+  <div class="main-login main-center " style="margin-top:30px;">
+    <h4>用户登录</h4>
+    <form  method="post" >
+      <div class="form-group">
+        <div class="cols-sm-12">
+          <div class="input-group">
+            <span class="input-group-addon" style="width:40px;"><i class="fa fa-user " aria-hidden="true"></i></span>
+            <input type="text" class="form-control" name="userName" id="username" placeholder="输入用户名">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="cols-sm-12">
+          <div class="input-group">
+            <span class="input-group-addon" style="width:40px;"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
+            <input type="password" class="form-control" name="password" id="password" placeholder="输入密码">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="cols-sm-12 ">
+          <div class="input-group">
+            <input type="text" class="form-control" name="verifyCode" id="verifyCode" placeholder="验证码">
+            <div class="input-group-addon" style="width: 82px;padding: 0;height: 34px;"><img src="/imgCode" onclick="this.src='/imgCode?time='+Date.now()" style="max-width:100%;" ></div>
+          </div>
+        </div>
+      </div>
+     <% if(error){ %> <p class="text-danger"><%=error %></p><% } %>
+      <div class="form-group ">
+        <button type="submit" class="btn btn-primary btn-lg btn-block login-button">登录</button>
+        <p class="text-right padding-top">没有账户？<a href="/register">立即注册</a></p>
+      </div>
+      <!--<div class="login-register">-->
+        <!--<a href="create_account.php">Create account</a> or <a href="reset_password.php">reset password</a>-->
+      <!--</div>-->
+    </form>
+  </div>
+</div>
+<% block('footer').append(`<script src='js/jquery.validate.js'></script>`)%>
+<% block('footer').append(`<script src='js/jquery.validate.methods.js'></script>`)%>
+<% block('footer').append(`<script></script>`)%>
+

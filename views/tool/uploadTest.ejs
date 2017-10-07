@@ -1,0 +1,17 @@
+<% layout('layout/layout') %>
+<% block('header').append(`<style>
+</style>`)%>
+<div class="container">
+   <%if(success){ %><p><%= success %></p><% } %>
+   <%if(error){ %><p><%= error %></p><% } %>
+    <%if(success){ %>
+        <img src="<%=imgUrl %>" />
+    <% } %>
+    <form  action="/tool/upload" method="post" enctype="multipart/form-data"  novalidate >
+        <input type="file" name="file" accept="image/gif,image/jpeg"  multiple="multiple">
+        <button >提交</button>
+    </form>
+</div>
+<% block('footer').append(`<script>
+
+</script>`)%>
