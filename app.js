@@ -29,8 +29,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(expressValidator(validatorMethods));
 app.use(cookieParser());
 app.use(session({
-    resave: true,  // 新增
-    saveUninitialized: true,  // 新增
+    resave: false,  // 新增
+    saveUninitialized: false,  // 新增
     secret:'czwaiwai'}));
 app.use(flash());
 app.use(sassMiddleware({

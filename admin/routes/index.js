@@ -12,18 +12,19 @@ function getPageNum(count,pageSize){
     }
     return parseInt(count/pageSize)+1;
 }
+
 router.get('/', (req, res)=> {
     res.render('index',{title:"首页"});
 });
 router.get('/login',(req,res)=>{
     // req.flash('success',"靠靠靠");
     console.log(req.session.imgCode,"imgCode");
-
+    req.session.abc=1;
     res.render('login',{title:"用户登录"});
 })
 router.post('/login',(req,res)=>{
     console.log(req.session,req.session.imgCode,req.body.verifyCode,"imgCode");
-
+    req.session.imgCode
     let imgCode=req.session.imgCode;
     req.checkBody('userName',"用户名不能为空").notEmpty()
         .isTooShort(6).withMessage("用户名太短");

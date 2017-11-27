@@ -14,9 +14,9 @@ router.get('/', (req, res)=> {
 });
 router.get('/imgCode',(req,res)=>{
    var arr= ccap.get();
-   req.session.imgCode=arr[0];
-   console.log(req.session);
-   console.log(req.session.imgCode,"-------");
+   req.session.imgCode="1234";
+   req.session.imgCode=arr[0]+"";
+    console.log(req.session);
    res.send(arr[1]);
 });
 router.get('/chat',(req,res)=>{

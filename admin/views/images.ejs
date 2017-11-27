@@ -1,11 +1,15 @@
 <% layout('layout/layout') %>
 <% block('header').append(`<style>
+.j_pager .pagination{
+    margin:0;
+}
 </style>`)%>
 <div class="row">
         <div class="col-xs-12">
                 <div class="box">
                         <div class="box-header">
-                                <h3 class="box-title">Responsive Hover Table</h3>
+                                <h3 class="box-title"><button class="btn  btn-sm btn-primary">修改</button>
+                                        <button class="btn btn_del btn-sm  btn-danger">删除</button></h3>
 
                                 <div class="box-tools">
                                         <a id="imgUpload" class="btn  btn-sm btn-success">添加+</a>
@@ -23,10 +27,11 @@
                                 <table class="table table-bordered table-hover">
                                         <tbody>
                                         <tr>
+                                                <th><label><input name="checkAll" type="checkbox" value="all>">全选</label></th>
                                                 <th>图片预览</th>
-                                                <th>图片名称</th>
+                                                <th style="max-width:150px;">图片名称</th>
                                                 <th>图片类型</th>
-                                                <th>图片创建时间</th>
+                                                <th>创建时间</th>
                                                 <th>操作</th>
                                         </tr>
                                         <% if(images.length==0){ %>
@@ -36,13 +41,13 @@
                                         <% }%>
                                         <% images.forEach(function(item){ %>
                                         <tr>
+                                                <td><input name="check" type="checkbox" value="<%=item.name %>"></td>
                                                 <td><div style="width:100px;height:100px;"><img src="<%=item.url  %>" style="max-width:100%;max-height:100%;"></div></td>
-                                                <td><%=item.name %></td>
+                                                <td ><div style="max-width:150px;word-break:break-all; "><%=item.name %></div></td>
                                                 <td><%=item.type %></td>
                                                 <td><%=item.buildTime.minute %></td>
                                                 <td>
-                                                   <button class="btn  btn-sm btn-primary">修改</button>
-                                                   <button data-name="<%=item.name %>" data-path="<%=item.url %>" class="btn btn_del btn-sm  btn-danger">删除</button>
+
 
                                                 </td>
                                         </tr>
@@ -51,9 +56,12 @@
                                 </table>
                         </div>
                         <!-- /.box-body -->
+                        <div class="box-footer">
+                             <div class="j_pager" data-page="<%=page %>"  data-count="<%=count%>"></div>
+                        </div>
                 </div>
                 <!-- /.box -->
-                <div class="j_pager" data-page="<%=page %>"  data-count="<%=count%>"></div>
+
         </div>
 
 </div>

@@ -48,11 +48,16 @@ function imgProcess(req,cb){
         createDir(newPath,function(){
             let imgfiles=[];
             file.forEach(ctx=>{
-                console.log(ctx);
                 let img= images(ctx.path);
                 let imgType=ctx.path.match(/\.\w+$/ig)[0];
                 let imgName=ctx.path.replace(uploadPath,"").replace(imgType,"");
                 let fullName=imgName+"_$date"+now+"_$"+img.width()+"x"+img.height()+imgType;
+                let small=true;
+                if(small){
+                  let smallImg= images(img).resize(120);
+                  let smallName=fullName.replace(imgType,"")+"_$sma_"+smallImg.width()+"x"+smallImg.height()+imgType;
+                    smallImg.save(newPath+smallName);
+                }
                 img.save(newPath+fullName);
                 imgfiles.push({
                     name:fullName,

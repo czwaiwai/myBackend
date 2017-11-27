@@ -2,7 +2,7 @@
  * Created by waiwai on 17-9-27.
  */
 (function($){
-    function uploadImg($el,cb){
+    function uploadImg($el,cb,options){
         var $saveIput=$($el.data("input"));
         var $file= $el.find('input[type=file]');
         if(!$file[0]){
@@ -20,6 +20,11 @@
             }
             var formData= new FormData();
             formData.append("callType","json");
+            if(options){
+                for(var key in options){
+                    formData.append(key,options[key]);
+                }
+            }
             for(var i=0;i<el.files.length;i++){
                 formData.append("file",el.files[i]);
             }
@@ -41,8 +46,13 @@
     }
     $.fn.uploadImg=function(options){
         var callback=function(){};
+        var params;
         if(typeof options=="function"){
             callback=options;
+        }
+        if(typeof options=="object"){
+            params=options.params;
+            callback=options.callback;
         }
         this.each(function(index,context){
             var $this=$(context);
@@ -51,10 +61,10 @@
             }
             var instance= $this.data("instance");
             if(instance){
-                return instance($this,cb);
+                return instance($this,cb,params);
             }else{
                 instance=uploadImg;
-                return instance($this,cb);
+                return instance($this,cb,params);
             }
         })
     }
