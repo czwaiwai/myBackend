@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%- title %></title>
+  <link href="/js/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/js/bootstrap/css/non-responsive.css" rel="stylesheet">
+  <link href="/js/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
+  <link href="/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="/css/main.css" rel="stylesheet">
+  <style>
+
+  </style>
+</head>
+<body>
+<div id="iframeContent">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Panel title</h3>
+    </div>
+    <div class="panel-body">
+      电话是发货撒
+    </div>
+    <div class="panel-footer">
+      <button class="btn btn-default" onclick="hideBtn();">关闭</button>
+    </div>
+  </div>
+</div>
+</body>
+<script src="/js/ieWarn.js"></script>
+<script src="/js/jquery-1.12.0.min.js"></script>
+<script src="/js/bootstrap/js/bootstrap.min.js"></script>
+<script>
+    function  noticeInit(){
+        var isLoad=false;
+        var info=function info(title,content){
+            var n = new Notification(title, {
+                body : content,
+            });
+            n.onshow = function () {
+                setTimeout(n.close.bind(n), 5000);
+            }
+//            setTimeout(function() {
+//                n.close();
+//            }, 2000);
+        }
+        return function(title,content){
+            if(!isLoad){
+                if(window.Notification && Notification.permission !== "denied") {
+                    Notification.requestPermission(function(status) {    // 请求权限
+                        if(status === 'granted') {
+                            isLoad=true;
+                            info(title,content)
+                        }
+                    });
+                }
+            }else{
+                info(title,content);
+            }
+
+        }
+    }
+
+    var notice=noticeInit();
+    notice("提示","给我弹出一个框");
+//    return function(){
+//        // 弹出一个通知
+
+//    }
+  function hideBtn(){
+      window.parent.dialogClose("abc");
+  }
+</script>
+</html>

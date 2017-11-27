@@ -2,9 +2,33 @@
 <div class="container" >
     <!--<h1><%= title %></h1>-->
     <!--<p>Welcome to <%= title %></p>-->
+    <button id="test" class="btn btn-default">测试</button>
+    <button id="test2" class="btn btn-default">测试</button>
+    <!-- Anchors (links) -->
+    <a href="about.html" class="button">这是链接按钮</a>
+    <a href="#features" class="button">其他</a>
 
+    <!-- Buttons (actions) -->
+    <button type="button" class="button success ">保存</button>
+    <button type="button" class="button alert">删除</button>
+    <a class="button primary" href="#">Primary</a>
+    <a class="button secondary" href="#">Secondary</a>
+    <a class="button success" href="#">Success</a>
+    <a class="button alert" href="#">Alert</a>
+    <a class="button warning" href="#">Warning</a>
+
+    <button class="hollow button" href="#">Primary</button>
+    <button class="hollow button secondary" href="#">Secondary</button>
+    <button class="hollow button success" href="#">Success</button>
+    <button class="hollow button alert" href="#">Alert</button>
+    <button class="hollow button warning" href="#">Warning</button>
+    <button class="hollow button" href="#" disabled>Disabled</button>
 
 </div><!-- /.container -->
 <% block('footer').append(`<script src='js/pager.js'></script>`)%>
+<% block('footer').append(`<script src='js/iframeDialog.js'></script>`)%>
 <% block('footer').append(`<script>
+    jQuery(function(){
+
+    });
 </script>`)%>

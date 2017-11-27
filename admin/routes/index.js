@@ -5,7 +5,7 @@ let fs=require('fs');
 let {succJson,errJson} =require('../../utils/sendJson');
 let User =require('../../models/user');
 let Pages =require('../../models/pages');
-
+let imgCode="";
 function getPageNum(count,pageSize){
     if(count%pageSize==0){//转换成页数
         return  parseInt(count/pageSize);
@@ -18,10 +18,12 @@ router.get('/', (req, res)=> {
 router.get('/login',(req,res)=>{
     // req.flash('success',"靠靠靠");
     console.log(req.session.imgCode,"imgCode");
+
     res.render('login',{title:"用户登录"});
 })
 router.post('/login',(req,res)=>{
     console.log(req.session,req.session.imgCode,req.body.verifyCode,"imgCode");
+
     let imgCode=req.session.imgCode;
     req.checkBody('userName',"用户名不能为空").notEmpty()
         .isTooShort(6).withMessage("用户名太短");

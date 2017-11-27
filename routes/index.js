@@ -28,6 +28,12 @@ router.get('/about',(req,res)=>{
     res.render('about',{title:"关于我们"});
 });
 
+router.get('/test',(req,res)=>{
+    res.render('test',{title:"测试"});
+})
+router.get('/test1',(req,res)=>{
+    res.render('test1',{title:"测试"});
+})
 router.get('/login',(req,res)=>{
   res.render('login',{title:"用户登录"});
 });
