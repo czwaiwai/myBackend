@@ -11,6 +11,13 @@ function Image(image){
     this.height=image.height;
     this.buildTime=timeFormat(Date.now());
     this.type=image.type;
+    if(image.sName){
+        this.sName=image.sName;
+        this.sWidth=image.sWidth;
+        this.sHeight=image.sHeight;
+        this.sPath=image.sPath;
+    }
+
 }
 
 module.exports=Image

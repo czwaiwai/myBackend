@@ -41,16 +41,8 @@ router.post('/upload',(req,res)=>{
         req.flash('success',"上传成功");
         //保存在mongodb中便于后台管理
         files.forEach(ctx=>{
-            let img= new Image({
-                name:ctx.name,
-                url:ctx.path,
-                type:ctx.type,
-                width:ctx.width,
-                height:ctx.height,
-            });
-            img.save();
+            new Image(Object(ctx,{url:ctx.path})).save();
         });
-
         if(fields && fields.callType=="json"){
             res.json(succJson({imgs:files},req.flash("success").toString()));
         }else{

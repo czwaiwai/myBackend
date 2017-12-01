@@ -32,17 +32,12 @@ function imgProcess(req,cb){
         }
         var obj ={};
         Object.keys(fields).forEach(function(name) {  //文本
-            console.log('name:' + name+";filed:"+fields[name]);
             obj[name] = fields[name];
         });
         var file=[]
         Object.keys(files).forEach(function(name) {  //文件
-            console.log('name:' + name+";file:"+files[name]);
             file = files[name];
         });
-        console.log(file);
-        // return cb && cb("error");
-        // let file=files.file;
         let now=moment().format("YYYYMMDD");
         let newPath=uploadPath+now+"/";
         createDir(newPath,function(){
@@ -53,19 +48,26 @@ function imgProcess(req,cb){
                 let imgName=ctx.path.replace(uploadPath,"").replace(imgType,"");
                 let fullName=imgName+"_$date"+now+"_$"+img.width()+"x"+img.height()+imgType;
                 let small=true;
-                if(small){
-                  let smallImg= images(img).resize(120);
-                  let smallName=fullName.replace(imgType,"")+"_$sma_"+smallImg.width()+"x"+smallImg.height()+imgType;
-                    smallImg.save(newPath+smallName);
-                }
-                img.save(newPath+fullName);
-                imgfiles.push({
+                let pushObj={
                     name:fullName,
                     width:img.width(),
                     height:img.height(),
                     type:ctx.headers['content-type'],
                     path:(newPath+fullName).replace("public","")
-                });
+                }
+                if(small){
+                  let smallImg= images(img).resize(120);
+                  let smallName=fullName.replace(imgType,"")+"_$sma_"+smallImg.width()+"x"+smallImg.height()+imgType;
+                  smallImg.save(newPath+smallName);
+                  Object.assign(pushObj,{
+                      sName:smallName,
+                      sPath:(newPath+smallName).replace("public",""),
+                      sWidth:smallImg.width(),
+                      sHeight:smallImg.height()
+                  });
+                }
+                img.save(newPath+fullName);
+                imgfiles.push(pushObj);
                 fs.unlink(ctx.path);
             });
             cb && cb(null,obj,imgfiles);
