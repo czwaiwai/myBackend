@@ -6,6 +6,7 @@
  //初始化组件
  $('.j_pager').pager(function(page){
  console.log(page,"我是回调");
+
  });
  //修改当前页
  $('.j_pager').pager(1);

@@ -22,6 +22,9 @@ router.get('/login',(req,res)=>{
     req.session.abc=1;
     res.render('login',{title:"用户登录"});
 })
+router.get('/welcome',(req, res) => {
+    res.render('welcome', {title: "首页"})
+})
 router.post('/login',(req,res)=>{
     console.log(req.session,req.session.imgCode,req.body.verifyCode,"imgCode");
     req.session.imgCode
