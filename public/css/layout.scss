@@ -2,6 +2,10 @@ html{
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
   height: 100%;
+
+}
+body {
+  background:#f0f0f0;
 }
 .w-hd,w-bd{
   position:relative;
@@ -13,7 +17,7 @@ w-bd{
   z-index:1;
 }
 .w-row{
-  width: 1090px;
+  width: 980px;
   margin-right: auto;
   margin-left: auto;
   position: relative;

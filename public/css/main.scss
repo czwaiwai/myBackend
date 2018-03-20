@@ -1,9 +1,11 @@
-@import './settings';
-@import '../scss/foundation';
-@include foundation-everything;
+@import '../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap';
+//@import './_bootstrap';
+//@import './settings';
+//@import '../scss/foundation';
+//@include foundation-everything;
 @import './layout';
 @import './tool';
-@import './login';
+//@import './login';
 body, button, code, input, select, textarea {
   color: #333;
   font: 12px/1.5 "Microsoft Yahei","微软雅黑",verdana;
