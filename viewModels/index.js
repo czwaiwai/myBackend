@@ -1,0 +1,1 @@
+exports.Page = require('./page')

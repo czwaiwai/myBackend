@@ -1,0 +1,46 @@
+<% layout('layout/layout') %>
+<% block('header').append(`<style>
+</style>`)%>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">Responsive Hover Table</h3>
+                <div class="box-tools">
+                    <a class="btn  btn-sm btn-success" href="add">添加+</a>
+                    <!--<div class="input-group input-group-sm" style="width: 150px;">-->
+                    <!--<input type="text" name="table_search" class="form-control pull-right" placeholder="Search">-->
+
+                    <!--<div class="input-group-btn">-->
+                    <!--<button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body table-responsive no-padding">
+                <table class="table table-bordered table-hover">
+                    <tbody>
+                    <tr>
+                        <th>图片预览</th>
+                        <th>图片名称</th>
+                        <th>图片类型</th>
+                        <th>图片创建时间</th>
+                        <th>操作</th>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+        <div class="j_pager" data-page="<%=page %>"  data-count="<%=count%>"></div>
+    </div>
+
+</div>
+<% block('footer').append(`<script src="${assetsPath}/js/uploadImg.js"></script>`); %>
+<% block('footer').append(`<script src="${assetsPath}/js/pager.js" ></script>`); %>
+<% block('footer').append(`<script>
+$('.j_pager').pager();
+</script>`)%>
