@@ -6,4 +6,4 @@ const config = {
 	// mongodb 数据库链接
 	db: 'mongodb://localhost/waiShop'
 }
-export default config
+module.exports = config

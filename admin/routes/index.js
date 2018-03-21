@@ -29,7 +29,6 @@ router.get('/welcome',(req, res) => {
 })
 router.post('/login',(req,res)=>{
     console.log(req.session,req.session.imgCode,req.body.verifyCode,"imgCode");
-    req.session.imgCode
     let imgCode=req.session.imgCode;
     req.checkBody('userName',"用户名不能为空").notEmpty()
         .isTooShort(6).withMessage("用户名太短");
@@ -40,6 +39,8 @@ router.post('/login',(req,res)=>{
     req.getValidationResult().then(function(valid){
         if(valid.isEmpty()){
             User.getOne({userName:req.body.userName},function(err,user){
+                console.log(user, '-------user--------')
+                console.log(req.body.password)
                 if(!user ||  user.pwd!=req.body.password){
                     req.flash("error","账户名或密码错误");
                     return  res.redirect('./login');
@@ -71,10 +72,12 @@ router.post('/pages/add', (req, res) => {
     console.log(req.params, '--------')
     console.log(req.body, '---------')
   Page.newPage(req.body, function (err) {
-      if (err) {
-          console.error(err)
-      }
-    console.log('保存成功')
+    if (err) {
+      req.flash("error",err.message);
+      console.error(err)
+      return res.redirect('/admin/pages/add')
+    }
+    req.flash("success", '操作成功')
     return res.redirect('/admin/pages/add')
   })
 })

@@ -43,7 +43,7 @@ app.use(function(req,res,next){
 function checkLogin(req,res,next){
     if(req.path=="/login") return next();
     if(!req.session.user  || (req.session.user && req.session.user.isAdmin!==true)){
-        return  res.redirect('./login');
+        return  res.redirect('/admin/login');
     }
     next();
 }

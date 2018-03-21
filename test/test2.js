@@ -1,4 +1,14 @@
+/**
+ * Created by Administrator on 2018/3/21 0021.
+ */
 var mongoose = require ('mongoose')
+var config = require('../config')
+mongoose.connect(config.db, {}, function(err){
+	if (err) {
+
+	}
+	console.log('链接成功')
+})
 var Schema = mongoose.Schema
 var PageSchema = new Schema({
 	title:{type: String},
@@ -11,9 +21,19 @@ var PageSchema = new Schema({
 	create_at:{type: Date, default: Date.now},
 	update_at:{type: Date, default: Date.now},
 })
-PageSchema.index({path:1},{ unique: true})
 PageSchema.pre('save', function (next) {
 	this.update_at =  new Date()
 	next()
 })
-mongoose.model('Page', PageSchema)
+var Page = mongoose.model('Page', PageSchema)
+var page = new Page({
+	title:'哈哈哈',
+	path: 'about',
+	content: 'dfjlsdjfklsddsfklsdflsd sdfjsdklfsd'
+})
+page.save(function(err, page){
+	if(err) {
+		console.log(err)
+	}
+	console.log('插入成功', page)
+})

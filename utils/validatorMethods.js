@@ -6,7 +6,7 @@
 module.exports={
     customValidators: {
         isEqual:function(value,code){
-            console.log(value,code,"比较值是否相同")
+            console.log(value,code, value === code,"比较值是否相同")
             return value===code;
         },
         isTooShort:function(value,num){
