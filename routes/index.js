@@ -4,6 +4,8 @@ var ccap=require('../utils/verifycode');
 // var schema=require('async-validator');
 var User =require('../models/user');
 /* GET home page. */
+var models = require('../viewModels')
+var Page = models.Page
 
 
 // router.get(checkLogin);
@@ -27,11 +29,22 @@ router.get('/chat',(req,res)=>{
 router.get('/about',(req,res)=>{
     res.render('about',{title:"关于我们"});
 });
-router.get('/page/:pageName', (req, res) => {
+router.get('/page/:pageName', (req, res, next) => {
     console.log(req.query, '-------------')
     console.log(req.body, '-------------')
     console.log(req.params, '-----------')
-    res.render('about', {title: '关于我们'})
+  Page.getPageByPathName(req.params.pageName, function(err, page) {
+    if (err) {
+      console.log(err)
+    }
+    console.log(page, 'page')
+    if (!page) {
+      return next()
+    } else {
+      res.render('page', page.toObject())
+    }
+  })
+   // res.render('about', {title: '关于我们'})
 })
 router.get('/test',(req,res)=>{
     res.render('test',{title:"测试"});
