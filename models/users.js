@@ -10,7 +10,7 @@ var UserSchema = new Schema({
 	realname: {type: String}, // 真实姓名
 	card_id: {type: String}, // 用户证件
 	mobile: {type: String}, // 手机号吗
-	cart: {type: []}
+	cart: {type: []},
 	address: {type: []}, // 地址
 	create_at: {type: Date , default: Date.now},
 	update_at: {type: Date , default: Date.now},
@@ -20,4 +20,4 @@ UserSchema.pre('save', function (next) {
 	this.updateTime = Date.now
 	next()
 })
-mongoose.model('user',UserSchema)
+mongoose.model('User',UserSchema)

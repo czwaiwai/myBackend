@@ -1,8 +1,12 @@
-var mongoose = reuqire('mongoose')
+var mongoose = require('mongoose')
 var config = require('../config')
-var mongoose.connect(config.db)
+mongoose.connect(config.db, {}, function(err){
+  if (err) {
 
+  }
+  console.log('链接成功')
+})
 require('./users')
 require('./page')
-export.Page = mongoose.model('Page')
-export.User = mongoose.model('User')
+exports.Page = mongoose.model('Page')
+exports.User = mongoose.model('User')

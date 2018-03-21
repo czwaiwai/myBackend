@@ -8,6 +8,7 @@
     "dev": "supervisor bin/www"
   },
   "dependencies": {
+    "admin-lte": "^2.4.3",
     "async-validator": "^1.7.1",
     "body-parser": "~1.17.1",
     "bootstrap-sass": "^3.3.7",

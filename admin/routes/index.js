@@ -5,6 +5,8 @@ let fs=require('fs');
 let {succJson,errJson} =require('../../utils/sendJson');
 let User =require('../../models/user');
 let Pages =require('../../models/pages');
+let viewModels = require('../../viewModels/')
+let Page =viewModels.Page
 let imgCode="";
 function getPageNum(count,pageSize){
     if(count%pageSize==0){//转换成页数
@@ -58,6 +60,24 @@ router.get('/logout',(req,res)=>{
     req.session.user=null;
     return res.redirect('./');
 })
+router.get('/pages/index', (req, res) => {
+    return res.render('pages/index', {title: '单页管理', page: 1, count: 10})
+})
+router.get('/pages/add', (req, res) => {
+    return res.render('pages/add', {title: '添加单页'})
+})
+router.post('/pages/add', (req, res) => {
+    console.log(req.query, '--------')
+    console.log(req.params, '--------')
+    console.log(req.body, '---------')
+  Page.newPage(req.body, function (err) {
+      if (err) {
+          console.error(err)
+      }
+    console.log('保存成功')
+    return res.redirect('/admin/pages/add')
+  })
+})
 
 router.get('/chat',(req,res)=>{
     console.log(req.path);
@@ -83,10 +103,6 @@ router.get('/pages',(req,res)=>{
             list:pages,
         });
     })
-});
-router.get('/pages/add',(req,res)=>{
-  //
-    res.render('pages/add',{title:"添加单页"});
 });
 router.get('/images',(req,res)=>{
     let page = req.query.page || 1;

@@ -18,7 +18,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="<%=assetsPath %>/css/ionicons/ionicons.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="<%=assetsPath %>/css/AdminLTE.min.css">
-
   <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
         page. However, you can choose any other skin. Make sure you
         apply the skin class to the body tag so the changes take effect.
@@ -261,7 +260,7 @@ desired effect
         <li <% if(path=="/"){ %>class="active"<% } %> ><a href="<%=assetsPath %>/"><i class="fa fa-home"></i><span>首页概况</span></a></li>
         <li <% if(path=="/chat"){ %>class="active"<% } %> ><a href="<%=assetsPath %>/chat"><i class="fa fa-comments"></i> <span>聊天室</span></a></li>
         <li <% if(path=="/images"){ %>class="active"<% } %> ><a href="<%=assetsPath %>/images"><i class="fa fa-image"></i> <span>图片管理</span></a></li>
-        <li <% if(path=="/pages"){ %>class="active"<% } %> ><a href="<%=assetsPath %>/pages"><i class="fa fa-file-text-o "></i> <span>单页管理</span></a></li>
+        <li <% if(path=="/pages"){ %>class="active"<% } %> ><a href="<%=assetsPath %>/pages/index"><i class="fa fa-file-text-o "></i> <span>单页管理</span></a></li>
         <!--<li class="treeview">-->
           <!--<a href="#"><i class="fa fa-gift"></i><span>店铺管理</span>-->
             <!--<span class="pull-right-container">-->
@@ -370,9 +369,8 @@ desired effect
             <p><%= success%></p>
           </div>
         <% } %>
-      <%- body %>
+        <%- body %>
       <!-- Your Page Content Here -->
-
     </section>
     <!-- /.content -->
   </div>

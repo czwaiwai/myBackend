@@ -1,7 +1,7 @@
 var express = require('express');
 let router = express.Router();
 var ccap=require('../utils/verifycode');
-var schema=require('async-validator');
+// var schema=require('async-validator');
 var User =require('../models/user');
 /* GET home page. */
 
@@ -27,7 +27,12 @@ router.get('/chat',(req,res)=>{
 router.get('/about',(req,res)=>{
     res.render('about',{title:"关于我们"});
 });
-
+router.get('/page/:pageName', (req, res) => {
+    console.log(req.query, '-------------')
+    console.log(req.body, '-------------')
+    console.log(req.params, '-----------')
+    res.render('about', {title: '关于我们'})
+})
 router.get('/test',(req,res)=>{
     res.render('test',{title:"测试"});
 })

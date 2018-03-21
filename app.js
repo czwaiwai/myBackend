@@ -36,7 +36,8 @@ app.use(flash());
 app.use(sassMiddleware({
   src: path.join(__dirname, 'public/css'),
   dest: path.join(__dirname, 'public/css'),
-  includePaths:[path.join(__dirname,"node_modules/foundation-sites/assets/")],
+  includePaths:[path.join(__dirname,"/node_modules/bootstrap-sass/assets/stylesheets/")],
+  // includePaths:[path.join(__dirname,"node_modules/foundation-sites/assets/")],
   indentedSyntax: false, // true = .sass and false = .scss
   sourceMap: false,
     // outputStyle: 'compressed',

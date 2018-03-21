@@ -12,12 +12,13 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(sassMiddleware({
-    src: path.join(__dirname, 'public'),
-    dest: path.join(__dirname, 'public'),
+    src: path.join(__dirname, 'public/css'),
+    dest: path.join(__dirname, 'public/css'),
     indentedSyntax: false, // true = .sass and false = .scss
     sourceMap: false,
     // outputStyle: 'compressed',
-    // prefix:  '/css'
+    outputStyle: 'extended',
+    prefix:  '/css'
 }));
 
 // app.use(function(req,res,next){ res.locals.staticUrl ='/admin' });
