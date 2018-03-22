@@ -81,7 +81,12 @@ router.post('/pages/add', (req, res) => {
     return res.redirect('/admin/pages/add')
   })
 })
-
+router.get('/catalog/index', (req, res) => {
+	return res.render('catalog/index', {title: '导航列表', page: 1, count: 10})
+})
+router.get('/catalog/add', (req, res) => {
+	return res.render('catalog/add', {title: '添加导航'} )
+})
 router.get('/chat',(req,res)=>{
     console.log(req.path);
     res.render('chat',{title:"聊天室"});

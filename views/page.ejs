@@ -1,0 +1,9 @@
+<% layout('layout/layout') %>
+<% block('header').append(`<style>
+</style>`)%>
+<div class="container">
+    <%= title %>
+    <%- content %>
+</div>
+<% block('footer').append(`<script>
+</script>`)%>

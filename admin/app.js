@@ -23,20 +23,8 @@ app.use(sassMiddleware({
 
 // app.use(function(req,res,next){ res.locals.staticUrl ='/admin' });
 app.use(function(req,res,next){
-
+    res.locals.path = req.path
     res.locals.assetsPath=app.path();
-    // if(res.redirect){
-    //     let redirect=res.redirect;
-    //     res.redirect=function(){
-    //         let args=Array.prototype.slice.call(arguments);
-    //         if(args.length==2){
-    //             args[1]=app.mountpath+args[0];
-    //         }else{
-    //             args[0]=app.mountpath+args[0];
-    //         }
-    //         redirect.apply(res,args);
-    //     }
-    // }
     next();
 })
 

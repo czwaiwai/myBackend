@@ -1,8 +1,15 @@
 var mongoose = require('mongoose')
 var Schema = mongoose.Schema
-var catalog =  new Schema({
+var CatalogSchema =  new Schema({
+	nameCn: {type: String},
 	name: {type: String},
-	path: {type: String},
+	calPath: {type: String, default: null},
 	shopName: {type: String},
-	children: {type: Schema.Types.Mixed}
-})
+	relativeUrl: {type: String},
+	isValid: {type: Number , default: 0 },
+	sort: {type: Number, default: 100}
+}, {collection: 'catalog'})
+
+CatalogSchema.index({shopName:1},{unique: true})
+
+mongoose.model('Catalog', CatalogSchema)

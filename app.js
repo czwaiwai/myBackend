@@ -48,18 +48,14 @@ app.use(sassMiddleware({
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(function(req,res,next){
-    let render=res.render.bind(res);
-    res.render=function(view,options,callback){
-        let option=Object.assign({},{
-            title:"飞常赞",
-            path:req.path,
-            error:req.flash("error").toString(),
-            success:req.flash("success").toString(),
-            user:req.session.user
-        },options)
-        console.info("render 返回结果：",options);
-        render(view,option,callback);
-    }
+  console.log(req, 'req')
+    res.locals = Object.assign(res.locals,{
+      title:"飞常赞",
+      basePath:req.path,
+      error:req.flash("error").toString(),
+      success:req.flash("success").toString(),
+      user:req.session.user
+    })
     next();
 });
 

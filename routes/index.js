@@ -2,11 +2,11 @@ var express = require('express');
 let router = express.Router();
 var ccap=require('../utils/verifycode');
 // var schema=require('async-validator');
-var User =require('../models/user');
+// var User =require('../models/user');
 /* GET home page. */
 var models = require('../viewModels')
 var Page = models.Page
-var Users = models.User
+var User = models.User
 
 
 // router.get(checkLogin);
@@ -17,9 +17,7 @@ router.get('/', (req, res)=> {
 });
 router.get('/imgCode',(req,res)=>{
    var arr= ccap.get();
-   req.session.imgCode="1234";
    req.session.imgCode=arr[0]+"";
-    console.log(req.session);
    res.send(arr[1]);
 });
 router.get('/chat',(req,res)=>{
@@ -54,7 +52,7 @@ router.get('/test1',(req,res)=>{
 router.get('/login',(req,res)=>{
   res.render('login',{title:"用户登录"});
 });
-router.post('/login',(req,res)=>{
+router.post('/login',(req,res, next)=>{
     req.checkBody('userName',"用户名不能为空").notEmpty()
         .isTooShort(6).withMessage("用户名太短");
     req.checkBody('password',"密码不能为空").notEmpty()
@@ -62,13 +60,22 @@ router.post('/login',(req,res)=>{
     req.checkBody('verifyCode',"验证码不能为空").notEmpty()
         .isEqual(req.session.imgCode).withMessage("验证码不正确");
     req.asyncValidationErrors().then(function(){
-        User.getOne({userName:req.body.userName},function(err,user){
-            if(user.pwd!=req.body.password){
-                req.flash("error","账户名或密码错误");
-                return  res.redirect('/login');
-            }
-            req.session.user=user;
-            return  res.redirect('/');
+    	console.log(req.body)
+        User.findByUserName(req.body.userName,function(err,user){
+        	if (err) {
+        		return next(err)
+	        }
+	        if (!user) {
+		        req.flash("error","账户名或密码错误")
+        		return res.redirect('/login')
+	        }
+          if(user.pwd!=req.body.password){
+        		req.flash("error","账户名或密码错误");
+        		return  res.redirect('/login');
+          }
+          console.log(user, 'user')
+          req.session.user=user;
+          return  res.redirect('/');
         });
     },function(errors){
         req.flash("error",errors[0].msg);
@@ -89,7 +96,7 @@ router.post('/register', (req, res, next) => {
 	req.checkBody('verifyCode',"验证码不能为空").notEmpty()
 		.isEqual(req.session.imgCode).withMessage("验证码不正确");
 	req.asyncValidationErrors().then(function(){
-		Users.create(req.body, (err, user) => {
+        User.create(req.body, (err, user) => {
 			if (err) {
 				console.error(err)
 				req.flash("error",err.message)
