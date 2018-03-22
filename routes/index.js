@@ -6,6 +6,7 @@ var User =require('../models/user');
 /* GET home page. */
 var models = require('../viewModels')
 var Page = models.Page
+var Users = models.User
 
 
 // router.get(checkLogin);
@@ -30,12 +31,10 @@ router.get('/about',(req,res)=>{
     res.render('about',{title:"关于我们"});
 });
 router.get('/page/:pageName', (req, res, next) => {
-    console.log(req.query, '-------------')
-    console.log(req.body, '-------------')
-    console.log(req.params, '-----------')
   Page.getPageByPathName(req.params.pageName, function(err, page) {
     if (err) {
       console.log(err)
+      return next()
     }
     console.log(page, 'page')
     if (!page) {
@@ -77,8 +76,32 @@ router.post('/login',(req,res)=>{
     });
 });
 router.get('/register',(req,res)=>{
-
     res.render('register',{title:"用户注册"});
+})
+router.post('/register', (req, res, next) => {
+	req.checkBody('userName',"用户名不能为空").notEmpty()
+		.isTooShort(6).withMessage("用户名太短");
+	req.checkBody('pwd',"密码不能为空").notEmpty()
+		.isTooShort(6).withMessage("密码太短");
+	req.checkBody('pwdRepeat').notEmpty()
+		.isSame(req.body.pwd).withMessage('密码不一致')
+	req.checkBody('mobile', '手机号不能为空').notEmpty().isMobile().withMessage('手机号码不正确')
+	req.checkBody('verifyCode',"验证码不能为空").notEmpty()
+		.isEqual(req.session.imgCode).withMessage("验证码不正确");
+	req.asyncValidationErrors().then(function(){
+		Users.create(req.body, (err, user) => {
+			if (err) {
+				console.error(err)
+				req.flash("error",err.message)
+				return res.redirect('/register')
+			}
+			req.flash('success', '注册成功')
+			return res.redirect('/login')
+		})
+	},function(errors){
+		req.flash("error",errors[0].msg);
+		return res.redirect('/register');
+	});
 })
 router.get('/logout',(req,res)=>{
     req.session.user=null;

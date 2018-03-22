@@ -258,9 +258,9 @@ desired effect
         <!-- Optionally, you can add icons to the links -->
 
         <li <% if(path=="/"){ %>class="active"<% } %> ><a href="<%=assetsPath %>/"><i class="fa fa-home"></i><span>首页概况</span></a></li>
-        <li <% if(path=="/chat"){ %>class="active"<% } %> ><a href="<%=assetsPath %>/chat"><i class="fa fa-comments"></i> <span>聊天室</span></a></li>
+        <!--<li <% if(path=="/chat"){ %>class="active"<% } %> ><a href="<%=assetsPath %>/chat"><i class="fa fa-comments"></i> <span>聊天室</span></a></li>-->
         <li <% if(path=="/images"){ %>class="active"<% } %> ><a href="<%=assetsPath %>/images"><i class="fa fa-image"></i> <span>图片管理</span></a></li>
-        <li <% if(path=="/pages"){ %>class="active"<% } %> ><a href="<%=assetsPath %>/pages/index"><i class="fa fa-file-text-o "></i> <span>单页管理</span></a></li>
+        <!--<li <% if(path=="/pages"){ %>class="active"<% } %> ><a href="<%=assetsPath %>/pages/index"><i class="fa fa-file-text-o "></i> <span>单页管理</span></a></li>-->
         <!--<li class="treeview">-->
           <!--<a href="#"><i class="fa fa-gift"></i><span>店铺管理</span>-->
             <!--<span class="pull-right-container">-->
@@ -275,49 +275,56 @@ desired effect
             <!--<li><a href="#">同款</a></li>-->
           <!--</ul>-->
         <!--</li>-->
-        <!--<li class="treeview">-->
-          <!--<a href="#"><i class="fa fa-shopping-bag "></i><span>商品管理</span>-->
-            <!--<span class="pull-right-container">-->
-              <!--<i class="fa fa-angle-left pull-right"></i>-->
-            <!--</span>-->
-          <!--</a>-->
-          <!--<ul class="treeview-menu">-->
-            <!--<li><a href="#">全部</a></li>-->
-            <!--<li><a href="#">动态</a></li>-->
-            <!--<li><a href="#">逛逛</a></li>-->
-            <!--<li><a href="#">生活</a></li>-->
-            <!--<li><a href="#">同款</a></li>-->
-          <!--</ul>-->
-        <!--</li>-->
-        <!--<li class="treeview">-->
-          <!--<a href="#"><i class="fa fa-wpforms"></i><span>订单管理</span>-->
-            <!--<span class="pull-right-container">-->
-              <!--<i class="fa fa-angle-left pull-right"></i>-->
-            <!--</span>-->
-          <!--</a>-->
-          <!--<ul class="treeview-menu">-->
-            <!--<li><a href="#">全部</a></li>-->
-            <!--<li><a href="#">待付款</a></li>-->
-            <!--<li><a href="#">已付款</a></li>-->
-            <!--<li><a href="#">已发货</a></li>-->
-            <!--<li><a href="#">退款订单</a></li>-->
-            <!--<li><a href="#">退款完成</a></li>-->
-          <!--</ul>-->
-        <!--</li>-->
-        <!--<li class="treeview">-->
-          <!--<a href="#"><i class="fa fa-users"></i><span>客户管理</span>-->
-            <!--<span class="pull-right-container">-->
-              <!--<i class="fa fa-angle-left pull-right"></i>-->
-            <!--</span>-->
-          <!--</a>-->
-          <!--<ul class="treeview-menu">-->
-            <!--<li><a href="#">全部</a></li>-->
-            <!--<li><a href="#">会员管理</a></li>-->
-            <!--<li><a href="#">会员卡</a></li>-->
-            <!--<li><a href="#">积分卡</a></li>-->
-            <!--<li><a href="#">积分管理</a></li>-->
-          <!--</ul>-->
-        <!--</li>-->
+        <li class="treeview">
+          <a href="#"><i class="fa fa-shopping-bag "></i><span>商品管理</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="#">全部</a></li>
+            <li><a href="#">动态</a></li>
+            <li><a href="#">逛逛</a></li>
+            <li><a href="#">生活</a></li>
+            <li><a href="#">同款</a></li>
+          </ul>
+        </li>
+        <li class="treeview">
+          <a href="#"><i class="fa fa-wpforms"></i><span>订单管理</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="#">全部</a></li>
+            <li><a href="#">待付款</a></li>
+            <li><a href="#">已付款</a></li>
+            <li><a href="#">已发货</a></li>
+            <li><a href="#">退款订单</a></li>
+          </ul>
+        </li>
+        <li class="treeview">
+          <a href="#"><i class="fa fa-users"></i><span>用户管理</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="#">用户列表</a></li>
+          </ul>
+        </li>
+        <li class="treeview">
+          <a href="#"><i class="fa fa-users"></i><span>资讯管理</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="#">新闻列表</a></li>
+            <li><a href="#">烹饪</a></li>
+            <li <% if(path=="/pages"){ %>class="active"<% } %> ><a href="<%=assetsPath %>/pages/index"><i class="fa fa-file-text-o "></i> <span>单页管理</span></a></li>
+          </ul>
+        </li>
         <!--<li class="treeview">-->
           <!--<a href="#"><i class="fa fa-area-chart"></i><span>数据中心</span>-->
             <!--<span class="pull-right-container">-->
