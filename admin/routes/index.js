@@ -5,8 +5,8 @@ let fs=require('fs');
 let {succJson,errJson} =require('../../utils/sendJson');
 let User =require('../../models/user');
 let Pages =require('../../models/pages');
-let viewModels = require('../../viewModels/')
-let Page =viewModels.Page
+let {Page, Catalog} = require('../../viewModels/')
+
 let imgCode="";
 function getPageNum(count,pageSize){
     if(count%pageSize==0){//转换成页数
@@ -68,9 +68,6 @@ router.get('/pages/add', (req, res) => {
     return res.render('pages/add', {title: '添加单页'})
 })
 router.post('/pages/add', (req, res) => {
-    console.log(req.query, '--------')
-    console.log(req.params, '--------')
-    console.log(req.body, '---------')
   Page.newPage(req.body, function (err) {
     if (err) {
       req.flash("error",err.message);
@@ -82,12 +79,28 @@ router.post('/pages/add', (req, res) => {
   })
 })
 router.get('/catalog/index', (req, res) => {
+ 
 	return res.render('catalog/index', {title: '导航列表', page: 1, count: 10})
 })
 router.get('/catalog/add', (req, res) => {
+ Catalog.get
 	return res.render('catalog/add', {title: '添加导航'} )
 })
-router.get('/chat',(req,res)=>{
+router.post('/catalog/add', (req, res, next) => {
+  console.log(req.body)
+  let param = req.body
+	param.shopName = 'mShop'
+  if (param.isMaster) {
+    param.parent = null
+  } else {
+    param.calPath = param.parent
+  }
+  Catalog.create(req.body, (err, catalog) => {
+    console.log(catalog, 'catalog')
+	  res.redirect('/admin/catalog/add')
+  })
+})
+router.get('/chat',(req,res) => {
     console.log(req.path);
     res.render('chat',{title:"聊天室"});
 })

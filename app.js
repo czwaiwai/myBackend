@@ -48,8 +48,7 @@ app.use(sassMiddleware({
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(function(req,res,next){
-  console.log(req, 'req')
-    res.locals = Object.assign(res.locals,{
+    res.locals = Object.assign(res.locals, {
       title:"飞常赞",
       basePath:req.path,
       error:req.flash("error").toString(),

@@ -1,61 +1,64 @@
 <% layout('layout/layout') %>
 <% block('header').append(`<style>
 </style>`) %>
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="box box-info">
-                <div class="box-header with-border">
-                    <h3 class="box-title">添加当行</h3>
-                </div>
-                <!-- /.box-header -->
-                <!-- form start -->
-                <form action="<%=assetsPath %>/catalog/add" method="post" class="form-horizontal" novalidate>
-                    <div class="box-body">
-                        <div class="form-group">
-                            <label for="title" class="col-sm-2 control-label">名称</label>
-                            <div class="col-sm-10">
-                                <input name="nameCn" type="text" class="form-control"  placeholder="单页标题">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="path" class="col-sm-2 control-label">路径名称</label>
-                            <div class="col-sm-10">
-                                <input name="name" type="text" class="form-control" placeholder="显示的url路径">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="content" class="col-sm-2 control-label">父菜单</label>
-                            <div class="col-sm-10">
-                                <select name="parent" class="form-control">
-                                    <option>无</option>
-                                    <option>option 2</option>
-                                    <option>option 3</option>
-                                    <option>option 4</option>
-                                    <option>option 5</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-sm-offset-2 col-sm-10">
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox"> 是否有效
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /.box-body -->
-                    <div class="box-footer">
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <button type="submit" class="btn btn-info ">创建</button>
-                            <button type="reset" class="btn btn-default">重置</button>
-                        </div>
-                    </div>
-                    <!-- /.box-footer -->
-                </form>
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-info">
+            <div class="box-header with-border">
+                <h3 class="box-title">添加当行</h3>
             </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+            <form action="<%=assetsPath %>/catalog/add" method="post" class="form-horizontal" novalidate>
+                <div class="box-body">
+                    <div class="form-group">
+                        <label for="title" class="col-sm-2 control-label">名称</label>
+                        <div class="col-sm-10">
+                            <input name="nameCn" type="text" class="form-control"  placeholder="单页标题">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="path" class="col-sm-2 control-label">路径名称</label>
+                        <div class="col-sm-10">
+                            <input name="name" type="text" class="form-control" placeholder="显示的url路径">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="parent" class="col-sm-2 control-label">父菜单</label>
+                        <div class="col-sm-10">
+                            <select name="parent" class="form-control">
+                                <option value="">无</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <div class="checkbox">
+                                <label>
+                                    <input name="isMaster" type="checkbox" value="1"> 是否根路径
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <div class="checkbox">
+                                <label>
+                                    <input name="isValid" type="checkbox" value="1"> 是否有效
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-info ">创建</button>
+                        <button type="reset" class="btn btn-default">重置</button>
+                    </div>
+                </div>
+                <!-- /.box-footer -->
+            </form>
         </div>
     </div>
 </div>
