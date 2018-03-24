@@ -3,9 +3,9 @@ let router = express.Router();
 let Image =require('../../models/image');
 let fs=require('fs');
 let {succJson,errJson} =require('../../utils/sendJson');
-let User =require('../../models/user');
+// let User =require('../../models/user');
 let Pages =require('../../models/pages');
-let {Page, Catalog} = require('../../viewModels/')
+let {User, Page, Catalog} = require('../../viewModels/')
 
 let imgCode="";
 function getPageNum(count,pageSize){
@@ -31,28 +31,25 @@ router.post('/login',(req,res)=>{
     console.log(req.session,req.session.imgCode,req.body.verifyCode,"imgCode");
     let imgCode=req.session.imgCode;
     req.checkBody('userName',"用户名不能为空").notEmpty()
-        .isTooShort(6).withMessage("用户名太短");
+      .isTooShort(6).withMessage("用户名太短");
     req.checkBody('password',"密码不能为空").notEmpty()
-        .isTooShort(6).withMessage("密码太短");
+      .isTooShort(6).withMessage("密码太短");
     req.checkBody('verifyCode',"验证码不能为空").notEmpty()
-        .isEqual(imgCode).withMessage("验证码不正确");
+      .isEqual(imgCode).withMessage("验证码不正确");
     req.getValidationResult().then(function(valid){
-        if(valid.isEmpty()){
-            User.getOne({userName:req.body.userName},function(err,user){
-                console.log(user, '-------user--------')
-                console.log(req.body.password)
-                if(!user ||  user.pwd!=req.body.password){
-                    req.flash("error","账户名或密码错误");
-                    return  res.redirect('./login');
-                }
-                user.isAdmin=true;
-                req.session.user=user;
-                return  res.redirect('./');
-            });
-        }else{
-            req.flash("error",valid.array()[0].msg);
-            return   res.redirect('./login');
-        }
+      if(valid.isEmpty()){
+        User.findByUserName(req.body.userName, (err, user) => {
+          if (!user || user.pwd !== req.body.password) {
+            req.flash('error', '账户名或密码错误')
+            return res.redirect('/admin/login')
+          }
+          req.session.user = user
+          return res.redirect('/admin/')
+        })
+      }else{
+          req.flash("error",valid.array()[0].msg);
+          return   res.redirect('./login');
+      }
     },function(errors){
         console.log(errors)
     })
@@ -67,7 +64,7 @@ router.get('/pages/index', (req, res) => {
 router.get('/pages/add', (req, res) => {
     return res.render('pages/add', {title: '添加单页'})
 })
-router.post('/pages/add', (req, res) => {
+router.post('/pages/add', (req, res, next) => {
   Page.newPage(req.body, function (err) {
     if (err) {
       req.flash("error",err.message);
@@ -83,7 +80,7 @@ router.get('/catalog/index', (req, res) => {
 	return res.render('catalog/index', {title: '导航列表', page: 1, count: 10})
 })
 router.get('/catalog/add', (req, res) => {
- Catalog.get
+
 	return res.render('catalog/add', {title: '添加导航'} )
 })
 router.post('/catalog/add', (req, res, next) => {
@@ -97,6 +94,12 @@ router.post('/catalog/add', (req, res, next) => {
   }
   Catalog.create(req.body, (err, catalog) => {
     console.log(catalog, 'catalog')
+    if (err) {
+      req.flash('error', err.message)
+	    return res.redirect('/admin/catalog/add')
+    }
+    console.log(catalog)
+    req.flash('success', '目录创建成功')
 	  res.redirect('/admin/catalog/add')
   })
 })
