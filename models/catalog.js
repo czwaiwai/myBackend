@@ -11,6 +11,6 @@ var CatalogSchema =  new Schema({
 	sort: {type: Number, default: 100}
 }, {collection: 'catalog'})
 
-CatalogSchema.index({shopName:1},{unique: true})
-
+CatalogSchema.index({name:1},{unique: true})
+CatalogSchema.index({calPath:1})
 mongoose.model('Catalog', CatalogSchema)
