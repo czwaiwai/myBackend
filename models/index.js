@@ -9,6 +9,8 @@ mongoose.connect(config.db, {}, function(err){
 require('./users')
 require('./page')
 require('./catalog')
+require('./articles')
 exports.Page = mongoose.model('Page')
 exports.User = mongoose.model('User')
 exports.Catalog = mongoose.model('Catalog')
+exports.Article = mongoose.model('Article')

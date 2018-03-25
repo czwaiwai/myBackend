@@ -4,11 +4,16 @@ var ccap=require('../utils/verifycode');
 // var schema=require('async-validator');
 // var User =require('../models/user');
 /* GET home page. */
-var models = require('../viewModels')
-var Page = models.Page
-var User = models.User
+let {Page, User, Catalog} = require('../viewModels')
 
-
+router.use((req,res,next) => {
+	Catalog.getFrontCatalog((err, catalogs) => {
+		if(err) return next(err)
+		res.locals.catalogs = catalogs
+		console.log(catalogs ,'catalogs')
+		next()
+	})
+})
 // router.get(checkLogin);
 router.get('/', (req, res)=> {
     //console.log(req.session.user,"这里可以取到session");
@@ -43,6 +48,16 @@ router.get('/page/:pageName', (req, res, next) => {
   })
    // res.render('about', {title: '关于我们'})
 })
+// 文章管理
+router.get('/article/list/:type', (req, res, next) => {
+
+	res.render('article/list', {title:'文章列表'})
+})
+router.get('/article/detail/:id', (req, res, next) => {
+
+	res.render('article/detail', {title: '文章详情'})
+})
+
 router.get('/test',(req,res)=>{
     res.render('test',{title:"测试"});
 })

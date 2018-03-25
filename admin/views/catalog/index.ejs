@@ -1,11 +1,11 @@
 <% layout('layout/layout') %>
 <% block('header').append(`<style>
 </style>`)%>
-<div class="row">
+<div id="catalog" class="row">
     <div class="col-xs-12">
         <div class="box">
             <div class="box-header">
-                <h3 class="box-title">Responsive Hover Table</h3>
+                <h3 class="box-title">前端导航</h3>
                 <div class="box-tools">
                     <a class="btn  btn-sm btn-success" href="add">添加+</a>
                     <!--<div class="input-group input-group-sm" style="width: 150px;">-->
@@ -22,13 +22,24 @@
                 <table class="table table-bordered table-hover">
                     <tbody>
                     <tr>
-                        <th>图片预览</th>
-                        <th>图片名称</th>
-                        <th>图片类型</th>
-                        <th>图片创建时间</th>
+                        <th>导航名称</th>
+                        <th>导航路径</th>
+                        <th>是否启用</th>
                         <th>操作</th>
                     </tr>
-
+                    <% catalogs.forEach(function(item) { %>
+                        <% if(item.calPath){ %>
+                        <tr >
+                            <td><%= item.deepStr %><%= item.nameCn %></td>
+                            <td><%= item.name %></td>
+                            <td><%= item.isValid?'关闭':'启动' %></td>
+                            <td>
+                                <a class="btn  btn-sm btn-success" href="add?update=<%=item._id %>">修改</a>
+                                <a class="btn btn-delete  btn-sm btn-danger" data-id="<%=item._id%>" href="javascript:void(0)">删除</a>
+                            </td>
+                        </tr>
+                        <% }%>
+                    <% })%>
                     </tbody>
                 </table>
             </div>
@@ -43,4 +54,19 @@
 <% block('footer').append(`<script src="${assetsPath}/js/pager.js" ></script>`); %>
 <% block('footer').append(`<script>
 $('.j_pager').pager();
+jQuery(function(){
+  var $catalog = $('#catalog')
+  $catalog.on('click','.btn-delete',function () {
+  	 var $this = $(this)
+     $.confirm('你确定要删除这个栏目么?').then(function (action) {
+     	if(action) {
+     		$.post('/admin/catalog/remove',{id:$this.data('id')}).done(function(res){
+     			$.alert(res.message)
+     		}).fail(function(err) {
+     			alert('删除失败')
+     		})
+     	}
+     })
+  })
+})
 </script>`)%>

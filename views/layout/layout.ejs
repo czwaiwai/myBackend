@@ -66,12 +66,9 @@
       </div>
       <div id="navbar" class="collapse  navbar-right  navbar-collapse">
         <ul class="nav navbar-nav">
-          <li  <% if(basePath=="/"){ %>class="active"<% } %>><a href="/">首页</a></li>
-          <li  <% if(basePath=="/page/company"){ %>class="active"<% } %>><a href="/page/company">公司介绍</a></li>
-          <li  <% if(basePath=="/1232"){ %>class="active"<% } %>><a href="/">新闻动态</a></li>
-          <li  <% if(basePath=="/32432"){ %>class="active"<% } %>><a href="/">烹调菜谱</a></li>
-          <li  <% if(basePath=="/page/info"){ %>class="active"<% } %>><a href="/page/info">发货通知</a></li>
-          <li  <% if(basePath=="/page/contact"){ %>class="active"<% } %>><a href="/page/contact">联系我们</a></li>
+          <% catalogs.forEach(function(item){ %>
+          <li  <% if(basePath==item.relativeUrl){ %>class="active"<% } %>><a href="<%=item.relativeUrl %>"><%= item.nameCn %></a></li>
+          <% }) %>
         </ul>
       </div>
     </div>

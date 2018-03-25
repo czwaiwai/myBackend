@@ -1,5 +1,6 @@
 var mongoose = require ('mongoose')
 var Schema = mongoose.Schema
+var BaseModel = require("./baseModel");
 var PageSchema = new Schema({
 	title:{type: String},
 	path:{type: String},
@@ -11,6 +12,7 @@ var PageSchema = new Schema({
 	create_at:{type: Date, default: Date.now},
 	update_at:{type: Date, default: Date.now},
 })
+PageSchema.plugin(BaseModel)
 PageSchema.index({path:1},{ unique: true})
 PageSchema.pre('save', function (next) {
 	this.update_at =  new Date()

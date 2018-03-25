@@ -1,4 +1,5 @@
 var mongoose = require('mongoose')
+var BaseModel = require("./baseModel");
 var Schema = mongoose.Schema
 var UserSchema = new Schema({
 	userName: {type: String}, // 登录用户名
@@ -17,6 +18,7 @@ var UserSchema = new Schema({
 	create_at: {type: Date , default: Date.now},
 	update_at: {type: Date , default: Date.now},
 }, {collection: 'user'})
+UserSchema.plugin(BaseModel)
 UserSchema.index({userName: 1}, {unique: true})
 UserSchema.index({mobile: 1}, {unique: true})
 UserSchema.pre('save', function (next) {
