@@ -28,31 +28,58 @@
   <![endif]-->
 </head>
 <body>
-  <div class="w-hd">
-    <div class="site-nav">
-      <div class="w-row">
-         <a class="site-link" href="/">好的生活，没那么贵</a>
-         <div class="float_right" >
-            <% if(user){ %>
-              <a href="#" class="site-link margin-right15"><%=user.userName %></a>
-              <a href="/logout" class="site-link margin-right">退出</a>
-            <% }else{%>
-             <a class="site-link margin-right15" href="/login" >登录</a>
-             <a class="site-link margin-right" href="/register">注册</a>
-            <% }%>
-           <div class="split"></div>
-           <a class="site-link margin-right">我的订单</a>
-           <div class="split"></div>
-           <a class="site-link margin-right">帮助中心</a>
-           <div class="split"></div>
-           <a class="site-link margin-right">在线客服</a>
-           <div class="split"></div>
-           <a class="site-link margin-right" href="/page/about">关于我们</a>
-         </div>
+  <!--<div class="w-hd">-->
+    <!--<div class="site-nav">-->
+      <!--<div class="w-row">-->
+         <!--<a class="site-link" href="/">电话：13728905705</a>-->
+         <!--<div class="float_right" >-->
+            <!--<% if(user){ %>-->
+              <!--<a href="#" class="site-link margin-right15"><%=user.userName %></a>-->
+              <!--<a href="/logout" class="site-link margin-right">退出</a>-->
+            <!--<% }else{%>-->
+             <!--<a class="site-link margin-right15" href="/login" >登录</a>-->
+             <!--<a class="site-link margin-right" href="/register">注册</a>-->
+            <!--<% }%>-->
+           <!--<div class="split"></div>-->
+           <!--<a class="site-link margin-right">我的订单</a>-->
+           <!--<div class="split"></div>-->
+           <!--&lt;!&ndash;<a class="site-link margin-right">帮助中心</a>&ndash;&gt;-->
+           <!--&lt;!&ndash;<div class="split"></div>&ndash;&gt;-->
+           <!--&lt;!&ndash;<a class="site-link margin-right">在线客服</a>&ndash;&gt;-->
+           <!--&lt;!&ndash;<div class="split"></div>&ndash;&gt;-->
+           <!--<a class="site-link margin-right" href="/page/about">关于我们</a>-->
+         <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</div>-->
+  <div class="w-hd site-nav">
+    <div class="container ">
+      <div class="row">
+        <div class="col-md-5">
+          <!--<a class="site-link" href="/">好的生活，没那么贵</a>-->
+        </div>
+        <div class="col-md-7 text-right clearfix">
+          <div class="inline-block" >
+              <% if(user){ %>
+            <a href="#" class="site-link margin-right15"><%=user.userName %></a>
+            <a href="/logout" class="site-link margin-right">退出</a>
+              <% }else{%>
+            <a class="site-link margin-right15" href="/login" >登录</a>
+            <a class="site-link margin-right" href="/register">注册</a>
+              <% }%>
+            <div class="split"></div>
+            <a class="site-link margin-right">购物车</a>
+            <div class="split"></div>
+            <!--<a class="site-link margin-right">帮助中心</a>-->
+            <!--<div class="split"></div>-->
+            <!--<a class="site-link margin-right">在线客服</a>-->
+            <!--<div class="split"></div>-->
+            <a class="site-link margin-right" href="/page/about">关于我们</a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-
   <nav class="navbar navbar-default ">
     <div class="container">
       <div class="navbar-header">
@@ -62,7 +89,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="/">WaiWai</a>
+        <a class="navbar-brand" href="/">WaiWai <%= basePath %></a>
       </div>
       <div id="navbar" class="collapse  navbar-right  navbar-collapse">
         <ul class="nav navbar-nav">
@@ -80,8 +107,7 @@
       <%=success %>
     </div>
     <% } %>
-    <%= basePath %>
-      <%- body %>
+    <%- body %>
   </div>
 <script src="/js/ieWarn.js"></script>
 <script src="/js/jquery-1.12.0.min.js"></script>

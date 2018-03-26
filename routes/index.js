@@ -58,6 +58,14 @@ router.get('/article/detail/:id', (req, res, next) => {
 	res.render('article/detail', {title: '文章详情'})
 })
 
+// 商品列表
+router.get('/goods/index' , (req, res, next) => {
+	res.render('goods/index', {title: '商品列表'})
+})
+router.get('/goods/detail' , (req, res, next) => {
+	res.render('goods/detail', {title: '商品详情'})
+})
+
 router.get('/test',(req,res)=>{
     res.render('test',{title:"测试"});
 })
