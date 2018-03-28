@@ -66,6 +66,11 @@ router.get('/goods/detail' , (req, res, next) => {
 	res.render('goods/detail', {title: '商品详情'})
 })
 
+// 购物车
+router.get('/cart/index', (req, res, next) => {
+	res.render('cart/index', {title: '购物车'})
+})
+
 router.get('/test',(req,res)=>{
     res.render('test',{title:"测试"});
 })

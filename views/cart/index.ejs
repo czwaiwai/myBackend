@@ -1,0 +1,29 @@
+<% layout('layout/layout') %>
+<% block('header').append(`<style>
+.shop_cart_wrap {
+    width:100%;
+    height:600px;
+    border:1px solid #e3e3e3;
+    background:#FFF;
+}
+.no_cart {
+    padding-top:120px;
+    text-align:center;
+       color: #989898;
+}
+.no_cart .icon-cart {
+    font-size:46px;
+    color: #989898;
+}
+</style>`) %>
+<div class="container">
+  <div class="shop_cart_wrap">
+      <div class="no_cart">
+          <i class="iconfont icon-cart"></i>
+          <p class="fs14">你还没有添加任何商品哦</p>
+          <a href="/" class="btn btn-primary">去逛逛</a>
+      </div>
+  </div>
+</div>
+<% block('footer').append(`<script>
+</script>`) %>
