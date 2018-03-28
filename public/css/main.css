@@ -5013,6 +5013,26 @@ button.close {
   .hidden-print {
     display: none !important; } }
 
+.xs_footer {
+  background: #FFF;
+  color: #131313;
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  border-top: 1px solid #e3e3e3; }
+  .xs_footer a.flex_item {
+    font-size: 12px;
+    padding-top: 5px;
+    color: #656565; }
+    .xs_footer a.flex_item > i {
+      font-size: 24px;
+      line-height: 20px; }
+    .xs_footer a.flex_item > p {
+      margin: 0;
+      line-height: 15px; }
+  .xs_footer a.flex_item.active {
+    color: #42932c; }
+
 html {
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;

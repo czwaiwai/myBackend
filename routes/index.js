@@ -71,6 +71,11 @@ router.get('/cart/index', (req, res, next) => {
 	res.render('cart/index', {title: '购物车'})
 })
 
+// 个人中心
+router.get('/account/index', (req, res, next) => {
+	res.render('account/index', {title: '个人中心'})
+})
+
 router.get('/test',(req,res)=>{
     res.render('test',{title:"测试"});
 })

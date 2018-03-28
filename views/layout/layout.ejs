@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=0;">
   <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
   <meta name="description" content="网上商城">
   <meta name="author" content="czwaiwai">
@@ -28,31 +28,7 @@
   <![endif]-->
 </head>
 <body>
-  <!--<div class="w-hd">-->
-    <!--<div class="site-nav">-->
-      <!--<div class="w-row">-->
-         <!--<a class="site-link" href="/">电话：13728905705</a>-->
-         <!--<div class="float_right" >-->
-            <!--<% if(user){ %>-->
-              <!--<a href="#" class="site-link margin-right15"><%=user.userName %></a>-->
-              <!--<a href="/logout" class="site-link margin-right">退出</a>-->
-            <!--<% }else{%>-->
-             <!--<a class="site-link margin-right15" href="/login" >登录</a>-->
-             <!--<a class="site-link margin-right" href="/register">注册</a>-->
-            <!--<% }%>-->
-           <!--<div class="split"></div>-->
-           <!--<a class="site-link margin-right">我的订单</a>-->
-           <!--<div class="split"></div>-->
-           <!--&lt;!&ndash;<a class="site-link margin-right">帮助中心</a>&ndash;&gt;-->
-           <!--&lt;!&ndash;<div class="split"></div>&ndash;&gt;-->
-           <!--&lt;!&ndash;<a class="site-link margin-right">在线客服</a>&ndash;&gt;-->
-           <!--&lt;!&ndash;<div class="split"></div>&ndash;&gt;-->
-           <!--<a class="site-link margin-right" href="/page/about">关于我们</a>-->
-         <!--</div>-->
-      <!--</div>-->
-    <!--</div>-->
-  <!--</div>-->
-  <div class="w-hd site-nav">
+  <div class="w-hd hidden-xs site-nav">
     <div class="container ">
       <div class="row">
         <div class="col-md-5">
@@ -108,6 +84,28 @@
     </div>
     <% } %>
     <%- body %>
+  </div>
+  <div class="footer">
+    <div class="visible-xs ">
+      <div class="xs_footer   flex_box text-center">
+        <a class="flex_item <% if(basePath=='/'){ %>active<% } %>" href="/">
+          <i class="iconfont icon-store"></i>
+          <p>首页</p>
+        </a>
+        <a class="flex_item <% if(basePath=='/goods/index'){ %>active<% } %>" href="/goods/index">
+          <i class="iconfont icon-category"></i>
+          <p>全部分类</p>
+        </a>
+        <a class="flex_item <% if(basePath=='/cart/index'){ %>active<% } %>" href="/cart/index">
+          <i class="iconfont icon-cart"></i>
+          <p>购物车</p>
+        </a>
+        <a class="flex_item <% if(basePath=='/account/index'){ %>active<% } %>" href="/account/index" >
+          <i class="iconfont icon-account"></i>
+          <p>个人中心</p>
+        </a>
+      </div>
+    </div>
   </div>
 <script src="/js/ieWarn.js"></script>
 <script src="/js/jquery-1.12.0.min.js"></script>
