@@ -13,7 +13,7 @@ var sassMiddleware = require('node-sass-middleware');
 var index = require('./routes/index');
 var tool = require('./routes/tool');
 var admin = require('./admin/app');
-
+var device = require('express-device');
 var app = express();
 
 app.engine('ejs',engine);
@@ -26,6 +26,8 @@ app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(device.capture());
+device.enableDeviceHelpers(app)
 app.use(expressValidator(validatorMethods));
 app.use(cookieParser());
 app.use(session({

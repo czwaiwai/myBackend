@@ -1,9 +1,33 @@
 <% layout('layout/layout') %>
 <% block('header').append(`<style>
+.page-head-title {
+    text-align: left;
+    text-transform: none;
+    padding: 0px 0px 15px 0px;
+    font-weight: bold;
+    font-size: 22px;
+    border-bottom: 1px #e5e5e5 solid;
+}
+.page {
+    background-color: #fff;
+    border: 1px #e5e5e5 solid;
+    padding: 20px;
+    overflow: hidden;
+}
 </style>`)%>
 <div class="container">
-    <%= title %>
-    <%- content %>
+    <div class="row">
+        <ol class="breadcrumb">
+            <li><a href="/">首页</a></li>
+            <li class="active"><%= title %></li>
+        </ol>
+        <div class="page" >
+            <h2 class="page-head-title"><%=title %></h2>
+            <%- content %>
+        </div>
+    </div>
+
+
 </div>
 <% block('footer').append(`<script>
 </script>`)%>
