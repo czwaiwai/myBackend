@@ -1,3 +1,4 @@
+// tool -- css
 .clearfix {
   *zoom: 1;
   &:before,
@@ -25,126 +26,76 @@
 .normal{
   font-weight:normal;
 }
-.text-left{
-  text-align:left;
-}
-.text-center{
-  text-align:center;
-}
-.text-right{
-  text-align:right;
-}
+
 .relative{
   position:relative;
 }
 .no-padding{
   padding:0 !important;
 }
-.padding5{
-  padding:5px;
+
+
+$direction:('top','left','right','bottom');
+$distance:('5','10','15','20');
+$text-position:('left','right','center');
+@mixin distanceBy($dis,$size) {
+  @if($size == '10') {
+    .#{$dis}{
+      margin:#{$size}px;
+    }
+    .#{$dis}-h{
+      margin-left:#{$size}px;
+      margin-right:#{$size}px;
+    }
+    .#{$dis}-v{
+      margin-top:#{$size}px;
+      margin-bottom:#{$size}px;
+    }
+  } @else {
+    .#{$dis}#{$size}{
+      margin:#{$size}px;
+    }
+    .#{$dis}#{$size}-h{
+      margin-left:#{$size}px;
+      margin-right:#{$size}px;
+    }
+    .#{$dis}#{$size}-v{
+      margin-top:#{$size}px;
+      margin-bottom:#{$size}px;
+    }
+  }
 }
-.padding5-h{
-  padding-left:5px;
-  padding-right:5px;
-}
-.padding5-v{
-  padding-top:5px;
-  padding-bottom:5px;
-}
-.padding{
-  padding:10px;
-}
-.padding-h{
-  padding-left:10px;
-  padding-right:10px;
-}
-.padding-v{
-  padding-top:10px;
-  padding-bottom:10px;
-}
-.padding15{
-  padding:15px;
-}
-.padding15-h{
-  padding-left:15px;
-  padding-right:15px;
-}
-.padding15-v{
-  padding-top:15px;
-  padding-bottom:15px;
-}
-.padding20-h{
-  padding-left:20px;
-  padding-right:20px;
-}
-.padding20-v{
-  padding-top:20px;
-  padding-bottom:20px;
+@for $i from 0 to length($distance) {
+  @include distanceBy('margin',nth($distance,$i+1));
+  @include distanceBy('padding',nth($distance,$i+1));
 }
 
-.margin5{
-  margin:5px;
-}
-.margin5-h{
-  margin-left:5px;
-  margin-right:5px;
-}
-.margin5-v{
-  margin-top:5px;
-  margin-bottom:5px;
-}
-.margin{
-  margin:10px;
-}
-.margin-h{
-  margin-left:10px;
-  margin-right:10px;
-}
-.margin-v{
-  margin-top:10px;
-  margin-bottom:10px;
-}
-.margin15{
-  margin:15px;
-}
-.margin15-h{
-  margin-left:15px;
-  margin-right:15px;
-}
-.margin15-v{
-  margin-top:15px;
-  margin-bottom:15px;
-}
-.margin20-h{
-  margin-left:20px;
-  margin-right:20px;
-}
-.margin20-v{
-  margin-top:20px;
-  margin-bottom:20px;
-}
-$padding-direction:('top','left','right','bottom');
-@for $i from 0 to length($padding-direction) {
-  .padding-#{nth($padding-direction,$i+1)} {
-    padding-#{nth($padding-direction,$i+1)}: 10px;
+@for $i from 0 to length($text-position) {
+  .text-#{nth($text-position,$i+1)}{
+    text-align:#{nth($text-position,$i+1)}
   }
-  .padding-#{nth($padding-direction,$i+1)}5 {
-    padding-#{nth($padding-direction,$i+1)}: 5px;
+}
+
+@for $i from 0 to length($direction) {
+  .border-#{nth($direction,$i+1)} {
+    border-#{nth($direction,$i+1)}: 1px solid #e3e3e3;
   }
-  .padding-#{nth($padding-direction,$i+1)}15 {
-    padding-#{nth($padding-direction,$i+1)}: 15px;
-  }
-  .margin-#{nth($padding-direction,$i+1)} {
-    margin-#{nth($padding-direction,$i+1)}: 10px;
-  }
-  .margin-#{nth($padding-direction,$i+1)}5 {
-    margin-#{nth($padding-direction,$i+1)}: 5px;
-  }
-  .margin-#{nth($padding-direction,$i+1)}15 {
-    margin-#{nth($padding-direction,$i+1)}: 15px;
-  }
-  .border-#{nth($padding-direction,$i+1)} {
-    border-#{nth($padding-direction,$i+1)}: 1px solid #e3e3e3;
+  @for $j from 0 to length($distance) {
+    @if nth($distance, $j+1) == '10' {
+      .padding-#{nth($direction,$i+1)}{
+        padding-#{nth($direction,$i+1)}:#{nth($distance, $j+1)}px;
+      }
+      .margin-#{nth($direction,$i+1)}{
+        margin-#{nth($direction,$i+1)}:#{nth($distance,$j+1)}px;
+      }
+    } @else {
+      .padding-#{nth($direction,$i+1)}#{nth($distance,$j+1)} {
+        padding-#{nth($direction,$i+1)}:#{nth($distance, $j+1)}px;
+      }
+      .margin-#{nth($direction,$i+1)}#{nth($distance,$j+1)}{
+        margin-#{nth($direction,$i+1)}:#{nth($distance,$j+1)}px;
+      }
+    }
   }
 }
 
