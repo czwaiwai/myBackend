@@ -8,8 +8,8 @@ var ArticleSchema = new Schema({
 	catalogName: {type: String},
 	catalogPath: {type: String},
 	imgUrl: {type: String}, // 相关图片
-	isTop: {type: Number, default: 0 }, // 置顶
-	isHot: {type: Number, default: 0 }, // 热门
+	isTop: {type: Number, default: 0 }, // 置顶 1为置顶
+	isHot: {type: Number, default: 0 }, // 推荐 1为推荐
 	content: {type: String}, // 内容
 	author: {type: String},  // 作者
 	tag: {type: [] }, // 标签

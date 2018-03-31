@@ -10,7 +10,6 @@ router.use((req,res,next) => {
 	Catalog.getFrontCatalog((err, catalogs) => {
 		if(err) return next(err)
 		res.locals.catalogs = catalogs
-		console.log(catalogs ,'catalogs')
 		next()
 	})
 })
@@ -60,7 +59,12 @@ router.get('/article/detail/:id', (req, res, next) => {
 
 // 商品列表
 router.get('/goods/index' , (req, res, next) => {
-	res.render('goods/index', {title: '商品列表'})
+	Catalog.getChildrenByName('goods', (err,catalogs) => {
+		if (err) return next(err)
+		console.log(catalogs)
+		res.render('goods/index', {title: '商品展示', goodTypes: catalogs})
+	})
+
 })
 router.get('/goods/detail' , (req, res, next) => {
 	res.render('goods/detail', {title: '商品详情'})

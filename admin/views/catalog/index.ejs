@@ -32,7 +32,7 @@
                         <tr >
                             <td><%= item.deepStr %><%= item.nameCn %></td>
                             <td><%= item.name %></td>
-                            <td><%= item.isValid?'关闭':'启动' %></td>
+                            <td><%= item.isValid?'启动':'关闭' %></td>
                             <td>
                                 <a class="btn  btn-sm btn-success" href="add?update=<%=item._id %>">修改</a>
                                 <a class="btn btn-delete  btn-sm btn-danger" data-id="<%=item._id%>" href="javascript:void(0)">删除</a>
@@ -46,14 +46,10 @@
             <!-- /.box-body -->
         </div>
         <!-- /.box -->
-        <div class="j_pager" data-page="<%=page %>"  data-count="<%=count%>"></div>
     </div>
-
 </div>
 <% block('footer').append(`<script src="${assetsPath}/js/uploadImg.js"></script>`); %>
-<% block('footer').append(`<script src="${assetsPath}/js/pager.js" ></script>`); %>
 <% block('footer').append(`<script>
-$('.j_pager').pager();
 jQuery(function(){
   var $catalog = $('#catalog')
   $catalog.on('click','.btn-delete',function () {

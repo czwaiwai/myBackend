@@ -7,7 +7,7 @@ var PageSchema = new Schema({
 	imgUrl: {type: String},
 	content: {type: String},
 	author: {type: String},
-	is_vaild: {type: Boolean, default: true},
+	isValid: {type: Number, default: 0}, // 0 无效 1有效
 	read_count: {type: Number, default: 0},
 	create_at:{type: Date, default: Date.now},
 	update_at:{type: Date, default: Date.now},

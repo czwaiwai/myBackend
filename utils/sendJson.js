@@ -4,16 +4,16 @@
 
 function succJson(obj,msg){
     return  {
-        retCode:0,
-        retStatus:msg || "操作成功",
-        data:obj
+      code:0,
+	    message:msg || "操作成功",
+      data:obj
     }
 }
 function errJson(obj,msg){
     return  {
-        retCode:-1,
-        retStatus:msg || "操作错误",
-        data:obj
+      code:-1,
+	    message:msg || "操作错误",
+      data:obj
     }
 }
 module.exports={

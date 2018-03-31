@@ -2,6 +2,7 @@ var express = require('express');
 let router = express.Router();
 let Image =require('../../models/image');
 let fs=require('fs');
+let EventProxy = require('eventproxy')
 let {succJson,errJson} =require('../../utils/sendJson');
 // let User =require('../../models/user');
 // let Pages =require('../../models/pages');
@@ -9,13 +10,14 @@ let {User, Page, Catalog, Article} = require('../../viewModels/')
 
 let imgCode="";
 function getPageNum(count,pageSize){
-    if(count%pageSize==0){//转换成页数
-        return  parseInt(count/pageSize);
-    }
-    return parseInt(count/pageSize)+1;
+	if(count%pageSize==0){//转换成页数
+		return  parseInt(count/pageSize);
+	}
+	return parseInt(count/pageSize)+1;
 }
 
 router.get('/', (req, res)=> {
+
     res.render('index',{title:"首页"});
 });
 router.get('/login',(req,res)=>{
@@ -61,50 +63,118 @@ router.get('/logout',(req,res)=>{
 
 // 用户管理
 router.get('/users/index', (req, res, next) => {
-	User.findAllByRegister((err, users) => {
+	User.findAllByPage(req.query.page,10,(err, obj) => {
 		if (err) return next(err)
-		return res.render('users/index', {title: '用户管理', users, page: 1, count: 10})
+		return res.render('users/index', Object.assign({title:'用户管理'},obj))
 	})
+})
+router.get('/users/add', (req, res, next) => {
+	let curr = {isNew:true}
+	if (req.query.update) {
+
+	}
+	return res.render('users/add', {title: '添加用户', curr})
+})
+// 商品管理
+router.get('/goods/index', (req, res, next) => {
+	res.render('goods/index', {title: '产品管理' , page:1, count:10})
+})
+router.get('/goods/add', (req, res, next) => {
+	Catalog.getChildrenByNameAll('goods', (err, goodTypes) => {
+		if(err) return next(err)
+		res.render('goods/add', {title: '添加商品', goodTypes})
+	})
+})
+// 订单管理
+router.get('/orders/index', (req, res, next) => {
+	res.render('orders/index', {title: '订单管理' , page:1, count:10})
 })
 
 // 单页管理
 router.get('/pages/index', (req, res, next) => {
-	Page.findAll((err, pages) => {
+	console.log('req.query.page',req.query.page)
+	Page.findAllByPage(req.query.page,10,(err, obj) => {
 		if (err) return next(err)
-		return res.render('pages/index', {title: '单页管理', pages, page: 1, count: 10})
+		console.log(obj,'page---------------------inde')
+		return res.render('pages/index', Object.assign({title:'单页管理'},obj))
 	})
 })
-router.get('/pages/add', (req, res) => {
-    return res.render('pages/add', {title: '添加单页'})
+router.get('/pages/add', (req, res, next) => {
+	var curr = {isNew:true}
+	if (req.query.update) {
+		Page.findById(req.query.update, (err, page) => {
+			if (err) return next(err)
+			curr = page
+			return res.render('pages/add', {title: '添加单页', curr})
+		})
+	} else {
+		return res.render('pages/add', {title: '添加单页', curr})
+	}
 })
 router.post('/pages/add', (req, res, next) => {
-  Page.newPage(req.body, function (err) {
-    if (err) {
-      req.flash("error",err.message);
-      console.error(err)
-      return res.redirect('/admin/pages/add')
-    }
-    req.flash("success", '操作成功')
-    return res.redirect('/admin/pages/add')
-  })
+	if(req.body._id) { //更新
+		Page.findAndUpdate(req.body._id, req.body, (err,page) => {
+			if (err) return  next(err)
+			req.flash("success", '更新成功!')
+			return res.redirect('/admin/pages/add?update='+req.body._id)
+		})
+	} else {
+		Page.newPage(req.body, function (err) {
+			if (err) {
+				req.flash("error",err.message);
+				console.error(err)
+				return res.redirect('/admin/pages/add')
+			}
+			req.flash("success", '操作成功')
+			return res.redirect('/admin/pages/add')
+		})
+	}
+})
+router.post('/pages/delete',(req, res, next) => {
+	let removeId = req.body.id
+	Page.removeById(removeId, function(err,page) {
+		if(err) {
+			console.log(err)
+			return res.sendStatus(403)
+		}
+		if (page) {
+			return res.json({
+				code:0,
+				message:'操作成功'
+			})
+		} else {
+			return res.sendStatus(403)
+		}
+	})
 })
 
 // 文章管理
-router.get('/article/index', (req, res) => {
+router.get('/article/index', (req, res, next) => {
 	let name = req.query.catalogName
 	if (!name) {
 		return res.sendStatus(404)
 	}
-	Article.getListByCatalogPath(name, (err, articles) => {
-		if(err) return next(err)
-		return res.render('article/index', {title: '文章管理',articles, page: 1, count: 10})
+	Article.findAllByPageCatalogs(name, req.query.page, 10, (err, obj) => {
+		if (err) return next(err)
+		return res.render('article/index', Object.assign({title: '单页管理'}, obj))
 	})
 })
 router.get('/article/add', (req, res, next) => {
-	Catalog.findByTpl('article', (err, catalogs) => {
-		if (err) return next(err)
-		return res.render('article/add', {title: '添加文章', catalogs})
-	})
+	let curr = {isNew: true}
+	if(req.query.update) {
+		let ep = EventProxy.create('catalogs','article',function(catalogs,article){
+			curr = article
+			return res.render('article/add',{title: '修改文章', catalogs, curr })
+		})
+		ep.fail(next)
+		Article.findById(req.query.update,ep.done('article'))
+		Catalog.findByTpl('article',ep.done('catalogs'))
+	} else{
+		Catalog.findByTpl('article', (err, catalogs) => {
+			if (err) return next(err)
+			return  res.render('article/add',{title: '添加文章', catalogs, curr})
+		})
+	}
 })
 router.post('/article/add', (req, res, next) => {
 	let params = req.body
@@ -112,13 +182,40 @@ router.post('/article/add', (req, res, next) => {
 	params.catalog = tmpArr[0]
 	params.catalogName = tmpArr[1]
 	params.catalogPath = tmpArr[2]
-	Article.create(params, (err, article) => {
-		if(err) return next(err)
-		console.log('article', article)
-		req.flash('success', '创建成功')
-		return res.redirect('/admin/article/add')
+	if (req.body._id) { // 修改
+		Article.findAndUpdate(params._id, params, (err,article) => {
+			if(err) return next(err)
+			console.log('article', article)
+			req.flash('success', '更新成功')
+			return res.redirect('/admin/article/add?update=' + params._id)
+		})
+	} else {
+		Article.create(params, (err, article) => {
+			if(err) return next(err)
+			console.log('article', article)
+			req.flash('success', '创建成功')
+			return res.redirect('/admin/article/add')
+		})
+	}
+})
+router.post('/article/delete',(req, res, next) => {
+	let removeId = req.body.id
+	Article.removeById(removeId, function(err,page) {
+		if(err) {
+			console.log(err)
+			return res.sendStatus(403)
+		}
+		if (page) {
+			return res.json({
+				code:0,
+				message:'操作成功'
+			})
+		} else {
+			return res.sendStatus(403)
+		}
 	})
 })
+
 
 // 导航管理
 router.get('/catalog/index', (req, res) => {
@@ -126,12 +223,12 @@ router.get('/catalog/index', (req, res) => {
     if (err) {
       return next(err)
     } else {
-	    return res.render('catalog/index', {title: '导航列表',catalogs, page: 1, count: 10})
+	    return res.render('catalog/index', {title: '导航列表',catalogs})
     }
   })
 })
 router.get('/catalog/add', (req, res ,next) => {
-  let curr = {}
+  let curr = {isNew:true}
   Catalog.getCatalogMenu((err, catalogs) => {
     if (err) {
       return next(err)

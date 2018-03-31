@@ -1,5 +1,5 @@
 /*
- <div class="j_pager"  data-len="9" data-page="<%=page %>"  data-ajax="true" data-count="100"></div>
+ <div class="j_pager" data-param=""  data-len="9" data-page="<%=page %>"  data-ajax="true" data-count="100"></div>
  //需提供基础
  @params 分页总数
  @parmss 当前页

@@ -12,8 +12,8 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(sassMiddleware({
-    src: path.join(__dirname, 'public/css'),
-    dest: path.join(__dirname, 'public/css'),
+    src: path.join(__dirname, '/public/css'),
+    dest: path.join(__dirname, '/public/css'),
     indentedSyntax: false, // true = .sass and false = .scss
     sourceMap: false,
     // outputStyle: 'compressed',
@@ -25,6 +25,8 @@ app.use(sassMiddleware({
 app.use(function(req,res,next){
     res.locals.path = req.path
     res.locals.assetsPath=app.path();
+	  res.locals.query= req.query
+
     next();
 })
 

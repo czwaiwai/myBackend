@@ -71,37 +71,11 @@
         <div class="head"><i class="icon fa fa-align-justify fa-fw"></i> 产品列表</div>
         <nav class="yamm megamenu-horizontal" role="navigation">
           <ul class="nav">
+            <% goodTypes.forEach(function(item) { %>
             <li class="dropdown menu-item">
-              <a href="#" ><i class="icon fa fa-shopping-bag" aria-hidden="true"></i>畜牧系列</a>
+              <a href="#" ><i class="icon fa fa-shopping-bag" aria-hidden="true"></i><%=item.nameCn %></a>
             </li>
-            <li class="dropdown menu-item">
-              <a href="#" ><i class="icon fa fa-laptop" aria-hidden="true"></i>家禽系列</a>
-            </li><!-- /.menu-item -->
-
-            <li class="dropdown menu-item">
-              <a href="#"  ><i class="icon fa fa-paw" aria-hidden="true"></i>水产系列</a>
-            </li><!-- /.menu-item -->
-
-            <li class="dropdown menu-item">
-              <a href="#" ><i class="icon fa fa-clock-o"></i>瓜果系列</a>
-             </li><!-- /.menu-item -->
-
-            <li class="dropdown menu-item">
-              <a href="#" ><i class="icon fa fa-diamond"></i>有机蔬菜</a>
-             </li><!-- /.menu-item -->
-
-            <li class="dropdown menu-item">
-              <a href="#" ><i class="icon fa fa-heartbeat"></i>农副特产</a>
-              </li><!-- /.menu-item -->
-
-            <li class="dropdown menu-item">
-              <a href="#" ><i class="icon fa fa-paper-plane"></i>饲料系列</a>
-            </li><!-- /.menu-item -->
-
-            <li class="dropdown menu-item">
-              <a href="#" ><i class="icon fa fa-futbol-o"></i>旅游接待</a>
-            </li><!-- /.menu-item -->
-
+            <% }) %>
           </ul><!-- /.nav -->
         </nav><!-- /.megamenu-horizontal -->
       </div>

@@ -3,6 +3,7 @@ var Schema = mongoose.Schema
 var CatalogSchema =  new Schema({
 	nameCn: {type: String},
 	name: {type: String},
+	imgUrl: {type: String},
 	calPath: {type: String, default: null},
 	deep: {type: Number, default: 1}, //深度
 	shopName: {type: String},
@@ -13,7 +14,7 @@ var CatalogSchema =  new Schema({
 }, {collection: 'catalog'})
 
 CatalogSchema.virtual('deepStr').get(function () {
-	return Array(this.deep).fill('——').join('')
+	return Array(this.deep).fill('---').join('')
 })
 CatalogSchema.virtual('parent').get(function() {
 	return this.calPath.replace(/,[^,]+$/,'')

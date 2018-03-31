@@ -13,3 +13,9 @@ exports.formatDate = function (date, friendly) {
 	}
 
 };
+exports.getPageNum = function (count,pageSize){
+	if (count%pageSize==0) { //转换成页数
+		return  parseInt(count / pageSize)
+	}
+	return parseInt(count / pageSize) + 1
+}

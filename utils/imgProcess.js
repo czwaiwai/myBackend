@@ -6,6 +6,7 @@ var multiparty= require('multiparty');
 var fs=require("fs");
 var moment=require("moment");
 var images=require('images');
+var Image = require('../viewModels').Image
 let qs=require('qs');
 let uploadPath ="public/upload/";
 function createDir(newPath,cb){
@@ -23,7 +24,7 @@ function imgProcess(req,cb){
     var form=new multiparty.Form({
         encoding:"utf-8",
         uploadDir:uploadPath,
-        maxFilesSize:2*1024*1024,//2M
+        maxFilesSize:5*1024*1024,//5M
     });
     form.parse(req,function(err,fields,files){
         if(err){

@@ -48,6 +48,6 @@ router.post('/upload',(req,res)=>{
         }else{
             res.redirect('/tool/upload?imgUrl='+files[0].path);
         }
-    });
+    })
 })
 module.exports=router
