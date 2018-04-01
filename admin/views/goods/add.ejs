@@ -9,39 +9,63 @@
       </div>
       <!-- /.box-header -->
       <!-- form start -->
-      <form action="<%=assetsPath %>/article/add" method="post" class="form-horizontal" novalidate>
+      <form action="<%=assetsPath %>/goods/add" method="post" class="form-horizontal" novalidate>
         <div class="box-body">
           <div class="form-group">
-            <label for="title" class="col-sm-2 control-label">产品名称</label>
+            <label for="name" class="col-sm-2 control-label">产品名称</label>
             <div class="col-sm-10">
-              <input name="title" type="text" class="form-control"  placeholder="单页标题">
+              <input name="name" value="<%=curr.name || '' %>" type="text" class="form-control"  placeholder="产品名称">
             </div>
           </div>
           <div class="form-group">
-            <label for="title" class="col-sm-2 control-label">产品简介</label>
+            <label for="subName" class="col-sm-2 control-label">产品简介</label>
             <div class="col-sm-10">
-              <input name="subTitle" type="text" class="form-control"  placeholder="副标题">
+              <input name="subName" value="<%=curr.subName || '' %>" type="text" class="form-control"  placeholder="产品简介">
             </div>
           </div>
           <div class="row">
-          <div class="col-sm-6">
-
+            <div class="col-sm-4">
+                <div class="form-group">
+                  <label for="virPrice" class="col-sm-6 control-label">原价</label>
+                  <div class="col-sm-6">
+                    <input name="virPrice" value="<%=curr.virPrice || '' %>" type="text" class="form-control"  placeholder="参考价格">
+                  </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
               <div class="form-group">
-                <label for="title" class="col-sm-4 control-label">原价</label>
-                <div class="col-sm-8">
-                  <input name="subTitle" type="text" class="form-control"  placeholder="副标题">
+                <label for="sellPrice" class="col-sm-6 control-label">售卖价格</label>
+                <div class="col-sm-6">
+                  <input name="sellPrice" value="<%=curr.sellPrice || '' %>"  type="text" class="form-control"  placeholder="售卖价格">
                 </div>
               </div>
-
-          </div>
-          <div class="col-sm-6">
-            <div class="form-group">
-              <label for="title" class="col-sm-4 control-label">售卖价格</label>
-              <div class="col-sm-8">
-                <input name="subTitle" type="text" class="form-control"  placeholder="副标题">
+            </div>
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label for="stock" class="col-sm-6 control-label">库存</label>
+                <div class="col-sm-6">
+                  <input name="stock"  value="<%=curr.stock || '' %>" type="text" class="form-control"  placeholder="库存数量">
+                </div>
               </div>
             </div>
           </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="place" class="col-sm-4 control-label">产地</label>
+                <div class="col-sm-8">
+                  <input name="place" value="<%=curr.place || '' %>" type="text" class="form-control"  placeholder="产地">
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="brands" class="col-sm-4 control-label">品牌名称</label>
+                <div class="col-sm-8">
+                  <input name="brands"  value="<%=curr.brands || '' %>" type="text" class="form-control"  placeholder="售卖价格">
+                </div>
+              </div>
+            </div>
           </div>
           <div class="form-group">
             <label for="title" class="col-sm-2 control-label">图片上传</label>
@@ -54,7 +78,10 @@
             <div class="col-sm-10">
               <select name="catalogStr" class="form-control">
                   <% goodTypes.forEach(function(item){ %>
-                <option value="<%=item._id %>|<%=item.name%>|<%=item.calPath %>,<%=item.name %>"><%=item.deepStr%><%=item.nameCn %></option>
+                <option <%=(curr.catalogId &&  item._id.toString() === curr.catalogId.toString())?'selected':'' %>
+                        value="<%=item._id %>|<%=item.name%>|<%=item.calPath %>,<%=item.name %>">
+                    <%=item.deepStr%><%=item.nameCn %>
+                </option>
                   <% })%>
               </select>
             </div>
@@ -62,22 +89,41 @@
           <div class="form-group">
             <label for="content" class="col-sm-2 control-label">产品详情</label>
             <div class="col-sm-10">
-              <textarea name="content"></textarea>
+              <div id="editor"><%-curr.content || '' %></div>
+              <textarea id="content" hidden name="content"><%-curr.content || '' %></textarea>
             </div>
           </div>
-          <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-3">
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox"> 置顶
-                </label>
+          <div class="row">
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label for="isHot" class="col-sm-6 control-label">产品推荐类型</label>
+                <div class="col-sm-6">
+                  <select name="isHot" class="form-control">
+                    <option <%=curr.isHot === 0?'selected':'' %> value="0">普通商品</option>
+                    <option <%=curr.isHot === 1?'selected':'' %> value="1">推荐商品</option>
+                    <option <%=curr.isHot === 2?'selected':'' %> value="2">热卖商品</option>
+                    <option <%=curr.isHot === 3?'selected':'' %> value="3">新品上市</option>
+                  </select>
+                </div>
               </div>
             </div>
-            <div class="col-sm-3">
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox"> 热门
-                </label>
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label for="onSale" class="col-sm-6 control-label">产品上下架</label>
+                <div class="col-sm-6">
+                  <select name="onSale" class="form-control">
+                    <option <%=curr.onSale === 1?'selected':'' %> value="1">上架</option>
+                    <option <%=curr.onSale === 0?'selected':'' %> value="0">下架</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label for="sort" class="col-sm-6 control-label">排序</label>
+                <div class="col-sm-6">
+                  <input name="sort" value="<%=curr.sort || 0 %>" type="text" class="form-control"  placeholder="排序">
+                </div>
               </div>
             </div>
           </div>
@@ -85,6 +131,9 @@
         <!-- /.box-body -->
         <div class="box-footer">
           <div class="col-sm-offset-2 col-sm-10">
+            <% if(curr._id) { %>
+             <input name="_id" type="hidden" value="<%=curr._id%>">
+            <% }%>
             <button type="submit" class="btn btn-info ">保存</button>
             <button type="reset" class="btn btn-default">重置</button>
           </div>
@@ -94,5 +143,6 @@
     </div>
   </div>
 </div>
+<% block('footer').append(`<script src="${assetsPath}/js/wangeditor/wangEditor.js"></script>`); %>
 <% block('footer').append(`<script>
 </script>`) %>

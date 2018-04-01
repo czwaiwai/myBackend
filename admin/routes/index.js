@@ -6,7 +6,7 @@ let EventProxy = require('eventproxy')
 let {succJson,errJson} =require('../../utils/sendJson');
 // let User =require('../../models/user');
 // let Pages =require('../../models/pages');
-let {User, Page, Catalog, Article} = require('../../viewModels/')
+let {User, Page, Catalog, Article, Goods} = require('../../viewModels/')
 
 let imgCode="";
 function getPageNum(count,pageSize){
@@ -71,20 +71,78 @@ router.get('/users/index', (req, res, next) => {
 router.get('/users/add', (req, res, next) => {
 	let curr = {isNew:true}
 	if (req.query.update) {
-
+		User.findById(req.query.update, (err, user) => {
+			if (err) return  next(err)
+			curr = user
+			return res.render('users/add', {title: '更新用户', curr})
+		})
+	} else {
+		return res.render('users/add', {title: '添加用户', curr})
 	}
-	return res.render('users/add', {title: '添加用户', curr})
+})
+router.post('/users/add', (req, res, next) => {
+	if (req.body._id) {
+		User.findAndUpdate(req.body._id, req.body, (err, user) => {
+			if(err) return next(err)
+			if (user) {
+				req.flash('success', '更新用户成功')
+			} else {
+				req.flash('error', '更新用户失败')
+			}
+			return res.redirect('/admin/users/add?update='+req.body._id)
+		})
+	} else {
+		next(new Error('后台无法新建用户'))
+	}
 })
 // 商品管理
 router.get('/goods/index', (req, res, next) => {
-	res.render('goods/index', {title: '产品管理' , page:1, count:10})
-})
-router.get('/goods/add', (req, res, next) => {
-	Catalog.getChildrenByNameAll('goods', (err, goodTypes) => {
-		if(err) return next(err)
-		res.render('goods/add', {title: '添加商品', goodTypes})
+	Goods.findAllByPage({},req.query.page,10, (err, obj) => {
+		if (err) return next(err)
+		res.render('goods/index', Object.assign({title: '产品管理'}, obj))
 	})
 })
+router.get('/goods/add', (req, res, next) => {
+	let curr  = {isNew: true}
+	if (req.query.update) {
+		let ep = EventProxy.create('goodTypes', 'goods', (goodTypes, goods) => {
+			curr = goods
+			res.render('goods/add', {title: '添加商品', goodTypes, curr})
+		})
+		ep.fail(next)
+		Goods.findById(req.query.update, ep.done('goods'))
+		Catalog.getChildrenByNameAll('goods', ep.done('goodTypes'))
+	} else {
+		Catalog.getChildrenByNameAll('goods', (err, goodTypes) => {
+			if(err) return next(err)
+			res.render('goods/add', {title: '添加商品', goodTypes, curr})
+		})
+	}
+})
+router.post('/goods/add', (req, res, next) => {
+	let params = req.body
+	console.log(params)
+	let tmpArr = req.body.catalogStr.split('|')
+	params.catalogId = tmpArr[0]
+	params.catalogName = tmpArr[1]
+	params.catalogPath = tmpArr[2]
+	if(req.body._id) {
+		Goods.findAndUpdate(params._id, params, (err, goods) => {
+			if (err) return  next(err)
+			req.flash('sucess', '更新成功')
+			res.redirect('/admin/goods/add?update=' + params._id)
+		})
+	} else {
+		Goods.create(params, (err, goods) => {
+			if (err) return next(err)
+			req.flash('success', '创建成功')
+			res.redirect('/admin/goods/add')
+		})
+	}
+})
+
+
+
 // 订单管理
 router.get('/orders/index', (req, res, next) => {
 	res.render('orders/index', {title: '订单管理' , page:1, count:10})

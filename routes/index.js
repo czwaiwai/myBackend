@@ -4,7 +4,7 @@ var ccap=require('../utils/verifycode');
 // var schema=require('async-validator');
 // var User =require('../models/user');
 /* GET home page. */
-let {Page, User, Catalog} = require('../viewModels')
+let {Page, User, Catalog, Goods} = require('../viewModels')
 
 router.use((req,res,next) => {
 	Catalog.getFrontCatalog((err, catalogs) => {
@@ -67,7 +67,10 @@ router.get('/goods/index' , (req, res, next) => {
 
 })
 router.get('/goods/detail' , (req, res, next) => {
-	res.render('goods/detail', {title: '商品详情'})
+	Goods.findById('5ac05a372128d528094e603b', (err, goods) => {
+		if (err) next(err)
+		res.render('goods/detail', {title: '商品详情', goods})
+	})
 })
 
 // 购物车

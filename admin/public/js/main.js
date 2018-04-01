@@ -34,14 +34,16 @@
 
   if($('#content')[0] && $('#editor')[0]) {
 	  var E = window.wangEditor
-	  var $content= $('#content')
-	  var editor = new E('#editor')
-	  editor.customConfig.zIndex = 10
-	  editor.customConfig.uploadImgServer = '/upload'
-	  editor.customConfig.onchange = function (html) {
-		  // 监控变化，同步更新到 textarea
-		  $content.val(html)
+	  if (E) {
+		  var $content= $('#content')
+		  var editor = new E('#editor')
+		  editor.customConfig.zIndex = 10
+		  editor.customConfig.uploadImgServer = '/upload'
+		  editor.customConfig.onchange = function (html) {
+			  // 监控变化，同步更新到 textarea
+			  $content.val(html)
+		  }
+		  editor.create()
 	  }
-	  editor.create()
   }
 })(jQuery)

@@ -23,35 +23,80 @@
 .outer-top-xs {
     margin-top: 20px;
 }
+.ul_img_list {
+    list-style:none;
+    width:100%;
+    display:block;
+    margin-top:6px;
+    padding:0;
+}
+.ul_img_list .mall_img {
+    width:78px;
+    height:78px;
+    float:left;
+    border:1px solid #e5e5e5;
+}
+.ul_img_list .mall_img + .mall_img{
+  margin-left:6px;
+}
+
 </style>`) %>
 <div class="container">
     <div class="row">
         <div class="col-md-9">
             <div class="row">
-                <div class="col-md-5">
-                    <div style="width:100%;height:400px;background:#FFF;">图片区域</div>
-                </div>
-                <div class="col-md-7 product_info_block">
-                    <div class="product_info">
-                        <h1 class="product_name">走地鸡</h1>
+                <div class="col-md-6" style="width:360px;min-width:360px;">
+                    <div style="width:100%;background:#FFF;">
+                        <div style="width:330px;height:330px;border:1px solid #e5e5e5;">
+
+                        </div>
+                        <div class="">
+                            <ul class="ul_img_list clearfix">
+                                <li class="mall_img"></li>
+                                <li class="mall_img"></li>
+                                <li class="mall_img"></li>
+                                <li class="mall_img"></li>
+                            </ul>
+                        </div>
                     </div>
-                    <div class="product_stock margin-top">
-                        <p>产地：湖北</p>
+                </div>
+                <div class="col-md-6 product_info_block">
+                    <div class="product_info">
+                        <h1 class="product_name fs20"><%=goods.name %></h1>
                     </div>
                     <div class="product_desc margin-top15">
-                        <p>这只鸡的详细介绍</p>
+                        <p class="fs14"><%=goods.subName%></p>
+                    </div>
+                    <div class="product_price">
+                        <p class="fs14">
+                            价格：<span class="fs18 text-primary">￥<%=goods.sellPrice%></span>
+                            <del class="padding-left20" style="color:#989898;">原价:￥<%=goods.virPrice %> </del>
+                        </p>
+                    </div>
+                    <div class="product_stock margin-top">
+                        <p class="fs14">库存：<%=goods.stock%></p>
+                    </div>
+                    <div class="product_num margin-top20">
+                        <input type="number" value="1">
+                    </div>
+                    <div class="product_btn margin-top20">
+                        <button class="btn btn-plain btn-lg btn-default">立即购买</button>
+                        <button class="btn btn-plain btn-lg btn-primary margin-left" >
+                            <i class="iconfont icon-cart fs16"></i> 加入购物车</button>
                     </div>
                 </div>
             </div>
-            <div>
+            <div class="margin-top20" style="border:1px solid #e5e5e5;">
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">详情</a></li>
+                <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">商品详情</a></li>
                 <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">评论</a></li>
             </ul>
             <!-- Tab panes -->
-            <div class="tab-content">
-                <div role="tabpanel" class="tab-pane active" id="home">...</div>
+            <div class="tab-content" style="background:#FFF;">
+                <div role="tabpanel" class="tab-pane active" id="home">
+                    <%- goods.content %>
+                </div>
                 <div role="tabpanel" class="tab-pane" id="profile">...</div>
             </div>
 

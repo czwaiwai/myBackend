@@ -10,6 +10,12 @@ exports.findAllByRegister = function (callback) {
 	users.sort({create_at:1})
 	users.exec(callback)
 }
+exports.findById = function (id, callback) {
+	User.findById(id, callback)
+}
+exports.findAndUpdate = function (id, obj, callback) {
+	User.findByIdAndUpdate(id, obj, callback)
+}
 exports.findByUserName = function (userName , callback) {
 	User.findOne({userName:userName}, callback)
 }
