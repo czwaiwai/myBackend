@@ -8,6 +8,7 @@ var moment=require("moment");
 var images=require('images');
 var Image = require('../viewModels').Image
 let qs=require('qs');
+var path = require('path')
 let uploadPath ="public/upload/";
 function createDir(newPath,cb){
     fs.access(newPath,function(err){
@@ -40,32 +41,34 @@ function imgProcess(req,cb){
             file = files[name];
         });
         let now=moment().format("YYYYMMDD");
-        let newPath=uploadPath+now+"/";
+        // let newPath=uploadPath+now+"/";
+        let newPath=path.join(uploadPath,now+'/')
         createDir(newPath,function(){
             let imgfiles=[];
             file.forEach(ctx=>{
                 let img= images(ctx.path);
                 let imgType=ctx.path.match(/\.\w+$/ig)[0];
-                let imgName=ctx.path.replace(uploadPath,"").replace(imgType,"");
+                let imgName=ctx.path.replace(path.join(uploadPath),"").replace(imgType,"");
                 let fullName=imgName+"_$date"+now+"_$"+img.width()+"x"+img.height()+imgType;
-                let small=true;
+                
                 let pushObj={
                     name:fullName,
                     width:img.width(),
                     height:img.height(),
                     type:ctx.headers['content-type'],
-                    path:(newPath+fullName).replace("public","")
+                    url:(newPath+fullName).replace("public","").replace(/\\/g,'/')
                 }
+	              let small=true;
                 if(small){
-                  let smallImg= images(img).resize(120);
+                  let smallImg= images(img).resize(330);
                   let smallName=fullName.replace(imgType,"")+"_$sma_"+smallImg.width()+"x"+smallImg.height()+imgType;
                   smallImg.save(newPath+smallName);
-                  Object.assign(pushObj,{
-                      sName:smallName,
-                      sPath:(newPath+smallName).replace("public",""),
-                      sWidth:smallImg.width(),
-                      sHeight:smallImg.height()
-                  });
+                  pushObj.thumb = {
+                    name: smallName,
+                    url: (newPath+smallName).replace("public","").replace(/\\/g,'/'),
+                    width: smallImg.width(),
+                    height:smallImg.height()
+                  }
                 }
                 img.save(newPath+fullName);
                 imgfiles.push(pushObj);

@@ -1,0 +1,74 @@
+<% layout('layout/layout') %>
+<% block('header').append(`<style>
+.j_pager .pagination{
+    margin:0;
+}
+</style>`)%>
+<div id="imageManage" class="row">
+  <div class="col-xs-12">
+    <div class="box">
+      <div class="box-header">
+        <h3 class="box-title">图片管理</h3>
+        <div class="box-tools">
+          <a id="imgUpload" class="btn  btn-sm btn-success">添加+</a>
+          <!--<div class="input-group input-group-sm" style="width: 150px;">-->
+          <!--<input type="text" name="table_search" class="form-control pull-right" placeholder="Search">-->
+          <!--<div class="input-group-btn">-->
+          <!--<button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>-->
+          <!--</div>-->
+          <!--</div>-->
+        </div>
+      </div>
+      <!-- /.box-header -->
+      <div class="box-body table-responsive no-padding">
+        <table  class="table table-bordered table-hover">
+          <tbody>
+          <tr>
+            <!--<th><label><input name="checkAll" type="checkbox" value="all>">全选</label></th>-->
+            <th>图片预览</th>
+            <th style="max-width:150px;">图片名称</th>
+            <th>图片类型</th>
+            <th>创建时间</th>
+            <th>操作</th>
+          </tr>
+          <% if(images.length==0){ %>
+          <tr>
+            <td class="text-center" colspan="5" style="padding:30px;">没有任何图片</td>
+          </tr>
+          <% }%>
+          <% images.forEach(function(item){ %>
+          <tr>
+            <!--<td><input name="check" class="check" type="checkbox" value="<%=item.name %>"></td>-->
+            <td><div style="width:100px;height:100px;"><img src="<%=item.url || ''  %>" style="max-width:100%;max-height:100%;"></div></td>
+            <td style="min-width:140px;white-space: normal;"><div style="max-width:150px;word-break:break-all; "><%=item.name %></div></td>
+            <td><%=item.type %></td>
+            <td><%=item.create_at_ago()%></td>
+            <td>
+              <a class="btn btn-delete btn-sm btn-danger" data-id="<%=item._id%>" data-url="<%=assetsPath %>/image/delete" href="javascript:void(0)">删除</a>
+            </td>
+          </tr>
+          <% }) %>
+          </tbody>
+        </table>
+      </div>
+      <!-- /.box-body -->
+    </div>
+    <!-- /.box -->
+    <div class="j_pager" data-page="<%=page %>"  data-count="<%=count %>"></div>
+  </div>
+
+</div>
+<% block('footer').append(`<script src="${assetsPath}/js/uploadImg.js"></script>`); %>
+<% block('footer').append(`<script src="${assetsPath}/js/pager.js" ></script>`); %>
+<% block('footer').append(`<script>
+jQuery(function(){
+	$('.j_pager').pager();
+    $.delBtn('#imageManage','你确定要删掉这张图片么')
+    $('#imgUpload').uploadImg(function(imgs){
+    	console.log(imgs)
+       // location.reload();
+    });
+    console.log($.delBtn, '------------')
+
+})
+</script>`)%>

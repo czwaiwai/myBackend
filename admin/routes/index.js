@@ -1,12 +1,12 @@
 var express = require('express');
 let router = express.Router();
-let Image =require('../../models/image');
+// let Image =require('../../models/image');
 let fs=require('fs');
 let EventProxy = require('eventproxy')
 let {succJson,errJson} =require('../../utils/sendJson');
 // let User =require('../../models/user');
 // let Pages =require('../../models/pages');
-let {User, Page, Catalog, Article, Goods} = require('../../viewModels/')
+let {User, Page, Catalog, Article, Goods, Image} = require('../../viewModels/')
 
 let imgCode="";
 function getPageNum(count,pageSize){
@@ -372,35 +372,60 @@ router.get('/info',(req,res)=>{
 //     })
 // });
 // 上传图片管理
-router.get('/images',(req,res)=>{
-    let page = req.query.page || 1;
-    let pageSize=req.query.pageSize || 10;
+router.get('/image/index', (req, res) => {
+	Image.findAllByPage({}, req.query.page, 10, (err, obj)=> {
+		if (err) return next(err)
+		return res.render('image/index', Object.assign({title:'图片管理'}, obj))
+	})
+})
+router.post('/image/delete', (req, res) => {
+	if (req.body.id) {
+		Image.removeById(req.body.id, (err, image) => {
+			if (err) return next(err)
+			if (image) {
+				return res.json({
+					code:0,
+					message:'操作成功'
+				})
+			}
+		})
+	} else {
+		return res.json({
+			code:-1,
+			message:'删除失败'
+		})
+	}
+})
 
-    Image.getByPage(page,pageSize,(err,images)=>{
-        let {count} =images;
-        if(err){
-            req.flash("error",err.toString());
-           return  res.render('images',{title:"图片管理",images:[]});
-        }
-        images.count=getPageNum(count,pageSize);
-        let renderObj=Object.assign({page,pageSize,title:"图片管理"},images);
-        res.render('images',renderObj);
-    })
-})
-router.post('/images',(req,res)=>{
-    let {type,name,path}=req.body;
-    if(type==="delete"){
-        Image.removeOne(name,(err,images)=>{
-            if(err){
-                return res.json(errJson({err}));
-            }
-            req.flash("success","删除成功！");
-            res.json(succJson({},"删除成功！"));
-        });
-        fs.unlink("public"+path);
-    }
-    // req.body.name=""
-})
+// router.get('/images',(req,res)=>{
+//     let page = req.query.page || 1;
+//     let pageSize=req.query.pageSize || 10;
+//
+//     Image.getByPage(page,pageSize,(err,images)=>{
+//         let {count} =images;
+//         if(err){
+//             req.flash("error",err.toString());
+//            return  res.render('images',{title:"图片管理",images:[]});
+//         }
+//         images.count=getPageNum(count,pageSize);
+//         let renderObj=Object.assign({page,pageSize,title:"图片管理"},images);
+//         res.render('images',renderObj);
+//     })
+// })
+// router.post('/images',(req,res)=>{
+//     let {type,name,path}=req.body;
+//     if(type==="delete"){
+//         Image.removeOne(name,(err,images)=>{
+//             if(err){
+//                 return res.json(errJson({err}));
+//             }
+//             req.flash("success","删除成功！");
+//             res.json(succJson({},"删除成功！"));
+//         });
+//         fs.unlink("public"+path);
+//     }
+//     // req.body.name=""
+// })
 // router.all('*',(req,res)=>{
 //     res.redirect
 // })

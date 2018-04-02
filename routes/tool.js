@@ -4,9 +4,9 @@ let router = express.Router();
 let qs=require('qs');
 let {succJson,errJson} =require('../utils/sendJson');
 let imgProcess =require('../utils/imgProcess');
-let Image=require('../models/image');
+// let Image=require('../models/image');
 let User=require('../models/user');
-
+let {Image} = require('../models')
 router.get('/createUser',(req,res)=>{
     console.log(req.body);
 
@@ -41,7 +41,8 @@ router.post('/upload',(req,res)=>{
         req.flash('success',"上传成功");
         //保存在mongodb中便于后台管理
         files.forEach(ctx=>{
-            new Image(Object(ctx,{url:ctx.path})).save();
+	        Image.create(ctx)
+            // new Image(Object(ctx,{url:ctx.path})).save();
         });
         if(fields && fields.callType=="json"){
             res.json(succJson({imgs:files},req.flash("success").toString()));
