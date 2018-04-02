@@ -1,8 +1,54 @@
 <% layout('layout/layout') %>
 <% block('header').append(`<style>
+.section_no_padding {
+padding:0;
+margin-bottom:20px;
+}
+.section_title {
+    background:#e8e8e8;
+    border:1px solid #e5e5e5;
+    heigth:42px;
+    line-height:42px;
+    padding-left:20px;
+    font-size:14px;
+}
 </style>`) %>
 <div class="container">
+    <div class="section section_no_padding" >
+        <div class="section_title">收货地址</div>
+        <div class="section_body">
+            <div class="row">
+                <div class="col-md-8">
+                   <div>所在地区： 省，市，区</div>
+                   <div>详细地址：</div>
+                   <div>收货人：</div>
+                    <div>手机号码</div>
+                </div>
+                <div class="col-md-4">
 
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="section section_no_padding" >
+        <div class="section_title">商品信息</div>
+        <div class="row">
+            <div class="col-md-8">
+
+            </div>
+            <div class="col-md-4">
+
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="text-right">
+        <div>商品合计：￥329</div>
+        <div>运费：￥329</div>
+        <div>应付总额：￥329</div>
+        <div><button class="btn btn-lg btn-primary">去付款</button></div>
+    </div>
 </div>
 <% block('footer').append(`<script>
 </script>`) %>

@@ -58,3 +58,5 @@ typings/
 .env
 # template .idea
 .idea
+# upload img
+public/upload/

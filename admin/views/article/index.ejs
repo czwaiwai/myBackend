@@ -31,8 +31,15 @@
                     <% articles.forEach(function(item){%>
                     <tr>
                         <td><%=item.title%></td>
-                        <td><%=item.imgUrl || '无'%></td>
-                        <td></td>
+                        <td>
+                            <%if (item.imgUrl) {%>
+                             <img src="<%=item.imgUrl %>" style="max-width:150px;max-height:100px;" >
+                            <% } else {%>
+                                无
+                            <% }%>
+                        <td>
+                            <%if (item)%>
+                        </td>
                         <td><%=item.create_at_ago()%></td>
                         <td>
                             <a class="btn  btn-sm btn-success" href="add?update=<%=item._id %>">修改</a>

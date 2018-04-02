@@ -83,6 +83,11 @@ router.get('/account/index', (req, res, next) => {
 	res.render('account/index', {title: '个人中心'})
 })
 
+//订单
+router.get('/order/index', (req, res, next) => {
+	res.render('order/index', {title: '下单'})
+})
+
 router.get('/test',(req,res)=>{
     res.render('test',{title:"测试"});
 })

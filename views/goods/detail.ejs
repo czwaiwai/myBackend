@@ -48,7 +48,7 @@
                 <div class="col-md-6" style="width:360px;min-width:360px;">
                     <div style="width:100%;background:#FFF;">
                         <div style="width:330px;height:330px;border:1px solid #e5e5e5;">
-
+                            <img src="<%=goods.imgTmb %>">
                         </div>
                         <div class="">
                             <ul class="ul_img_list clearfix">
@@ -69,7 +69,7 @@
                     </div>
                     <div class="product_price">
                         <p class="fs14">
-                            价格：<span class="fs18 text-primary">￥<%=goods.sellPrice%></span>
+                            价格：<span class="fs20  text-primary">￥<%=goods.sellPrice%></span>
                             <del class="padding-left20" style="color:#989898;">原价:￥<%=goods.virPrice %> </del>
                         </p>
                     </div>
@@ -80,7 +80,7 @@
                         <input type="number" value="1">
                     </div>
                     <div class="product_btn margin-top20">
-                        <button class="btn btn-plain btn-lg btn-default">立即购买</button>
+                        <a class="btn btn-plain btn-lg btn-default" href="/order/index">立即购买</a>
                         <button class="btn btn-plain btn-lg btn-primary margin-left" >
                             <i class="iconfont icon-cart fs16"></i> 加入购物车</button>
                     </div>

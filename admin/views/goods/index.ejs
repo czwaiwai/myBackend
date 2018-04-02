@@ -34,7 +34,10 @@
           <% goods.forEach(function(item){%>
           <tr>
             <td><%=item.name %></td>
-            <td><%=item.imgTmb || '无'%></td>
+            <td>
+                <%if (item.imgTmb) {%>
+              <img src="<%=item.imgTmb %>" style="max-width:150px;max-height:100px;" >
+                <% } else {%><span>无</span><% }%>
             <td>
               <% if (item.isHot ===1) { %>
               推荐商品
