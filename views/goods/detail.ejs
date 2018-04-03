@@ -48,7 +48,7 @@
                 <div class="col-md-6" style="width:360px;min-width:360px;">
                     <div style="width:100%;background:#FFF;">
                         <div style="width:330px;height:330px;border:1px solid #e5e5e5;">
-                            <img src="<%=goods.imgTmb %>">
+                            <img src="<%=goods.imgTmb || '' %>">
                         </div>
                         <div class="">
                             <ul class="ul_img_list clearfix">
@@ -77,7 +77,9 @@
                         <p class="fs14">库存：<%=goods.stock%></p>
                     </div>
                     <div class="product_num margin-top20">
-                        <input type="number" value="1">
+                        <div id="spinner">
+                            <input type="text" >
+                        </div>
                     </div>
                     <div class="product_btn margin-top20">
                         <a class="btn btn-plain btn-lg btn-default" href="/order/index">立即购买</a>
@@ -130,9 +132,12 @@
                 </div><!-- /.sidebar-widget-body -->
             </div>
 
-
         </div>
     </div>
 </div>
+<% block('footer').append(`<script src="/js/spinner.js" ></script>`); %>
 <% block('footer').append(`<script>
+jQuery(function () {
+	$("#spinner").Spinner();
+})
 </script>`) %>

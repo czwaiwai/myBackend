@@ -5423,3 +5423,59 @@ a, a:active, a:hover, video {
   border: 1px #e5e5e5 solid;
   padding: 20px;
   overflow: hidden; }
+
+.footer .footer-bottom {
+  margin-top: 20px;
+  background: #202020;
+  padding-top: 15px;
+  color: #898989;
+  padding-bottom: 10px; }
+
+.copyright-bar {
+  background: #121212;
+  padding: 5px 0px;
+  color: #898989; }
+
+.footer_nav {
+  list-style: none;
+  display: block; }
+
+.footer_nav_item {
+  float: left;
+  width: 25%;
+  font-size: 14px; }
+
+.spinner {
+  border: 1px solid #e3e3e3;
+  display: inline-block; }
+
+.spinner .next, .spinner .prev {
+  width: 36px;
+  height: 30px;
+  color: #656565;
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+  float: left;
+  line-height: 28px;
+  font-size: 26px; }
+
+.spinner .disabled {
+  background: #f0f0f0; }
+
+.spinner .prev {
+  border-right: 1px solid #e3e3e3; }
+
+.spinner .next {
+  border-left: 1px solid #e3e3e3; }
+
+.spinner input {
+  float: left;
+  width: 60px;
+  padding: 0;
+  height: 30px;
+  line-height: 30px;
+  font-size: 12px;
+  text-align: center;
+  outline: none;
+  border: none; }

@@ -57,6 +57,7 @@ app.use(function(req,res,next){
       success:req.flash("success").toString(),
       user:req.session.user
     })
+	  res.locals.query= req.query
     next();
 });
 

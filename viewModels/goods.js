@@ -12,12 +12,12 @@ exports.findAndUpdate = function (id, obj, callback) {
 exports.findById = function (id, callback) {
 	Goods.findById (id, callback)
 }
-exports.findAllByPage = function (findObj = {}, pageNum = 1,pageSize = 10, callback) {
+exports.findAllByPage = function (query = {}, pageNum = 1,pageSize = 10, callback) {
 	pageNum = parseInt(pageNum)
 	pageSize = parseInt(pageSize)
 	Goods.count((err,count) => {
 		if (err) return callback(err)
-		var goods = Goods.find(findObj)
+		var goods = Goods.find(query)
 		goods.sort({create_at:-1})
 		goods.skip(pageSize*(pageNum-1))
 		goods.limit(pageSize)

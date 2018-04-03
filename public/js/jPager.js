@@ -26,7 +26,7 @@
 			this.arr.push(i+1);
 		}
 		// this.draw=draw;
-		this.init(this,options.page);
+		this.init(options.page);
 		return this;
 	}
 	pager.prototype.init = function (page){
@@ -60,7 +60,7 @@
 
 	pager.prototype.draw = function  (page){
 		this.page=parseInt(page);
-		var arr=this.getNum.call(this,page);
+		var arr=this.getNum(page);
 		this.$el.find('.page_num').removeClass('active').each(function(index,ctx){
 			ctx.childNodes[0].innerHTML=arr[index];
 			if(page==arr[index]){
@@ -74,7 +74,7 @@
 	pager.prototype.drawFrag = function (page,pageSize){
 		var frag= document.createDocumentFragment();
 		this.createHead(frag,page);
-		this.createBody(frag,page,this.getNum(this,page));
+		this.createBody(frag,page,this.getNum(page));
 		this.createTail(frag,page,pageSize);
 		return frag;
 	}
@@ -131,11 +131,18 @@
 	pager.prototype.createLi = function (txt,pageNum){
 		var li=document.createElement('li');
 		if(!isNaN(pageNum)){
-			li.innerHTML='<a  href="?page='+pageNum+'">'+txt+'</a>';
+			li.innerHTML='<a  href="'+this.setParams(pageNum)+'">'+txt+'</a>';
 		}else{
 			li.innerHTML='<a  href="javascript:void(0);">'+txt+'</a>';
 		}
 		return li;
+	}
+	pager.prototype.setParams = function (pageNum){
+		if(this.$el.data('param')) {
+			return "?page="+pageNum + '&' + this.$el.data('param')
+		}else {
+			return "?page="+pageNum;
+		}
 	}
 	pager.prototype.createBody = function (frag,page,liTxt){
 		for(var i=0;i<liTxt.length;i++){
@@ -154,7 +161,7 @@
 		var li=this.createLi("上一页");
 		li.classList.add("prev");
 		if(page>1){
-			li.childNodes[0].setAttribute('href','?page='+(page-1));
+			li.childNodes[0].setAttribute('href',this.setParams(--page));
 		}
 		console.log(page,1);
 		frag.appendChild(li,page);
@@ -164,7 +171,7 @@
 		li.classList.add("next");
 		if(page<pageSize){
 			console.log(page,pageSize);
-			li.childNodes[0].setAttribute('href','?page='+(page+1));
+			li.childNodes[0].setAttribute('href',this.setParams(++page));
 		}
 		frag.appendChild(li);
 	}
@@ -189,7 +196,7 @@
 
 			var instance=$this.data("instance");
 			if(!instance) {
-				$this.data("instance", pager($this,option));
+				$this.data("instance", new pager($this,option));
 			}
 			if(instance && typeof options =="number"){
 				instance.draw(options);

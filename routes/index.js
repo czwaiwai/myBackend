@@ -59,15 +59,21 @@ router.get('/article/detail/:id', (req, res, next) => {
 
 // 商品列表
 router.get('/goods/index' , (req, res, next) => {
+	// req.query.catalogsId
 	Catalog.getChildrenByName('goods', (err,catalogs) => {
 		if (err) return next(err)
-		console.log(catalogs)
-		res.render('goods/index', {title: '商品展示', goodTypes: catalogs})
+		let params = {}
+		if (req.query.catalog) {
+			let catalog = catalogs.find(item => item.name === req.query.catalog)
+			params.catalogPath  = new RegExp(`^${catalog.calPath}`)
+		}
+		Goods.findAllByPage(params, req.query.page, 10, (err, obj) => {
+			res.render('goods/index', Object.assign({title: '商品展示', goodTypes: catalogs}, obj))
+		})
 	})
-
 })
-router.get('/goods/detail' , (req, res, next) => {
-	Goods.findById('5ac05a372128d528094e603b', (err, goods) => {
+router.get('/goods/detail/:id' , (req, res, next) => {
+	Goods.findById(req.params.id, (err, goods) => {
 		if (err) next(err)
 		res.render('goods/detail', {title: '商品详情', goods})
 	})
