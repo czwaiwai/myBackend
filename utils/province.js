@@ -1,4 +1,4 @@
-let province = [{
+const province = [{
     "name": "北京市",
     "id": "110000"
 }, {
@@ -102,4 +102,4 @@ let province = [{
     "id": "820000"
 }]
 
-export {province} 
+module.exports = province

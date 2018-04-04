@@ -1,4 +1,4 @@
-let area = {
+const area = {
     "110100": [
         {
             "city": "市辖区", 
@@ -16334,4 +16334,4 @@ let area = {
         }
     ]
 }
-export {area} 
+module.exports = area

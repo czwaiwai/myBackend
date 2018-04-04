@@ -65,6 +65,10 @@
 
 </style>`) %>
 <div class=" container">
+  <ol class="breadcrumb">
+    <li><a href="/">首页</a></li>
+    <li class="active"><%= title %></li>
+  </ol>
   <div class="row">
     <div  class="hidden-xs col-sm-3 col-md-3 sidebar ">
       <div class="side-menu animate-dropdown outer-bottom-xs">
@@ -88,7 +92,9 @@
         <% goods.forEach(function(item){  %>
         <div  class="col-xs-6 col-sm-4 col-md-4  col-lg-3">
             <a href="/goods/detail/<%=item._id %>" class="thumbnail">
-              <img data-src="holder.js/100%x200" src="<%=item.imgTmb %>" alt="100%x200" style="width: 100%; display: block;" >
+              <div style="">
+                <img data-src="holder.js/100%x200" src="<%=item.imgTmb %>" alt="100%x200" style="width: 100%; display: block;" >
+              </div>
               <div class="caption">
                 <h5 class="dot text-center"><%=item.name%></h5>
                 <p class="text-center">￥<%=item.sellPrice %></p>
@@ -96,46 +102,6 @@
             </a>
         </div>
         <% }) %>
-        <div class="col-xs-6 col-sm-4 col-md-4  col-lg-3">
-            <div class="thumbnail">
-              <img data-src="holder.js/100%x200" src="/upload/p9.jpg" alt="100%x200" style="width: 100%; display: block;" >
-              <div class="caption">
-                <h5 class="dot text-center">黑凤梨 20寸全铝镁合金登机箱</h5>
-                <p class="text-center">￥25.00</p>
-                <p class="">温和贴肤，除毛按摩、沐浴两不误</p>
-              </div>
-            </div>
-        </div>
-        <div class="col-xs-6 col-sm-4 col-md-4  col-lg-3">
-            <div class="thumbnail">
-              <img data-src="holder.js/100%x200" src="/upload/p8.jpg" alt="100%x200" style="width: 100%; display: block;" >
-              <div class="caption">
-                <h5 class="dot text-center">黑凤梨 20寸全铝镁合金登机箱</h5>
-                <p class="text-center">￥25.00</p>
-                <p class="">温和贴肤，除毛按摩、沐浴两不误</p>
-              </div>
-            </div>
-        </div>
-        <div class="col-xs-6 col-sm-4 col-md-4  col-lg-3">
-            <div class="thumbnail">
-              <img data-src="holder.js/100%x200" src="/upload/p9.jpg" alt="100%x200" style="width: 100%; display: block;" >
-              <div class="caption">
-                <h5 class="dot text-center">黑凤梨 20寸全铝镁合金登机箱</h5>
-                <p class="text-center">￥25.00</p>
-                <p class="">温和贴肤，除毛按摩、沐浴两不误</p>
-              </div>
-            </div>
-        </div>
-        <div class="col-xs-6 col-sm-4 col-md-4  col-lg-3">
-            <div class="thumbnail">
-              <img data-src="holder.js/100%x200" src="/upload/p12.jpg" alt="100%x200" style="width: 100%; display: block;" >
-              <div class="caption">
-                <h5 class="dot text-center">黑凤梨 20寸全铝镁合金登机箱</h5>
-                <p class="text-center">￥25.00</p>
-                <p class="">温和贴肤，除毛按摩、沐浴两不误</p>
-              </div>
-            </div>
-        </div>
       </div>
       <div class="row">
         <div class="j_pager" data-page="<%=page %>"  data-param="<%=query.catalog?'catalog='+query.catalog:'' %>"   data-count="<%=count %>"></div>

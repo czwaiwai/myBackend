@@ -1,4 +1,4 @@
-let city = {
+const city = {
     "110000": [
         {
             "province": "北京市", 
@@ -1782,4 +1782,4 @@ let city = {
         }
     ]
 }
-export {city} 
+module.exports = city

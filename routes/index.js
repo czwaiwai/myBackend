@@ -65,7 +65,7 @@ router.get('/goods/index' , (req, res, next) => {
 		let params = {}
 		if (req.query.catalog) {
 			let catalog = catalogs.find(item => item.name === req.query.catalog)
-			params.catalogPath  = new RegExp(`^${catalog.calPath}`)
+			params.catalogPath  = new RegExp(`^${catalog.calPath},${catalog.name}`)
 		}
 		Goods.findAllByPage(params, req.query.page, 10, (err, obj) => {
 			res.render('goods/index', Object.assign({title: '商品展示', goodTypes: catalogs}, obj))
@@ -91,8 +91,29 @@ router.get('/account/index', (req, res, next) => {
 
 //订单
 router.get('/order/index', (req, res, next) => {
-	res.render('order/index', {title: '下单'})
+	let province = require('../utils/province')
+	res.render('order/index', {title: '下单', province})
 })
+
+// 地址选择
+router.get('/cityAndArea', (req, res, next) => {
+	if (req.query.addrId && req.query.name) {
+		var nameList = ['city','area']
+		if(nameList.indexOf(req.query.name)>-1) {
+			let res = require('../utils/'+req.query.name)
+			return res.json({
+				data:{
+					list:res[req.query.adderId]
+				},
+				code:0,
+				message:'操作成功'
+			})
+		} else {
+			return res.sendStatus(404)
+		}
+	}
+})
+
 
 router.get('/test',(req,res)=>{
     res.render('test',{title:"测试"});

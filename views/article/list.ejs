@@ -2,12 +2,27 @@
 <% block('header').append(`<style>
 </style>`) %>
 <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="/">首页</a></li>
+        <li class="active"><%= title %></li>
+    </ol>
     <div class="row">
-        <h3><%=title %></h3>
-    </div>
-    <div class="row">
-        <div class="col-md-5"></div>
-        <div class="col-md-7">
+        <div class="col-md-3">
+            <div class="sidebar-widget newsletter wow  outer-bottom-small " style="visibility: visible; ">
+                <h3 class="section-title">销量最佳</h3>
+                <div class="sidebar-widget-body outer-top-xs">
+                    <p>Sign Up for Our Newsletter!</p>
+                    <form role="form">
+                        <div class="form-group">
+                            <label class="sr-only" for="exampleInputEmail1">Email address</label>
+                            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Subscribe to our newsletter">
+                        </div>
+                        <button class="btn btn-primary">Subscribe</button>
+                    </form>
+                </div><!-- /.sidebar-widget-body -->
+            </div>
+        </div>
+        <div class="col-md-9">
             <ul class="list-group">
                 <li class="list-group-item">暗物质缺失！科学家发现一个前所未见的幽灵星系</li>
                 <li class="list-group-item">B站上市 ：用爱发电的IPO  Z世代的狂欢节和穿越次元壁的</li>
