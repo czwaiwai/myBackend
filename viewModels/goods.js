@@ -12,6 +12,14 @@ exports.findAndUpdate = function (id, obj, callback) {
 exports.findById = function (id, callback) {
 	Goods.findById (id, callback)
 }
+exports.getHotGoods = function (callback) {
+	var goods = Goods.find({}) // 填入条件
+	goods.limit(12)
+	goods.exec(callback)
+}
+exports.findInIds = function (ids, callback) {
+	Goods.find({_id:{$in:[...ids]}}, callback)
+}
 exports.findAllByPage = function (query = {}, pageNum = 1,pageSize = 10, callback) {
 	pageNum = parseInt(pageNum)
 	pageSize = parseInt(pageSize)

@@ -1,0 +1,195 @@
+<% layout('layout/layout') %>
+<% block('header').append(`<style>
+    .img_file{
+        width:100px;
+        height:100px;
+        border:1px solid #e3e3e3;
+        position:relative;
+    }
+    .img_file:after{
+        content:"+";
+        position:absolute;
+        width:100%;
+        height:100%;
+        font-size:30px;
+        text-align:center;
+        line-height:100px;
+    }
+
+    ul.add_img_list {
+        padding:0;
+        margin:0;
+        list-style:none;
+    }
+    ul.add_img_list li.img {
+         width:100px;
+        height:100px;
+        margin-right:5px;
+        margin-bottom:5px;
+        border:1px solid #e3e3e3;
+        position:relative;
+        float:left;
+    }
+    ul.add_img_list li.img_file{
+        float:left;
+        margin-right:5px;
+        margin-bottom:5px;
+    }
+    ul.add_img_list li.img i.del {
+        background: rgba(51, 51, 51, 0.72);
+        color: #FFF;
+        padding: 2px 5px;
+        position: absolute;
+        display: block;
+        top: 0;
+        right: 0;
+    }
+    ul.add_img_list li.img i.del:hover {
+        background: rgba(185, 0, 0, 0.5);
+    }
+
+.ul_img_list {
+    list-style:none;
+    width:100%;
+    display:block;
+    margin-top:6px;
+    padding:0;
+}
+.ul_img_list .mall_img {
+    width:78px;
+    height:78px;
+    float:left;
+    border:1px solid #e5e5e5;
+}
+.ul_img_list .mall_img.current{
+    border:1px solid #59b210;
+}
+.ul_img_list .mall_img + .mall_img{
+  margin-left:6px;
+}
+</style>`) %>
+<div class="container" style="min-height:500px;">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="img_list_wrap clearfix">
+                <ul class="add_img_list">
+                    <!--<li class="img">-->
+                        <!--<i class="del iconfont icon-delete"></i>-->
+                    <!--</li>-->
+                    <li class="img_file"></li>
+                </ul>
+                <input name="imgs" type="hidden" class="imgs_input" value="">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div id="imgUpload" class="img_file"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6" style="width:360px;min-width:360px;">
+            <div id="imgShowWrap" style="width:100%;background:#FFF;">
+                <div class="img_main" style="width:330px;height:330px;border:1px solid #e5e5e5;"></div>
+                <div class="img_small">
+                    <ul class="ul_img_list clearfix"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<% block('footer').append(`<script src="/js/uploadImg.js"></script>`)%>
+<% block('footer').append(`<script>
+    var $imgShowWrap = $('#imgShowWrap')
+    var $imgMain = $('.img_main', $imgShowWrap)
+    var $ulImgList = $('.ul_img_list',$imgShowWrap)
+    var arr = [
+    	'/upload/20180407/FUFIx3Lx1n_4hWR9lOs_6XZx_$date20180407_$1000x562_$sma_330x185.jpg',
+        '/upload/20180402/9zsOY4aY6e-bjXW7uBYGuMM1_$date20180402_$900x600_$sma_330x220.jpeg',
+        '/upload/20180407/0wrfvMdNueaP5oOoXnLWa-oN_$date20180407_$600x680_$sma_330x374.jpg',
+        '/upload/20180407/clzeczkq9XhtYC0neUhsum7R_$date20180407_$600x680_$sma_330x374.png'
+    ]
+    function init(arr) {
+        var doc = document.createDocumentFragment()
+        var firstUrl
+        arr.forEach(function(item, index){
+        	if(index === 0) {
+        		firstUrl = item.replace(/_\\$sma_[^\\.]+/,'')
+        	}
+        	var $li = $('<li class="mall_img" data-url="'+item+'" ></li>')
+        	$li.css({'background':'url('+item+') no-repeat center','background-size': 'cover'})
+        	doc.append($li[0])
+        })
+        $imgMain.css({'background':'url('+firstUrl+') no-repeat center','background-size': 'cover'})
+        $ulImgList.append(doc)
+        $ulImgList.on('mouseover','li',(function(){
+        	var time
+        	return function(){
+        		var $this= $(this)
+        		clearTimeout(time)
+        		time = setTimeout(function() {
+                    var url = $this.data('url')
+                    url = url.replace(/_\\$sma_[^\\.]+/,'')
+                    console.log(url,'img')
+                    $this.addClass('current').siblings().removeClass('current')
+                    $imgMain.css({'background':'url('+url+') no-repeat center','background-size': 'cover'})
+        	    },300)
+        	}
+        })())
+    }
+    init(arr)
+
+
+    var $imgListWrap = $('.img_list_wrap')
+    var $imgsInput = $('.imgs_input',$imgListWrap)
+    var $imgFile = $('.img_file',$imgListWrap)
+    var maxImg = 4
+    function imgsInit(arr) {
+    	arr.forEach(function(item) {
+    		var $li = $('<li class="img" data-tmb="'+item+'"><i class="del iconfont icon-delete"></i></li>')
+            $li.css({"background":'url('+item+')  no-repeat center', 'background-size': 'cover'})
+            $imgFile.before($li)
+    	})
+    }
+    $imgListWrap.on('click','.del',function(){
+    	var $this = $(this)
+    	var $img=$this.closest('.img')
+    	$imgsInput.val(getImgsStr($imgListWrap,$img))
+    	$img.remove()
+    	maxUpload(maxImg)
+    })
+    function maxUpload (max) {
+    	var imgs = $imgListWrap.find('.img')
+        if(imgs.length >= max) {
+            $imgFile.hide()
+        }
+        if(imgs.length < max){
+            $imgFile.show()
+        }
+    }
+    function getImgsStr ($imgWrap,$noOne) {
+    	var tmp = []
+    	$imgWrap.find('.img').each(function(index,el){
+    		var $el = $(el)
+    		if ($noOne) {
+    			if($el.data('tmb') !== $noOne.data('tmb')) {
+    		        tmp.push($el.data('tmb'))
+    		    }
+    		} else {
+    			tmp.push($el.data('tmb'))
+    		}
+    	})
+    	return tmp.join(',')
+    }
+    $imgFile.uploadImg(function(imgs){
+    	console.log(imgs)
+    	var $this = $(this)
+    	var $li = $('<li class="img" data-tmb="'+imgs[0].thumb.url+'"><i class="del iconfont icon-delete"></i></li>')
+    	$li.css({"background":'url('+imgs[0].thumb.url+')  no-repeat center', 'background-size': 'cover'})
+    	$this.before($li)
+    	$imgsInput.val(getImgsStr($imgListWrap))
+    	maxUpload(maxImg)
+    })
+
+    $('#imgUpload').uploadImg(function(imgs){
+        $(this).css({"background":"url("+imgs[0].thumb.url+") no-repeat center","background-size":"cover"});
+   });
+</script>`) %>

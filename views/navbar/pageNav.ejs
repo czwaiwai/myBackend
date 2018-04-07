@@ -1,0 +1,9 @@
+<div class="sidebar-widget newsletter wow  outer-bottom-small margin-bottom20" style="visibility: visible;padding:15px; ">
+    <div class="sidebar-widget-body ">
+        <ul class="nav nav-pills nav-stacked">
+            <% pages.forEach(function(item){ %>
+            <li class="<%=(item.relativeUrl == '/page/'+page.path)?'active':'' %>"><a href="<%=item.relativeUrl %>"><%=item.nameCn%></a></li>
+            <% }) %>
+        </ul>
+    </div><!-- /.sidebar-widget-body -->
+</div>

@@ -254,7 +254,7 @@ html {
   -webkit-tap-highlight-color: transparent; }
 
 body {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: 微软雅黑, "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px;
   line-height: 1.42857;
   color: #333333;
@@ -2762,10 +2762,13 @@ tbody.collapse.in {
     max-width: none; }
 
 .nav-tabs {
-  border-bottom: 1px solid #ddd; }
+  border-bottom: 1px solid #ddd;
+  background: #f5f5f5;
+  font-size: 14px; }
   .nav-tabs > li {
     float: left;
-    margin-bottom: -1px; }
+    margin-bottom: -1px;
+    margin-left: -1px; }
     .nav-tabs > li > a {
       margin-right: 2px;
       line-height: 1.42857;
@@ -2779,6 +2782,13 @@ tbody.collapse.in {
       border: 1px solid #ddd;
       border-bottom-color: transparent;
       cursor: default; }
+    .nav-tabs > li.active > a:after {
+      content: "";
+      border-top: 2px solid #58953b;
+      width: 100%;
+      position: absolute;
+      top: -2px;
+      left: 0; }
 
 .nav-pills > li {
   float: left; }
@@ -4376,7 +4386,7 @@ button.close {
   position: absolute;
   z-index: 1070;
   display: block;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: 微软雅黑, "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-style: normal;
   font-weight: normal;
   letter-spacing: normal;
@@ -4489,7 +4499,7 @@ button.close {
   display: none;
   max-width: 276px;
   padding: 1px;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: 微软雅黑, "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-style: normal;
   font-weight: normal;
   letter-spacing: normal;
@@ -5086,6 +5096,9 @@ w-bd {
 .no-padding {
   padding: 0 !important; }
 
+.no-margin {
+  margin: 0 !important; }
+
 .margin5 {
   margin: 5px; }
 
@@ -5098,15 +5111,15 @@ w-bd {
   margin-bottom: 5px; }
 
 .padding5 {
-  margin: 5px; }
+  padding: 5px; }
 
 .padding5-h {
-  margin-left: 5px;
-  margin-right: 5px; }
+  padding-left: 5px;
+  padding-right: 5px; }
 
 .padding5-v {
-  margin-top: 5px;
-  margin-bottom: 5px; }
+  padding-top: 5px;
+  padding-bottom: 5px; }
 
 .margin {
   margin: 10px; }
@@ -5120,15 +5133,15 @@ w-bd {
   margin-bottom: 10px; }
 
 .padding {
-  margin: 10px; }
+  padding: 10px; }
 
 .padding-h {
-  margin-left: 10px;
-  margin-right: 10px; }
+  padding-left: 10px;
+  padding-right: 10px; }
 
 .padding-v {
-  margin-top: 10px;
-  margin-bottom: 10px; }
+  padding-top: 10px;
+  padding-bottom: 10px; }
 
 .margin15 {
   margin: 15px; }
@@ -5142,15 +5155,15 @@ w-bd {
   margin-bottom: 15px; }
 
 .padding15 {
-  margin: 15px; }
+  padding: 15px; }
 
 .padding15-h {
-  margin-left: 15px;
-  margin-right: 15px; }
+  padding-left: 15px;
+  padding-right: 15px; }
 
 .padding15-v {
-  margin-top: 15px;
-  margin-bottom: 15px; }
+  padding-top: 15px;
+  padding-bottom: 15px; }
 
 .margin20 {
   margin: 20px; }
@@ -5164,15 +5177,15 @@ w-bd {
   margin-bottom: 20px; }
 
 .padding20 {
-  margin: 20px; }
+  padding: 20px; }
 
 .padding20-h {
-  margin-left: 20px;
-  margin-right: 20px; }
+  padding-left: 20px;
+  padding-right: 20px; }
 
 .padding20-v {
-  margin-top: 20px;
-  margin-bottom: 20px; }
+  padding-top: 20px;
+  padding-bottom: 20px; }
 
 .text-left {
   text-align: left; }
@@ -5378,7 +5391,7 @@ w-bd {
 
 body, button, code, input, select, textarea {
   color: #333;
-  font: 12px/1.5 "Microsoft Yahei","微软雅黑",verdana; }
+  font-family: "Segoe UI","Lucida Grande",Helvetica,Arial,"Microsoft YaHei",FreeSans,Arimo,"Droid Sans","wenquanyi micro hei","Hiragino Sans GB","Hiragino Sans GB W3",Roboto,Arial,sans-serif; }
 
 footer {
   position: absolute;
@@ -5485,7 +5498,6 @@ a, a:active, a:hover, video {
 
 .section-title {
   font-size: 14px;
-  font-family: 'Open Sans', sans-serif;
   border-bottom: 1px solid #e3e3e3;
   padding-bottom: 10px;
   text-transform: uppercase;
@@ -5494,3 +5506,36 @@ a, a:active, a:hover, video {
 
 .outer-top-xs {
   margin-top: 20px; }
+
+.dot {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis; }
+
+.list-group-no-border .list-group-item {
+  border: none; }
+
+.list-group-other-padding .list-group-item {
+  padding: 6px 0; }
+
+a.normal_link {
+  color: #333;
+  text-decoration: none; }
+
+a.normal_link:hover, a.normal_link:focus {
+  color: #58953b; }
+
+.img_file {
+  width: 100px;
+  height: 100px;
+  border: 1px solid #e3e3e3;
+  position: relative; }
+
+.img_file:after {
+  content: "+";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  font-size: 30px;
+  text-align: center;
+  line-height: 100px; }

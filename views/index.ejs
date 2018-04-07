@@ -1,6 +1,27 @@
 <% layout('layout/layout') %>
 <% block('header').append(`<style>
-
+    .spec_img {
+        overflow:hidden;
+    }
+    .spec_img img {
+        max-width:100%;
+        -webkit-transition: all 0.5s ease-in-out;
+        -moz-transition: all 0.5s ease-in-out;
+        transition: all 0.5s ease-in-out;
+    }
+    .spec_img img:hover {
+        transform: scale(1.08);
+        -ms-transform: scale(1.08);
+        -moz-transform: scale(1.08);
+        -webkit-transform: scale(1.08);
+        -o-transform: scale(1.08);
+    }
+    .list-group-no-border li{
+        border:none;
+    }
+    .list-group li {
+        padding:5px 10px;
+    }
 </style>`)%>
 <div class="container" >
     <div class="row">
@@ -36,36 +57,67 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-6">
-            新闻资讯
-            <ul class="media-list">
-                <li class="media">
-                    <div class="media-left">
-                        <a href="#">
-                            <img class="media-object" data-src="holder.js/64x64" alt="64x64" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PCEtLQpTb3VyY2UgVVJMOiBob2xkZXIuanMvNjR4NjQKQ3JlYXRlZCB3aXRoIEhvbGRlci5qcyAyLjYuMC4KTGVhcm4gbW9yZSBhdCBodHRwOi8vaG9sZGVyanMuY29tCihjKSAyMDEyLTIwMTUgSXZhbiBNYWxvcGluc2t5IC0gaHR0cDovL2ltc2t5LmNvCi0tPjxkZWZzPjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+PCFbQ0RBVEFbI2hvbGRlcl8xNjI3MDY5ZDQxMCB0ZXh0IHsgZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQgfSBdXT48L3N0eWxlPjwvZGVmcz48ZyBpZD0iaG9sZGVyXzE2MjcwNjlkNDEwIj48cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSIxMy4xNzk2ODc1IiB5PSIzNi41NTYyNSI+NjR4NjQ8L3RleHQ+PC9nPjwvZz48L3N2Zz4=" data-holder-rendered="true" style="width: 64px; height: 64px;">
-                        </a>
+    <div  class="row  margin-top20">
+        <h3 class="section-title fs20 text-center">热销推荐</h3>
+        <div class="col-md-3">13242</div>
+        <div class="col-md-3">32432</div>
+        <div class="col-md-3">2111</div>
+        <div class="col-md-3"></div>
+    </div>
+    <div class="row margin-top20">
+        <div class="col-md-4  ">
+            <div class="section  no-padding" style="margin: 0 -10px;">
+                <h3 class="fs20 padding-h clearfix">公司简介<small class="float_right"><a  href="/page/company" >更多 >></a></small></h3>
+                <div class="padding-h">
+                    <div class="spec_img">
+                        <img src="/upload/index_banner01.jpg">
                     </div>
-                    <div class="media-body">
-                        <!--<p class="media-heading">Media heading</p>-->
-                        <p>暗物质缺失！科学家发现一个前所未见的幽灵星系</p>
-                    </div>
-                </li>
-                <li class="media">
-                    <div class="media-body">
-                        <h4 class="media-heading">Media heading</h4>
-                        <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis.</p>
-                    </div>
-                </li>
-            </ul>
+                </div>
+                <div class="padding-v padding15-h">
+                    湖南农副产品有限公司有限公司成立于2009年，在一直以来的发展中一直致力于完善自己以助于更好的服务于各餐饮企业。在这些年的发展中，积累了丰富的采购经验，拥有了优良的货源渠道，建立了完善的管理制度，成立了成熟的物流配送，公司已成为一家专业的农产品配送公司，并致力于成为湖南最具有影响力的餐饮企业综合服..
+                </div>
+            </div>
         </div>
-        <div class="col-md-6">
-            烹调菜谱
+        <div class="col-md-4 ">
+            <div class="section  no-padding " style="margin: 0 -10px;">
+                <h2 class="fs20 padding-h clearfix">新闻资讯<small class="float_right"><a  href="/page/company" >更多 >></a></small></h2>
+                <div class="padding-h">
+                    <div class="spec_img">
+                        <img src="/upload/index_banner03.jpg">
+                    </div>
+                </div>
+                <ul class="list-group list-group-no-border margin-top">
+                    <li class="list-group-item">
+                        <a class="normal_link"><i class="iconfont icon-more padding-right5"></i>你了解百香果吗</a>
+                    </li>
+                    <li class="list-group-item"><a  class="normal_link"><i class="iconfont icon-more padding-right5"></i>什么水果可有预防白血病的效果</a></li>
+                    <li class="list-group-item"><a class="normal_link"><i class="iconfont icon-more padding-right5"></i>孕妇适宜多吃以下几种水果</a></li>
+                    <li class="list-group-item"><a class="normal_link"><i class="iconfont icon-more padding-right5"></i>生活中的养生水果表</a></li>
+                    <li class="list-group-item"><a class="normal_link"><i class="iconfont icon-more padding-right5"></i>生活中的养生水果表</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="section  no-padding" style="margin: 0 -10px;">
+                <h2 class="fs20 padding-h clearfix">新闻资讯<small class="float_right"><a  href="/page/company" >更多 >></a></small></h2>
+                <div class="padding-h">
+                    <div class="spec_img">
+                        <img src="/upload/index_banner02.jpg">
+                    </div>
+                </div>
+                <ul class="list-group list-group-no-border margin-top">
+                    <li class="list-group-item">
+                        <a class="normal_link"><i class="iconfont icon-more padding-right5"></i>你了解百香果吗</a>
+                    </li>
+                    <li class="list-group-item"><a class="normal_link"><i class="iconfont icon-more padding-right5"></i>什么水果可有预防白血病的效果</a></li>
+                    <li class="list-group-item"><a class="normal_link"><i class="iconfont icon-more padding-right5"></i>孕妇适宜多吃以下几种水果</a></li>
+                    <li class="list-group-item"><a class="normal_link"><i class="iconfont icon-more padding-right5"></i>生活中的养生水果表</a></li>
+                    <li class="list-group-item"><a class="normal_link"><i class="iconfont icon-more padding-right5"></i>生活中的养生水果表</a></li>
+                </ul>
+            </div>
         </div>
     </div>
-    <div class="section">
 
-    </div>
 </div><!-- /.container -->
 <% block('footer').append(`<script src='js/pager.js'></script>`)%>
 <% block('footer').append(`<script src='js/iframeDialog.js'></script>`)%>

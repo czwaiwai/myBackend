@@ -66,6 +66,9 @@ exports.getChildrenByNameAll = function (name,callback) {
 		})
 	})
 }
+exports.findByName = function (name, callback) {
+	Catalog.findOne({name:name},callback)
+}
 
 exports.findByTpl = function (useTpl, callback) {
 	var catalog = Catalog.find({useTpl, shopName: 'mShop'})

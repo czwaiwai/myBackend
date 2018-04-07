@@ -31,7 +31,7 @@
                 contentType:false,
                 cache:false,
             }).done(function(res){
-                $saveIput && $saveIput.val(res.data.imgs[0].path);
+                $saveIput && $saveIput.val(res.data.imgs[0].url);
                 cb && cb(res.data.imgs);
             })
         });
@@ -53,8 +53,8 @@
             if(instance){
                 return instance($this,cb);
             }else{
-                instance=uploadImg;
-                return instance($this,cb);
+                $this.data('instance',uploadImg)
+                return uploadImg($this,cb);
             }
         })
     }

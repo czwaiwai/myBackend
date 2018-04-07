@@ -15,31 +15,25 @@
     overflow: hidden;
 }
 </style>`)%>
+
 <div class="container">
-    <ol class="breadcrumb">
-        <li><a href="/">首页</a></li>
-        <li class="active"><%= title %></li>
-    </ol>
+    <div style="height: 200px;background: url(/upload/banner_other.jpg) no-repeat center;background-size: cover;" >
+    </div>
+    <div >
+        <ol class="breadcrumb">
+            <li><a href="/">首页</a></li>
+            <li class="active"><%= page.title %></li>
+        </ol>
+    </div>
     <div class="row">
         <div class="col-md-3">
-            <div class="sidebar-widget newsletter wow  outer-bottom-small" style="visibility: visible; ">
-                <h3 class="section-title">销量最佳</h3>
-                <div class="sidebar-widget-body outer-top-xs">
-                    <p>Sign Up for Our Newsletter!</p>
-                    <form role="form">
-                        <div class="form-group">
-                            <label class="sr-only" for="exampleInputEmail1">Email address</label>
-                            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Subscribe to our newsletter">
-                        </div>
-                        <button class="btn btn-primary">Subscribe</button>
-                    </form>
-                </div><!-- /.sidebar-widget-body -->
-            </div>
+            <% include navbar/pageNav %>
+            <% include navbar/addrNav %>
         </div>
         <div class="col-md-9">
             <div class="page" >
-                <h2 class="page-head-title"><%=title %></h2>
-                <%- content %>
+                <h2 style="margin-top:0;" class="page-head-title"><%=page.title %></h2>
+                <%- page.content %>
             </div>
         </div>
 

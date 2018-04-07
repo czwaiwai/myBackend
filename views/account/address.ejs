@@ -1,0 +1,25 @@
+<% layout('layout/layout') %>
+<% block('header').append(`<style>
+</style>`) %>
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a href="/">首页</a></li>
+        <li><a href="/account/index">用户中心</a></li>
+        <li class="active"><%= title %></li>
+    </ol>
+    <div class="row">
+        <div class="col-md-3">
+            <% include ../navbar/accountLeftNav.ejs %>
+        </div>
+        <div class="col-md-9">
+            <div class="panel panel-default ">
+                <div class="panel-heading fs14"><%=title %></div>
+                <div class="panel-body" style="min-height:300px;">
+                    Panel content111
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<% block('footer').append(`<script>
+</script>`) %>

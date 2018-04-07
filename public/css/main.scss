@@ -10,7 +10,8 @@
 //@import './login';
 body, button, code, input, select, textarea {
   color: #333;
-  font: 12px/1.5 "Microsoft Yahei","微软雅黑",verdana;
+  font-family: "Segoe UI","Lucida Grande",Helvetica,Arial,"Microsoft YaHei",FreeSans,Arimo,"Droid Sans","wenquanyi micro hei","Hiragino Sans GB","Hiragino Sans GB W3",Roboto,Arial,sans-serif;
+  //font: 12px/1.5 "Microsoft Yahei","微软雅黑",verdana;
 }
 footer{
   position: absolute;
@@ -125,7 +126,6 @@ a, a:active, a:hover, video {
 }
 .section-title {
   font-size: 14px;
-  font-family: 'Open Sans', sans-serif;
   border-bottom: 1px solid #e3e3e3;
   padding-bottom: 10px;
   text-transform: uppercase;
@@ -134,4 +134,41 @@ a, a:active, a:hover, video {
 }
 .outer-top-xs {
   margin-top: 20px;
+}
+.dot {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.list-group-no-border .list-group-item {
+  border:none;
+}
+.list-group-other-padding .list-group-item {
+  padding: 6px 0;
+}
+
+a.normal_link{
+  color: #333;
+  text-decoration: none;
+}
+a.normal_link:hover, a.normal_link:focus {
+  color: #58953b;
+}
+
+// 头像图片
+
+.img_file{
+  width:100px;
+  height:100px;
+  border:1px solid #e3e3e3;
+  position:relative;
+}
+.img_file:after{
+  content:"+";
+  position:absolute;
+  width:100%;
+  height:100%;
+  font-size:30px;
+  text-align:center;
+  line-height:100px;
 }

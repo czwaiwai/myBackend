@@ -98,7 +98,7 @@
     jQuery(function(){
           //var $form=$("#form");
        $('#imgUpload').uploadImg(function(imgs){
-            $(this).css({"background":"url("+imgs[0].path+") no-repeat","background-size":"cover"});
+            $(this).css({"background":"url("+imgs[0].thumb.url+") no-repeat","background-size":"cover"});
        });
     })
 </script>`)%>

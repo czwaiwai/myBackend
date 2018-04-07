@@ -12,4 +12,10 @@ module.exports = function (schema) {
 	schema.methods.update_at_ago = function () {
 		return tools.formatDate(this.update_at, true);
 	};
+	schema.methods.bigImg = function () {
+		if (this.imgUrl) {
+			return this.imgUrl.replace(/_\$sma_[^.]+/,'')
+		}
+		return  ''
+	}
 };

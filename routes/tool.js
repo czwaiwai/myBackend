@@ -29,6 +29,9 @@ router.get('/upload',(req,res)=>{
     res.render('tool/uploadTest',{imgUrl:req.query.imgUrl});
 
 });
+router.get('/test', (req, res, next) => {
+    res.render('tool/test',{title:'测试'})
+})
 router.post('/upload',(req,res)=>{
     imgProcess(req,function(err,fields,files){
         if(err){

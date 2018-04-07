@@ -1,37 +1,50 @@
 <% layout('layout/layout') %>
 <% block('header').append(`<style>
+.media-list .media {
+    border-bottom:1px solid #e5e5e5;
+}
 </style>`) %>
 <div class="container">
+    <div style="height: 200px;background: url(/upload/banner_other1.jpg) no-repeat center;background-size: cover;" ></div>
     <ol class="breadcrumb">
         <li><a href="/">首页</a></li>
         <li class="active"><%= title %></li>
     </ol>
     <div class="row">
         <div class="col-md-3">
-            <div class="sidebar-widget newsletter wow  outer-bottom-small " style="visibility: visible; ">
-                <h3 class="section-title">销量最佳</h3>
-                <div class="sidebar-widget-body outer-top-xs">
-                    <p>Sign Up for Our Newsletter!</p>
-                    <form role="form">
-                        <div class="form-group">
-                            <label class="sr-only" for="exampleInputEmail1">Email address</label>
-                            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Subscribe to our newsletter">
-                        </div>
-                        <button class="btn btn-primary">Subscribe</button>
-                    </form>
-                </div><!-- /.sidebar-widget-body -->
-            </div>
+            <% include ../navbar/hotArtNav %>
+            <% include ../navbar/addrNav %>
         </div>
         <div class="col-md-9">
-            <ul class="list-group">
-                <li class="list-group-item">暗物质缺失！科学家发现一个前所未见的幽灵星系</li>
-                <li class="list-group-item">B站上市 ：用爱发电的IPO  Z世代的狂欢节和穿越次元壁的</li>
-                <li class="list-group-item">融创发布会孙宏斌金句频出，终于可以和小股东一起骂乐视了？</li>
-                <li class="list-group-item">90后生猛上位，bilibili得“通关密码”上市，看不懂，</li>
-                <li class="list-group-item">库克麻烦了！苹果降频门还没完：美国用户的集体诉讼就要来了</li>
+            <ul class="media-list">
+                <% articles.forEach(function(item){%>
+                <li class="media">
+                    <% if(item.imgUrl){ %>
+                    <div class="media-left">
+                        <a href="/article/detail/<%=item._id %>">
+                            <img class="media-object" data-src="holder.js/64x64" alt="64x64" src="<%= item.imgUrl%>" data-holder-rendered="true" style="width: 64px; ">
+                        </a>
+                    </div>
+                    <%  } %>
+                    <div class="media-body">
+                        <h4 class="media-heading"><a class="link" href="/article/detail/<%=item._id %>" ><%=item.title %></a></h4>
+                        <p class="text-muted"><%=item.subTitle %></p>
+                        <p class="fs12 text-muted">
+                           <span class="fs12 margin-right20"><i class="iconfont icon-browse  padding-right5 "></i><%=item.read_count %></span>
+                           <span><i class="iconfont icon-history padding-right5 "></i><%=item.update_at_ago()%></span>
+                        </p>
+                    </div>
+                </li>
+                <% })%>
             </ul>
+            <div class="j_pager" data-page="<%=page %>"  data-param="<%=query.catalog?'catalog='+query.catalog:'' %>"   data-count="<%=count %>"></div>
         </div>
+
     </div>
 </div>
+<% block('footer').append(`<script src="/js/jPager.js" ></script>`); %>
 <% block('footer').append(`<script>
+jQuery(function () {
+	$('.j_pager').pager()
+})
 </script>`) %>

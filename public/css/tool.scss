@@ -33,7 +33,9 @@
 .no-padding{
   padding:0 !important;
 }
-
+.no-margin {
+  margin:0 !important;
+}
 
 $direction:('top','left','right','bottom');
 $distance:('5','10','15','20');
@@ -41,27 +43,27 @@ $text-position:('left','right','center');
 @mixin distanceBy($dis,$size) {
   @if($size == '10') {
     .#{$dis}{
-      margin:#{$size}px;
+      #{$dis}:#{$size}px;
     }
     .#{$dis}-h{
-      margin-left:#{$size}px;
-      margin-right:#{$size}px;
+      #{$dis}-left:#{$size}px;
+      #{$dis}-right:#{$size}px;
     }
     .#{$dis}-v{
-      margin-top:#{$size}px;
-      margin-bottom:#{$size}px;
+      #{$dis}-top:#{$size}px;
+      #{$dis}-bottom:#{$size}px;
     }
   } @else {
     .#{$dis}#{$size}{
-      margin:#{$size}px;
+      #{$dis}:#{$size}px;
     }
     .#{$dis}#{$size}-h{
-      margin-left:#{$size}px;
-      margin-right:#{$size}px;
+      #{$dis}-left:#{$size}px;
+      #{$dis}-right:#{$size}px;
     }
     .#{$dis}#{$size}-v{
-      margin-top:#{$size}px;
-      margin-bottom:#{$size}px;
+      #{$dis}-top:#{$size}px;
+      #{$dis}-bottom:#{$size}px;
     }
   }
 }

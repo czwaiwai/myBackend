@@ -1,0 +1,38 @@
+<% layout('layout/layout') %>
+<% block('header').append(`<style>
+</style>`) %>
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a href="/">首页</a></li>
+        <li><a href="/account/index">用户中心</a></li>
+        <li class="active"><%= title %></li>
+    </ol>
+    <div class="row">
+        <div class="col-md-3">
+            <% include ../navbar/accountLeftNav.ejs %>
+        </div>
+        <div class="col-md-9">
+
+            <div class="panel panel-default ">
+                <div class="panel-body no-padding" style="min-height:300px;">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active"><a href="#tab1" aria-controls="home" role="tab" data-toggle="tab">全部订单</a></li>
+                        <li role="presentation"><a href="#tab2" aria-controls="profile" role="tab" data-toggle="tab">待付款</a></li>
+                        <li role="presentation"><a href="#tab3" aria-controls="profile" role="tab" data-toggle="tab">待发货</a></li>
+                        <li role="presentation"><a href="#tab4" aria-controls="profile" role="tab" data-toggle="tab">已发货</a></li>
+                    </ul>
+                    <!-- Tab panes -->
+                    <div class="tab-content" style="background:#FFF;">
+                        <div role="tabpanel" class="tab-pane active" id="tab1">
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="tab2">2</div>
+                        <div role="tabpanel" class="tab-pane" id="tab3">3</div>
+                        <div role="tabpanel" class="tab-pane" id="tab4">4</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<% block('footer').append(`<script>
+</script>`) %>

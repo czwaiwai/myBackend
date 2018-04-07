@@ -9,6 +9,9 @@ exports.getListByCatalogPath = function (catalogName, callback) {
 exports.findById = function (id, callback) {
 	Article.findById(id, callback)
 }
+exports.findByIdAddView = function (id, callback) {
+	Article.findByIdAndUpdate(id, {$inc:{read_count:1}}, callback)
+}
 exports.findAllByPageCatalogs = function (catalogName,pageNum = 1,pageSize = 10, callback) {
 	pageNum = parseInt(pageNum)
 	pageSize = parseInt(pageSize)

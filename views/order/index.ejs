@@ -7,10 +7,13 @@ margin-bottom:20px;
 .section_title {
     background:#e8e8e8;
     border:1px solid #e5e5e5;
-    heigth:42px;
+    height:42px;
     line-height:42px;
     padding-left:20px;
     font-size:14px;
+}
+.order_item + .order_item {
+    border-top:1px dashed #e3e3e3;
 }
 </style>`) %>
 <div class="container">
@@ -23,18 +26,20 @@ margin-bottom:20px;
                         <div class="form-group">
                             <label for="inputEmail3" class="col-sm-2 control-label">所在地区</label>
                             <div class="col-sm-3">
-                                <select name="provinceId" class="form-control">
+                                <select id="provinceChoose" name="provinceId"  class="province_choose form-control">
                                     <option>请选择</option>
-                                    <
+                                    <% province.forEach(function(item){ %>
+                                    <option value="<%=item.id%>"><%=item.name %></option>
+                                    <% })%>
                                 </select>
                             </div>
                             <div class="col-sm-3">
-                                <select name="city" class="form-control">
+                                <select  id="cityChoose" name="city" class="form-control">
                                     <option>请选择</option>
                                 </select>
                             </div>
                             <div class="col-sm-4">
-                                <select name="district" class="form-control">
+                                <select  id="districtChoose"  name="district" class="form-control">
                                     <option>请选择</option>
                                 </select>
                             </div>
@@ -67,15 +72,56 @@ margin-bottom:20px;
 
     </div>
     <div class="section section_no_padding" >
-        <div class="section_title">商品信息</div>
-        <div class="row">
-            <div class="col-md-8">
-
+        <div class="section_title">
+            <div class="col-md-4">商品信息</div>
+            <div class="col-md-2">单价</div>
+            <div class="col-md-2">数量</div>
+            <div class="col-md-2">小计</div>
+            <div class="col-md-2">实付</div>
+        </div>
+        <div class="padding15-h ">
+            <% goods.forEach(function(item){ %>
+            <div class="row padding-v order_item">
+                <div class="col-md-4">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <img src="<%=item.imgTmb%>" style="width:100px;height:100px;" >
+                        </div>
+                        <div class="col-md-7">
+                           <h5><%=item.name %></h5>
+                            <p class="text-muted">
+                                深海蓝 男款45-46码
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">￥19.90</div>
+                <div class="col-md-2">1</div>
+                <div class="col-md-2">￥19.90</div>
+                <div class="col-md-2">￥19.90</div>
             </div>
-            <div class="col-md-4">
-
+            <% })%>
+            <div class="row padding-v order_item" >
+                <div class="col-md-4">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img src="" style="width:100px;height:100px;" >
+                        </div>
+                        <div class="col-md-8">
+                           <h5>玩趣彩虹四季拖鞋</h5>
+                            <p class="text-muted">
+                                深海蓝 男款45-46码
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">￥19.90</div>
+                <div class="col-md-2">1</div>
+                <div class="col-md-2">￥19.90</div>
+                <div class="col-md-2">￥19.90</div>
             </div>
         </div>
+
     </div>
     <hr>
     <div class="text-right">
@@ -86,4 +132,29 @@ margin-bottom:20px;
     </div>
 </div>
 <% block('footer').append(`<script>
+    jQuery(function(){
+        function remoteList(id,name,cb) {
+        	$.get('/cityAndArea?name='+name+'&addrId=' + id).done(function(res){
+            	var optionTmp = '<option value="" >请选择</option>'
+            	res.data.list.forEach(function(item) {
+            		optionTmp += '<option value='+item.id+'>'+item.name+'</option>'
+            	})
+            	cb && cb(optionTmp)
+
+            })
+        }
+    	var $cityChoose =$('#cityChoose')
+    	var $districtChoose = $('#districtChoose')
+    	$('#provinceChoose').on('change', function() {
+    		$districtChoose.empty().append('<option value="" >请选择</option>')
+            remoteList($(this).val(), 'city',function(optionTmp){
+            	$cityChoose.empty().append(optionTmp)
+            })
+    	})
+    	$('#cityChoose').on('change', function () {
+            remoteList($(this).val(), 'area',function(optionTmp){
+            	$districtChoose.empty().append(optionTmp)
+            })
+    	})
+    })
 </script>`) %>

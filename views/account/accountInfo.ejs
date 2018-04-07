@@ -1,0 +1,66 @@
+<% layout('layout/layout') %>
+<% block('header').append(`<style>
+</style>`) %>
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a href="/">首页</a></li>
+        <li><a href="/account/index">用户中心</a></li>
+        <li class="active"><%= title %></li>
+    </ol>
+    <div class="row">
+        <div class="col-md-3">
+            <% include ../navbar/accountLeftNav.ejs %>
+        </div>
+        <div class="col-md-9">
+            <div class="panel panel-default ">
+                <div class="panel-heading fs14"><%=title %></div>
+                <div class="panel-body" style="min-height:300px;">
+                    <form class="form-horizontal ">
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">用户头像</label>
+                            <div class="col-sm-4">
+                                <div id="imgUpload" class="img_file"  data-input="#headImg" >
+                                    <input name="file"  multiple  style="display:none;" type="file" >
+                                </div>
+                                <input  id="headImg" name="user[headImg]"  type="hidden" class="form-control"  placeholder="头像">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">用户ID</label>
+                            <div class="col-sm-4">
+                                <input type="text" name="name" class="form-control" id="inputPassword3" placeholder="收件人姓名">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label">昵称</label>
+                            <div class="col-sm-4">
+                                <input type="text" name="name" class="form-control" id="inputPassword3" placeholder="收件人姓名">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label">性别</label>
+                            <div class="col-sm-4">
+                               <label class="radio-inline"><input type="radio" name="sex"> 男</label>
+                               <label class="radio-inline"><input type="radio" name="sex"> 女</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label">手机号码</label>
+                            <div class="col-sm-4">
+                                <input type="text" name="name" class="form-control" id="inputPassword3" placeholder="收件人姓名">
+                            </div>
+                        </div>
+                        <div class="margin20-h" style="border-top:1px dashed #e3e3e3;"></div>
+                        <div class="form-group padding-top" >
+                            <div class="col-sm-offset-2 col-sm-4">
+                                <button class="btn btn-primary"  style="width:80px;" type="submit">保存</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<% block('footer').append(`<script>
+</script>`) %>

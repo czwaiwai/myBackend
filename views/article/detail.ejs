@@ -1,8 +1,74 @@
 <% layout('layout/layout') %>
 <% block('header').append(`<style>
-</style>`) %>
+.page-head-title {
+    text-align: left;
+    text-transform: none;
+    padding: 0px 0px 15px 0px;
+    font-weight: bold;
+    font-size: 22px;
+    border-bottom: 1px #e5e5e5 solid;
+}
+.page {
+    background-color: #fff;
+    border: 1px #e5e5e5 solid;
+    padding: 20px;
+    overflow: hidden;
+}
+</style>`)%>
+
 <div class="container">
+    <div style="height: 200px;background: url(/upload/banner_other.jpg) no-repeat center;background-size: cover;" >
+    </div>
+    <div >
+        <ol class="breadcrumb">
+            <li><a href="/">首页</a></li>
+            <% var indexCata =  catalogs.find(item => item.name === article.catalogName)%>
+            <% if(indexCata) {%>
+            <li ><a href="<%=indexCata.relativeUrl %>"><%=indexCata.nameCn %></a></li>
+            <% } %>
+            <li class="active"><%= title %></li>
+        </ol>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="sidebar-widget newsletter wow  outer-bottom-small" style="visibility: visible; ">
+                <h3 class="section-title">销量最佳</h3>
+                <div class="sidebar-widget-body outer-top-xs">
+                    <ul class="nav nav-pills nav-stacked">
+                        <li><a>公司介绍</a></li>
+                        <li class="active"><a>发货通知</a></li>
+                        <li><a>联系我们</a></li>
+                    </ul>
+                </div><!-- /.sidebar-widget-body -->
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="page" >
+                <article>
+
+                    <h2 style="margin-top:0;" class="page-head-title"><%=article.title %></h2>
+                    <p class="fs12 text-muted text-right no-margin">
+                        <span class="fs12 margin-right20"><i class="iconfont icon-browse  padding-right5 "></i><%=article.read_count %></span>
+                        <span><i class="iconfont icon-history padding-right5 "></i><%=article.update_at_ago()%></span>
+                    </p>
+                    <blockquote>
+                        <p class="fs13 text-muted"><%= article.subTitle%></p>
+                    </blockquote>
+                    <% if (article.imgUrl) { %>
+                    <div class="margin-bottom">
+                        <img src="<%=article.bigImg() %>" style="max-width:100%" >
+                    </div>
+                    <% } %>
+                    <section>
+                        <%- article.content %>
+                    </section>
+                </article>
+            </div>
+        </div>
+
+    </div>
+
 
 </div>
 <% block('footer').append(`<script>
-</script>`) %>
+</script>`)%>
