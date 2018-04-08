@@ -110,7 +110,7 @@ router.post('/order/index', (req, res, next) => {
 
 //添加到购物车
 router.post('/add2Cart', (req, res, next) => {
-
+	User.cart.create()
 	res.json({
 		code:0,
 		message:'操作成功'

@@ -1,6 +1,29 @@
 var mongoose = require('mongoose')
 var BaseModel = require("./baseModel");
 var Schema = mongoose.Schema
+var AddressSchema = new Schema({
+	name: {type: String},
+	mobile: {type: String},
+	isDefault: {type: Number},
+	district: {type: String},
+	provinceId: {type: Number},
+	province: {type:String},
+	cityId: {type: Number},
+	city: {type: String},
+	areaId: {type: Number},
+	area: {type: String}
+})
+var CartSchema = new Schema({
+	goodsId: {type: Schema.ObjectId}, // 产品Id
+	goodsName: {type: String}, // 产品名称
+	goodsSubName: {type: String}, // 产品sub名称
+	imgUrl: {type: String}, // 图片
+	goodsNum: {type: Number, default:1}, //数量
+	isCheck: {type: Boolean, default: false}, // 是否选中
+	price: {type: Number}, // 单价
+	smallAllPrice: {type: Number}, // 小计
+	realPrice: {type: Number}, // 实付
+})
 var UserSchema = new Schema({
 	userName: {type: String}, // 登录用户名
 	pwd: {type: String}, // 密码
@@ -13,8 +36,8 @@ var UserSchema = new Schema({
 	token: {type: String},
 	card_id: {type: String}, // 用户证件
 	mobile: {type: String}, // 手机号吗
-	cart: {type: []},
-	address: {type: []}, // 地址
+	cart: {type: [CartSchema]},
+	address: {type: [AddressSchema]}, // 地址
 	create_at: {type: Date , default: Date.now},
 	update_at: {type: Date , default: Date.now},
 }, {collection: 'user'})

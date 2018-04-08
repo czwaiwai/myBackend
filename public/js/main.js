@@ -38,7 +38,7 @@ jQuery(function(){
                         $button.disable();
                         callback(function(){
                             dialog.close();
-                        });
+                        },dialog,$button);
                     }
                 }]
             });

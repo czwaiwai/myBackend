@@ -27,13 +27,15 @@
             <% include ../navbar/accountLeftNav.ejs %>
         </div>
         <div class="col-md-9">
-            <div class="panel panel-default" style="min-height:400px;">
-                <div class="no_address text-center" style="color:#898989;padding-top:120px;">
-                    <i class="iconfont icon-map" style="font-size:60px;"></i>
-                    <p class="fs18">你还没有收货地址</p>
-                    <a class="new_address" href="javascript:void(0)">新建地址</a>
+            <% if(user.address.length===0){ %>
+                <div class="panel panel-default" style="min-height:400px;">
+                    <div class="no_address text-center" style="color:#898989;padding-top:120px;">
+                        <i class="iconfont icon-map" style="font-size:60px;"></i>
+                        <p class="fs18">你还没有收货地址</p>
+                        <a class="new_address" href="javascript:void(0)">新建地址</a>
+                    </div>
                 </div>
-            </div>
+            <% } else { %>
             <div>
                 <div class="padding-bottom clearfix">
                     <span>您最多能创建10个收货地址</span>
@@ -61,32 +63,58 @@
                     </table>
                 </div>
             </div>
+            <% } %>
         </div>
     </div>
 </div>
+<% block('footer').append(`<script id="addrTpl" type="text/template">
+     <form class="form-horizontal margin-top20">
+        <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">所在地区</label>
+            <div class="col-sm-3">
+                <select id="provinceChoose" name="provinceId"  class="province_choose form-control">
+                    <option>请选择</option>
+                 </select>
+            </div>
+            <div class="col-sm-3">
+                <select  id="cityChoose" name="city" class="form-control">
+                    <option>请选择</option>
+                </select>
+            </div>
+            <div class="col-sm-4">
+                <select  id="districtChoose"  name="district" class="form-control">
+                    <option>请选择</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputPassword3" class="col-sm-2 control-label">详细地址</label>
+            <div class="col-sm-10">
+                <textarea name="address" class="form-control" style="resize:none;" rows="3" placeholder="详细地址，街道，门牌号等"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputPassword3" class="col-sm-2 control-label">收件人</label>
+            <div class="col-sm-4">
+                <input type="text" name="name" class="form-control" id="inputPassword3" placeholder="收件人姓名">
+            </div>
+            <label for="inputPassword3" class="col-sm-2 control-label">手机号码</label>
+            <div class="col-sm-4">
+                <input type="text" name="mobile" class="form-control" id="inputPassword3" placeholder="手机号码">
+            </div>
+        </div>
+     </form>
+</script>`) %>
 <% block('footer').append(`<script>
 jQuery(function() {
-
-
+    var addrTpl = _.template($('#addrTpl').html())
     $('.new_address').on('click', function () {
-BootstrapDialog.confirm({
-            title: 'WARNING',
-            message: 'Warning! Drop your banana?',
-            type: BootstrapDialog.TYPE_WARNING, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
-            closable: true, // <-- Default value is false
-            draggable: true, // <-- Default value is false
-            btnCancelLabel: 'Do not drop it!', // <-- Default value is 'Cancel',
-            btnOKLabel: 'Drop it!', // <-- Default value is 'OK',
-            btnOKClass: 'btn-warning', // <-- If you didn't specify it, dialog type will be used,
-            callback: function(result) {
-                // result will be true if button was click, while it will be false if users close the dialog directly.
-                if(result) {
-                    alert('Yup.');
-                }else {
-                    alert('Nope.');
-                }
-            }
-        });
+    	var tmp =  addrTpl({})
+    	var div = document.createElement('div')
+    	div.innerHTML = tmp
+    	$.confirmSubmit(div, function(next, dialog, $button) {
+            next()
+    	},{title:'添加收货地址'})
 //    	BootstrapDialog.confirm({
 //    	    message: 'Hi Apple!',
 //    	})
