@@ -38,7 +38,20 @@
 		  var $content= $('#content')
 		  var editor = new E('#editor')
 		  editor.customConfig.zIndex = 10
-		  editor.customConfig.uploadImgServer = '/upload'
+		  editor.customConfig.uploadImgHeaders = {
+			  'X-Requested-With': 'XMLHttpRequest'
+		  }
+		  editor.customConfig.uploadImgServer = '/tool/upload'
+		  editor.customConfig.uploadImgHooks = {
+			  before: function (xhr, editor, files) {
+			  	console.log(xhr)
+			  },
+			  customInsert: function (insertImg, result, editor) {
+			  	result.data.imgs.forEach(function(item){
+			  		insertImg(item.url)
+				  })
+			  }
+		  }
 		  editor.customConfig.onchange = function (html) {
 			  // 监控变化，同步更新到 textarea
 			  $content.val(html)

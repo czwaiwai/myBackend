@@ -133,6 +133,10 @@ router.get('/account/accountInfo', (req, res, next) => {
 	res.render('account/accountInfo', {title: '个人信息'})
 })
 
+router.get('/account/changePwd', (req, res, next) => {
+	res.render('account/changePwd', {title: '修改密码'})
+})
+
 //订单管理
 router.get('/account/orderManage', (req, res, next) => {
 	res.render('account/orderManage', {title: '订单管理'})

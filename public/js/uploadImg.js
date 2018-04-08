@@ -4,6 +4,7 @@
 (function($){
     function uploadImg($el,cb){
         var $saveIput=$($el.data("input"));
+        var uploadUrl = $el.data('url')
         var $file= $el.find('input[type=file]');
         if(!$file[0]){
             var tmpArr="";
@@ -25,7 +26,7 @@
             }
             $file[0].value="";
             $.post({
-                url:'/tool/upload',
+                url:uploadUrl || '/tool/upload',
                 data:formData,
                 processData:false,
                 contentType:false,

@@ -240,6 +240,8 @@ router.post('/article/add', (req, res, next) => {
 	params.catalog = tmpArr[0]
 	params.catalogName = tmpArr[1]
 	params.catalogPath = tmpArr[2]
+	params.isTop = Boolean(req.body.isTop)?1:0
+	params.isHot = Boolean(req.body.isHot)?1:0
 	if (req.body._id) { // 修改
 		Article.findAndUpdate(params._id, params, (err,article) => {
 			if(err) return next(err)

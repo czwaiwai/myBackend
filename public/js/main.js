@@ -13,6 +13,10 @@ jQuery(function(){
     $.extend({
         guidGenerator:guidGenerator,
     });
+	  BootstrapDialog.DEFAULT_TEXTS[BootstrapDialog.TYPE_PRIMARY] = '提示';
+    BootstrapDialog.DEFAULT_TEXTS['OK'] = '确定'
+    BootstrapDialog.DEFAULT_TEXTS['CANCEL'] = '取消'
+	  // BootstrapDialog.DEFAULT_TEXTS['CONFIRM'] = '提示'
     $.extend({
         confirmSubmit:function(message,callback,options){
             var option=options || {};

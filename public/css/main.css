@@ -5393,6 +5393,21 @@ body, button, code, input, select, textarea {
   color: #333;
   font-family: "Segoe UI","Lucida Grande",Helvetica,Arial,"Microsoft YaHei",FreeSans,Arimo,"Droid Sans","wenquanyi micro hei","Hiragino Sans GB","Hiragino Sans GB W3",Roboto,Arial,sans-serif; }
 
+html, body, .wrap {
+  height: 100%; }
+
+body > .wrap {
+  height: auto;
+  min-height: 100%; }
+
+.main {
+  padding-bottom: 93px; }
+
+.footer {
+  margin-top: -73px;
+  height: 73px;
+  position: relative; }
+
 footer {
   position: absolute;
   width: 100%;
@@ -5430,7 +5445,6 @@ a, a:active, a:hover, video {
   overflow: hidden; }
 
 .footer .footer-bottom {
-  margin-top: 20px;
   background: #202020;
   padding-top: 15px;
   color: #898989;

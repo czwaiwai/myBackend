@@ -1,5 +1,20 @@
 <% layout('layout/layout') %>
 <% block('header').append(`<style>
+.table th {
+    background:#f5f5f5;
+    height:40px;
+    text-align:center;
+    font-weight:normal;
+}
+.table td {
+    text-align:center;
+    height:90px;
+    word-wrap: break-word;
+    word-break: break-all;
+    margin: 0;
+    vertical-align:middle !important;
+    padding: 0;
+}
 </style>`) %>
 <div class="container">
     <ol class="breadcrumb">
@@ -12,14 +27,69 @@
             <% include ../navbar/accountLeftNav.ejs %>
         </div>
         <div class="col-md-9">
-            <div class="panel panel-default ">
-                <div class="panel-heading fs14"><%=title %></div>
-                <div class="panel-body" style="min-height:300px;">
-                    Panel content111
+            <div class="panel panel-default" style="min-height:400px;">
+                <div class="no_address text-center" style="color:#898989;padding-top:120px;">
+                    <i class="iconfont icon-map" style="font-size:60px;"></i>
+                    <p class="fs18">你还没有收货地址</p>
+                    <a class="new_address" href="javascript:void(0)">新建地址</a>
+                </div>
+            </div>
+            <div>
+                <div class="padding-bottom clearfix">
+                    <span>您最多能创建10个收货地址</span>
+                    <a class="new_address float_right" href="javascript:void(0)">新建地址</a>
+                </div>
+                <div class="panel panel-default ">
+                    <table class="table table-hover">
+                        <tr>
+                            <th>收货人</th>
+                            <th>地址</th>
+                            <th>联系方式</th>
+                            <th>操作</th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <td>曹正 <small class="text-muted">[默认]</small></td>
+                            <td>大数据发生了贷款及分类考试的凡事都</td>
+                            <td>13728905705</td>
+                            <td>
+                                <a class="btn btn-link">修改</a>
+                                <a class="btn btn-link">删除</a>
+                            </td>
+                            <td></td>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
 </div>
 <% block('footer').append(`<script>
+jQuery(function() {
+
+
+    $('.new_address').on('click', function () {
+BootstrapDialog.confirm({
+            title: 'WARNING',
+            message: 'Warning! Drop your banana?',
+            type: BootstrapDialog.TYPE_WARNING, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
+            closable: true, // <-- Default value is false
+            draggable: true, // <-- Default value is false
+            btnCancelLabel: 'Do not drop it!', // <-- Default value is 'Cancel',
+            btnOKLabel: 'Drop it!', // <-- Default value is 'OK',
+            btnOKClass: 'btn-warning', // <-- If you didn't specify it, dialog type will be used,
+            callback: function(result) {
+                // result will be true if button was click, while it will be false if users close the dialog directly.
+                if(result) {
+                    alert('Yup.');
+                }else {
+                    alert('Nope.');
+                }
+            }
+        });
+//    	BootstrapDialog.confirm({
+//    	    message: 'Hi Apple!',
+//    	})
+    })
+})
 </script>`) %>

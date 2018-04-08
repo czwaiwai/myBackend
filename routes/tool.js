@@ -30,12 +30,14 @@ router.get('/upload',(req,res)=>{
 
 });
 router.get('/test', (req, res, next) => {
+    
     res.render('tool/test',{title:'测试'})
 })
 router.post('/upload',(req,res)=>{
     imgProcess(req,function(err,fields,files){
         if(err){
-            if(fields && fields.callType=="json"){
+            console.log(req.get('X-Requested-With'),'X-Requested-With')
+            if((fields && fields.callType=="json") || req.get('X-Requested-With') === 'XMLHttpRequest'){
                 res.json(errJson({},req.flash("error").toString())) ;
             }else{
                 return res.redirect('/tool/upload');
@@ -47,7 +49,7 @@ router.post('/upload',(req,res)=>{
 	        Image.create(ctx)
             // new Image(Object(ctx,{url:ctx.path})).save();
         });
-        if(fields && fields.callType=="json"){
+        if(fields && fields.callType=="json" || req.get('X-Requested-With') === 'XMLHttpRequest'){
             res.json(succJson({imgs:files},req.flash("success").toString()));
         }else{
             res.redirect('/tool/upload?imgUrl='+files[0].path);

@@ -1,5 +1,53 @@
 <% layout('layout/layout') %>
 <% block('header').append(`<style>
+    .img_file{
+        width:100px;
+        height:100px;
+        border:1px solid #e3e3e3;
+        position:relative;
+    }
+    .img_file:after{
+        content:"+";
+        position:absolute;
+        width:100%;
+        height:100%;
+        font-size:30px;
+        text-align:center;
+        line-height:100px;
+    }
+
+    ul.add_img_list {
+        padding:0;
+        margin:0;
+        list-style:none;
+    }
+    ul.add_img_list li.img {
+         width:100px;
+        height:100px;
+        margin-right:5px;
+        margin-bottom:5px;
+        border:1px solid #e3e3e3;
+        position:relative;
+        float:left;
+    }
+    ul.add_img_list li.img_file{
+        float:left;
+        margin-right:5px;
+        margin-bottom:5px;
+    }
+    ul.add_img_list li.img i.del {
+        background: rgba(51, 51, 51, 0.72);
+        color: #FFF;
+        padding: 2px 5px;
+        position: absolute;
+        display: block;
+        top: 0;
+        right: 0;
+    }
+    ul.add_img_list li.img i.del:hover {
+        background: rgba(185, 0, 0, 0.5);
+    }
+
 </style>`) %>
 <div class="row">
   <div class="col-md-12">
@@ -77,6 +125,20 @@
                 <i class="ionfont "></i>
                 <img src="<%=curr.imgTmb %>" style="max-height:100%;max-width:100%" >
                   <% }%>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="title" class="col-sm-2 control-label">商品图片</label>
+            <div class="col-sm-10">
+              <div class="img_list_wrap clearfix">
+                <ul class="add_img_list">
+                  <!--<li class="img">-->
+                  <!--<i class="del iconfont icon-delete"></i>-->
+                  <!--</li>-->
+                  <li class="img_file"></li>
+                </ul>
+                <input name="imgs" type="hidden" class="imgs_input" value="">
               </div>
             </div>
           </div>
@@ -184,6 +246,58 @@ jQuery(function() {
                $('#showImg').empty().append(img)
             })
     	}
+    })
+
+
+    var $imgListWrap = $('.img_list_wrap')
+    var $imgsInput = $('.imgs_input',$imgListWrap)
+    var $imgFile = $('.img_file',$imgListWrap)
+    var maxImg = 4
+    function imgsInit(arr) {
+    	arr.forEach(function(item) {
+    		var $li = $('<li class="img" data-tmb="'+item+'"><i class="del iconfont icon-delete"></i></li>')
+            $li.css({"background":'url('+item+')  no-repeat center', 'background-size': 'cover'})
+            $imgFile.before($li)
+    	})
+    }
+    $imgListWrap.on('click','.del',function(){
+    	var $this = $(this)
+    	var $img=$this.closest('.img')
+    	$imgsInput.val(getImgsStr($imgListWrap,$img))
+    	$img.remove()
+    	maxUpload(maxImg)
+    })
+    function maxUpload (max) {
+    	var imgs = $imgListWrap.find('.img')
+        if(imgs.length >= max) {
+            $imgFile.hide()
+        }
+        if(imgs.length < max){
+            $imgFile.show()
+        }
+    }
+    function getImgsStr ($imgWrap,$noOne) {
+    	var tmp = []
+    	$imgWrap.find('.img').each(function(index,el){
+    		var $el = $(el)
+    		if ($noOne) {
+    			if($el.data('tmb') !== $noOne.data('tmb')) {
+    		        tmp.push($el.data('tmb'))
+    		    }
+    		} else {
+    			tmp.push($el.data('tmb'))
+    		}
+    	})
+    	return tmp.join(',')
+    }
+    $imgFile.uploadImg(function(imgs){
+    	console.log(imgs)
+    	var $this = $(this)
+    	var $li = $('<li class="img" data-tmb="'+imgs[0].thumb.url+'"><i class="del iconfont icon-delete"></i></li>')
+    	$li.css({"background":'url('+imgs[0].thumb.url+')  no-repeat center', 'background-size': 'cover'})
+    	$this.before($li)
+    	$imgsInput.val(getImgsStr($imgListWrap))
+    	maxUpload(maxImg)
     })
 })
 </script>`) %>
