@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <title>白石山农场</title>
+  <script type="text/javascript" src="http://tajs.qq.com/stats?sId=37342703" charset="UTF-8"></script>
+  <link rel="stylesheet" href="/css/mainMobile.css">
+  <%- block('header') %>
+</head>
+
+<body ontouchstart="">
+<header class="ui-header ui-header-positive ui-border-b">
+  <i class="ui-icon-return" onclick="history.back()"></i>
+  <h1>基础样式 </h1>
+</header>
+<footer class="ui-footer ui-footer-btn">
+  <ul class="ui-tiled ui-border-t">
+    <li class="footer_item <% if(basePath=='/app/index'){ %>active<% } %>" >
+      <a   href="/app/index">
+        <i class="iconfont icon-store"></i>
+        <div>首页</div>
+      </a>
+    </li>
+    <li class="footer_item <% if(basePath=='/app/type'){ %>active<% } %>">
+      <a href="/app/type">
+        <i class="iconfont icon-category"></i>
+        <div>全部分类</div>
+      </a>
+    </li>
+    <li class="footer_item <% if(basePath=='/app/cart'){ %>active<% } %>">
+      <a href="/app/cart">
+        <i class="iconfont icon-cart"></i>
+        <div>购物车</div>
+      </a>
+    </li>
+    <li class="footer_item <% if(basePath=='/app/center'){ %>active<% } %>">
+      <a href="/app/center">
+        <i class="iconfont icon-account"></i>
+        <div>个人中心</div>
+      </a>
+    </li>
+  </ul>
+</footer>
+<!--<div class="visible-xs ">-->
+  <!--<div class="xs_footer   flex_box text-center">-->
+    <!--<a class="flex_item " href="/">-->
+      <!--<i class="iconfont icon-store"></i>-->
+      <!--<p>首页</p>-->
+    <!--</a>-->
+    <!--<a class="flex_item " href="/goods/index">-->
+      <!--<i class="iconfont icon-category"></i>-->
+      <!--<p>全部分类</p>-->
+    <!--</a>-->
+    <!--<a class="flex_item " href="/cart/index">-->
+      <!--<i class="iconfont icon-cart"></i>-->
+      <!--<p>购物车</p>-->
+    <!--</a>-->
+    <!--<a class="flex_item <% if(basePath=='/account/index'){ %>active<% } %>" href="/account/index" >-->
+      <!--<i class="iconfont icon-account"></i>-->
+      <!--<p>个人中心</p>-->
+    <!--</a>-->
+  <!--</div>-->
+<!--</div>-->
+<section class="ui-container">
+  <%- body %>
+</section><!-- /.ui-container-->
+<script src="/js/jquery-1.12.0.min.js"></script>
+<%- block('footer') %>
+</body>
+</html>

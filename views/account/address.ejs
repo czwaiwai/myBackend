@@ -107,17 +107,27 @@
 </script>`) %>
 <% block('footer').append(`<script>
 jQuery(function() {
-    var addrTpl = _.template($('#addrTpl').html())
-    $('.new_address').on('click', function () {
-    	var tmp =  addrTpl({})
-    	var div = document.createElement('div')
-    	div.innerHTML = tmp
-    	$.confirmSubmit(div, function(next, dialog, $button) {
-            next()
-    	},{title:'添加收货地址'})
-//    	BootstrapDialog.confirm({
-//    	    message: 'Hi Apple!',
-//    	})
-    })
+  var addrTpl = _.template($('#addrTpl').html())
+  $('.new_address').on('click', function () {
+    var tmp =  addrTpl({})
+    var div = document.createElement('div')
+    div.innerHTML = tmp
+    BootstrapDialog.show({
+      title: option.title || "提示",
+      message: tmp,
+      buttons: [{
+        label: '取消',
+        action: function(dialog) {
+          dialog.close();
+        }
+      }, {
+        label: '确定',
+        cssClass:"btn-primary",
+        action: function(dialog) {
+          dialog.close()
+        }
+      }]
+    });
+  })
 })
 </script>`) %>

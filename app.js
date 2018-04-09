@@ -11,6 +11,7 @@ var expressValidator = require('express-validator');
 var validatorMethods=require('./utils/validatorMethods');
 var sassMiddleware = require('node-sass-middleware');
 var index = require('./routes/index');
+var mobile = require('./routes/mobile');
 var tool = require('./routes/tool');
 var admin = require('./admin/app');
 var device = require('express-device');
@@ -62,6 +63,7 @@ app.use(function(req,res,next){
 });
 
 app.use('/', index);
+app.use('/app', mobile);
 app.use('/tool',tool);
 app.use('/admin',admin);
 
