@@ -21,8 +21,14 @@ var CartSchema = new Schema({
 	goodsNum: {type: Number, default:1}, //数量
 	isCheck: {type: Boolean, default: false}, // 是否选中
 	price: {type: Number}, // 单价
-	smallAllPrice: {type: Number}, // 小计
-	realPrice: {type: Number}, // 实付
+})
+CartSchema.plugin(function(schema) {
+	schema.methods.smallAllPrice = function () { // 小计
+		return this.goodsNum * this.price
+	}
+	schema.methods.realPrice = function () { // 实付
+		return this.goodsNum * this.price
+	}
 })
 var UserSchema = new Schema({
 	userName: {type: String}, // 登录用户名

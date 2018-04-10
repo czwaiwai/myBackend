@@ -4,7 +4,7 @@ var ccap=require('../utils/verifycode');
 // var schema=require('async-validator');
 // var User =require('../models/user');
 /* GET home page. */
-let {Page, User, Catalog, Goods, Article} = require('../viewModels')
+let {Page, User, Catalog, Goods, Article, Cart} = require('../viewModels')
 
 router.use((req,res,next) => {
 	Catalog.getFrontCatalog((err, catalogs) => {
@@ -89,6 +89,7 @@ router.get('/goods/detail/:id' , (req, res, next) => {
 
 // 购物车
 router.get('/cart/index', (req, res, next) => {
+
 	res.render('cart/index', {title: '购物车'})
 })
 
@@ -108,12 +109,56 @@ router.post('/order/index', (req, res, next) => {
 	}
 })
 
+// goodsId: {type: Schema.ObjectId}, // 产品Id
+// goodsName: {type: String}, // 产品名称
+// goodsSubName: {type: String}, // 产品sub名称
+// imgUrl: {type: String}, // 图片
+// goodsNum: {type: Number, default:1}, //数量
+// isCheck: {type: Boolean, default: false}, // 是否选中
+// price: {type: Number}, // 单价
+
 //添加到购物车
 router.post('/add2Cart', (req, res, next) => {
-	User.cart.create()
-	res.json({
-		code:0,
-		message:'操作成功'
+	Goods.findById(req.body._id, (err, goods) => {
+		if (err) return  next(err)
+		console.log(goods,'goods --- -')
+		console.log(goods.toObject())
+		let cart = {
+			goodsId: goods.toObject()._id,
+			goodsName: goods.name,
+			imgUrl: goods.imgTmb,
+			goodsNum: req.body.num,
+			isCheck: true,
+			price: goods.sellPrice,
+		}
+		console.log(cart)
+		if (req.session.user) {
+			// console.log(req.session.user)
+			Cart.add2Update(req.session.user._id, cart, (err, user) => {
+				console.log('cart --- - -', user)
+				res.json({
+					data: {cart: user.cart},
+					code:0,
+					message:'操作成功'
+				})
+			})
+
+			// Cart.create(req.session.user._id, cart, (err, newUser) => {
+			// 	if (err) return next(err)
+			// 	req.session.user.cart = newUser.cart
+			// 	res.json({
+			// 		data: {cart: newUser.cart},
+			// 		code:0,
+			// 		message:'操作成功'
+			// 	})
+			// })
+		} else {
+			res.json({
+				data: {},
+				code:-1,
+				message:'您还没有登录哦～'
+			})
+		}
 	})
 })
 
