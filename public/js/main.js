@@ -42,13 +42,34 @@ jQuery(function(){
                     }
                 }]
             });
-        }
+        },
+				Toast:function(msg,type){
+					bootoast({
+						message: msg,
+						type:type || 'success',
+						timeout:2,
+						position:'top-center',
+					});
+				}
     })
 
 
 
     // $.guidGenerator=guidGenerator;
     // console.log($.guidGenerator(),"-----");
-
+	
+	var $cartBadge = $('#cartBadge')
+	if($cartBadge && $cartBadge[0]) {
+		$cartBadge.bind('change.cartBadge',function(e, num){
+			console.log(e,num)
+			var $this = $(this)
+			if(num > 0){
+				$this.show()
+				$this.text(num)
+			} else {
+				$this.hide()
+			}
+		})
+	}
 });
 

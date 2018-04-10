@@ -116,14 +116,14 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="title" class="col-sm-2 control-label">图片上传</label>
+            <label for="title" class="col-sm-2 control-label">商品缩略图</label>
             <div class="col-sm-10">
-              <a id="imgUpload" class="btn  btn-sm btn-success">图片上传</a>
-              <input id="imgInput" name="imgTmb" type="hidden" value="<%=curr.imgTmb || ''%>">
-              <div id="showImg" class="show_img" style="height:180px;border:1px solid #e3e3e3;" >
+              <!--<a id="imgUpload" class="btn  btn-sm btn-success">图片上传</a>-->
+              <!--<input id="imgInput" name="imgTmb" type="hidden" value="<%=curr.imgTmb || ''%>">-->
+              <div id="showImg" class="show_img" style="width:200px;border:1px solid #e3e3e3;" >
                   <% if (curr.imgTmb){ %>
-                <i class="ionfont "></i>
-                <img src="<%=curr.imgTmb %>" style="max-height:100%;max-width:100%" >
+                <!--<i class="ionfont "></i>-->
+                    <img src="<%=curr.imgTmb %>" style="max-height:100%;max-width:100%" >
                   <% }%>
               </div>
             </div>
@@ -133,12 +133,14 @@
             <div class="col-sm-10">
               <div class="img_list_wrap clearfix">
                 <ul class="add_img_list">
-                  <!--<li class="img">-->
-                  <!--<i class="del iconfont icon-delete"></i>-->
-                  <!--</li>-->
+                  <% curr.imgs.forEach(function(item) { %>
+                  <li class="img"  data-tmb="<%=item %>" style="background:url(<%=item %>)  no-repeat center;background-size:cover;">
+                    <i class="del fa  fa-trash-o"></i>
+                  </li>
+                  <% })%>
                   <li class="img_file"></li>
                 </ul>
-                <input name="imgs" type="hidden" class="imgs_input" value="">
+                <input name="imgs" type="hidden" class="imgs_input" value="<%=curr.imgs.join(',') %>">
               </div>
             </div>
           </div>
@@ -238,15 +240,15 @@ jQuery(function() {
 		}
 	}
 	var getImg =  createImg()
-	$('#imgUpload').uploadImg(function(imgs){
-    	if (imgs && imgs.length > 0) {
-            var url = imgs[0].thumb.url
-    	    $('#imgInput').val(url)
-            getImg(url,function(img){
-               $('#showImg').empty().append(img)
-            })
-    	}
-    })
+//	$('#imgUpload').uploadImg(function(imgs){
+//    	if (imgs && imgs.length > 0) {
+//            var url = imgs[0].thumb.url
+//    	    $('#imgInput').val(url)
+//            getImg(url,function(img){
+//               $('#showImg').empty().append(img)
+//            })
+//    	}
+//    })
 
 
     var $imgListWrap = $('.img_list_wrap')
@@ -255,7 +257,7 @@ jQuery(function() {
     var maxImg = 4
     function imgsInit(arr) {
     	arr.forEach(function(item) {
-    		var $li = $('<li class="img" data-tmb="'+item+'"><i class="del iconfont icon-delete"></i></li>')
+    		var $li = $('<li class="img" data-tmb="'+item+'"><i class="del  fa  fa-trash-o"></i></li>')
             $li.css({"background":'url('+item+')  no-repeat center', 'background-size': 'cover'})
             $imgFile.before($li)
     	})
@@ -293,7 +295,7 @@ jQuery(function() {
     $imgFile.uploadImg(function(imgs){
     	console.log(imgs)
     	var $this = $(this)
-    	var $li = $('<li class="img" data-tmb="'+imgs[0].thumb.url+'"><i class="del iconfont icon-delete"></i></li>')
+    	var $li = $('<li class="img" data-tmb="'+imgs[0].thumb.url+'"><i class="del  fa  fa-trash-o"></i></li>')
     	$li.css({"background":'url('+imgs[0].thumb.url+')  no-repeat center', 'background-size': 'cover'})
     	$this.before($li)
     	$imgsInput.val(getImgsStr($imgListWrap))

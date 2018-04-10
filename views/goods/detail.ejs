@@ -1,6 +1,5 @@
 <% layout('layout/layout') %>
 <% block('header').append(`<style>
-
 .ul_img_list {
     list-style:none;
     width:100%;
@@ -14,6 +13,9 @@
     float:left;
     border:1px solid #e5e5e5;
 }
+.ul_img_list .mall_img.current{
+    border:1px solid #59b210;
+}
 .ul_img_list .mall_img + .mall_img{
   margin-left:6px;
 }
@@ -26,17 +28,10 @@
         <div class="col-md-12">
             <div class="row">
                 <div class="col-md-6" style="width:360px;min-width:360px;">
-                    <div style="width:100%;background:#FFF;">
-                        <div style="width:330px;height:330px;border:1px solid #e5e5e5;">
-                            <img src="<%=goods.imgTmb || '' %>">
-                        </div>
-                        <div class="">
-                            <ul class="ul_img_list clearfix">
-                                <li class="mall_img"></li>
-                                <li class="mall_img"></li>
-                                <li class="mall_img"></li>
-                                <li class="mall_img"></li>
-                            </ul>
+                    <div id="imgShowWrap" data-imgs="<%=goods.imgs.join(',') %>" style="width:100%;background:#FFF;">
+                        <div class="img_main" style="width:330px;height:330px;border:1px solid #e5e5e5;"></div>
+                        <div class="img_small">
+                            <ul class="ul_img_list clearfix"></ul>
                         </div>
                     </div>
                 </div>
@@ -105,9 +100,51 @@ jQuery(function () {
         $('#form').submit()
 	})
 	$('#addCart').on('click', function() {
-        $.post('/add2Cart', $('#form').serialize()).done(function(res){
-        	console.log(res)
-        })
+    $.post('/add2Cart', $('#form').serialize()).done(function(res){
+      console.log(res)
+      if (res.code === 0) {
+        var num = res.data.cart.reduce(function(before,item){
+          return before + item.goodsNum
+        }, 0)
+        $('#cartBadge').triggerHandler('change.cartBadge',[num])
+        $.Toast('添加成功','success')
+      } else {
+        $.Toast(res.message,'warning')
+      }
+    })
 	})
+
+    var $imgShowWrap = $('#imgShowWrap')
+    var $imgMain = $('.img_main', $imgShowWrap)
+    var $ulImgList = $('.ul_img_list',$imgShowWrap)
+    function init(arr) {
+        var doc = document.createDocumentFragment()
+        var firstUrl
+        arr.forEach(function(item, index){
+          if(index === 0) {
+            firstUrl = item.replace(/_\\$sma_[^\\.]+/,'')
+          }
+          var $li = $('<li class="mall_img" data-url="'+item+'" ></li>')
+          $li.css({'background':'url('+item+') no-repeat center','background-size': 'cover'})
+          doc.append($li[0])
+        })
+        $imgMain.css({'background':'url('+firstUrl+') no-repeat center','background-size': 'cover'})
+        $ulImgList.append(doc)
+        $ulImgList.on('mouseover','li',(function(){
+          var time
+          return function(){
+            var $this= $(this)
+            clearTimeout(time)
+            time = setTimeout(function() {
+                    var url = $this.data('url')
+                    url = url.replace(/_\\$sma_[^\\.]+/,'')
+                    console.log(url,'img')
+                    $this.addClass('current').siblings().removeClass('current')
+                    $imgMain.css({'background':'url('+url+') no-repeat center','background-size': 'cover'})
+              },300)
+          }
+        })())
+    }
+    init($imgShowWrap.data('imgs').split(','))
 })
 </script>`) %>

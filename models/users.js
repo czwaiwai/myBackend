@@ -48,6 +48,13 @@ var UserSchema = new Schema({
 	update_at: {type: Date , default: Date.now},
 }, {collection: 'user'})
 UserSchema.plugin(BaseModel)
+UserSchema.plugin(function(schema){
+	schema.methods.getCartNum = function() {
+		return this.cart.reduce((before,item) => {
+			 return before + item.goodsNum
+		},0)
+	}
+})
 UserSchema.index({userName: 1}, {unique: true})
 UserSchema.index({mobile: 1}, {unique: true})
 UserSchema.pre('save', function (next) {

@@ -1,6 +1,10 @@
 var models = require('../models')
 var User = models.User
 var getPageNum =  require('../utils/tools').getPageNum
+exports.getInstance = function (obj) {
+	return new User(obj)
+}
+
 exports.create = function (obj, callback) {
 	var user =  new User(obj)
 	user.save(callback)

@@ -57,14 +57,38 @@
             </div>
         </div>
     </div>
+    <div>
+        <!--catalogs, goods-->
+      <% goodTypes.forEach(function(item) { %>
+        <ul>
+            <li class="menu-item">
+                <a href="?catalog=<%=item.name %>" ><%=item.nameCn %></a>
+            </li>
+        </ul>
+      <% }) %>
+    </div>
     <div  class="row  margin-top20">
-        <h3 class="section-title fs20 text-center">热销推荐</h3>
-        <div class="col-md-3">13242</div>
-        <div class="col-md-3">32432</div>
-        <div class="col-md-3">2111</div>
-        <div class="col-md-3"></div>
+        <h3 class="section-title fs20 text-center" style="font-size:25px;">热销推荐</h3>
+        <% goods.forEach(function(item){  %>
+        <div class="col-xs-3 col-md-3">
+            <a  href="/goods/detail/<%=item._id %>" class="thumbnail">
+                <div style="">
+                    <div class="img_bg" style="width:100%;height:222px;background-image:url(<%=item.imgTmb %>);background-size:cover;"></div>
+                    <!--<img data-src="holder.js/100%x200" src="<%=item.imgTmb %>" alt="100%x200" style="width: 100%; display: block;" >-->
+                </div>
+                <div class="caption">
+                    <h5 class="dot text-center fs16"><%=item.name%></h5>
+                    <p class="no-margin clearfix">
+                        <span class="price pull-left fs20 text-primary">￥<%=item.sellPrice %></span>
+                        <button  data-id="<%=item._id %>" class="add_cart btn btn-primary pull-right" type="button">加入购物车</button>
+                    </p>
+                </div>
+            </a>
+        </div>
+        <%})%>
     </div>
     <div class="row margin-top20">
+        <h3 class="section-title text-center" style="font-size:25px;">文章阅读</h3>
         <div class="col-md-4  ">
             <div class="section  no-padding" style="margin: 0 -10px;">
                 <h3 class="fs20 padding-h clearfix">公司简介<small class="float_right"><a  href="/page/company" >更多 >></a></small></h3>
@@ -123,6 +147,22 @@
 <% block('footer').append(`<script src='js/iframeDialog.js'></script>`)%>
 <% block('footer').append(`<script>
     jQuery(function(){
-
+      $('.add_cart').on('click',function(e){
+        e.preventDefault()
+        e.stopPropagation()
+        var $this = $(this)
+        $.post('/add2Cart',{_id:$this.data('id'),num:1}).done(function(res){
+          console.log(res)
+          if (res.code === 0) {
+            var num = res.data.cart.reduce(function(before,item){
+              return before + item.goodsNum
+            }, 0)
+            $('#cartBadge').triggerHandler('change.cartBadge',[num])
+            $.Toast('添加成功','success')
+          } else {
+            $.Toast(res.message,'warning')
+          }
+        })
+      })
     });
 </script>`)%>

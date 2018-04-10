@@ -1,12 +1,52 @@
 <% layout('layout/appLayout') %>
+<% block('header').append(`<style>
+.navside {
+    width: 81px;
+    position: fixed;
+    top: 44px;
+    font-size: 13px;
+    height: 100%;
+    left: 0;
+    bottom: 55px;
+    background: #FFF;
+    overflow-y: auto;
+}
+</style>`)%>
 <div class="page">
+  <div class="navside">
+    <ul class="ui-list ui-list-text ui-list-active ui-list-cover ui-border-tb">
+      <% goodTypes.forEach(function(item) { %>
+        <li class="ui-border-t ">
+          <a href="?catalog=<%=item.name %>" ><%=item.nameCn %></a>
+        </li>
+      <% }) %>
+    </ul>
+  </div>
   <section class="ui-panel " style="padding-left:81px;" >
+
     <ul class="ui-grid-halve" style="padding-left: 5px;padding-right: 0px;">
+      <% goods.forEach(function(item){  %>
       <li>
+        <a href="/goods/detail/<%=item._id %>" class="thumbnail">
         <div class="ui-grid-halve-img">
-          <span style="background-image:url(http://placeholder.qiniudn.com/290x160)"></span>
+          <span style="background-image:url(<%=item.imgTmb %>) no-repeat center"></span>
+          <p><%=item.name%></p>
         </div>
+        </a>
       </li>
+      <!--<div  class="col-xs-6 col-sm-4 col-md-4  col-lg-3">-->
+        <!--<a href="/goods/detail/<%=item._id %>" class="thumbnail">-->
+          <!--<div style="">-->
+            <!--<img data-src="holder.js/100%x200" src="<%=item.imgTmb %>" alt="100%x200" style="width: 100%; display: block;" >-->
+          <!--</div>-->
+          <!--<div class="caption">-->
+            <!--<h5 class="dot text-center"><%=item.name%></h5>-->
+            <!--<p class="text-center">￥<%=item.sellPrice %></p>-->
+          <!--</div>-->
+        <!--</a>-->
+      <!--</div>-->
+      <% }) %>
+
       <li>
         <div class="ui-grid-halve-img">
           <span style="background-image:url(http://placeholder.qiniudn.com/290x160)"></span>

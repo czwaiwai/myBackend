@@ -18,7 +18,17 @@ router.get('/index', (req,res) => {
 	res.render('app/index',{title:"首页"});
 })
 router.get('/type', (req, res)=> {
-	res.render('app/type',{title:"全部分类"});
+	Catalog.getChildrenByName('goods', (err,catalogs) => {
+		if (err) return next(err)
+		let params = {}
+		if (req.query.catalog) {
+			let catalog = catalogs.find(item => item.name === req.query.catalog)
+			params.catalogPath  = new RegExp(`^${catalog.calPath},${catalog.name}`)
+		}
+		Goods.findAllByPage(params, req.query.page, 10, (err, obj) => {
+			res.render('app/type', Object.assign({title: '商品展示', goodTypes: catalogs}, obj))
+		})
+	})
 })
 router.get('/cart', (req, res)=> {
 	res.render('app/cart',{title:"购物车"});

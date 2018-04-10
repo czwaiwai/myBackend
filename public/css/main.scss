@@ -5,6 +5,7 @@
 //@import './settings';
 //@import '../scss/foundation';
 //@include foundation-everything;
+@import './bootoast';
 @import './layout';
 @import './tool';
 //@import './login';
@@ -184,4 +185,8 @@ a.normal_link:hover, a.normal_link:focus {
   font-size:30px;
   text-align:center;
   line-height:100px;
+}
+
+.thumbnail {
+  margin: 5px -10px;
 }

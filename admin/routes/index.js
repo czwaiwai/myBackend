@@ -126,10 +126,17 @@ router.post('/goods/add', (req, res, next) => {
 	params.catalogId = tmpArr[0]
 	params.catalogName = tmpArr[1]
 	params.catalogPath = tmpArr[2]
+	if(req.body.imgs) {
+		params.imgs = req.body.imgs.split(',')
+		params.imgTmb = params.imgs[0]
+	} else {
+		params.imgs = []
+		params.imgTmb = ''
+	}
 	if(req.body._id) {
 		Goods.findAndUpdate(params._id, params, (err, goods) => {
 			if (err) return  next(err)
-			req.flash('sucess', '更新成功')
+			req.flash('success', '更新成功')
 			res.redirect('/admin/goods/add?update=' + params._id)
 		})
 	} else {

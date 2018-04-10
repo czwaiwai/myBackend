@@ -4,6 +4,7 @@ var ccap=require('../utils/verifycode');
 // var schema=require('async-validator');
 // var User =require('../models/user');
 /* GET home page. */
+let EventProxy = require('eventproxy')
 let {Page, User, Catalog, Goods, Article, Cart} = require('../viewModels')
 
 router.use((req,res,next) => {
@@ -13,11 +14,26 @@ router.use((req,res,next) => {
 		next()
 	})
 })
+router.use((req, res, next) => {
+	var user = req.session.user
+	if(user && user.cart && user.cart.length >0) {
+		res.locals.cartNum= user.cart.reduce((before,item) => {
+			return before + item.goodsNum
+		}, 0)
+	} else {
+		res.locals.cartNum = 0
+	}
+	next()
+})
 // router.get(checkLogin);
-router.get('/', (req, res)=> {
+router.get('/', (req, res, next)=> {
     //console.log(req.session.user,"这里可以取到session");
-
-    res.render('index',{title:"首页"});
+	let ep = EventProxy.create('goodTypes', 'goods', (goodTypes, goods) => {
+		res.render('index',{title:"首页", goodTypes, goods});
+	})
+	ep.fail(next)
+	Catalog.getChildrenByName('goods',ep.done('goodTypes'))
+	Goods.getHotGoods (ep.done('goods'))
 });
 router.get('/imgCode',(req,res)=>{
    var arr= ccap.get();
@@ -121,13 +137,11 @@ router.post('/order/index', (req, res, next) => {
 router.post('/add2Cart', (req, res, next) => {
 	Goods.findById(req.body._id, (err, goods) => {
 		if (err) return  next(err)
-		console.log(goods,'goods --- -')
-		console.log(goods.toObject())
 		let cart = {
-			goodsId: goods.toObject()._id,
+			goodsId: goods._id,
 			goodsName: goods.name,
 			imgUrl: goods.imgTmb,
-			goodsNum: req.body.num,
+			goodsNum: req.body.num || 1,
 			isCheck: true,
 			price: goods.sellPrice,
 		}
@@ -135,14 +149,13 @@ router.post('/add2Cart', (req, res, next) => {
 		if (req.session.user) {
 			// console.log(req.session.user)
 			Cart.add2Update(req.session.user._id, cart, (err, user) => {
-				console.log('cart --- - -', user)
+				req.session.user.cart=user.cart
 				res.json({
 					data: {cart: user.cart},
 					code:0,
 					message:'操作成功'
 				})
 			})
-
 			// Cart.create(req.session.user._id, cart, (err, newUser) => {
 			// 	if (err) return next(err)
 			// 	req.session.user.cart = newUser.cart
