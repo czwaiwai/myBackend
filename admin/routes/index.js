@@ -302,6 +302,7 @@ router.get('/catalog/add', (req, res ,next) => {
     }
     if (req.query.update) {
       curr = catalogs.find(item => item.id === req.query.update)
+	    console.log(curr,'curr_catalog/add')
     }
 	  return res.render('catalog/add', {title: '添加导航', catalogs, curr} )
   })

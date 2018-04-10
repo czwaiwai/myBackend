@@ -28,11 +28,13 @@ router.use((req, res, next) => {
 // router.get(checkLogin);
 router.get('/', (req, res, next)=> {
     //console.log(req.session.user,"这里可以取到session");
-	let ep = EventProxy.create('goodTypes', 'goods', (goodTypes, goods) => {
-		res.render('index',{title:"首页", goodTypes, goods});
+	let ep = EventProxy.create('goodTypes', 'goods', 'news', 'articles', (goodTypes, goods, news, articles) => {
+		res.render('index',{title:"首页", goodTypes, goods, news, articles});
 	})
 	ep.fail(next)
 	Catalog.getChildrenByName('goods',ep.done('goodTypes'))
+	Article.findTopArticle('news', ep.done('news'))
+	Article.findTopArticle('articles', ep.done('articles'))
 	Goods.getHotGoods (ep.done('goods'))
 });
 router.get('/imgCode',(req,res)=>{
@@ -66,18 +68,28 @@ router.get('/page/:pageName', (req, res, next) => {
 })
 // 文章管理
 router.get('/article/list/:type', (req, res, next) => {
+	let ep = EventProxy.create('topArticles', 'obj', (topArticles, obj) => {
+		// res.render('index',{title:"首页", goodTypes, goods});
+		obj.topArticles = topArticles
+		res.render('article/list', obj)
+	})
+	Article.findTopArticle(req.params.type,ep.done('topArticles'))
 	Catalog.findByName(req.params.type, (err, catalog) => {
 		if (err) return next(err)
 		Article.findAllByPageCatalogs(catalog.name,req.query.page, 10, (err, obj) => {
 			if (err)  return next(err)
-			res.render('article/list', Object.assign({title:catalog.nameCn}, obj))
+
+			ep.emit('obj', Object.assign({title:catalog.nameCn}, obj));
 		})
 	})
 })
 router.get('/article/detail/:id', (req, res, next) => {
 	Article.findByIdAddView(req.params.id, (err, article) => {
 		if(err) return next(err)
-		res.render('article/detail', {title: article.title, article})
+		Article.findTopArticle(article.catalogName, (err, topArticles) => {
+			if (err) return next(err)
+			res.render('article/detail', {title: article.title, article, topArticles})
+		})
 	})
 })
 

@@ -22,6 +22,40 @@
     .list-group li {
         padding:5px 10px;
     }
+    .good_type_wrap {
+        list-style: none;
+        margin-top: 20px;
+        margin-right: -15px;
+        padding: 0;
+    }
+    .good_type_wrap li.good_type_item {
+        width: 110px;
+        height: 80px;
+        float: left;
+        margin-right: 8px;
+        font-size: 16px;
+        line-height: 40px;
+        border: 1px solid #e3e3e3;
+        text-align: center;
+    }
+    .good_type_wrap .good_type_item a {
+        width: 100%;
+        display: block;
+        height: 100%;
+        color: #FFF;
+        background: rgba(51, 51, 51, 0.32);
+        -webkit-transition: all 0.3s ease-in-out;
+        -moz-transition: all 0.3s ease-in-out;
+        transition: all 0.3s ease-in-out;
+    }
+    .good_type_wrap .good_type_item a:hover {
+        transform: scale(1.08);
+        -ms-transform: scale(1.08);
+        -moz-transform: scale(1.08);
+        -webkit-transform: scale(1.08);
+        -o-transform: scale(1.08);
+        background: rgba(87, 179, 55, 0.32);
+    }
 </style>`)%>
 <div class="container" >
     <div class="row">
@@ -57,15 +91,15 @@
             </div>
         </div>
     </div>
-    <div>
+    <div class="clearfix">
         <!--catalogs, goods-->
+      <ul class="good_type_wrap">
       <% goodTypes.forEach(function(item) { %>
-        <ul>
-            <li class="menu-item">
-                <a href="?catalog=<%=item.name %>" ><%=item.nameCn %></a>
-            </li>
-        </ul>
+        <li class="good_type_item" style="background:url(<%=item.imgUrl %>) no-repeat center;background-size:cover;">
+            <a href="/goods/index?catalog=<%=item.name %>" ><%=item.nameCn %></a>
+        </li>
       <% }) %>
+      </ul>
     </div>
     <div  class="row  margin-top20">
         <h3 class="section-title fs20 text-center" style="font-size:25px;">热销推荐</h3>
@@ -90,7 +124,7 @@
     <div class="row margin-top20">
         <h3 class="section-title text-center" style="font-size:25px;">文章阅读</h3>
         <div class="col-md-4  ">
-            <div class="section  no-padding" style="margin: 0 -10px;">
+            <div class="section  no-padding" style="height:386px;margin: 0 -10px;">
                 <h3 class="fs20 padding-h clearfix">公司简介<small class="float_right"><a  href="/page/company" >更多 >></a></small></h3>
                 <div class="padding-h">
                     <div class="spec_img">
@@ -103,40 +137,32 @@
             </div>
         </div>
         <div class="col-md-4 ">
-            <div class="section  no-padding " style="margin: 0 -10px;">
-                <h2 class="fs20 padding-h clearfix">新闻资讯<small class="float_right"><a  href="/page/company" >更多 >></a></small></h2>
+            <div class="section  no-padding " style="height:386px;margin: 0 -10px;">
+                <h2 class="fs20 padding-h clearfix">新闻资讯<small class="float_right"><a  href="/article/list/news" >更多 >></a></small></h2>
                 <div class="padding-h">
                     <div class="spec_img">
                         <img src="/upload/index_banner03.jpg">
                     </div>
                 </div>
                 <ul class="list-group list-group-no-border margin-top">
-                    <li class="list-group-item">
-                        <a class="normal_link"><i class="iconfont icon-more padding-right5"></i>你了解百香果吗</a>
-                    </li>
-                    <li class="list-group-item"><a  class="normal_link"><i class="iconfont icon-more padding-right5"></i>什么水果可有预防白血病的效果</a></li>
-                    <li class="list-group-item"><a class="normal_link"><i class="iconfont icon-more padding-right5"></i>孕妇适宜多吃以下几种水果</a></li>
-                    <li class="list-group-item"><a class="normal_link"><i class="iconfont icon-more padding-right5"></i>生活中的养生水果表</a></li>
-                    <li class="list-group-item"><a class="normal_link"><i class="iconfont icon-more padding-right5"></i>生活中的养生水果表</a></li>
+                    <% news.forEach(function(item){ %>
+                        <li class="list-group-item dot"><a  alt="<%=item.title %>"   href="/article/detail/<%=item._id %>" class="normal_link "><i class="iconfont icon-more padding-right5"></i><%=item.title %></a></li>
+                    <% }) %>
                 </ul>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="section  no-padding" style="margin: 0 -10px;">
-                <h2 class="fs20 padding-h clearfix">新闻资讯<small class="float_right"><a  href="/page/company" >更多 >></a></small></h2>
+            <div class="section  no-padding" style="height:386px;margin: 0 -10px;">
+                <h2 class="fs20 padding-h clearfix">烹调菜谱<small class="float_right"><a href="/article/list/articles" >更多 >></a></small></h2>
                 <div class="padding-h">
                     <div class="spec_img">
                         <img src="/upload/index_banner02.jpg">
                     </div>
                 </div>
                 <ul class="list-group list-group-no-border margin-top">
-                    <li class="list-group-item">
-                        <a class="normal_link"><i class="iconfont icon-more padding-right5"></i>你了解百香果吗</a>
-                    </li>
-                    <li class="list-group-item"><a class="normal_link"><i class="iconfont icon-more padding-right5"></i>什么水果可有预防白血病的效果</a></li>
-                    <li class="list-group-item"><a class="normal_link"><i class="iconfont icon-more padding-right5"></i>孕妇适宜多吃以下几种水果</a></li>
-                    <li class="list-group-item"><a class="normal_link"><i class="iconfont icon-more padding-right5"></i>生活中的养生水果表</a></li>
-                    <li class="list-group-item"><a class="normal_link"><i class="iconfont icon-more padding-right5"></i>生活中的养生水果表</a></li>
+                    <% articles.forEach(function(item){ %>
+                    <li class="list-group-item dot"><a  alt="<%=item.title %>"  href="/article/detail/<%=item._id %>" class="normal_link "><i class="iconfont icon-more padding-right5"></i><%=item.title %></a></li>
+                    <% }) %>
                 </ul>
             </div>
         </div>

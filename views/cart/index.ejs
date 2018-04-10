@@ -63,10 +63,10 @@ margin-bottom:20px;
         <div class="section section_no_padding" >
             <div class="section_title" >
                 <div class="col-md-4">商品信息</div>
-                <div class="col-md-2">单价</div>
-                <div class="col-md-2">数量</div>
-                <div class="col-md-2">小计</div>
-                <div class="col-md-2">实付</div>
+                <div class="col-md-2 text-center">单价</div>
+                <div class="col-md-2  text-center">数量</div>
+                <div class="col-md-2  text-center">小计</div>
+                <div class="col-md-2 text-center">实付</div>
             </div>
             <div class="padding15-h ">
               <% user.cart.forEach(function(item){ %>
@@ -83,10 +83,14 @@ margin-bottom:20px;
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-2">￥<%=item.price %></div>
-                    <div class="col-md-2"><%=item.goodsNum %></div>
-                    <div class="col-md-2">￥<%=item.price * item.goodsNum %></div>
-                    <div class="col-md-2">￥<%=item.price * item.goodsNum %></div>
+                    <div class="col-md-2  text-center ">￥<%=item.price %></div>
+                    <div class="col-md-2  text-center">
+                        <div class="spinner">
+                            <input name="num" style="width:55px;" type="text" value="<%=item.goodsNum %>" >
+                        </div>
+                    </div>
+                    <div class="col-md-2  text-center">￥<%=item.price * item.goodsNum %></div>
+                    <div class="col-md-2  text-center">￥<%=item.price * item.goodsNum %></div>
                 </div>
               <% })%>
             </div>
@@ -99,7 +103,9 @@ margin-bottom:20px;
         <% } %>
     </div>
 </div>
+<% block('footer').append(`<script src="/js/spinner.js" ></script>`); %>
 <% block('footer').append(`<script>
-
-
+jQuery(function(){
+	$(".spinner").Spinner();
+})
 </script>`) %>

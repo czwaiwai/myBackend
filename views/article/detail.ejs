@@ -31,21 +31,12 @@
     </div>
     <div class="row">
         <div class="col-md-3">
-            <div class="sidebar-widget newsletter wow  outer-bottom-small" style="visibility: visible; ">
-                <h3 class="section-title">销量最佳</h3>
-                <div class="sidebar-widget-body outer-top-xs">
-                    <ul class="nav nav-pills nav-stacked">
-                        <li><a>公司介绍</a></li>
-                        <li class="active"><a>发货通知</a></li>
-                        <li><a>联系我们</a></li>
-                    </ul>
-                </div><!-- /.sidebar-widget-body -->
-            </div>
+            <% include ../navbar/hotArtNav %>
+            <% include ../navbar/addrNav %>
         </div>
         <div class="col-md-9">
             <div class="page" >
                 <article>
-
                     <h2 style="margin-top:0;" class="page-head-title"><%=article.title %></h2>
                     <p class="fs12 text-muted text-right no-margin">
                         <span class="fs12 margin-right20"><i class="iconfont icon-browse  padding-right5 "></i><%=article.read_count %></span>
@@ -71,4 +62,5 @@
 
 </div>
 <% block('footer').append(`<script>
+
 </script>`)%>

@@ -2,21 +2,11 @@
     <h3 class="section-title">推荐阅读</h3>
     <div class="sidebar-widget-body margin-top15">
         <ul class="list-group list-group-no-border list-group-other-padding  margin-bottom5">
+           <% topArticles.forEach(function(item){ %>
             <li class="list-group-item dot">
-                <a class="normal_link"><i class="iconfont icon-more padding-right5"></i>一杯清茶放空心灵的禅意</a>
+                <a class="normal_link" href="/article/detail/<%=item._id%>"><i class="iconfont icon-more padding-right5"></i><%=item.title %></a>
             </li>
-            <li class="list-group-item  dot">
-                <a class="normal_link"><i class="iconfont icon-more padding-right5"></i>三伏天 | 宜伏 宜苦 宜茯</a>
-            </li>
-            <li class="list-group-item  dot">
-                <a class="normal_link"><i class="iconfont icon-more padding-right5"></i>Morbi leo risus</a>
-            </li>
-            <li class="list-group-item  dot">
-                <a  class="normal_link"><i class="iconfont icon-more padding-right5"></i>Porta ac consectetur ac</a>
-            </li>
-            <li class="list-group-item  dot">
-                <a  class="normal_link"><i class="iconfont icon-more padding-right5"></i>Vestibulum at eros</a>
-            </li>
+            <%}) %>
         </ul>
     </div><!-- /.sidebar-widget-body -->
 </div>

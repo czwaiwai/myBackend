@@ -1,8 +1,18 @@
 <% layout('layout/appLayout') %>
 <div class="page">
-  <section class="ui-placehold-img">
-    <span style="background-image:url(http://placeholder.qiniudn.com/640x200)"></span>
-  </section>
+  <div id="full_feature" class="swipslider">
+    <ul class="sw-slides">
+      <li class="sw-slide">
+        <img src="/upload/banner1.jpg" alt="Summer beach concept">
+      </li>
+      <li class="sw-slide">
+        <img src="/upload/banner2.jpg" alt="Lang from Yie Ar Kung Fu">
+      </li>
+      <li class="sw-slide">
+        <img src="/upload/banner3.jpg" alt="Tiny Tina">
+      </li>
+    </ul>
+  </div>
   <section class="ui-panel" >
     <ul class="ui-row-flex">
       <li class="ui-col ">畜牧</li>
@@ -48,4 +58,9 @@
     </ul>
   </section>
 </div>
-
+<% block('footer').append(`<script src='/js/swipeslider.js'></script>`)%>
+<% block('footer').append(`<script>
+jQuery(function(){
+    $('#full_feature').swipeslider();
+})
+</script>`)%>

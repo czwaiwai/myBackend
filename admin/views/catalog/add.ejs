@@ -5,7 +5,7 @@
     <div class="col-md-12">
         <div class="box box-info">
             <div class="box-header with-border">
-                <h3 class="box-title">添加当行</h3>
+                <h3 class="box-title">添加导航</h3>
             </div>
             <!-- /.box-header -->
             <!-- form start -->
@@ -28,7 +28,7 @@
                         <div class="col-sm-10">
                             <select name="parent" class="form-control">
                                 <% catalogs.forEach(function(item){ %>
-                                <option value="<%=item.calPath || '' %>,<%=item.name %>" <%=curr.parent === item.calPath?'selected':'' %> >
+                                <option value="<%=item.calPath || '' %>,<%=item.name %>" <%=curr.calPath === item.calPath+','+item.name?'selected':'' %> >
                                     <%=item.deepStr%><%=item.nameCn%>
                                 </option>
                                 <% }) %>
@@ -39,6 +39,19 @@
                         <label for="path" class="col-sm-2 control-label">关联页面路径</label>
                         <div class="col-sm-10">
                             <input name="relativeUrl"  value="<%=curr.relativeUrl || '' %>" ttype="text" class="form-control" placeholder="关联的Url">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="title" class="col-sm-2 control-label">图片展示</label>
+                        <div class="col-sm-10">
+                            <a id="imgUpload" class="btn  btn-sm btn-success">图片上传</a>
+                            <input id="imgInput" name="imgUrl" type="hidden" value="<%=curr.imgUrl || ''%>">
+                            <div id="showImg" class="show_img" style="width:200px;" >
+                                <% if (curr.imgUrl){ %>
+                                <i class="ionfont "></i>
+                                <img src="<%=curr.imgUrl %>" style="max-height:100%;max-width:100%" >
+                                <% }%>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group">
@@ -81,5 +94,39 @@
         </div>
     </div>
 </div>
+<% block('footer').append(`<script src="${assetsPath}/js/uploadImg.js"></script>`); %>
 <% block('footer').append(`<script>
+jQuery(function(){
+		function createImg () {
+		var img
+		return function (url,cb) {
+			if (!img) {
+                img = new Image()
+                img.src = url
+                img.style['max-width'] = '100%'
+                img.style['max-height'] = '100%'
+                img.onload = function () {
+                    img.onload = null
+                    cb(img)
+                }
+            } else {
+				img.src = url
+				img.onload =function () {
+					img.onload = null
+					cb(img)
+				}
+            }
+		}
+	}
+	var getImg =  createImg()
+	$('#imgUpload').uploadImg(function(imgs){
+    	if (imgs && imgs.length > 0) {
+            var url = imgs[0].thumb.url
+    	    $('#imgInput').val(url)
+            getImg(url,function(img){
+               $('#showImg').empty().append(img)
+            })
+    	}
+    })
+})
 </script>`) %>

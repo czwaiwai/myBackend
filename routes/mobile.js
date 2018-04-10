@@ -7,7 +7,8 @@ var ccap=require('../utils/verifycode');
 // var schema=require('async-validator');
 // var User =require('../models/user');
 /* GET home page. */
-let {Page, User, Catalog, Goods, Article} = require('../viewModels')
+let EventProxy = require('eventproxy')
+let {Page, User, Catalog, Goods, Article, Cart} = require('../viewModels')
 
 router.get('/', (req, res)=> {
 	//console.log(req.session.user,"这里可以取到session");
@@ -15,7 +16,15 @@ router.get('/', (req, res)=> {
 	
 });
 router.get('/index', (req,res) => {
-	res.render('app/index',{title:"首页"});
+	let ep = EventProxy.create('goodTypes', 'goods', 'news', 'articles', (goodTypes, goods, news, articles) => {
+		res.render('app/index',{title:"首页", goodTypes, goods, news, articles});
+	})
+	ep.fail(next)
+	Catalog.getChildrenByName('goods',ep.done('goodTypes'))
+	Article.findTopArticle('news', ep.done('news'))
+	Article.findTopArticle('articles', ep.done('articles'))
+	Goods.getHotGoods (ep.done('goods'))
+
 })
 router.get('/type', (req, res)=> {
 	Catalog.getChildrenByName('goods', (err,catalogs) => {

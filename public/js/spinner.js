@@ -7,7 +7,11 @@
 		this.$el = $el
 		$el.addClass('spinner')
 		this.$input = $el.find('input')
-		options.default && this.$input.val(options.default)
+		if(!this.$input.val()){
+			options.default && this.$input.val(options.default)
+		} else {
+			this.options.default = this.$input.val()
+		}
 		this.$prev = $('<a class="prev" href="javascript:void(0)" >-</a>')
 		this.$next = $('<a class="next" href="javascript:void(0)" >+</a>')
 		$el.prepend(this.$prev)

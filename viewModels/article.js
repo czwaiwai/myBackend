@@ -9,6 +9,12 @@ exports.getListByCatalogPath = function (catalogName, callback) {
 exports.findById = function (id, callback) {
 	Article.findById(id, callback)
 }
+exports.findTopArticle =function (catalogName, callback) {
+	var article = Article.find({catalogName:catalogName,isHot:1},{title:1,imgUrl:1})
+	article.sort({read_count:-1,create_at:-1})
+	article.limit(5)
+	article.exec(callback)
+}
 exports.findByIdAddView = function (id, callback) {
 	Article.findByIdAndUpdate(id, {$inc:{read_count:1}}, callback)
 }
