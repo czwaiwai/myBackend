@@ -1,6 +1,11 @@
 /**
  * Created by waiwai on 17-7-12.
  **/
+_.templateSettings = {
+	evaluate    : /<@([\s\S]+?)@>/g,
+	interpolate : /<@=([\s\S]+?)@>/g,
+	escape      : /<@-([\s\S]+?)@>/g
+};
 jQuery(function(){
 
     function guidGenerator() {

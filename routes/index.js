@@ -139,13 +139,15 @@ router.get('/cart/index', (req, res, next) => {
 router.post('/order/index', (req, res, next) => {
 	console.log(req.body)
 	let address = null
+	let addrList = []
 	if (req.body.status === 'buy') {
 		let user = req.session.user
-		if (user.address && user.address.length) {
+		if (user.address && user.address.length>0) {
 			address = user.address[0]
+			addrList = user.addrList
 		}
 		Goods.findInIds([req.body._id], (err, goods) => {
-			res.render('order/index', {title: '下单',goods, address})
+			res.render('order/index', {title: '下单',goods, address, addrList})
 		})
 	}
 	if (req.body.status === 'cart') {
@@ -227,6 +229,18 @@ router.get('/account/changePwd', (req, res, next) => {
 router.get('/account/orderManage', (req, res, next) => {
 	res.render('account/orderManage', {title: '订单管理'})
 })
+
+// 获取所有地址
+router.get('/account/getAllAddress', (req, res, next) => {
+	Address.findAllAddress(req.session.user._id, (err, address) => {
+		if (err) return next(err)
+		res.json({
+			code:0,
+			message:'操作成功',
+			data: address
+		})
+	})
+})
 // 地址保存
 router.post('/account/address', (req, res, next) => {
 	// req.body
@@ -246,9 +260,10 @@ router.post('/account/address', (req, res, next) => {
 		area: areaArr[1]
 	}
 	Address.create(req.session.user._id,param, (err, user) => {
+		if (err) return next(err)
 		console.log(user)
 		res.json({
-			data: {},
+			data: {user},
 			code: 0,
 			message: '操作成功'
 		})

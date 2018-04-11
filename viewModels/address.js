@@ -11,3 +11,7 @@ exports.create = function (userId, obj, callback) {
 		user.save(callback)
 	})
 }
+
+exports.findAllAddress = function (userId, callback) {
+	User.findOne({_id:userId}, {address:1}, callback)
+}

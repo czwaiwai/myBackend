@@ -29,6 +29,19 @@ margin-bottom:20px;
     margin: 0 auto 15px auto;
     cursor: pointer;
 }
+li.addr_card.active {
+    border: 1px solid #58953b;
+    position: relative;
+}
+li.addr_card.active:after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    border-width: 20px 0px 20px 20px;
+    border-style: solid;
+    border-color: transparent transparent #58953b transparent;
+}
 </style>`) %>
 <div class="container">
     <div id="addressWrap" class="section section_no_padding" >
@@ -38,9 +51,11 @@ margin-bottom:20px;
                 <div >
                     <div class="col-md-8">
                         <p><i class="iconfont icon-map padding-right5" style="font-size: 34px;vertical-align: middle;"></i><button class="addr_update btn btn-sm btn-info">修改</button></p>
-                        <p><label>收货人：</label><span><%=address.name %></span></p>
-                        <p><label>联系方式：</label><span><%=address.mobile %></span></p>
-                        <p><label>收货地址：</label><span><%=address.province %><%=address.city %><%=address.area %><%=address.address%></span></p>
+                        <div id="addrShowDetail">
+                            <p><label>收货人：</label><span><%=address && address.name %></span></p>
+                            <p><label>联系方式：</label><span><%=address && address.mobile %></span></p>
+                            <p><label>收货地址：</label><span><%=address && address.province %><%=address && address.city %><%=address && address.area %><%=address && address.address%></span></p>
+                        </div>
                     </div>
                     <div class="col-md-4">
                         <div class="text-center margin20-h margin-v padding-top20 padding-left20 border-left" style="height: 140px;">
@@ -142,14 +157,21 @@ margin-bottom:20px;
     </div>
 </div>
 <% block('footer').append('<script src="/js/adChoose.js"></script>') %>
+<% block('footer').append(`<script id="addShowDetailTpl" type="text/template">
+<p><label>收货人：</label><span><@=address.name @></span></p>
+<p><label>联系方式：</label><span><@=address.mobile @></span></p>
+<p><label>收货地址：</label><span><@=address.province @><@=address.city @><@=address.area @><@=address.address @></span></p>
+</script>`)%>
 <% block('footer').append(`<script id="addrChooseTpl" type="text/template">
   <div >
     <ul class="addr_choose_wrap">
-      <li class="addr_card">
-           <p><label>收货人：</label><span>是的凡事都凡事都</span></p>
-           <p><label>联系方式：</label><span>13728905705</span></p>
-           <p><label>收货地址：</label><span>山西省晋城市城区撒地方是的的发见识到了客服撒大大三解放昆仑山的</span></p>
+      <@ _.forEach(address,function(item){ @>
+      <li data-id="<@=item._id @>" class="addr_card">
+           <p><label>收货人：</label><span><@=item.name @></span></p>
+           <p><label>联系方式：</label><span><@=item.mobile @></span></p>
+           <p><label>收货地址：</label><span><@=item.province @><@=item.city @><@=item.area @><@=item.address @></span></p>
        </li>
+       <@ }) @>
     </ul>
   </div>
 </script>`) %>
@@ -163,8 +185,23 @@ jQuery(function(){
    var $addrChange = $('.addr_change')
    var $addrShow = $('#addrShow')
    var $addrForm = $('#addrForm')
+   var $addrCancel =  $('.addr_cancel')
+   var $addrShowDetail = $('#addrShowDetail')
    var address = ${JSON.stringify(address)}
-   console.log(address)
+   var addrList = ${JSON.stringify(addrList)}
+   console.log(address,'address')
+   function init () {
+   	 if (!address) {
+   	 	$addrCancel.hide()
+   	 } else {
+   	 	setfillAddr(address)
+   	 }
+   }
+   function setfillAddr(address) {
+   	var tmp = _.template($('#addShowDetailTpl').html())({address:address})
+   	$addrShowDetail.empty().html(tmp)
+   }
+   init(address)
     $addressChoose.adChoose({
       provinceUrl: '/cityAndArea',
       cityUrl: '/cityAndArea?name=city',
@@ -196,25 +233,54 @@ jQuery(function(){
    // 切换地址
    var addrChooseTpl = _.template($('#addrChooseTpl').html())
    $addressWrap.on('click', '.addr_change', function () {
-        var tmp =  addrChooseTpl({})
-        var div = document.createElement('div')
-        div.innerHTML = tmp
-        BootstrapDialog.show({
-          title:"修改地址",
-          message: div,
-          buttons: [{
-            label: '取消',
-            action: function(dialog) {
-              dialog.close();
-            }
-          }, {
-            label: '确定',
-            cssClass:"btn-primary",
-            action: function(dialog) {
-              dialog.close()
-            }
-          }]
-        });
+   	    var choose = ''
+        $.get('/account/getAllAddress').done(function(res) {
+            console.log(res.data.address)
+            addrList = res.data.address
+            var tmp =  addrChooseTpl({address:res.data.address})
+            var div = document.createElement('div')
+            div.innerHTML = tmp
+            BootstrapDialog.show({
+              title:"切换地址",
+              message: div,
+              onshown: function(dialogRef){
+                var $body = dialogRef.getModalBody()
+                console.log($body)
+                $body.on('click','.addr_card',function() {
+                	var $this = $(this)
+                	if($this.hasClass('active')) {
+                		$this.removeClass('active')
+                		choose = ''
+                	} else {
+                		choose = $this.data('id')
+                		$this.addClass('active').siblings().removeClass('active')
+                	}
+                })
+              },
+              buttons: [{
+                label: '取消',
+                action: function(dialog) {
+                  dialog.close();
+                }
+              }, {
+                label: '确定',
+                cssClass:"btn-primary",
+                action: function(dialog) {
+                  if(!choose) {
+                  	$.Toast('请选择你的地址','warning')
+                  } else {
+                  	var newChoose = addrList.find(function(item) {
+                  	    return 	item._id === choose
+                  	})
+                  	address = newChoose
+                  	setfillAddr(address)
+                    dialog.close()
+                  }
+                }
+              }]
+            });
+        })
+
    })
    // 取消地址
    $addressWrap.on('click', '.addr_cancel', function () {
@@ -236,8 +302,12 @@ jQuery(function(){
       submitHandler:function(form){
         var formParams = $(form).serialize();
         console.log(formParams)
-        $.post('/account/address', $(form).serialize()).done(function(){
-
+        $.post('/account/address', $(form).serialize()).done(function(res){
+            var user = res.data.user
+            address = user.address[user.address.length -1]
+            setfillAddr(address)
+            $addrForm.hide()
+            $addrShow.show()
         })
         return false;
       }
