@@ -5,7 +5,7 @@ var AddressSchema = new Schema({
 	name: {type: String},
 	mobile: {type: String},
 	isDefault: {type: Number},
-	district: {type: String},
+	address: {type: String},
 	provinceId: {type: Number},
 	province: {type:String},
 	cityId: {type: Number},

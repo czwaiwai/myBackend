@@ -19,3 +19,8 @@ exports.getPageNum = function (count,pageSize){
 	}
 	return parseInt(count / pageSize) + 1
 }
+
+exports.formatFloat = function(f, digit = 2) {
+	var m = Math.pow(10, digit);
+	return parseInt(f * m, 10) / m;
+}

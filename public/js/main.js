@@ -50,6 +50,10 @@ jQuery(function(){
 						timeout:2,
 						position:'top-center',
 					});
+				},
+				formatFloat:  function(f, digit) {
+					var m = Math.pow(10, digit || 2);
+					return parseInt(f * m, 10) / m;
 				}
     })
 
@@ -71,5 +75,23 @@ jQuery(function(){
 			}
 		})
 	}
+	$.validator.setDefaults({
+		errorLabelContainer:'.form-error',
+		onkeyup: false,
+		rules:{},
+		messages:{},
+		highlight: function ( element, errorClass, validClass ) {
+			$( element ).closest('.form-group').addClass( "has-error" ).removeClass( "has-success" );
+		},
+		unhighlight: function (element, errorClass, validClass) {
+			$( element ).closest('.form-group').addClass( "has-success" ).removeClass( "has-error" );
+		},
+		showErrors:function(errorMap, errorList){
+			this.defaultShowErrors();
+			if($('#back-error')[0]){
+				$('#back-error').hide();
+			}
+		}
+	});
 });
 

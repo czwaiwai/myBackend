@@ -15,7 +15,7 @@ router.get('/', (req, res)=> {
 	res.redirect('/index')
 	
 });
-router.get('/index', (req,res) => {
+router.get('/index', (req,res,next) => {
 	let ep = EventProxy.create('goodTypes', 'goods', 'news', 'articles', (goodTypes, goods, news, articles) => {
 		res.render('app/index',{title:"首页", goodTypes, goods, news, articles});
 	})

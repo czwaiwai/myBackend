@@ -18,21 +18,29 @@
 		$el.append(this.$next)
 		this.beforeVal = this.options.default || 1
 		this.render(options.default)
-		$el.on('change keyup', 'input', function(){
-			var $this = $(this)
-			self.render($this.val())
-		})
 		var self = this
+		$el.on('change keyup', 'input', (function(that){
+			var timer
+			return function() {
+					clearTimeout(timer)
+					var timer = setTimeout(function() {
+						that.render(that.$input.val())
+						options.callback.call(that.$el,that.$input.val())
+					},150)
+			}
+		})(this))
 		$el.on('click', '.prev', function() {
 			var $this = $(this)
 			var val = parseInt(self.$input.val())
 			val--
 			self.render(val)
+			options.callback.call($el,val)
 		})
 		$el.on('click', '.next', function() {
 			var val = parseInt(self.$input.val())
 			val++
 			self.render(val)
+			options.callback.call($el,val)
 		})
 	}
 	spinner.prototype.render = function (num) {
@@ -60,6 +68,7 @@
 			min:1,
 			max:99,
 			default:1,
+			callback:function (num) {}
 		}
 		return this.each(function (){
 			var $this = $(this)

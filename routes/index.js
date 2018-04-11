@@ -4,8 +4,9 @@ var ccap=require('../utils/verifycode');
 // var schema=require('async-validator');
 // var User =require('../models/user');
 /* GET home page. */
+let {formatFloat} = require('../utils/tools')
 let EventProxy = require('eventproxy')
-let {Page, User, Catalog, Goods, Article, Cart} = require('../viewModels')
+let {Page, User, Catalog, Goods, Article, Cart, Address} = require('../viewModels')
 
 router.use((req,res,next) => {
 	Catalog.getFrontCatalog((err, catalogs) => {
@@ -117,19 +118,34 @@ router.get('/goods/detail/:id' , (req, res, next) => {
 
 // 购物车
 router.get('/cart/index', (req, res, next) => {
-
-	res.render('cart/index', {title: '购物车'})
+	let user = req.session.user
+	let carts = []
+	let total = 0
+	if (user) {
+		carts = user.cart.map(item => {
+			item.subTotal = formatFloat(item.goodsNum * item.price)
+			item.payTotal = formatFloat(item.goodsNum * item.price)
+			total += item.payTotal
+			return item
+		})
+		total = formatFloat(total)
+	}
+	res.render('cart/index', {title: '购物车', carts, total})
 })
 
 
 
 //订单
 router.post('/order/index', (req, res, next) => {
-	let province = require('../utils/province')
 	console.log(req.body)
+	let address = null
 	if (req.body.status === 'buy') {
+		let user = req.session.user
+		if (user.address && user.address.length) {
+			address = user.address[0]
+		}
 		Goods.findInIds([req.body._id], (err, goods) => {
-			res.render('order/index', {title: '下单', province, goods})
+			res.render('order/index', {title: '下单',goods, address})
 		})
 	}
 	if (req.body.status === 'cart') {
@@ -211,7 +227,41 @@ router.get('/account/changePwd', (req, res, next) => {
 router.get('/account/orderManage', (req, res, next) => {
 	res.render('account/orderManage', {title: '订单管理'})
 })
-
+// 地址保存
+router.post('/account/address', (req, res, next) => {
+	// req.body
+	var provArr = req.body.province.split(',')
+	var cityArr = req.body.city.split(',')
+	var areaArr = req.body.area.split(',')
+	let param = {
+		name: req.body.name,
+		mobile: req.body.mobile,
+		isDefault: false,
+		address: req.body.address,
+		provinceId: provArr[0],
+		province: provArr[1],
+		cityId: cityArr[0],
+		city: cityArr[1],
+		areaId: areaArr[0],
+		area: areaArr[1]
+	}
+	Address.create(req.session.user._id,param, (err, user) => {
+		console.log(user)
+		res.json({
+			data: {},
+			code: 0,
+			message: '操作成功'
+		})
+	})
+})
+router.post('/account/addressRemove', (req, res, next) => {
+	
+	res.json({
+		data: {},
+		code: 0,
+		message: '操作成功'
+	})
+})
 // 地址选择
 router.get('/cityAndArea', (req, res, next) => {
 	if (req.query.addrId && req.query.name) {
@@ -228,6 +278,15 @@ router.get('/cityAndArea', (req, res, next) => {
 		} else {
 			return res.sendStatus(404)
 		}
+	} else {
+		let addr = require('../utils/province')
+		return res.json({
+			data: {
+				list: addr,
+			},
+			code: 0,
+			message: '操作成功'
+		})
 	}
 })
 
