@@ -27,7 +27,8 @@
 		}
 		var options = $.extend(this.options, opt)
 		if (options.provinceId) {
-			$('option[value^="'+ options.provinceId+'"]',$one).attr('selected',true)
+			$one[0].value = $('option[value^="'+ options.provinceId+'"]',$one).val()
+			// $one[0].clientWidth
 			value.province = $one.val()
 			that.getData(that.options.cityUrl, options.provinceId, function(str) {
 				$two.empty().append(str)

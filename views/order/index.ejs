@@ -106,6 +106,7 @@ li.addr_card.active:after {
                         </div>
                         <div class="col-md-4">
                             <div class="margin20-h padding-top20 padding-left20 border-left" style="height: 170px;">
+                                <input type="hidden" name="isUpdate" value="" >
                                 <button type="submit" class="btn btn-info">保存地址</button>
                                 <button type="button" class="btn btn-default addr_cancel">取消</button>
                             </div>
@@ -177,7 +178,6 @@ li.addr_card.active:after {
 </script>`) %>
 <% block('footer').append(`<script>
 jQuery(function(){
-
    var $addressChoose = $('#addressChoose')
    var $addressWrap = $('#addressWrap')
    var $addrAdd = $('.addr_add')
@@ -214,6 +214,7 @@ jQuery(function(){
    // 添加地址
    $addressWrap.on('click', '.addr_add', function() {
    	  $addrForm.find('form')[0].reset();
+   	  $addrForm.find('input[name=isUpdate]').val('')
    	  $addrShow.hide()
       $addrForm.show()
    })
@@ -227,6 +228,7 @@ jQuery(function(){
       $addrForm.find('textarea[name=address]').val(address.address)
       $addrForm.find('input[name=name]').val(address.name)
       $addrForm.find('input[name=mobile]').val(address.mobile)
+      $addrForm.find('input[name=isUpdate]').val(address._id)
       $addrShow.hide()
       $addrForm.show()
    })
@@ -273,6 +275,7 @@ jQuery(function(){
                   	    return 	item._id === choose
                   	})
                   	address = newChoose
+                  	console.log(address , 'address')
                   	setfillAddr(address)
                     dialog.close()
                   }
@@ -280,7 +283,6 @@ jQuery(function(){
               }]
             });
         })
-
    })
    // 取消地址
    $addressWrap.on('click', '.addr_cancel', function () {

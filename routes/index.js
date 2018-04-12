@@ -247,6 +247,7 @@ router.post('/account/address', (req, res, next) => {
 	var provArr = req.body.province.split(',')
 	var cityArr = req.body.city.split(',')
 	var areaArr = req.body.area.split(',')
+	
 	let param = {
 		name: req.body.name,
 		mobile: req.body.mobile,
@@ -259,9 +260,16 @@ router.post('/account/address', (req, res, next) => {
 		areaId: areaArr[0],
 		area: areaArr[1]
 	}
-	Address.create(req.session.user._id,param, (err, user) => {
+	let action = "create"
+	if(req.body.isUpdate) {
+		param._id = req.body.isUpdate
+		action = "update"
+	} else {
+		action = "create"
+	}
+	Address[action](req.session.user._id,param, (err, user) => {
 		if (err) return next(err)
-		console.log(user)
+		console.log(user, 'user -- -address')
 		res.json({
 			data: {user},
 			code: 0,
