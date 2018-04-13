@@ -21,7 +21,25 @@ jQuery(function(){
 	  BootstrapDialog.DEFAULT_TEXTS[BootstrapDialog.TYPE_PRIMARY] = '提示';
     BootstrapDialog.DEFAULT_TEXTS['OK'] = '确定'
     BootstrapDialog.DEFAULT_TEXTS['CANCEL'] = '取消'
-	  // BootstrapDialog.DEFAULT_TEXTS['CONFIRM'] = '提示'
+		BootstrapDialog.defaultOptions = {
+			type: BootstrapDialog.TYPE_PRIMARY,
+			size: BootstrapDialog.SIZE_NORMAL,
+			cssClass: '',
+			title: "提示",
+			message: null,
+			nl2br: true,
+			closable: true,
+			closeByBackdrop: true,
+			closeByKeyboard: true,
+			spinicon: BootstrapDialog.ICON_SPINNER,
+			autodestroy: true,
+			draggable: false,
+			animate: false,
+			description: '',
+			tabindex: -1
+		};
+
+	// BootstrapDialog.DEFAULT_TEXTS['CONFIRM'] = '提示'
     $.extend({
         confirmSubmit:function(message,callback,options){
             var option=options || {};
@@ -48,6 +66,34 @@ jQuery(function(){
                 }]
             });
         },
+	      alert:function(msg,title,callback) {
+		      var cb = callback
+		      if(typeof title === 'function') {
+			      cb = title
+			      title = '提示'
+		      }
+		      BootstrapDialog.alert({
+			      title: title,
+			      message: msg,
+			      closable: true, // <-- Default value is false
+			      draggable: false, // <-- Default value is false
+			      callback: cb
+		      }).setSize(BootstrapDialog.SIZE_SMALL)
+	      },
+	      confirm:function(msg,title,callback) {
+					var cb = callback
+        	if(typeof title === 'function') {
+						cb = title
+		        title = '提示'
+					}
+		      BootstrapDialog.confirm({
+			      title: title,
+			      message: msg,
+			      closable: true, // <-- Default value is false
+			      draggable: false, // <-- Default value is false
+			      callback:cb
+		      }).setSize(BootstrapDialog.SIZE_SMALL)
+	      },
 				Toast:function(msg,type){
 					bootoast({
 						message: msg,

@@ -6,6 +6,10 @@
     text-align:center;
     font-weight:normal;
 }
+.table > thead > tr > th {
+ border-bottom: 1px solid #ddd;
+}
+
 .table td {
     text-align:center;
     height:90px;
@@ -39,27 +43,31 @@
             <div>
                 <div class="padding-bottom clearfix">
                     <span>您最多能创建10个收货地址</span>
-                    <a class="new_address float_right" href="javascript:void(0)">新建地址</a>
+                    <a id="newAddress" class="new_address float_right" href="javascript:void(0)">新建地址</a>
                 </div>
-                <div class="panel panel-default ">
-                    <table class="table table-hover">
-                        <tr>
-                            <th>收货人</th>
-                            <th>地址</th>
-                            <th>联系方式</th>
-                            <th>操作</th>
-                            <th></th>
-                        </tr>
-                        <tr>
-                            <td>曹正 <small class="text-muted">[默认]</small></td>
-                            <td>大数据发生了贷款及分类考试的凡事都</td>
-                            <td>13728905705</td>
-                            <td>
-                                <a class="btn btn-link">修改</a>
-                                <a class="btn btn-link">删除</a>
-                            </td>
-                            <td></td>
-                        </tr>
+                <div class=" panel  panel-default ">
+                    <table  class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th >收货人</th>
+                                <th>地址</th>
+                                <th>联系方式</th>
+                                <th>操作</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableAddress" >
+                            <tr>
+                                <td>曹正 <small class="text-muted">[默认]</small></td>
+                                <td>大数据发生了贷款及分类考试的凡事都</td>
+                                <td>13728905705</td>
+                                <td>
+                                    <a data-id="" class="btn btn_update btn-link">修改</a>
+                                    <a data-id="" class="btn btn_del btn-link">删除</a>
+                                </td>
+                                <td></td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -67,22 +75,36 @@
         </div>
     </div>
 </div>
+<% block('footer').append(`<script id="addrListTpl" type="text/template">
+    <@ _.forEach(list,function(item){ @>
+    <tr>
+        <td><@=item.name @> <small class="text-muted">[默认]</small></td>
+        <td width="260"><@=item.province+item.city+item.area+item.address @></td>
+        <td><@=item.mobile @></td>
+        <td>
+            <a data-id="<@= item._id @>" class="btn btn_update btn-link">修改</a>
+            <a data-id="<@= item._id @>" class="btn btn_del btn-link">删除</a>
+        </td>
+        <td></td>
+    </tr>
+    <@ }) @>
+</script>`)%>
 <% block('footer').append(`<script id="addrTpl" type="text/template">
      <form class="form-horizontal margin-top20">
-        <div class="form-group">
+        <div id="addressChoose" class="form-group">
             <label for="inputEmail3" class="col-sm-2 control-label">所在地区</label>
             <div class="col-sm-3">
-                <select id="provinceChoose" name="provinceId"  class="province_choose form-control">
+                <select name="province"  class="province_choose form-control">
                     <option>请选择</option>
                  </select>
             </div>
             <div class="col-sm-3">
-                <select  id="cityChoose" name="city" class="form-control">
+                <select  name="city" class="form-control">
                     <option>请选择</option>
                 </select>
             </div>
             <div class="col-sm-4">
-                <select  id="districtChoose"  name="district" class="form-control">
+                <select  name="area" class="form-control">
                     <option>请选择</option>
                 </select>
             </div>
@@ -90,31 +112,89 @@
         <div class="form-group">
             <label for="inputPassword3" class="col-sm-2 control-label">详细地址</label>
             <div class="col-sm-10">
-                <textarea name="address" class="form-control" style="resize:none;" rows="3" placeholder="详细地址，街道，门牌号等"></textarea>
+                <textarea name="address"   class="form-control" style="resize:none;" rows="3" placeholder="详细地址，街道，门牌号等"><@=address.address @></textarea>
             </div>
         </div>
         <div class="form-group">
             <label for="inputPassword3" class="col-sm-2 control-label">收件人</label>
             <div class="col-sm-4">
-                <input type="text" name="name" class="form-control" id="inputPassword3" placeholder="收件人姓名">
+                <input type="text" name="name"  value="<@= address.name @>" class="form-control" id="inputPassword3" placeholder="收件人姓名">
             </div>
             <label for="inputPassword3" class="col-sm-2 control-label">手机号码</label>
             <div class="col-sm-4">
-                <input type="text" name="mobile" class="form-control" id="inputPassword3" placeholder="手机号码">
+                <input type="text" name="mobile" value="<@= address.mobile @>" class="form-control" id="inputPassword3" placeholder="手机号码">
             </div>
         </div>
+        <input name="isUpdate" type="hidden" value="<@= address.isUpdate @>" >
      </form>
 </script>`) %>
+<% block('footer').append('<script src="/js/adChoose.js"></script>') %>
 <% block('footer').append(`<script>
 jQuery(function() {
   var addrTpl = _.template($('#addrTpl').html())
-  $('.new_address').on('click', function () {
-    var tmp =  addrTpl({})
+  var $tableAddress = $('#tableAddress')
+
+  var addrList = ${JSON.stringify(address)}
+  initList(addrList)
+  $('#newAddress').on('click', function () {
+     showAddressDialog({isUpdate:''}, function(address) {
+        addrList.push(address)
+        initList(addrList)
+     })
+  })
+  $tableAddress.on('click', '.btn_update', function () {
+    var $this = $(this)
+    var id = $this.data('id')
+    var item = _.find(addrList,function(item){
+    	return item._id === id
+    })
+    item.isUpdate = item._id
+    showAddressDialog(item, function(address) {
+
+    })
+  })
+  $tableAddress.on('click', '.btn_del', function () {
+  	var $this = $(this)
+  	$.confirm('你确定要删除这个收货地址么？',function(res){
+        if (res) {
+           $.post('/account/addressRemove',{_id:$this.data('id')},function(res){
+               $this.closest('tr').remove();
+           })
+        }
+  	})
+  })
+  function initList(addrList) {
+    var tplCompile = _.template($('#addrListTpl')[0].innerHTML)
+    var tpl = tplCompile({list:addrList})
+    $tableAddress.empty().append(tpl)
+  }
+  function showAddressDialog(address ,cb) {
+    var tmp =  addrTpl({address:address})
     var div = document.createElement('div')
     div.innerHTML = tmp
     BootstrapDialog.show({
       title:"修改地址",
       message: div,
+      onshown: function(dialogRef){
+        var $body = dialogRef.getModalBody()
+        var $addressChoose = $body.find('#addressChoose')
+        let chooseOption = {
+          provinceUrl: '/cityAndArea',
+          cityUrl: '/cityAndArea?name=city',
+          areaUrl: '/cityAndArea?name=area',
+        }
+        if (address.isUpdate) {
+          chooseOption.provinceId = address.provinceId
+          chooseOption.cityId = address.cityId
+          chooseOption.areaId = address.areaId
+        }
+        $addressChoose.adChoose(chooseOption)
+      },
+      onhide:function(dialogRef) {
+      	var $body = dialogRef.getModalBody()
+        var $addressChoose = $body.find('#addressChoose')
+        $addressChoose.adChoose('unbind')
+      },
       buttons: [{
         label: '取消',
         action: function(dialog) {
@@ -124,10 +204,15 @@ jQuery(function() {
         label: '确定',
         cssClass:"btn-primary",
         action: function(dialog) {
+          var $body = dialog.getModalBody()
+          var $form = $body.find('form')
+          $.post('/account/address',$form.serialize(),function(res) {
+            cb(res.data.address)
+          })
           dialog.close()
         }
       }]
     });
-  })
+  }
 })
 </script>`) %>

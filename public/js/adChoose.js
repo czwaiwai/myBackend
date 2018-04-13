@@ -120,6 +120,9 @@
 			if(typeof options === 'string'){
 				instance[options](obj)
 			}
+			if(options.fnName) {
+				instance[options.fnName](obj)
+			}
 		})
 	}
 })(jQuery)

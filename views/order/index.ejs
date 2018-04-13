@@ -180,9 +180,9 @@ li.addr_card.active:after {
 jQuery(function(){
    var $addressChoose = $('#addressChoose')
    var $addressWrap = $('#addressWrap')
-   var $addrAdd = $('.addr_add')
-   var $addrUpdate = $('.addr_update')
-   var $addrChange = $('.addr_change')
+   // var $addrAdd = $('.addr_add')
+   // var $addrUpdate = $('.addr_update')
+   // var $addrChange = $('.addr_change')
    var $addrShow = $('#addrShow')
    var $addrForm = $('#addrForm')
    var $addrCancel =  $('.addr_cancel')
@@ -247,7 +247,7 @@ jQuery(function(){
               message: div,
               onshown: function(dialogRef){
                 var $body = dialogRef.getModalBody()
-                console.log($body)
+                $body.css({height: '500px',overflow: 'auto'})
                 $body.on('click','.addr_card',function() {
                 	var $this = $(this)
                 	if($this.hasClass('active')) {
@@ -305,8 +305,7 @@ jQuery(function(){
         var formParams = $(form).serialize();
         console.log(formParams)
         $.post('/account/address', $(form).serialize()).done(function(res){
-            var user = res.data.user
-            address = user.address[user.address.length -1]
+            var address = res.data.address
             setfillAddr(address)
             $addrForm.hide()
             $addrShow.show()

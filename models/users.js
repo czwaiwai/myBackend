@@ -61,4 +61,6 @@ UserSchema.pre('save', function (next) {
 	this.updateTime = Date.now
 	next()
 })
+mongoose.model('Cart',CartSchema)
+mongoose.model('Address',AddressSchema)
 mongoose.model('User',UserSchema)

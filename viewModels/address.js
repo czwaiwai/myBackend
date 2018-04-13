@@ -3,12 +3,18 @@
  */
 var models = require('../models')
 var User = models.User
+var Address = models.Address
 
 exports.create = function (userId, obj, callback) {
 	User.findById(userId,(err,user) => {
 		console.log(user, 'user')
-		user.address.push(obj)
-		user.save(callback)
+		let address = new Address(obj)
+		user.address.push(address)
+		console.log(address._id)
+		user.save((err,user) => {
+			if (err) return callback(err)
+			callback(err,address)
+		})
 	})
 }
 exports.remove = function (userId, addressId, callback) {
@@ -23,9 +29,9 @@ exports.update= function (userId, obj, callback) {
 		if (err) return callback(err)
 		let address = user.address.id(obj._id)
 		address.set(obj)
-		user.save(function(err, user) {
+		user.save(function(err, subUser) {
 			if (err) return callback(err)
-			var addr = user.address.find(item => item._id === obj._id)
+			let addr = subUser.address.find(item => item._id === address._id)
 			callback(err, addr)
 		})
 	})

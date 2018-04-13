@@ -213,7 +213,10 @@ router.get('/account/index', (req, res, next) => {
 
 //地址管理
 router.get('/account/address', (req, res, next) => {
-	res.render('account/address', {title: '地址管理'})
+	Address.findAllAddress(req.session.user._id, (err, address) => {
+		if (err) return next(err)
+		res.render('account/address', {title: '地址管理', address:address.address})
+	})
 })
 
 //个人信息
@@ -267,22 +270,24 @@ router.post('/account/address', (req, res, next) => {
 	} else {
 		action = "create"
 	}
-	Address[action](req.session.user._id,param, (err, user) => {
+	Address[action](req.session.user._id,param, (err, address) => {
 		if (err) return next(err)
-		console.log(user, 'user -- -address')
+		console.log(address, 'user -- -address')
 		res.json({
-			data: {user},
+			data: {address},
 			code: 0,
 			message: '操作成功'
 		})
 	})
 })
 router.post('/account/addressRemove', (req, res, next) => {
-	
-	res.json({
-		data: {},
-		code: 0,
-		message: '操作成功'
+	Address.remove(req.session.user._id,req.body._id, (err) => {
+		if (err) return next(err)
+		res.json({
+			data: {},
+			code: 0,
+			message: '操作成功'
+		})
 	})
 })
 // 地址选择
