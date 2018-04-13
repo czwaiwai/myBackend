@@ -5612,3 +5612,6 @@ a.normal_link:hover, a.normal_link:focus {
 
 .thumbnail {
   margin: 5px -10px; }
+
+.hide_div {
+  display: none; }

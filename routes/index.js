@@ -223,6 +223,15 @@ router.get('/account/address', (req, res, next) => {
 router.get('/account/accountInfo', (req, res, next) => {
 	res.render('account/accountInfo', {title: '个人信息'})
 })
+router.post('/account/accountInfo', (req, res, next) => {
+	// req.body
+	let param = req.body
+	User.saveById(req.session.user._id, param, (err, user) => {
+		if (err) return next(err)
+		req.session.user = user
+		res.redirect('/account/accountInfo')
+	})
+})
 
 router.get('/account/changePwd', (req, res, next) => {
 	res.render('account/changePwd', {title: '修改密码'})
@@ -230,7 +239,12 @@ router.get('/account/changePwd', (req, res, next) => {
 
 //订单管理
 router.get('/account/orderManage', (req, res, next) => {
+
 	res.render('account/orderManage', {title: '订单管理'})
+})
+router.get('/account/orderManage/:id', (req, res, next) => {
+
+	res.render('account/orderDetail', {title: '订单详情'})
 })
 
 // 获取所有地址

@@ -36,6 +36,7 @@ var UserSchema = new Schema({
 	isAdmin: {type: Number, default: 0},
 	isLock: {type: Number, default: 0},
 	email: {type: String}, // 邮件
+	sex: {type:Number}, // 0 女 1男
 	headImg: {type: String}, // 图片url
 	nickname: {type: String}, // 昵称
 	realname: {type: String}, // 真实姓名

@@ -1,0 +1,73 @@
+<% layout('layout/layout') %>
+<% block('header').append(`<style>
+</style>`) %>
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a href="/">首页</a></li>
+        <li><a href="/account/index">用户中心</a></li>
+        <li><a href="/account/orderManage">订单管理</a></li>
+        <li class="active"><%= title %></li>
+    </ol>
+    <div class="row">
+        <div class="col-md-3">
+            <% include ../navbar/accountLeftNav.ejs %>
+        </div>
+        <div class="col-md-9">
+            <div class="panel panel-default " >
+                <div class="panel-heading">订单号：123456
+                    <span class="padding-left20">下单时间：</span>
+                </div>
+                <div class="panel-body " >
+                    <div class="row">
+                        <div class="col-md-8">
+                            <p>收件人：曹正</p>
+                            <p>联系方式：137****5706</p>
+                            <p>收货地址：广东省深圳市罗湖区到沙发科技大厦了房间是反倒是激发库</p>
+                        </div>
+                        <div class="col-md-4">
+                            <div>
+                                <p>商品合计：￥120.00</p>
+                                <p>运费：￥120.00</p>
+                            </div>
+                           <div class="padding-top" style="border-top:1px dashed #e3e3e3;">
+                               <p>应付： ￥169</p>
+                               <button class="btn btn-primary " style="width:100px;">付款</button>
+                           </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default " style="height:auto;">
+                <div class="panel-heading">货品1
+                    <span class="padding-left20">未付款</span>
+                </div>
+                <div class="panel-body " >
+                    <div class="row">
+                        <table class="table text-center" style="width:100%">
+                            <thead>
+                                <tr class="text-center">
+                                    <th >商品信息</th>
+                                    <th>单价</th>
+                                    <th>数量</th>
+                                    <th>小计</th>
+                                    <th>实付</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>女式抽绳长袖条纹 T恤</td>
+                                    <td>￥169</td>
+                                    <td>1</td>
+                                    <td>￥169</td>
+                                    <td>￥169</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<% block('footer').append(`<script>
+</script>`) %>

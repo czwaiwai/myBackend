@@ -9,6 +9,13 @@ exports.create = function (obj, callback) {
 	var user =  new User(obj)
 	user.save(callback)
 }
+exports.saveById = function (id, obj, callback) {
+	User.findById(id,(err, user) => {
+		if (err) return callback(err)
+		user.set(obj)
+		user.save(callback)
+	})
+}
 exports.findAllByRegister = function (callback) {
 	var users = User.find({isAdmin:0})
 	users.sort({create_at:1})

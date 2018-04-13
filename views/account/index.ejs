@@ -8,6 +8,12 @@
     border-radius:100%;
     vertical-align:top;
 }
+.tr_border td + td{
+    border-left:1px solid #e3e3e3;
+}
+.tr_border td {
+    border-bottom:1px solid #e3e3e3;
+}
 </style>`) %>
 <div class="container">
     <ol class="breadcrumb">
@@ -21,10 +27,10 @@
         </div>
         <div class="col-md-9">
             <div class="section">
-                <div class="col-md-6" >
-                    <div class="head_img"></div>
+                <div class="col-md-6 padding-top" >
+                    <div class="head_img" style="<%=user.headImg?'background:url('+user.headImg+') no-repeat center;background-size:cover;':'' %>"></div>
                     <div style="display:inline-block;padding-left:10px;">
-                        <p class="fs18">歪歪</p>
+                        <p class="fs18"><%=user.nickname %></p>
                         <p class="text-muted">白石山农场欢迎您的到来</p>
                     </div>
                 </div>
@@ -40,7 +46,28 @@
             <div class="panel panel-default margin-top20">
                 <div class="panel-heading fs14">未完成订单</div>
                 <div class="panel-body" style="min-height:300px;">
-                    Panel content
+                    <div class="row" style="margin-top:-15px;">
+                        <table style="width:100%;">
+                            <tr class="tr_border text-center">
+                                <td style="width: 142px;text-align: center;">订单号：33434055</td>
+                                <td style="width:300px;">图片 状态</td>
+                                <td>￥ 386</td>
+                                <td class="text-center padding">
+                                    <button class="btn btn-primary btn-sm">付款</button><br />
+                                    <a href="/account/orderManage/12345" class="btn btn-link">查看</a>
+                                </td>
+                            </tr>
+                            <tr class="tr_border text-center">
+                                <td style="width: 142px;text-align: center;">订单号：33434055</td>
+                                <td style="width:300px;">图片 状态</td>
+                                <td>￥ 386</td>
+                                <td class="text-center padding">
+                                    <button class="btn btn-primary btn-sm">付款</button><br />
+                                    <a href="/account/orderManage/12345" class="btn btn-link">查看</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

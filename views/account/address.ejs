@@ -30,21 +30,18 @@
         <div class="col-md-3">
             <% include ../navbar/accountLeftNav.ejs %>
         </div>
-        <div class="col-md-9">
-            <%=JSON.stringify(user.address) %>
-            <% if(user.address && user.address.length===0){ %>
-                <div class="panel panel-default" style="min-height:400px;">
-                    <div class="no_address text-center" style="color:#898989;padding-top:120px;">
-                        <i class="iconfont icon-map" style="font-size:60px;"></i>
-                        <p class="fs18">你还没有收货地址</p>
-                        <a class="new_address" href="javascript:void(0)">新建地址</a>
-                    </div>
+        <div id="addressWrap" class="col-md-9 ">
+            <div  class="panel panel_empty panel-default <%=address && address.length===0?'':'hide_div'%>" style="min-height:400px;">
+                <div class="no_address text-center" style="color:#898989;padding-top:120px;">
+                    <i class="iconfont icon-map" style="font-size:60px;"></i>
+                    <p class="fs18">你还没有收货地址</p>
+                    <a class="new_address" href="javascript:void(0)">新建地址</a>
                 </div>
-            <% } else { %>
-            <div class="">
+            </div>
+            <div class="panel_full  <%=address && address.length > 0?'':'hide_div' %>">
                 <div class="padding-bottom clearfix">
                     <span>您最多能创建10个收货地址</span>
-                    <a id="newAddress" class="new_address float_right" href="javascript:void(0)">新建地址</a>
+                    <a  class="new_address float_right" href="javascript:void(0)">新建地址</a>
                 </div>
                 <div class=" panel  panel-default ">
                     <table  class="table table-hover">
@@ -72,7 +69,6 @@
                     </table>
                 </div>
             </div>
-            <% } %>
         </div>
     </div>
 </div>
@@ -142,15 +138,19 @@
 <% block('footer').append('<script src="/js/adChoose.js"></script>') %>
 <% block('footer').append(`<script>
 jQuery(function() {
+  var $addressWrap = $('#addressWrap')
   var addrTpl = _.template($('#addrTpl').html())
   var addrItemComplie = _.template($('#addrItemTpl')[0].innerHTML)
   var $tableAddress = $('#tableAddress')
 
   var addrList = ${JSON.stringify(address)}
   initList(addrList)
-  $('#newAddress').on('click', function () {
+  $('.new_address').on('click', function () {
      showAddressDialog({isUpdate:''}, function(address) {
-        addrList.push(address)
+        if(addrList.length === 0) {
+           $addressWrap.find('.panel_empty').addClass('hide_div').siblings().removeClass('hide_div')
+        }
+     	addrList.push(address)
         initList(addrList)
      })
   })
@@ -172,6 +172,13 @@ jQuery(function() {
         if (res) {
            $.post('/account/addressRemove',{_id:$this.data('id')},function(res){
                $this.closest('tr').remove();
+               var index =  _.findIndex(addrList,function (item) {
+               	return item._id === $this.data('id')
+               })
+               addrList.splice(index,1)
+               if(addrList.length===0) {
+               	$addressWrap.find('.panel_full').addClass('hide_div').siblings().removeClass('hide_div')
+               }
            })
         }
   	})
