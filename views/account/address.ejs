@@ -31,7 +31,8 @@
             <% include ../navbar/accountLeftNav.ejs %>
         </div>
         <div class="col-md-9">
-            <% if(user.address.length===0){ %>
+            <%=JSON.stringify(user.address) %>
+            <% if(user.address && user.address.length===0){ %>
                 <div class="panel panel-default" style="min-height:400px;">
                     <div class="no_address text-center" style="color:#898989;padding-top:120px;">
                         <i class="iconfont icon-map" style="font-size:60px;"></i>
@@ -40,7 +41,7 @@
                     </div>
                 </div>
             <% } else { %>
-            <div>
+            <div class="">
                 <div class="padding-bottom clearfix">
                     <span>您最多能创建10个收货地址</span>
                     <a id="newAddress" class="new_address float_right" href="javascript:void(0)">新建地址</a>
@@ -89,6 +90,16 @@
     </tr>
     <@ }) @>
 </script>`)%>
+<% block('footer').append(`<script id="addrItemTpl" type="text/template">
+    <td><@=item.name @> <small class="text-muted">[默认]</small></td>
+    <td width="260"><@=item.province+item.city+item.area+item.address @></td>
+    <td><@=item.mobile @></td>
+    <td>
+        <a data-id="<@= item._id @>" class="btn btn_update btn-link">修改</a>
+        <a data-id="<@= item._id @>" class="btn btn_del btn-link">删除</a>
+    </td>
+    <td></td>
+</script>`)%>
 <% block('footer').append(`<script id="addrTpl" type="text/template">
      <form class="form-horizontal margin-top20">
         <div id="addressChoose" class="form-group">
@@ -132,6 +143,7 @@
 <% block('footer').append(`<script>
 jQuery(function() {
   var addrTpl = _.template($('#addrTpl').html())
+  var addrItemComplie = _.template($('#addrItemTpl')[0].innerHTML)
   var $tableAddress = $('#tableAddress')
 
   var addrList = ${JSON.stringify(address)}
@@ -150,7 +162,8 @@ jQuery(function() {
     })
     item.isUpdate = item._id
     showAddressDialog(item, function(address) {
-
+       var addrItemTpl =  addrItemComplie({item:address})
+       $this.closest('tr').empty().append(addrItemTpl)
     })
   })
   $tableAddress.on('click', '.btn_del', function () {
