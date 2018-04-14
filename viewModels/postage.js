@@ -1,0 +1,20 @@
+/**
+ * Created by Administrator on 2018/4/14 0014.
+ */
+var models = require('../models/')
+var getPageNum =  require('../utils/tools').getPageNum
+var Postage = models.Postage
+
+exports.findAll = function (callback) {
+	Postage.find(callback)
+}
+exports.update = function (id,obj,callback) {
+	Postage.findByIdAndUpdate(id,{$set:obj},callback)
+}
+exports.add = function (obj, callback) {
+	var postage = new Postage(obj)
+	postage.save(callback)
+}
+exports.remove = function (id, callback) {
+	Postage.findByIdAndRemove(id, callback)
+}

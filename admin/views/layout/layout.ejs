@@ -295,11 +295,11 @@ desired effect
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="<%=assetsPath %>/orders/index">全部</a></li>
-            <li><a href="#">待付款</a></li>
-            <li><a href="#">已付款</a></li>
-            <li><a href="#">已发货</a></li>
-            <li><a href="#">退款订单</a></li>
+            <li><a href="<%=assetsPath %>/orders/index/all">全部</a></li>
+            <li><a href="<%=assetsPath %>/orders/index/waitPay">待付款</a></li>
+            <li><a href="<%=assetsPath %>/orders/index/pay">已付款</a></li>
+            <li><a href="<%=assetsPath %>/orders/index/ship">已发货</a></li>
+            <li><a href="<%=assetsPath %>/orders/index/back">退款订单</a></li>
           </ul>
         </li>
         <li class="treeview  <% if(["/users/index"].indexOf(path) > -1){ %>active<% } %> ">

@@ -1,0 +1,65 @@
+<% layout('./layout/layout') %>
+<% block('header').append(`<style></style>`)%>
+<div class="row">
+  <div class="col-md-12">
+    <div class="box box-info">
+      <div class="box-header with-border">
+        <h3 class="box-title"><%=curr.isNew?'添加':'修改'%>单页</h3>
+      </div>
+      <!-- /.box-header -->
+      <!-- form start -->
+      <form action="<%=assetsPath %>/pages/add" method="post" class="form-horizontal" novalidate>
+        <div class="box-body">
+          <div class="form-group">
+            <label for="title" class="col-sm-2 control-label">名称</label>
+            <div class="col-sm-10">
+              <input name="title" type="text" value="<%=curr.title || ''%>" class="form-control"  placeholder="单页标题">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="path" class="col-sm-2 control-label">路径名称</label>
+            <div class="col-sm-10">
+              <input name="path" type="text" value="<%=curr.path || '' %>" class="form-control" placeholder="请输入英文或拼音">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="content" class="col-sm-2 control-label">内容</label>
+            <div class="col-sm-10">
+              <div  id="editor" >
+                <%-curr.content || ''%>
+              </div>
+              <textarea id="content" hidden name="content"><%-curr.content || ''%></textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              <div class="checkbox">
+                <label>
+                  <input name="isValid" value="1" type="checkbox"> 是否有效
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- /.box-body -->
+        <div class="box-footer">
+          <div class="col-sm-offset-2 col-sm-10">
+            <% if(!curr.isNew) { %>
+            <input name="_id" type="hidden" value="<%=curr._id%>" >
+            <% }%>
+            <button type="submit" class="btn btn-info ">保存</button>
+            <button type="reset" class="btn btn-default">重置</button>
+          </div>
+        </div>
+        <!-- /.box-footer -->
+      </form>
+    </div>
+  </div>
+</div>
+<% block('footer').append(`<script src="${assetsPath}/js/wangeditor/wangEditor.js"></script>`); %>
+<% block('footer').append(`<script>
+    jQuery(function() {
+
+    })
+</script>`)%>

@@ -386,7 +386,7 @@ router.post('/register', (req, res, next) => {
 	req.checkBody('verifyCode',"验证码不能为空").notEmpty()
 		.isEqual(req.session.imgCode).withMessage("验证码不正确");
 	req.asyncValidationErrors().then(function(){
-        User.create(req.body, (err, user) => {
+		  User.create(req.body, (err, user) => {
 			if (err) {
 				console.error(err)
 				req.flash("error",err.message)

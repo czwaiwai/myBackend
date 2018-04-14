@@ -6,7 +6,7 @@ let EventProxy = require('eventproxy')
 let {succJson,errJson} =require('../../utils/sendJson');
 // let User =require('../../models/user');
 // let Pages =require('../../models/pages');
-let {User, Page, Catalog, Article, Goods, Image} = require('../../viewModels/')
+let {User, Page, Catalog, Article, Goods, Image, Order} = require('../../viewModels/')
 
 let imgCode="";
 function getPageNum(count,pageSize){
@@ -151,8 +151,19 @@ router.post('/goods/add', (req, res, next) => {
 
 
 // 订单管理
-router.get('/orders/index', (req, res, next) => {
-	res.render('orders/index', {title: '订单管理' , page:1, count:10})
+router.get('/orders/index/:status', (req, res, next) => {
+	let queryParam = {}
+	switch(req.params.status) {
+		case "all": break;
+		case "waitPay": break;
+		case "pay": break;
+		case "ship": break; // 已发货
+		case "back": break;
+	}
+	Order.findAllByPage(queryParam,req.query.page, 10, (err, obj) => {
+		if (err) return next(err)
+		res.render('orders/index', Object.assign({title:'单页管理'}, obj))
+	})
 })
 
 // 单页管理
