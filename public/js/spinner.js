@@ -31,12 +31,15 @@
 		})(this))
 		$el.on('click', '.prev', function() {
 			var $this = $(this)
+			if ($this.hasClass('disabled')) return ;
 			var val = parseInt(self.$input.val())
 			val--
 			self.render(val)
 			options.callback.call($el,val)
 		})
 		$el.on('click', '.next', function() {
+			var $this = $(this)
+			if ($this.hasClass('disabled')) return ;
 			var val = parseInt(self.$input.val())
 			val++
 			self.render(val)
