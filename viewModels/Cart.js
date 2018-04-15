@@ -8,6 +8,26 @@ exports.create = function (userId, obj, callback) {
 		user.save(callback)
 	})
 }
+exports.checkAll = function (userId, bool, callback) {
+	User.findOneAndUpdate({_id: userId},
+		{$set:{'cart.isCheck':bool}},
+		{new:true},
+		callback)
+}
+exports.changeCheck = function (userId, cartObj, callback) {
+	User.findOneAndUpdate({_id: userId, 'cart._id': cartObj.id},
+		{$set:{"cart.$.isCheck":cartObj.check}},
+		{new:true},
+		callback
+	)
+}
+exports.changeNum = function (userId, cartObj, callback) {
+	User.findOneAndUpdate({_id: userId, 'cart._id': cartObj.id},
+		{$set:{"cart.$.goodsNum":cartObj.num}},
+		{new:true},
+		callback
+		)
+}
 exports.add2Update = function (userId, cart, callback) {
 	User.findOne({_id: userId, 'cart.goodsId': cart.goodsId},{"cart.$":1}, (err, carts) => {
 		if (err) callback(err)

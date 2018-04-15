@@ -132,7 +132,43 @@ router.get('/cart/index', (req, res, next) => {
 	}
 	res.render('cart/index', {title: '购物车', carts, total})
 })
-
+router.post('/cart/checkAll', (req, res, next) => {
+	let user = req.session.user
+	Cart.checkAll(user.id, req.body.check, (err, user) => {
+		if (err) return next(err)
+		console.log(user , 'checkAll')
+		req.session.user.cart = user.cart
+		res.json({
+			code: 0,
+			message: '操作成功',
+			data: {carts: user.cart}
+		})
+	})
+})
+router.post('/cart/changeCartCheck',(req, res, next) => {
+	let user = req.session.user
+	Cart.changeCheck(user._id,req.body,(err, user) => {
+		if (err) return next(err)
+		req.session.user.cart = user.cart
+		res.json({
+			code:0,
+			message: '操作成功',
+			data: {carts:user.cart}
+		})
+	})
+})
+router.post('/cart/changeCartNum',(req, res, next) => {
+	let user = req.session.user
+	Cart.changeNum(user._id,req.body,(err, user) => {
+		if (err) return next(err)
+		req.session.user.cart = user.cart
+		res.json({
+			code:0,
+			message: '操作成功',
+			data: {carts:user.cart}
+		})
+	})
+})
 
 
 //订单

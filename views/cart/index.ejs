@@ -99,9 +99,8 @@ margin-bottom:20px;
                 <div class="col-xs-5 col-md-5 text-right">
                     <span class="padding-right fs16" style="color:#989898;">商品合计：￥<span id="goodsTotal" class="goods_total"><%=total %></span></span>
                     <span class="fs16">
-                        <strong>应付总额：</strong><span id="needTotal" class="text-danger fs22">￥<%=total %></span>
-                    </span><br />
-                    <span class="fs12">不含运费</span>
+                        <strong>应付总额：</strong><span id="needTotal" class="text-danger fs22">￥<%=total %><small><span class="fs12">不含运费</span></small></span>
+                    </span>
                 </div>
                 <div class="col-xs-2 col-md-2" style="padding-right:0;"><button class="btn btn-primary btn-lg btn-block" style="height: 48px;">下单</button></div>
             </div>
@@ -133,16 +132,16 @@ jQuery(function(){
                   callback:function(num) {
                     var $item = this.closest('.order_item')
                     $item.data('num',num)
-                    $.post('/changeCartNum',{id:$item.data('id'),num:num})
+                    $.post('/cart/changeCartNum',{id:$item.data('id'),num:num})
                     that.renderAll(that.setAllData())
                     that.renderOne($item)
                   }
                 });
                 $cartWrap.on('change', '.check_item', function(){
                 	var $this = $(this)
-                	var $item = $this.closest('.order_item').
+                	var $item = $this.closest('.order_item')
                     $item.data('check',$this.prop('checked'))
-                    $.post('/changeCartCheck', {id:$item.data('id'),check:$this.prop('checked')})
+                    $.post('/cart/changeCartCheck', {id:$item.data('id'),check:$this.prop('checked')})
                     that.renderAll(that.setAllData())
                 })
                 $checkAll.on('change', function () {
@@ -157,6 +156,7 @@ jQuery(function(){
                 		$cartWrap.find('.check_item').prop('checked', false)
                 		$cartWrap.find('.order_item').data('check', false)
                 	}
+                	$.post('/cart/checkAll',{check:$this.prop('checked')})
                 	that.renderAll(that.setAllData())
                 })
 			},
@@ -175,17 +175,20 @@ jQuery(function(){
 			    var len = $orderItem.length
 			    var checkNum = 0
 			    var totalPrice = 0
+			    var cartNum = 0
 				$orderItem.each(function(index,item){
                     var $this = $(this)
                     console.log($this)
                     var num = $this.data('num')
                     var price = $this.data('price')
                     var isCheck = $this.data('check')
+                    cartNum += parseInt(num)
                     if(isCheck) {
                         checkNum++
                         totalPrice += parseInt(num) * parseFloat(price)
                     }
                 })
+                obj.allNum = cartNum
                 obj.totalPrice = $.formatFloat(totalPrice)
                 if(len === checkNum) {
                   obj.isAllCheck = true
@@ -200,6 +203,7 @@ jQuery(function(){
 				}else {
 					$checkAll.prop('checked',false)
 				}
+				$('#cartBadge').triggerHandler('change.cartBadge',[data.allNum])
 				$needTotal.text(data.totalPrice)
                 $goodsTotal.text(data.totalPrice)
 			}
