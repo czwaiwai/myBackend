@@ -132,11 +132,35 @@ router.get('/cart/index', (req, res, next) => {
 	}
 	res.render('cart/index', {title: '购物车', carts, total})
 })
+router.post('/cart/clear', (req, res, next) => {
+	let user = req.session.user
+	Cart.clear(user._id,  (err, user) => {
+		if (err) return next(err)
+		req.session.user.cart = []
+		res.json({
+			code: 0,
+			message: '操作成功',
+			data: {carts: user.cart}
+		})
+	})
+})
+// 购物车删除单个商品
+router.post('/cart/removeOne', (req, res, next) => {
+	let user = req.session.user
+	Cart.removeOne(user._id, req.body.cartId, (err, user) => {
+		if (err) return next(err)
+		req.session.user.cart = user.cart
+		res.json({
+			code: 0,
+			message: '操作成功',
+			data: {carts: user.cart}
+		})
+	})
+})
 router.post('/cart/checkAll', (req, res, next) => {
 	let user = req.session.user
-	Cart.checkAll(user.id, req.body.check, (err, user) => {
+	Cart.checkAll(user._id, req.body.check, (err, user) => {
 		if (err) return next(err)
-		console.log(user , 'checkAll')
 		req.session.user.cart = user.cart
 		res.json({
 			code: 0,
@@ -187,7 +211,14 @@ router.post('/order/index', (req, res, next) => {
 		})
 	}
 	if (req.body.status === 'cart') {
-
+		let user = req.session.user
+		if (user.address && user.address.length>0) {
+			address = user.address[0]
+			addrList = user.addrList
+		}
+		let carts = JSON.parse(req.body.carts)
+		let goodIds = carts.map(item => item.id)
+		res.render('order/index', {title: '下单',goods:[], address, addrList})
 	}
 })
 

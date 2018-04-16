@@ -96,8 +96,10 @@
 <% block('footer').append(`<script>
 jQuery(function () {
 	$("#spinner").Spinner();
+	 var isLogin =${user?true:false}
 	$('#buy').on('click', function() {
-        $('#form').submit()
+      if(!isLogin) return $.Toast('您还没有登录','warning')
+      $('#form').submit()
 	})
 	$('#addCart').on('click', function() {
     $.post('/add2Cart', $('#form').serialize()).done(function(res){

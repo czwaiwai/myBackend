@@ -9,10 +9,23 @@ exports.create = function (userId, obj, callback) {
 	})
 }
 exports.checkAll = function (userId, bool, callback) {
-	User.findOneAndUpdate({_id: userId},
-		{$set:{'cart.isCheck':bool}},
-		{new:true},
-		callback)
+	if(typeof bool === 'string' && bool === 'false') {
+		bool = false
+	} else {
+		bool = true
+	}
+	User.findById(userId, (err,user) => {
+		console.log(user, 'userm----------------')
+		user.cart.forEach(item => item.isCheck = bool)
+		user.save(callback)
+	})
+}
+exports.clear = function (userId, callback) {
+	User.findById('5ab4618fb5ecf926b4b18827',(err, user) => {
+		if(err) callback(err)
+		user.set({cart:[]})
+		user.save(callback)
+	})
 }
 exports.changeCheck = function (userId, cartObj, callback) {
 	User.findOneAndUpdate({_id: userId, 'cart._id': cartObj.id},
@@ -41,9 +54,9 @@ exports.add2Update = function (userId, cart, callback) {
 		}
 	})
 }
-exports.removeOne = function (userId, goodsId, callback) {
+exports.removeOne = function (userId, cartId, callback) {
 	User.findByIdAndUpdate(userId,
-		{$pull:{ 'cart': {goodsId:goodsId}}},
+		{$pull:{ 'cart': {cartId:cartId}}},
 		{new:true},
 		callback
 	)

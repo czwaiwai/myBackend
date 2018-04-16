@@ -51,16 +51,15 @@ margin-bottom:20px;
                     <a href="/" class="btn btn-primary">去逛逛</a>
                 </div>
             </div>
-        <% } else if(user && user.cart.length===0 ) { %>
-            <div class="shop_cart_wrap">
-                <div class="no_cart">
-                    <i class="iconfont icon-cart"></i>
-                    <p class="fs14">你还没有添加任何商品哦</p>
-                    <a href="/" class="btn btn-primary">去逛逛</a>
-                </div>
-            </div>
         <% } else { %>
-        <div class="section section_no_padding" >
+        <div id="emptyCart"  class="<%=user.cart.length>0?'hide_div':'' %> shop_cart_wrap">
+            <div class="no_cart">
+                <i class="iconfont icon-cart"></i>
+                <p class="fs14">你还没有添加任何商品哦</p>
+                <a href="/" class="btn btn-primary">去逛逛</a>
+            </div>
+        </div>
+        <div id="fullCart" class="<%=user.cart.length===0?'hide_div':'' %> section section_no_padding" >
             <div class="section_title" >
                 <div class="col-xs-4 col-md-4">商品信息</div>
                 <div class="col-xs-2 col-md-2 text-center">单价</div>
@@ -95,14 +94,25 @@ margin-bottom:20px;
               <% }) %>
             </div>
             <div class="section_footer" >
-                <div class="col-xs-5 col-md-5" style="padding-left:0;"><label><input id="checkAll" type="checkbox" name="checkAll"  value=""> 全选</label></div>
+                <div class="col-xs-5 col-md-5" style="padding-left:0;">
+                    <label><input id="checkAll" type="checkbox" name="checkAll"  value=""> 全选</label>
+                    <a id="clearCart" class="normal_link "  href="javascript:void(0)" style="padding-left:25px;color:#989898;">清空购物车</a>
+                </div>
                 <div class="col-xs-5 col-md-5 text-right">
                     <span class="padding-right fs16" style="color:#989898;">商品合计：￥<span id="goodsTotal" class="goods_total"><%=total %></span></span>
                     <span class="fs16">
-                        <strong>应付总额：</strong><span id="needTotal" class="text-danger fs22">￥<%=total %><small><span class="fs12">不含运费</span></small></span>
+                        <strong>应付总额：</strong>
+                        <span class="text-danger fs22">￥<span id="needTotal" ><%=total %></span></span><span class="fs12 text-muted">[不含运费]</span>
+
                     </span>
                 </div>
-                <div class="col-xs-2 col-md-2" style="padding-right:0;"><button class="btn btn-primary btn-lg btn-block" style="height: 48px;">下单</button></div>
+                <div class="col-xs-2 col-md-2" style="padding-right:0;">
+                    <form id="form" action="/order/index" method="post" novalidate>
+                        <input type="hidden" name="status" value="cart">
+                        <input type="hidden" name="carts" value="">
+                    </form>
+                    <button id="confirmCart" class="btn btn-primary btn-lg btn-block" style="height: 48px;">下单</button>
+                </div>
             </div>
         </div>
         <% } %>
@@ -121,6 +131,11 @@ jQuery(function(){
 		var $checkAll = $('#checkAll')
 		var $goodsTotal = $('#goodsTotal')
 		var $needTotal = $('#needTotal')
+		var $clearCart = $('#clearCart')
+		var $emptyCart = $('#emptyCart')
+		var $fullCart = $('#fullCart')
+		var $confirmCart = $('#confirmCart')
+		var $form = $('#form')
 		return {
 			init:function () {
 				this.bind()
@@ -128,37 +143,56 @@ jQuery(function(){
 			},
 			bind:function () {
 				var that = this
-                $spinner.Spinner({
-                  callback:function(num) {
-                    var $item = this.closest('.order_item')
-                    $item.data('num',num)
-                    $.post('/cart/changeCartNum',{id:$item.data('id'),num:num})
-                    that.renderAll(that.setAllData())
-                    that.renderOne($item)
-                  }
-                });
-                $cartWrap.on('change', '.check_item', function(){
-                	var $this = $(this)
-                	var $item = $this.closest('.order_item')
-                    $item.data('check',$this.prop('checked'))
-                    $.post('/cart/changeCartCheck', {id:$item.data('id'),check:$this.prop('checked')})
-                    that.renderAll(that.setAllData())
+        $spinner.Spinner({
+          callback:function(num) {
+            var $item = this.closest('.order_item')
+            $item.data('num',num)
+            $.post('/cart/changeCartNum',{id:$item.data('id'),num:num})
+            that.renderAll(that.setAllData())
+            that.renderOne($item)
+          }
+        });
+        $cartWrap.on('change', '.check_item', function(){
+          var $this = $(this)
+          var $item = $this.closest('.order_item')
+            $item.data('check',$this.prop('checked'))
+            $.post('/cart/changeCartCheck', {id:$item.data('id'),check:$this.prop('checked')})
+            that.renderAll(that.setAllData())
+        })
+        $clearCart.on('click', function() {
+           $.confirm('你确定要清空购物车么',function(res){
+              if (res) {
+                $.post('/cart/clear').done(function(){
+                  $cartWrap.empty()
+                  that.renderAll(that.setAllData())
                 })
-                $checkAll.on('change', function () {
-                	var $this = $(this)
-                	console.log($this)
-                	if ($this.prop('checked')) {
-                		console.log('toCheck')
-                		$cartWrap.find('.check_item').prop('checked',true)
-                		$cartWrap.find('.order_item').data('check',true)
+              }
+           })
+        })
+        $checkAll.on('change', function () {
+          var $this = $(this)
+          console.log($this)
+          if ($this.prop('checked')) {
+            console.log('toCheck')
+            $cartWrap.find('.check_item').prop('checked',true)
+            $cartWrap.find('.order_item').data('check',true)
 
-                	} else {
-                		$cartWrap.find('.check_item').prop('checked', false)
-                		$cartWrap.find('.order_item').data('check', false)
-                	}
-                	$.post('/cart/checkAll',{check:$this.prop('checked')})
-                	that.renderAll(that.setAllData())
-                })
+          } else {
+            $cartWrap.find('.check_item').prop('checked', false)
+            $cartWrap.find('.order_item').data('check', false)
+          }
+          $.post('/cart/checkAll',{check:$this.prop('checked')})
+          that.renderAll(that.setAllData())
+        })
+        $confirmCart.on('click',function () {
+          var obj = that.setAllData()
+          if (obj.checkNum === 0 ) {
+          	return $.Toast('你还没有选择要购买的商品', 'warning')
+          }
+          $form.find('input[name=carts]').val(JSON.stringify(obj.carts))
+          $form.find('input[name=totalPrice]').val(obj.totalPrice)
+          $form.submit()
+        })
 			},
 			renderOne: function ($item) {
 				var num = $item.data('num')
@@ -171,33 +205,51 @@ jQuery(function(){
 					isAllCheck:false,
 					totalPrice:0,
 				}
-			    var $orderItem = $cartWrap.find('.order_item')
-			    var len = $orderItem.length
-			    var checkNum = 0
-			    var totalPrice = 0
-			    var cartNum = 0
+        var $orderItem = $cartWrap.find('.order_item')
+        var len = $orderItem.length
+        var checkNum = 0
+        var totalPrice = 0
+        var cartNum = 0
+        var checkCarts = []
 				$orderItem.each(function(index,item){
-                    var $this = $(this)
-                    console.log($this)
-                    var num = $this.data('num')
-                    var price = $this.data('price')
-                    var isCheck = $this.data('check')
-                    cartNum += parseInt(num)
-                    if(isCheck) {
-                        checkNum++
-                        totalPrice += parseInt(num) * parseFloat(price)
-                    }
+            var $this = $(this)
+            console.log($this)
+            var id = $this.data('id')
+            var num = $this.data('num')
+            var price = $this.data('price')
+            var isCheck = $this.data('check')
+            cartNum += parseInt(num)
+            if(isCheck) {
+                checkNum++
+                checkCarts.push({
+                    id:id,
+                    num:num,
+                    price:price,
+                    subTotal:$.formatFloat(parseInt(num) * parseFloat(price))
                 })
-                obj.allNum = cartNum
-                obj.totalPrice = $.formatFloat(totalPrice)
-                if(len === checkNum) {
-                  obj.isAllCheck = true
-                } else {
-				  obj.isAllCheck = false
-                }
-                return obj
+                totalPrice += parseInt(num) * parseFloat(price)
+            }
+        })
+        obj.carts = checkCarts // 选中的商品信息
+        obj.len = len // 商品的种类数量
+        obj.allNum = cartNum // 商品的总数量
+        obj.checkNum = checkNum //选中商品的总数
+        obj.totalPrice = $.formatFloat(totalPrice) // 商品总价格
+        if(len === checkNum) {
+          obj.isAllCheck = true
+        } else {
+          obj.isAllCheck = false
+        }
+        return obj
 			},
 			renderAll(data) {
+				if(data.len) {
+					$emptyCart.hide()
+					$fullCart.show()
+				}else {
+					$emptyCart.show()
+					$fullCart.hide()
+				}
 				if(data.isAllCheck){
 					$checkAll.prop('checked',true)
 				}else {
@@ -205,7 +257,7 @@ jQuery(function(){
 				}
 				$('#cartBadge').triggerHandler('change.cartBadge',[data.allNum])
 				$needTotal.text(data.totalPrice)
-                $goodsTotal.text(data.totalPrice)
+        $goodsTotal.text(data.totalPrice)
 			}
 		}
     })()
