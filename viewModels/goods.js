@@ -17,8 +17,8 @@ exports.getHotGoods = function (callback) {
 	goods.limit(12)
 	goods.exec(callback)
 }
-exports.findInIds = function (ids, callback) {
-	Goods.find({_id:{$in:[...ids]}}, callback)
+exports.findByIds = function (ids, callback) {
+	Goods.find({_id:{$in:[...ids]}},{content:0,imgs:0}, callback)
 }
 exports.findAllByPage = function (query = {}, pageNum = 1,pageSize = 10, callback) {
 	pageNum = parseInt(pageNum)

@@ -1,6 +1,7 @@
 var express = require('express');
 let router = express.Router();
 var ccap=require('../utils/verifycode');
+var _ = require('lodash');
 // var schema=require('async-validator');
 // var User =require('../models/user');
 /* GET home page. */
@@ -200,13 +201,15 @@ router.post('/order/index', (req, res, next) => {
 	console.log(req.body)
 	let address = null
 	let addrList = []
+	let totalPrice = req.body.totalPrice
 	if (req.body.status === 'buy') {
 		let user = req.session.user
 		if (user.address && user.address.length>0) {
 			address = user.address[0]
 			addrList = user.addrList
 		}
-		Goods.findInIds([req.body._id], (err, goods) => {
+		Goods.findByIds([req.body.id], (err, goods) => {
+			goods[0].num = req.body.num
 			res.render('order/index', {title: '下单',goods, address, addrList})
 		})
 	}
@@ -218,7 +221,15 @@ router.post('/order/index', (req, res, next) => {
 		}
 		let carts = JSON.parse(req.body.carts)
 		let goodIds = carts.map(item => item.id)
-		res.render('order/index', {title: '下单',goods:[], address, addrList})
+		Goods.findByIds(goodIds, (err, goods) => {
+			carts.map(item => {
+				let newOne = goods.find(sub => {
+					return sub._id.toString() === item.id})
+				item.goods = newOne
+				return item
+			})
+			res.render('order/index', {title: '下单', goods:carts, fee:10, totalPrice, address, addrList})
+		})
 	}
 })
 

@@ -69,7 +69,7 @@ margin-bottom:20px;
             </div>
             <div id="cartWrap" class="padding15-h ">
               <% carts.forEach(function(item){ %>
-                <div class="row fs16 padding-v order_item" data-id="<%=item._id%>" data-check="<%=item.isCheck %>" data-num="<%=item.goodsNum %>" data-price="<%=item.price %>">
+                <div class="row fs16 padding-v order_item" data-cart-id="<%=item._id%>" data-id="<%=item.goodsId%>" data-check="<%=item.isCheck %>" data-num="<%=item.goodsNum %>" data-price="<%=item.price %>">
                     <div class="col-xs-4  col-md-4">
                         <div class="row">
                             <div class="col-md-2 col-xs-2"><input class="check_item" type="checkbox" <%=item.isCheck?'checked':'' %> value="<%item._id%>"></div>
@@ -110,6 +110,7 @@ margin-bottom:20px;
                     <form id="form" action="/order/index" method="post" novalidate>
                         <input type="hidden" name="status" value="cart">
                         <input type="hidden" name="carts" value="">
+                        <input type="hidden" name="totalPrice" value="">
                     </form>
                     <button id="confirmCart" class="btn btn-primary btn-lg btn-block" style="height: 48px;">下单</button>
                 </div>
@@ -147,7 +148,8 @@ jQuery(function(){
           callback:function(num) {
             var $item = this.closest('.order_item')
             $item.data('num',num)
-            $.post('/cart/changeCartNum',{id:$item.data('id'),num:num})
+            console.log('set', num)
+            $.post('/cart/changeCartNum',{id:$item.data('cartId'),num:num})
             that.renderAll(that.setAllData())
             that.renderOne($item)
           }
@@ -156,7 +158,7 @@ jQuery(function(){
           var $this = $(this)
           var $item = $this.closest('.order_item')
             $item.data('check',$this.prop('checked'))
-            $.post('/cart/changeCartCheck', {id:$item.data('id'),check:$this.prop('checked')})
+            $.post('/cart/changeCartCheck', {id:$item.data('cartId'),check:$this.prop('checked')})
             that.renderAll(that.setAllData())
         })
         $clearCart.on('click', function() {
@@ -191,20 +193,21 @@ jQuery(function(){
           }
           $form.find('input[name=carts]').val(JSON.stringify(obj.carts))
           $form.find('input[name=totalPrice]').val(obj.totalPrice)
+          console.log(JSON.stringify(obj.carts),'------------------------')
           $form.submit()
         })
-			},
-			renderOne: function ($item) {
-				var num = $item.data('num')
-				var price = $item.data('price')
-                $item.find('.sub_total').text($.formatFloat(num*price))
-                $item.find('.pay_total').text($.formatFloat(num*price))
-			},
-			setAllData:function () {
-				var obj = {
-					isAllCheck:false,
-					totalPrice:0,
-				}
+        },
+        renderOne: function ($item) {
+            var num = $item.data('num')
+            var price = $item.data('price')
+            $item.find('.sub_total').text($.formatFloat(num*price))
+            $item.find('.pay_total').text($.formatFloat(num*price))
+        },
+        setAllData:function () {
+            var obj = {
+                isAllCheck:false,
+                totalPrice:0,
+            }
         var $orderItem = $cartWrap.find('.order_item')
         var len = $orderItem.length
         var checkNum = 0
@@ -225,7 +228,8 @@ jQuery(function(){
                     id:id,
                     num:num,
                     price:price,
-                    subTotal:$.formatFloat(parseInt(num) * parseFloat(price))
+                    subTotal:$.formatFloat(parseInt(num) * parseFloat(price)),
+                    payTotal:$.formatFloat(parseInt(num) * parseFloat(price))
                 })
                 totalPrice += parseInt(num) * parseFloat(price)
             }
