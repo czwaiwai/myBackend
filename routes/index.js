@@ -232,6 +232,17 @@ router.post('/order/index', (req, res, next) => {
 		})
 	}
 })
+router.post('/order/pay', (req, res, next) => {
+	
+	
+	res.render('order/pay', {title: '订单支付'})
+})
+
+router.get('/order/success', (req, res, next) => {
+	
+	
+	res.render('order/success', {title: '订单支付完成'})
+})
 
 // goodsId: {type: Schema.ObjectId}, // 产品Id
 // goodsName: {type: String}, // 产品名称

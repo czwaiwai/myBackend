@@ -44,6 +44,12 @@ li.addr_card.active:after {
 }
 </style>`) %>
 <div class="container">
+
+        <ol class="breadcrumb">
+            <li><a href="/">首页</a></li>
+            <li class="active"><%= title %></li>
+        </ol>
+
     <div id="addressWrap" class="section section_no_padding" >
         <div class="section_title">收货地址</div>
         <div class="section_body">
@@ -151,10 +157,12 @@ li.addr_card.active:after {
     </div>
     <hr>
     <div class="fs16 text-right padding-right">
+      <form id="form" method="post" action="/order/pay">
         <p class="text-muted">商品合计：￥<%=totalPrice %></p>
         <p>运费：￥<%=fee %></p>
         <p>应付总额：<span class="fs20 text-danger">￥<%=totalPrice %></span></p>
-        <p><button class="btn btn-lg btn-primary">去付款</button></p>
+        <p><button  class="btn btn-lg btn-primary">去付款</button></p>
+      </form>
     </div>
 </div>
 <% block('footer').append('<script src="/js/adChoose.js"></script>') %>

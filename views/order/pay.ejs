@@ -3,6 +3,34 @@
 </style>`) %>
 <div class="container">
 
+  <ol class="breadcrumb">
+    <li><a href="/">首页</a></li>
+    <li class="active"><%= title %></li>
+  </ol>
+  <div class="section text-center" style="padding:20px 180px;">
+    <h1 class="amount " style="padding-bottom:40px;">￥1000.00</h1>
+    <div id="qrcode"></div>
+    <div style="margin-top:40px;border-top:1px dashed #e3e3e3;"></div>
+    <div>
+      <dl class="row" style="margin:20px auto;width:300px;">
+        <dt class="col-xs-4">
+          <i class="iconfont icon-scanning text-primary" style="font-size:46px;"></i>
+        </dt>
+        <dd class="text-left  col-xs-8 fs18" style="line-height:30px;">
+          <span>请用<span class="text-primary">微信</span>扫一扫</span><br/>
+          <span>扫描二维码完成支付</span>
+        </dd>
+      </dl>
+    </div>
+  </div>
 </div>
+
+<% block('footer').append('<script src="/js/jquery.qrcode.min.js"></script>') %>
 <% block('footer').append(`<script>
+ jQuery(function(){
+ 	  $('#qrcode').qrcode("http://www.jq22.com");
+    setTimeout(function(){
+    	location.href='/order/success'
+    },5000)
+ })
 </script>`) %>
