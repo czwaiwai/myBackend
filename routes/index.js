@@ -120,9 +120,12 @@ router.get('/goods/detail/:id' , (req, res, next) => {
 // 购物车
 router.get('/cart/index', (req, res, next) => {
 	let user = req.session.user
+	console.log(user, '-----------cart/index')
 	let carts = []
 	let total = 0
+	console.log(user, '---------------')
 	if (user) {
+		console.log('user', user)
 		carts = user.cart.map(item => {
 			item.subTotal = formatFloat(item.goodsNum * item.price)
 			item.payTotal = formatFloat(item.goodsNum * item.price)
@@ -187,6 +190,7 @@ router.post('/cart/changeCartNum',(req, res, next) => {
 	Cart.changeNum(user._id,req.body,(err, user) => {
 		if (err) return next(err)
 		req.session.user.cart = user.cart
+		console.log(req.session.user.cart, '----------------/cart/changeNum')
 		res.json({
 			code:0,
 			message: '操作成功',
@@ -209,8 +213,19 @@ router.post('/order/index', (req, res, next) => {
 			addrList = user.addrList
 		}
 		Goods.findByIds([req.body.id], (err, goods) => {
-			goods[0].num = req.body.num
-			res.render('order/index', {title: '下单',goods, address, addrList})
+			var goodOne = goods[0]
+			let num = parseInt(req.body.num)
+			var carts=[{
+				id:goodOne._id,
+				goods:goodOne,
+				num:num,
+				price:goodOne.sellPrice,
+				subTotal:formatFloat(goodOne.sellPrice * num),
+				payTotal:formatFloat(goodOne.sellPrice * num)
+			}]
+			// console.log(goodOne.sellPrice,parseFloat(goodOne.sellPrice))
+			let totalPrice = formatFloat(goodOne.sellPrice * num)
+			res.render('order/index', {title: '下单',goods:carts, address, fee:10, totalPrice, addrList})
 		})
 	}
 	if (req.body.status === 'cart') {

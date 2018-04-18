@@ -24,6 +24,20 @@ app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+
+app.use(sassMiddleware({
+	src: path.join(__dirname, 'public/css'),
+	dest: path.join(__dirname, 'public/css'),
+	// includePaths:[path.join(__dirname,"/node_modules/bootstrap-sass/assets/stylesheets/")],
+	// includePaths:[path.join(__dirname,"node_modules/foundation-sites/assets/")],
+	indentedSyntax: false, // true = .sass and false = .scss
+	sourceMap: false,
+	// outputStyle: 'compressed',
+	debug: true,
+	outputStyle: 'extended',
+	prefix:  '/css'
+}));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -36,20 +50,6 @@ app.use(session({
     saveUninitialized: false,  // 新增
     secret:'czwaiwai'}));
 app.use(flash());
-app.use(sassMiddleware({
-  src: path.join(__dirname, 'public/css'),
-  dest: path.join(__dirname, 'public/css'),
-  // includePaths:[path.join(__dirname,"/node_modules/bootstrap-sass/assets/stylesheets/")],
-  // includePaths:[path.join(__dirname,"node_modules/foundation-sites/assets/")],
-  indentedSyntax: false, // true = .sass and false = .scss
-  sourceMap: false,
-    // outputStyle: 'compressed',
-    debug: true,
-  outputStyle: 'extended',
-  prefix:  '/css'
-}));
-
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(function(req,res,next){
     res.locals = Object.assign(res.locals, {
       title:"飞常赞",

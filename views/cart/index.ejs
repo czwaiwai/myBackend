@@ -78,7 +78,7 @@ margin-bottom:20px;
                 <div class="row fs16 padding-v order_item" data-cart-id="<%=item._id%>" data-id="<%=item.goodsId%>" data-check="<%=item.isCheck %>" data-num="<%=item.goodsNum %>" data-price="<%=item.price %>">
                     <div class="col-xs-4  col-md-4">
                         <div class="row">
-                            <div class="col-md-2 col-xs-2"><input class="check_item" type="checkbox" <%=item.isCheck?'checked':'' %> value="<%item._id%>"></div>
+                            <div class="col-md-2 col-xs-2"><%=item.goodsNum %> -- <input class="check_item" type="checkbox" <%=item.isCheck?'checked':'' %> value="<%item._id%>"></div>
                             <div class="col-md-4 col-xs-4 no-padding" >
                                 <img src="<%=item.imgUrl%>" style="width:100px;height:100px;" >
                             </div>
