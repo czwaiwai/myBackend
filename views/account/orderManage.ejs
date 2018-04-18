@@ -16,10 +16,11 @@
             <div class="panel panel-default ">
                 <div class="panel-body no-padding" style="min-height:300px;">
                     <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation" class="active"><a href="#tab1" aria-controls="tab1" role="tab" data-toggle="tab">全部订单</a></li>
-                        <li role="presentation"><a href="#tab2" aria-controls="tab2" role="tab" data-toggle="tab">待付款</a></li>
-                        <li role="presentation"><a href="#tab3" aria-controls="tab3" role="tab" data-toggle="tab">待发货</a></li>
-                        <li role="presentation"><a href="#tab4" aria-controls="tab4" role="tab" data-toggle="tab">已发货</a></li>
+                        <li role="presentation" class="active"><a href="#tab1" aria-controls="tab1" role="tab" data-type="all" data-toggle="tab">全部订单</a></li>
+                        <li role="presentation"><a href="#tab2" aria-controls="tab2" role="tab" data-type="waitPay" data-toggle="tab">待付款</a></li>
+                        <li role="presentation"><a href="#tab3" aria-controls="tab3" role="tab" data-type="pay" data-toggle="tab">待发货</a></li>
+                        <li role="presentation"><a href="#tab4" aria-controls="tab4" role="tab" data-type="ship" data-toggle="tab">已发货</a></li>
+                        <li role="presentation"><a href="#tab4" aria-controls="tab4" role="tab" data-type="back" data-toggle="tab">已退款</a></li>
                     </ul>
                     <!-- Tab panes -->
                     <div class="tab-content" style="background:#FFF;">
@@ -66,15 +67,40 @@
     </div>
 </div>
 <% block('footer').append(`<script src="/js/jPager.js" ></script>`); %>
+<% block('footer').append(`<script id="itemTpl" type="text/template" >
+<div class="panel panel-default margin-top20 " style="border-left:none;border-right:none;">
+    <div class="panel-heading">
+        下单时间：2018-04-14 00:01:30
+        <span class="padding-left20">订单号：123456</span>
+    </div>
+    <div class="panel-body " >
+       <div class="row">
+           <div class="col-md-6">dsf</div>
+           <div class="col-md-3">dsfsd</div>
+           <div class="col-md-3">sdfds</div>
+       </div>
+    </div>
+</div>
+</script>`); %>
 <% block('footer').append(`<script>
 jQuery(function () {
+	var itemTplCompile= _.template($("#itemTpl").html())
+	var $curr = $('#tab1')
 	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-      e.target // newly activated tab
-      e.relatedTarget // previous active tab
-      console.log(e)
-      console.log('------------------')
-
+      // e.target // newly activated tab
+      // e.relatedTarget // previous active tab
+      // console.log(e)
+      // console.log(e.target)
+      // console.log(e.relatedTarget, '----')
+      var tab = $(e.target).attr('href')
+      console.log(tab)
+      $curr= $(tab)
+      console.log($curr, '----------')
+      $.post('/account/orderManage', {page:1, orderType:'all'}).done(function(res) {
+        console.log(res)
+      })
     })
+    // $('a[data-type]=all').trigger('shown.bs.tab')
 	$('.j_pager').pager()
 })
 </script>`) %>

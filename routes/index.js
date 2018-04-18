@@ -404,14 +404,12 @@ router.get('/account/orderManage', (req, res, next) => {
 	res.render('account/orderManage', {title: '订单管理'})
 })
 router.post('/account/orderManage', (req, res, next) => {
-
-	Order.findAllByPage({}, req.body.page, 10, (err, orders) => {
+	Order.findAllByPage({}, req.body.page, 10, (err, obj) => {
 		if(err) return next(err)
-		res.json({
+		res.json(Object.assign({
 			code:0,
 			message: '操作成功',
-			orders
-		})
+		}, obj))
 	})
 })
 router.get('/account/orderDetail/:id', (req, res, next) => {
