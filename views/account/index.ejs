@@ -14,6 +14,21 @@
 .tr_border td {
     border-bottom:1px solid #e3e3e3;
 }
+.good_sub_img_ul {
+  list-style:none;
+  padding:5px;
+  display:block;
+  margin-bottom:0;
+}
+.good_sub_img_item {
+  float:left;
+  width:80px;
+  border:1px solid #e3e3e3;
+  margin-right:5px;
+}
+.good_sub_img_item img{
+max-width:100%;
+}
 </style>`) %>
 <div class="container">
     <ol class="breadcrumb">
@@ -48,24 +63,28 @@
                 <div class="panel-body" style="min-height:300px;">
                     <div class="row" style="margin-top:-15px;">
                         <table style="width:100%;">
+                            <% orders.forEach(item => { %>
                             <tr class="tr_border text-center">
-                                <td style="width: 142px;text-align: center;">订单号：33434055</td>
-                                <td style="width:300px;">图片 状态</td>
-                                <td>￥ 386</td>
+                                <td style="width: 142px;text-align: center;">订单号：<%=item._id.toString().substr(-8) %></td>
+                                <td style="width:300px;">
+                                  <ul class="good_sub_img_ul clearfix">
+                                    <% item.goods.forEach(sub => { %>
+                                      <li class="good_sub_img_item"><img  src="<%=sub.imgTmb %>" ></li>
+                                    <% }) %>
+                                  </ul>
+                                </td>
+                                <td>￥ <%=item.needPrice %></td>
+                                <td style="width:60px;">
+                                    <% if(item.orderStatus === 10) { %>
+                                        <span class="text-danger">未支付</span>
+                                    <% }%>
+                                </td>
                                 <td class="text-center padding">
-                                    <button class="btn btn-primary btn-sm">付款</button><br />
-                                    <a href="/account/orderManage/12345" class="btn btn-link">查看</a>
+                                    <a class="btn btn-primary btn-sm" >付款</a><br />
+                                    <a href="/account/orderManage/<%=item._id %>" class="btn btn-link">查看</a>
                                 </td>
                             </tr>
-                            <tr class="tr_border text-center">
-                                <td style="width: 142px;text-align: center;">订单号：33434055</td>
-                                <td style="width:300px;">图片 状态</td>
-                                <td>￥ 386</td>
-                                <td class="text-center padding">
-                                    <button class="btn btn-primary btn-sm">付款</button><br />
-                                    <a href="/account/orderManage/12345" class="btn btn-link">查看</a>
-                                </td>
-                            </tr>
+                            <%})%>
                         </table>
                     </div>
                 </div>

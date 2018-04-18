@@ -7,7 +7,7 @@ var _ = require('lodash');
 /* GET home page. */
 let {formatFloat} = require('../utils/tools')
 let EventProxy = require('eventproxy')
-let {Page, User, Catalog, Goods, Article, Cart, Address} = require('../viewModels')
+let {Page, User, Catalog, Goods, Article, Cart, Address, Order} = require('../viewModels')
 
 router.use((req,res,next) => {
 	Catalog.getFrontCatalog((err, catalogs) => {
@@ -189,8 +189,9 @@ router.post('/cart/changeCartNum',(req, res, next) => {
 	let user = req.session.user
 	Cart.changeNum(user._id,req.body,(err, user) => {
 		if (err) return next(err)
-		req.session.user.cart = user.cart
-		console.log(req.session.user.cart, '----------------/cart/changeNum')
+		req.session.user.cart = [...user.cart]
+		// console.log(user.cart, '-------------/cart/change')
+		// console.log(req.session.user.cart, '----------------/cart/changeNum')
 		res.json({
 			code:0,
 			message: '操作成功',
@@ -247,10 +248,63 @@ router.post('/order/index', (req, res, next) => {
 		})
 	}
 })
+
+// 订单支付
 router.post('/order/pay', (req, res, next) => {
-	
-	
-	res.render('order/pay', {title: '订单支付'})
+	let rb = req.body
+	var addrId = rb.addressId
+	let totalPrice = rb.totalPrice
+	let fee = rb.fee
+	var goods = []
+	try {
+		console.log(req.body.goods)
+		goods = JSON.parse(req.body.goods)
+	} catch (e) {
+		return next(e)
+	}
+	let totalNum = 0;
+	let orderGoods = goods.map(item => {
+		totalNum += item.num
+		return {
+			goodsId:item.id,
+			name: item.goods.name,
+			subName: item.goods.subName,
+			imgTmb: item.goods.imgTmb,
+			sellPrice: item.goods.sellPrice,
+			num: item.num
+		}
+	})
+	let user = req.session.user
+	let addrObj =user.address.find(item => item._id === addrId)
+	if(!addrObj) {
+		return next(new Error('订单地址没有找到'))
+	}
+	var order = {
+		userId: user._id,
+		orderStatus: '00',
+		goods: orderGoods,
+		address: {
+			name: addrObj.name,
+			mobile: addrObj.mobile,
+			place: addrObj.province + addrObj.city + addrObj.area + addrObj.address
+		},
+		totalNum: totalNum,
+		totalPrice: totalPrice,
+		feePrice: fee,
+		type: 'wx',
+		needPrice: totalPrice,
+	}
+	// 请求微信接口返回二维码url
+	setTimeout(() => {
+		// 创建新订单
+		console.log(order,'order---before')
+		Order.create(order, (err, newOrder) => {
+			if (err) return next(err)
+			console.log(newOrder, 'newOrder ---- after')
+			res.render('order/pay', {title: '订单支付', totalPrice, prepay_id : '12342342352562',
+				code_url: 'www.http.com'})
+		})
+	},2000)
 })
 
 router.get('/order/success', (req, res, next) => {
@@ -312,7 +366,9 @@ router.post('/add2Cart', (req, res, next) => {
 
 // 个人中心
 router.get('/account/index', (req, res, next) => {
-	res.render('account/index', {title: '个人中心'})
+	Order.noPay((err, orders) => {
+		res.render('account/index', {title: '个人中心', orders})
+	})
 })
 
 //地址管理

@@ -8,7 +8,7 @@ var Schema = mongoose.Schema
 var OrderSchema = new Schema({
 	orderId: {type:Number}, // 订单id简化
 	userId: {type: Schema.ObjectId}, // 用户ID
-	orderStatus: {type: Number }, // 00 为待支付，01为已退款 ，10为 已支付, 20待发货 21 为已发货
+	orderStatus: {type: Number }, // 10 为待支付，11为已取消, 12 为已退款 ，20为 已支付, 30待发货 31 为已发货
 	create_at:{type:Date, default: Date.now},
 	update_at:{type:Date, default: Date.now},
 	goods: [{
@@ -24,11 +24,13 @@ var OrderSchema = new Schema({
 		mobile: {type: String},
 		place: {type: String},
 	},
+	type: {type: String, default: 'wx'}, // 支付方式 'wx', 'ali'
+	payId: {type: String, default: ''}, // 支付端信息编码 payId
 	totalNum: {type: Number}, // 总数量
 	totalPrice: {type: Number}, // 商品总价
 	feePrice: {type:Number}, //邮费
 	needPrice: {type: Number}, //应付金额
-	pay_at:{type:Date, default: Date.now}, // 支付时间
+	pay_at:{type:Date}, // 支付时间
 	out_at:{type:Date} // 退款时间
 })
 OrderSchema.plugin(BaseModel)

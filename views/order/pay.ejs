@@ -8,7 +8,7 @@
     <li class="active"><%= title %></li>
   </ol>
   <div class="section text-center" style="padding:20px 180px;">
-    <h1 class="amount " style="padding-bottom:40px;">￥1000.00</h1>
+    <h1 class="amount " style="padding-bottom:40px;">￥<%= totalPrice %></h1>
     <div id="qrcode"></div>
     <div style="margin-top:40px;border-top:1px dashed #e3e3e3;"></div>
     <div>
@@ -24,13 +24,13 @@
     </div>
   </div>
 </div>
-
 <% block('footer').append('<script src="/js/jquery.qrcode.min.js"></script>') %>
 <% block('footer').append(`<script>
  jQuery(function(){
- 	  $('#qrcode').qrcode("http://www.jq22.com");
-    setTimeout(function(){
-    	location.href='/order/success'
-    },5000)
+ 	  var url = '${code_url}'
+ 	  $('#qrcode').qrcode(url);
+//    setTimeout(function(){
+//    	location.href='/order/success'
+//    },5000)
  })
 </script>`) %>

@@ -44,12 +44,10 @@ li.addr_card.active:after {
 }
 </style>`) %>
 <div class="container">
-
-        <ol class="breadcrumb">
-            <li><a href="/">首页</a></li>
-            <li class="active"><%= title %></li>
-        </ol>
-
+    <ol class="breadcrumb">
+        <li><a href="/">首页</a></li>
+        <li class="active"><%= title %></li>
+    </ol>
     <div id="addressWrap" class="section section_no_padding" >
         <div class="section_title">收货地址</div>
         <div class="section_body">
@@ -156,12 +154,31 @@ li.addr_card.active:after {
 
     </div>
     <hr>
+
+    <!--goods: [{-->
+    <!--goodsId: {type:Schema.ObjectId},-->
+    <!--name: {type: String},      // 产品名称-->
+    <!--subName: {type: String},   // 规格名-->
+    <!--imgTmb: {type: String},    // 产品缩略图-->
+    <!--sellPrice: {type: String}, // 售卖的价格-->
+    <!--num: {type: Number}, // 售卖的数量-->
+    <!--}],-->
+    <!--totalNum: {type: Number}, // 总数量-->
+    <!--totalPrice: {type: Number}, // 商品总价-->
+    <!--feePrice: {type:Number}, //邮费-->
+    <!--needPrice: {type: Number}, //应付金额-->
+    <!--pay_at:{type:Date, default: Date.now}, // 支付时间-->
+    <!--out_at:{type:Date} // 退款时间-->
     <div class="fs16 text-right padding-right">
-      <form id="form" method="post" action="/order/pay">
+      <form id="orderForm"  method="post" action="/order/pay">
+        <input name="addressId" type="hidden" value="<%=address && address._id %>" >
+        <input name="goods" type="hidden"  value="<%=JSON.stringify(goods) %>" >
+        <input name="fee" type="hidden"  value="<%=fee %>" >
+        <input name="totalPrice" type="hidden"  value="<%=totalPrice %>" >
         <p class="text-muted">商品合计：￥<%=totalPrice %></p>
         <p>运费：￥<%=fee %></p>
         <p>应付总额：<span class="fs20 text-danger">￥<%=totalPrice %></span></p>
-        <p><button  class="btn btn-lg btn-primary">去付款</button></p>
+        <p><button   class="btn btn-lg btn-primary">去付款</button></p>
       </form>
     </div>
 </div>
@@ -195,6 +212,7 @@ jQuery(function(){
    var $addrForm = $('#addrForm')
    var $addrCancel =  $('.addr_cancel')
    var $addrShowDetail = $('#addrShowDetail')
+   var $orderForm = $('#orderForm')
    var address = ${JSON.stringify(address)}
    var addrList = ${JSON.stringify(addrList)}
    console.log(address,'address')
@@ -206,6 +224,8 @@ jQuery(function(){
    	 }
    }
    function setfillAddr(address) {
+    $orderForm.find('input[name=addressId]').val(address._id)
+    $orderForm.find('input[name=fee]').val(10) // 重新设置邮费
    	var tmp = _.template($('#addShowDetailTpl').html())({address:address})
    	$addrShowDetail.empty().html(tmp)
    }
@@ -218,7 +238,15 @@ jQuery(function(){
         console.log(data)
       }
    })
-
+   // 订单提交
+   $orderForm.on('submit',function(){
+       var $this = $(this)
+       if (!$this.find('input[name=addressId]').val()) {
+        $.Toast('请填写收货地址', 'warning')
+        return false;
+       }
+       return true
+   })
    // 添加地址
    $addressWrap.on('click', '.addr_add', function() {
    	  $addrForm.find('form')[0].reset();
