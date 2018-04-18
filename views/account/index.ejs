@@ -75,9 +75,7 @@ max-width:100%;
                                 </td>
                                 <td>￥ <%=item.needPrice %></td>
                                 <td style="width:60px;">
-                                    <% if(item.orderStatus === 10) { %>
-                                        <span class="text-danger">未支付</span>
-                                    <% }%>
+                                    <span class="<%=item.statusColor %>"><%=item.statusName %></span>
                                 </td>
                                 <td class="text-center padding">
                                     <a class="btn btn-primary btn-sm" >付款</a><br />

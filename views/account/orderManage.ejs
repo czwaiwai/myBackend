@@ -16,10 +16,10 @@
             <div class="panel panel-default ">
                 <div class="panel-body no-padding" style="min-height:300px;">
                     <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation" class="active"><a href="#tab1" aria-controls="home" role="tab" data-toggle="tab">全部订单</a></li>
-                        <li role="presentation"><a href="#tab2" aria-controls="profile" role="tab" data-toggle="tab">待付款</a></li>
-                        <li role="presentation"><a href="#tab3" aria-controls="profile" role="tab" data-toggle="tab">待发货</a></li>
-                        <li role="presentation"><a href="#tab4" aria-controls="profile" role="tab" data-toggle="tab">已发货</a></li>
+                        <li role="presentation" class="active"><a href="#tab1" aria-controls="tab1" role="tab" data-toggle="tab">全部订单</a></li>
+                        <li role="presentation"><a href="#tab2" aria-controls="tab2" role="tab" data-toggle="tab">待付款</a></li>
+                        <li role="presentation"><a href="#tab3" aria-controls="tab3" role="tab" data-toggle="tab">待发货</a></li>
+                        <li role="presentation"><a href="#tab4" aria-controls="tab4" role="tab" data-toggle="tab">已发货</a></li>
                     </ul>
                     <!-- Tab panes -->
                     <div class="tab-content" style="background:#FFF;">
@@ -50,8 +50,13 @@
                                        </div>
                                     </div>
                                 </div>
+                            <div class="padding-h" style="height: 66px;">
+                                <div class="j_pager" data-ajax="true" data-page="1" data-count="10" ></div>
+                            </div>
                         </div>
-                        <div role="tabpanel" class="tab-pane" id="tab2">2</div>
+                        <div role="tabpanel" class="tab-pane" id="tab2">
+
+                        </div>
                         <div role="tabpanel" class="tab-pane" id="tab3">3</div>
                         <div role="tabpanel" class="tab-pane" id="tab4">4</div>
                     </div>
@@ -60,5 +65,16 @@
         </div>
     </div>
 </div>
+<% block('footer').append(`<script src="/js/jPager.js" ></script>`); %>
 <% block('footer').append(`<script>
+jQuery(function () {
+	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+      e.target // newly activated tab
+      e.relatedTarget // previous active tab
+      console.log(e)
+      console.log('------------------')
+
+    })
+	$('.j_pager').pager()
+})
 </script>`) %>

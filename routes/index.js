@@ -281,7 +281,7 @@ router.post('/order/pay', (req, res, next) => {
 	}
 	var order = {
 		userId: user._id,
-		orderStatus: '00',
+		orderStatus: 10, //为支付
 		goods: orderGoods,
 		address: {
 			name: addrObj.name,
@@ -308,9 +308,10 @@ router.post('/order/pay', (req, res, next) => {
 })
 
 router.get('/order/success', (req, res, next) => {
-	
-	
-	res.render('order/success', {title: '订单支付完成'})
+	Order.findById('5ad741d9c361b72ee43ca252', (err, order) => {
+		if(err) return next(err)
+		res.render('order/success', {title: '订单支付完成', order})
+	})
 })
 
 // goodsId: {type: Schema.ObjectId}, // 产品Id
@@ -366,7 +367,7 @@ router.post('/add2Cart', (req, res, next) => {
 
 // 个人中心
 router.get('/account/index', (req, res, next) => {
-	Order.noPay((err, orders) => {
+	Order.noPay(req.session.user._id, (err, orders) => {
 		res.render('account/index', {title: '个人中心', orders})
 	})
 })
@@ -399,12 +400,24 @@ router.get('/account/changePwd', (req, res, next) => {
 
 //订单管理
 router.get('/account/orderManage', (req, res, next) => {
-
+	// Order.findAllByPage({},req)
 	res.render('account/orderManage', {title: '订单管理'})
 })
-router.get('/account/orderManage/:id', (req, res, next) => {
+router.post('/account/orderManage', (req, res, next) => {
 
-	res.render('account/orderDetail', {title: '订单详情'})
+	Order.findAllByPage({}, req.body.page, 10, (err, orders) => {
+		if(err) return next(err)
+		res.json({
+			code:0,
+			message: '操作成功',
+			orders
+		})
+	})
+})
+router.get('/account/orderDetail/:id', (req, res, next) => {
+  Order.findById(req.params.id, (err, order) => {
+	  res.render('account/orderDetail', {title: '订单详情', order})
+  })
 })
 
 // 获取所有地址

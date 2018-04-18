@@ -34,6 +34,33 @@ var OrderSchema = new Schema({
 	out_at:{type:Date} // 退款时间
 })
 OrderSchema.plugin(BaseModel)
+//10 为待支付，11为已取消, 12 为已退款 ，20为 已支付, 30待发货 31 为已发货
+OrderSchema.virtual('statusName').get(function() {
+	let sTxt = ''
+	switch (this.orderStatus) {
+		case 10: sTxt = '未付款';break;
+		case 11: sTxt = '已取消';break;
+		case 12: sTxt = '已退款';break;
+		case 20: sTxt = '已支付';break;
+		case 30: sTxt = '待发货';break;
+		case 31: sTxt = '已发货';break;
+		default: sTxt ='未知状态'
+	}
+	return sTxt
+})
+OrderSchema.virtual('statusColor').get(function() {
+	let sTxt = ''
+	switch (this.orderStatus) {
+		case 10: sTxt = 'text-danger';break;
+		case 11: sTxt = 'text-muted';break;
+		case 12: sTxt = 'text-muted';break;
+		case 20: sTxt = 'text-success';break;
+		case 30: sTxt = 'text-info';break;
+		case 31: sTxt = 'text-info';break;
+		default: sTxt ='text-danger'
+	}
+	return sTxt
+})
 OrderSchema.pre('save', function (next) {
 	this.updateTime = Date.now
 	next()

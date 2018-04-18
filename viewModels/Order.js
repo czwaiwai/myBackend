@@ -12,10 +12,15 @@ exports.create = function (obj, callback) {
 }
 
 // 查询支付订单
-exports.noPay = function (callback) {
-	var orders = Order.find({orderStatus: 10})
+exports.noPay = function (userId, callback) {
+	var orders = Order.find({userId: userId, orderStatus: 10})
 	orders.sort({create_at: -1})
 	orders.exec(callback)
+}
+
+// 查询订单详情
+exports.findById = function (id, callback) {
+	Order.findById(id,callback)
 }
 
 // 按查询分页
