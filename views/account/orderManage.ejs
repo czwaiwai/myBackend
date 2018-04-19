@@ -1,5 +1,36 @@
 <% layout('layout/layout') %>
 <% block('header').append(`<style>
+  .tab-pane > ul{
+     list-style: none;
+    padding: 10px 0 0 0;
+    margin: 0;
+  }
+  .tab-pane li.order_item {
+    border-top:1px solid #e3e3e3;
+    border-bottom:1px solid #e3e3e3;
+    margin-top:10px;
+  }
+  .tab-pane  li.order_item .order_item_header {
+    background:#f0f0f0;
+    height:34px;
+    line-height: 34px;
+  }
+  .good_sub_img_ul {
+  list-style:none;
+  padding:5px;
+  display:block;
+  margin-bottom:0;
+}
+.good_sub_img_item {
+  float:left;
+  width:80px;
+  height:80px;
+  border:1px solid #e3e3e3;
+  margin-right:5px;
+}
+.good_sub_img_item img{
+max-width:100%;
+}
 </style>`) %>
 <div class="container">
     <ol class="breadcrumb">
@@ -23,43 +54,14 @@
                         <li role="presentation"><a href="#tab4" aria-controls="tab4" role="tab" data-type="back" data-toggle="tab">已退款</a></li>
                     </ul>
                     <!-- Tab panes -->
-                    <div class="tab-content" style="background:#FFF;">
-                        <div role="tabpanel" class="tab-pane active" id="tab1">
-                                <div class="panel panel-default margin-top20 " style="border-left:none;border-right:none;">
-                                    <div class="panel-heading">
-                                        下单时间：2018-04-14 00:01:30
-                                        <span class="padding-left20">订单号：123456</span>
-                                    </div>
-                                    <div class="panel-body " >
-                                       <div class="row">
-                                           <div class="col-md-6">dsf</div>
-                                           <div class="col-md-3">dsfsd</div>
-                                           <div class="col-md-3">sdfds</div>
-                                       </div>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default margin-top20 " style="border-left:none;border-right:none;">
-                                    <div class="panel-heading">
-                                        下单时间：2018-04-14 00:01:30
-                                        <span class="padding-left20">订单号：123456</span>
-                                    </div>
-                                    <div class="panel-body " >
-                                       <div class="row">
-                                           <div class="col-md-6">dsf</div>
-                                           <div class="col-md-3">dsfsd</div>
-                                           <div class="col-md-3">sdfds</div>
-                                       </div>
-                                    </div>
-                                </div>
-                            <div class="padding-h" style="height: 66px;">
-                                <div class="j_pager" data-ajax="true" data-page="1" data-count="10" ></div>
-                            </div>
-                        </div>
-                        <div role="tabpanel" class="tab-pane" id="tab2">
-
-                        </div>
-                        <div role="tabpanel" class="tab-pane" id="tab3">3</div>
-                        <div role="tabpanel" class="tab-pane" id="tab4">4</div>
+                    <div class="tab-content" style="background:#FFF;min-height:300px;">
+                        <div role="tabpanel" class="tab-pane active" id="tab1"></div>
+                        <div role="tabpanel" class="tab-pane" id="tab2"></div>
+                        <div role="tabpanel" class="tab-pane" id="tab3"></div>
+                        <div role="tabpanel" class="tab-pane" id="tab4"></div>
+                    </div>
+                    <div class="padding-h" style="height: 66px;">
+                        <div class="j_pager" data-ajax="true" data-page="1" data-count="10" ></div>
                     </div>
                 </div>
             </div>
@@ -68,39 +70,70 @@
 </div>
 <% block('footer').append(`<script src="/js/jPager.js" ></script>`); %>
 <% block('footer').append(`<script id="itemTpl" type="text/template" >
-<div class="panel panel-default margin-top20 " style="border-left:none;border-right:none;">
-    <div class="panel-heading">
-        下单时间：2018-04-14 00:01:30
-        <span class="padding-left20">订单号：123456</span>
-    </div>
-    <div class="panel-body " >
-       <div class="row">
-           <div class="col-md-6">dsf</div>
-           <div class="col-md-3">dsfsd</div>
-           <div class="col-md-3">sdfds</div>
-       </div>
-    </div>
-</div>
+<ul>
+<@ _.each(orders,function(item) { @>
+    <li class="order_item">
+        <div class="order_item_header padding-left15">
+            下单时间：<@=item.create_time @>
+            <span class="padding-left20">订单号：<@=item._id @></span>
+        </div>
+        <div class="order_item_body">
+            <div class="clearfix" >
+                <div class="col-md-6">
+                  <ul class="good_sub_img_ul clearfix">
+                    <@ _.each(item.goods, function(sub) { @>
+                    <li class="good_sub_img_item" style="background:url('<@=sub.imgTmb @>') no-repeat;background-size:cover;"></li>
+                    <@ })@>
+                  <ul>
+                </div>
+                <div class="col-md-1 text-center no-padding">
+                   <p class="fs12  text-muted" style="padding-top: 35px; line-height: 20px;">共<@=item.totalNum @>件商品</p>
+                </div>
+                <div class="col-md-1 text-center no-padding">
+                   <p class="<@=item.statusColor @>" style="padding-top:35px;"><@=item.statusName @><p>
+                </div>
+                <div class="col-md-2 text-center padding-top20" style="height:90px;border-left:1px solid #e3e3e3;border-right:1px solid #e3e3e3">
+                  <p class="fs16 bold">￥<@= item.needPrice @></p>
+                  <span class="fs12 text-muted"> (含运费：￥<@=item.feePrice @>)</span>
+                </div>
+                <div class="col-md-2 text-center ">
+                    <p style="padding-top:30px;">
+                      <a class="btn btn-link">查看详情</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </li>
+<@ }) @>
+</ul>
 </script>`); %>
 <% block('footer').append(`<script>
 jQuery(function () {
 	var itemTplCompile= _.template($("#itemTpl").html())
 	var $curr = $('#tab1')
-	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-      // e.target // newly activated tab
-      // e.relatedTarget // previous active tab
-      // console.log(e)
-      // console.log(e.target)
-      // console.log(e.relatedTarget, '----')
-      var tab = $(e.target).attr('href')
-      console.log(tab)
+	var currType = 'all'
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    	var $this = $(e.target)
+      var tab = $this.attr('href')
+      currType =$this.data('type')
       $curr= $(tab)
-      console.log($curr, '----------')
-      $.post('/account/orderManage', {page:1, orderType:'all'}).done(function(res) {
-        console.log(res)
-      })
+      $('.j_pager').pager('draw',1)
     })
-    // $('a[data-type]=all').trigger('shown.bs.tab')
-	$('.j_pager').pager()
+    function getData($curr,page) {
+      $curr.empty()
+      $.post('/account/orderManage', {page:page, orderType: currType}).done(function(res) {
+        var resData = res.data
+        $('.j_pager').pager('setCount',{count:resData.count,page:page})
+        $curr.append(itemTplCompile({orders:resData.orders}))
+      })
+    }
+    $('.j_pager').pager({
+      callback:function (p) {
+        console.log($curr)
+        getData($curr, p)
+        console.log('页面变化', p)
+      }
+    })
+
 })
 </script>`) %>

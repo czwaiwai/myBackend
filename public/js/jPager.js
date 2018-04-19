@@ -17,6 +17,7 @@
 
 	function pager($el,options){
 		this.$el=$el;
+		this.options = options
 		this.pageCount=parseInt(options.pageCount);
 		this.callback=options.callback || function(){};
 		this.page=parseInt(options.page);
@@ -32,8 +33,8 @@
 	pager.prototype.init = function (page){
 		this.page=page;
 		console.log(this.page,"init");
-		var $nav=this.$el.append('<nav><ul class="pagination" ></ul></nav>');
-		$nav.find('ul').append(this.drawFrag(parseInt(page),this.pageCount));
+		this.$nav=this.$el.append('<nav><ul class="pagination" ></ul></nav>');
+		this.$nav.find('ul').append(this.drawFrag(parseInt(page),this.pageCount));
 		if(this.ajax){
 			this.binding();
 			this.callback(page);
@@ -57,8 +58,18 @@
 			}
 		})
 	}
-
-	pager.prototype.draw = function  (page){
+	pager.prototype.setCount = function (count, p) {
+		var page = p || 1
+		this.pageCount =  count || 1
+		this.arr=[];
+		for(var i=0;i<this.options.pageLen;i++){
+			this.arr.push(i+1);
+		}
+		console.log(this.drawFrag(parseInt(page),this.pageCount))
+		this.$nav.find('ul').empty().append(this.drawFrag(parseInt(page),this.pageCount))
+		this.draw(page, true)
+	},
+	pager.prototype.draw = function  (page, noCall){
 		this.page=parseInt(page);
 		var arr=this.getNum(page);
 		this.$el.find('.page_num').removeClass('active').each(function(index,ctx){
@@ -67,7 +78,9 @@
 				ctx.classList.add('active');
 			}
 		});
-		this.callback(page);
+		if (!noCall) {
+			this.callback(page);
+		}
 	}
 
 
@@ -193,16 +206,22 @@
 			}else{
 				option=defaultOption;
 			}
-
 			var instance=$this.data("instance");
 			if(!instance) {
-				$this.data("instance", new pager($this,option));
+				instance = new pager($this,option)
+				return $this.data("instance", instance);
 			}
-			if(instance && typeof options =="number"){
+			if(typeof options =="number"){
 				instance.draw(options);
 			}
-			if(instance  && typeof options =="string" && options=="draw"){
+			if(typeof options =="string" && options=="draw"){
 				instance.draw(cusPage);
+			}
+			if(typeof options === 'string' && options==='setCount') {
+				instance.setCount(cusPage.count,cusPage.page)
+			}
+			if(typeof options === 'object') {
+				instance.draw(options.page)
 			}
 		})
 	}

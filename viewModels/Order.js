@@ -27,7 +27,7 @@ exports.findById = function (id, callback) {
 exports.findAllByPage = function (query = {}, pageNum = 1,pageSize = 10, callback) {
 	pageNum = parseInt(pageNum)
 	pageSize = parseInt(pageSize)
-	Order.count((err,count) => {
+	Order.count(query, (err,count) => {
 		if (err) return callback(err)
 		var order = Order.find(query)
 		order.sort({create_at:-1})
@@ -37,10 +37,10 @@ exports.findAllByPage = function (query = {}, pageNum = 1,pageSize = 10, callbac
 			if(err) return callback(err)
 			callback(err,{
 				orders:res,
-				page:pageNum,
+				page:pageNum || 1,
 				pageSize,
-				total: count,
-				count: getPageNum(count,pageSize)
+				total: count ,
+				count: getPageNum(count,pageSize) || 1
 			})
 		})
 	})

@@ -68,13 +68,13 @@
                             <% order.goods.forEach(item => { %>
                                 <tr>
                                     <td class="text-left" style="padding-left:0;">
-                                      <div class="vertical-top" style="display:inline-block;width:80px;height:80px;background:url(<%=item.imgTmb %>) no-repeat center;background-size:cover;"></div>
+                                      <div class="vertical-top" style="display:inline-block;width:80px;border:1px solid #e3e3e3;height:80px;background:url(<%=item.imgTmb %>) no-repeat center;background-size:cover;"></div>
                                       <span class="padding-top5"><%=item.name %></span>
                                     </td>
                                     <td>￥<%=item.sellPrice %></td>
                                     <td><%= item.num %></td>
-                                    <td>￥169</td>
-                                    <td>￥169</td>
+                                    <td>￥<%= formatFloat(item.sellPrice * item.num) %></td>
+                                    <td>￥<%= formatFloat(item.sellPrice * item.num) %></td>
                                 </tr>
                             <% }) %>
                             </tbody>

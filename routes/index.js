@@ -404,17 +404,35 @@ router.get('/account/orderManage', (req, res, next) => {
 	res.render('account/orderManage', {title: '订单管理'})
 })
 router.post('/account/orderManage', (req, res, next) => {
-	Order.findAllByPage({}, req.body.page, 10, (err, obj) => {
+	let type = {};
+	switch (req.body.orderType) {
+		case 'waitPay': type = {orderStatus: 10};break;
+		case 'pay': type = {orderStatus: 20};break;
+		case 'ship': type = {orderStatus: 30};break;
+		case 'back': type = {orderStatus: 31};break;
+	}
+	
+	// type.userId = req.session.user._id
+	Order.findAllByPage(type, req.body.page, 1, (err, obj) => {
 		if(err) return next(err)
-		res.json(Object.assign({
-			code:0,
+		obj.orders = obj.orders.map(item => {
+			let newObj = item.toObject()
+			newObj.create_time = item.create_at_ago()
+			newObj.statusName = item.statusName
+			newObj.statusColor = item.statusColor
+			return newObj
+		})
+		console.log(obj.orders, '----')
+		res.json({
+			code: 0,
 			message: '操作成功',
-		}, obj))
+			data: obj
+		})
 	})
 })
 router.get('/account/orderDetail/:id', (req, res, next) => {
   Order.findById(req.params.id, (err, order) => {
-	  res.render('account/orderDetail', {title: '订单详情', order})
+	  res.render('account/orderDetail', {title: '订单详情', order, formatFloat:formatFloat})
   })
 })
 
