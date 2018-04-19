@@ -6,8 +6,10 @@ var Schema = mongoose.Schema
 
 var PostageSchema = new Schema({
 	fee: {type: Number},
+	provinceId: {type: Number},
 	province: {type: String},
+	cityId: {type: Number},
 	city: {type: String},
-	isDefault: {type: Boolean}
+	// isDefault: {type: Boolean}
 })
 mongoose.model('Postage', PostageSchema)

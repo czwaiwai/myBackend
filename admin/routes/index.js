@@ -147,8 +147,19 @@ router.post('/goods/add', (req, res, next) => {
 		})
 	}
 })
+//邮费管理
+router.get('/postage/index', (req, res, next) => {
 
+	res.render('postage/index', {title: '邮费管理', curr: {}})
+})
+router.get('/postage/add', (req, res, next) => {
+	let curr = {}
+	res.render('postage/add', {title: '邮费规则添加', curr})
+})
+router.post('/postage/add', (req, res, next) => {
 
+	res.redirect('/postage/add')
+})
 
 // 订单管理
 router.get('/orders/index/:status', (req, res, next) => {
