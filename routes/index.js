@@ -6,6 +6,7 @@ var _ = require('lodash');
 // var User =require('../models/user');
 /* GET home page. */
 let {formatFloat} = require('../utils/tools')
+let {loginValid} = require('../utils/helper')
 let EventProxy = require('eventproxy')
 let {Page, User, Catalog, Goods, Article, Cart, Address, Order} = require('../viewModels')
 
@@ -44,10 +45,10 @@ router.get('/imgCode',(req,res)=>{
    req.session.imgCode=arr[0]+"";
    res.send(arr[1]);
 });
-router.get('/chat',(req,res)=>{
-    console.log(req.path);
-    res.render('chat',{title:"聊天室"});
-});
+// router.get('/chat',(req,res)=>{
+//     console.log(req.path);
+//     res.render('chat',{title:"聊天室"});
+// });
 
 router.get('/about',(req,res)=>{
     res.render('about',{title:"关于我们"});
@@ -110,9 +111,14 @@ router.get('/goods/index' , (req, res, next) => {
 		})
 	})
 })
+// 商品详情
 router.get('/goods/detail/:id' , (req, res, next) => {
 	Goods.findById(req.params.id, (err, goods) => {
-		if (err) next(err)
+		if (err) return next(err)
+		if (!goods) {
+			res.status(404)
+			return next(err)
+		}
 		res.render('goods/detail', {title: '商品详情', goods})
 	})
 })
@@ -136,7 +142,7 @@ router.get('/cart/index', (req, res, next) => {
 	}
 	res.render('cart/index', {title: '购物车', carts, total})
 })
-router.post('/cart/clear', (req, res, next) => {
+router.post('/cart/clear', loginValid, (req, res, next) => {
 	let user = req.session.user
 	Cart.clear(user._id,  (err, user) => {
 		if (err) return next(err)
@@ -149,7 +155,7 @@ router.post('/cart/clear', (req, res, next) => {
 	})
 })
 // 购物车删除单个商品
-router.post('/cart/removeOne', (req, res, next) => {
+router.post('/cart/removeOne', loginValid, (req, res, next) => {
 	let user = req.session.user
 	Cart.removeOne(user._id, req.body.cartId, (err, user) => {
 		if (err) return next(err)
@@ -161,7 +167,7 @@ router.post('/cart/removeOne', (req, res, next) => {
 		})
 	})
 })
-router.post('/cart/checkAll', (req, res, next) => {
+router.post('/cart/checkAll', loginValid, (req, res, next) => {
 	let user = req.session.user
 	Cart.checkAll(user._id, req.body.check, (err, user) => {
 		if (err) return next(err)
@@ -173,7 +179,7 @@ router.post('/cart/checkAll', (req, res, next) => {
 		})
 	})
 })
-router.post('/cart/changeCartCheck',(req, res, next) => {
+router.post('/cart/changeCartCheck', loginValid, (req, res, next) => {
 	let user = req.session.user
 	Cart.changeCheck(user._id,req.body,(err, user) => {
 		if (err) return next(err)
@@ -185,7 +191,7 @@ router.post('/cart/changeCartCheck',(req, res, next) => {
 		})
 	})
 })
-router.post('/cart/changeCartNum',(req, res, next) => {
+router.post('/cart/changeCartNum', loginValid, (req, res, next) => {
 	let user = req.session.user
 	Cart.changeNum(user._id,req.body,(err, user) => {
 		if (err) return next(err)
@@ -202,7 +208,7 @@ router.post('/cart/changeCartNum',(req, res, next) => {
 
 
 //订单
-router.post('/order/index', (req, res, next) => {
+router.post('/order/index', loginValid, (req, res, next) => {
 	console.log(req.body)
 	let address = null
 	let addrList = []
@@ -249,8 +255,21 @@ router.post('/order/index', (req, res, next) => {
 	}
 })
 
+router.get('/order/pay/:orderId', loginValid, (req, res, next) => {
+	Order.findById(req.params.orderId, (err, order) => {
+		if (err) next(err)
+		if (order.orderStatus === 10) {
+			setTimeout(() => { //链接微信获取url
+				res.render('order/pay', {title: '订单支付', order:order, totalPrice: order.needPrice, prepay_id : '12342342352562',
+					code_url: 'www.http.com'})
+			}, 2000)
+		} else {
+			return next(new Error('订单不是为支付状态'))
+		}
+	})
+})
 // 订单支付
-router.post('/order/pay', (req, res, next) => {
+router.post('/order/pay', loginValid, (req, res, next) => {
 	let rb = req.body
 	var addrId = rb.addressId
 	let totalPrice = rb.totalPrice
@@ -301,13 +320,13 @@ router.post('/order/pay', (req, res, next) => {
 		Order.create(order, (err, newOrder) => {
 			if (err) return next(err)
 			console.log(newOrder, 'newOrder ---- after')
-			res.render('order/pay', {title: '订单支付', totalPrice, prepay_id : '12342342352562',
+			res.render('order/pay', {title: '订单支付', order:newOrder, totalPrice, prepay_id : '12342342352562',
 				code_url: 'www.http.com'})
 		})
 	},2000)
 })
 
-router.get('/order/success', (req, res, next) => {
+router.get('/order/success', loginValid, (req, res, next) => {
 	Order.findById('5ad741d9c361b72ee43ca252', (err, order) => {
 		if(err) return next(err)
 		res.render('order/success', {title: '订单支付完成', order})
@@ -323,7 +342,7 @@ router.get('/order/success', (req, res, next) => {
 // price: {type: Number}, // 单价
 
 //添加到购物车
-router.post('/add2Cart', (req, res, next) => {
+router.post('/add2Cart', loginValid, (req, res, next) => {
 	Goods.findById(req.body._id, (err, goods) => {
 		if (err) return  next(err)
 		let cart = {
@@ -366,14 +385,14 @@ router.post('/add2Cart', (req, res, next) => {
 
 
 // 个人中心
-router.get('/account/index', (req, res, next) => {
+router.get('/account/index', loginValid, (req, res, next) => {
 	Order.noPay(req.session.user._id, (err, orders) => {
 		res.render('account/index', {title: '个人中心', orders})
 	})
 })
 
 //地址管理
-router.get('/account/address', (req, res, next) => {
+router.get('/account/address', loginValid, (req, res, next) => {
 	Address.findAllAddress(req.session.user._id, (err, address) => {
 		if (err) return next(err)
 		res.render('account/address', {title: '地址管理', address:address.address})
@@ -381,29 +400,60 @@ router.get('/account/address', (req, res, next) => {
 })
 
 //个人信息
-router.get('/account/accountInfo', (req, res, next) => {
+router.get('/account/accountInfo', loginValid, (req, res, next) => {
 	res.render('account/accountInfo', {title: '个人信息'})
 })
-router.post('/account/accountInfo', (req, res, next) => {
+router.post('/account/accountInfo', loginValid, (req, res, next) => {
 	// req.body
 	let param = req.body
 	User.saveById(req.session.user._id, param, (err, user) => {
 		if (err) return next(err)
 		req.session.user = user
+		req.flash('success','保存成功')
 		res.redirect('/account/accountInfo')
 	})
 })
 
-router.get('/account/changePwd', (req, res, next) => {
+router.get('/account/changePwd', loginValid, (req, res, next) => {
 	res.render('account/changePwd', {title: '修改密码'})
+})
+router.post('/account/changePwd', loginValid, (req, res, next) => {
+	req.checkBody('oldpwd',"原始密码不能为空").notEmpty()
+		.isTooShort(6).withMessage("密码错误");
+	req.checkBody('pwd',"密码不能为空").notEmpty()
+		.isTooShort(6).withMessage("密码太短");
+	req.checkBody('pwdRepeat').notEmpty()
+		.isSame(req.body.pwd).withMessage('密码不一致')
+	req.asyncValidationErrors().then(function(){
+		// console.log(req.body)
+		// User.findById
+		User.findById(req.session.user._id, function(err,user){
+			if (err) return next(err)
+			if (user.pwd !== req.body.oldpwd) {
+				req.flash("error","账户名或密码错误")
+				return  res.redirect('/account/changePwd')
+			}
+			User.findAndUpdate(user._id, {pwd: req.body.pwd}, (err, newUser) => {
+				// console.log(newUser)
+				req.flash('success', '修改成功')
+				res.redirect('/account/changePwd')
+			})
+				// req.flash('success', '修改成功')
+				// res.redirect('/account/changePwd')
+		});
+	},function(errors){
+		req.flash('error', errors[0].msg)
+		res.redirect('/account/changePwd')
+	});
+	
 })
 
 //订单管理
-router.get('/account/orderManage', (req, res, next) => {
+router.get('/account/orderManage', loginValid, (req, res, next) => {
 	// Order.findAllByPage({},req)
-	res.render('account/orderManage', {title: '订单管理'})
+	res.render('account/orderManage', loginValid, {title: '订单管理'})
 })
-router.post('/account/orderManage', (req, res, next) => {
+router.post('/account/orderManage', loginValid, (req, res, next) => {
 	let type = {};
 	switch (req.body.orderType) {
 		case 'waitPay': type = {orderStatus: 10};break;
@@ -430,14 +480,14 @@ router.post('/account/orderManage', (req, res, next) => {
 		})
 	})
 })
-router.get('/account/orderDetail/:id', (req, res, next) => {
+router.get('/account/orderDetail/:id', loginValid, (req, res, next) => {
   Order.findById(req.params.id, (err, order) => {
 	  res.render('account/orderDetail', {title: '订单详情', order, formatFloat:formatFloat})
   })
 })
 
 // 获取所有地址
-router.get('/account/getAllAddress', (req, res, next) => {
+router.get('/account/getAllAddress', loginValid, (req, res, next) => {
 	Address.findAllAddress(req.session.user._id, (err, address) => {
 		if (err) return next(err)
 		res.json({
@@ -448,7 +498,7 @@ router.get('/account/getAllAddress', (req, res, next) => {
 	})
 })
 // 地址保存
-router.post('/account/address', (req, res, next) => {
+router.post('/account/address', loginValid, (req, res, next) => {
 	// req.body
 	var provArr = req.body.province.split(',')
 	var cityArr = req.body.city.split(',')
@@ -483,7 +533,7 @@ router.post('/account/address', (req, res, next) => {
 		})
 	})
 })
-router.post('/account/addressRemove', (req, res, next) => {
+router.post('/account/addressRemove', loginValid, (req, res, next) => {
 	Address.remove(req.session.user._id,req.body._id, (err) => {
 		if (err) return next(err)
 		res.json({
@@ -494,7 +544,7 @@ router.post('/account/addressRemove', (req, res, next) => {
 	})
 })
 // 地址选择
-router.get('/cityAndArea', (req, res, next) => {
+router.get('/cityAndArea', loginValid, (req, res, next) => {
 	if (req.query.addrId && req.query.name) {
 		var nameList = ['city','area']
 		if(nameList.indexOf(req.query.name)>-1) {
@@ -553,8 +603,9 @@ router.post('/login',(req,res, next)=>{
         		return  res.redirect('/login');
           }
           console.log(user, 'user')
+					delete user.pwd
           req.session.user=user;
-          return  res.redirect('/');
+          return  res.redirect('/account/index');
         });
     },function(errors){
         req.flash("error",errors[0].msg);
@@ -589,7 +640,7 @@ router.post('/register', (req, res, next) => {
 		return res.redirect('/register');
 	});
 })
-router.get('/logout',(req,res)=>{
+router.get('/logout', loginValid, (req,res)=>{
     req.session.user=null;
     return res.redirect('/');
 })

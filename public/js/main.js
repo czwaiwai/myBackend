@@ -126,6 +126,12 @@ jQuery(function(){
 			}
 		})
 	}
+	var $flashAlert = $('#flashAlert')
+	if($flashAlert && $flashAlert[0]) {
+    	setTimeout(function(){
+				$flashAlert.remove();
+			},2500)
+	}
 	$.validator.setDefaults({
 		errorLabelContainer:'.form-error',
 		onkeyup: false,

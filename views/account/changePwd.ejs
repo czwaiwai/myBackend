@@ -15,7 +15,7 @@
       <div class="panel panel-default ">
         <div class="panel-heading fs14"><%=title %></div>
         <div class="panel-body" style="min-height:300px;">
-          <form class="form-horizontal ">
+          <form action="/account/changePwd" method="post" novalidate class="form-horizontal ">
             <div class="form-group">
               <label for="inputPassword1" class="col-sm-2 control-label">旧密码</label>
               <div class="col-sm-4">
@@ -36,6 +36,9 @@
             </div>
             <div class="margin20-h" style="border-top:1px dashed #e3e3e3;"></div>
             <div class="form-group padding-top" >
+              <div class="col-md-offset-2">
+                <p class=" text-danger"><%=error || '' %>&nbsp;</p>
+              </div>
               <div class="col-sm-offset-2 col-sm-4">
                 <button class="btn btn-primary"  style="width:80px;" type="submit">保存</button>
               </div>
