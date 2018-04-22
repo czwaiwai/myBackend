@@ -451,7 +451,7 @@ router.post('/account/changePwd', loginValid, (req, res, next) => {
 //订单管理
 router.get('/account/orderManage', loginValid, (req, res, next) => {
 	// Order.findAllByPage({},req)
-	res.render('account/orderManage', loginValid, {title: '订单管理'})
+	res.render('account/orderManage', {title: '订单管理'})
 })
 router.post('/account/orderManage', loginValid, (req, res, next) => {
 	let type = {};

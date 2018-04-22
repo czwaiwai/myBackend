@@ -8,8 +8,11 @@ var Postage = models.Postage
 exports.findAll = function (callback) {
 	Postage.find(callback)
 }
+exports.findById = function (id, callback) {
+	Postage.findById(id, callback)
+}
 exports.update = function (id,obj,callback) {
-	Postage.findByIdAndUpdate(id,{$set:obj},callback)
+	Postage.findByIdAndUpdate(id, obj, callback)
 }
 exports.add = function (obj, callback) {
 	var postage = new Postage(obj)

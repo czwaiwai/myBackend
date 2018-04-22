@@ -6,7 +6,7 @@ let EventProxy = require('eventproxy')
 let {succJson,errJson} =require('../../utils/sendJson');
 // let User =require('../../models/user');
 // let Pages =require('../../models/pages');
-let {User, Page, Catalog, Article, Goods, Image, Order} = require('../../viewModels/')
+let {User, Page, Catalog, Article, Goods, Image, Order, Postage} = require('../../viewModels/')
 
 let imgCode="";
 function getPageNum(count,pageSize){
@@ -149,11 +149,16 @@ router.post('/goods/add', (req, res, next) => {
 })
 //邮费管理
 router.get('/postage/index', (req, res, next) => {
-
-	res.render('postage/index', {title: '邮费管理', curr: {}})
+	let postage = []
+	res.render('postage/index', {title: '邮费管理', postage})
 })
 router.get('/postage/add', (req, res, next) => {
-	let curr = {}
+	let curr = {
+		isNew:true
+	}
+	if(req.body._id) {
+		Postage.findBy
+	}
 	res.render('postage/add', {title: '邮费规则添加', curr})
 })
 router.post('/postage/add', (req, res, next) => {
