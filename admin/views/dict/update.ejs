@@ -1,0 +1,61 @@
+<% layout('./layout/layout') %>
+<% block('header').append(`<style></style>`)%>
+<div class="row">
+  <div class="col-md-12">
+    <div class="box box-info">
+      <div class="box-header with-border">
+        <h3 class="box-title"><%=dict.nameCn %></h3>
+      </div>
+      <!-- /.box-header -->
+      <!-- form start -->
+      <form action="<%=assetsPath %>/dict/saveField" method="post" class="form-horizontal" novalidate>
+        <div class="box-body">
+          <% if(dict.valueType === 'string'){ %>
+          <div class="form-group">
+            <label for="title" class="col-sm-2 control-label"><%=dict.nameCn %></label>
+            <div class="col-sm-10">
+              <input name="value" class="form-control" value="<%=dict.value || '' %>"  placeholder="属性值"  >
+            </div>
+          </div>
+          <% } %>
+          <% if(dict.valueType === 'object'){ %>
+            <% for (let key in dict.value) {  %>
+            <div class="form-group">
+              <label for="path" class="col-sm-2 control-label"><%=dict.value[key].name %></label>
+              <div class="col-sm-10">
+                <input name="value[<%=key %>][name]" type="hidden" value="<%=dict.value[key].name || ''%>" >
+                <input name="value[<%=key %>][value]" class="form-control" value="<%=dict.value[key].value || ''%>"  placeholder="属性值">
+              </div>
+            </div>
+            <% } %>
+          <% } %>
+          <% if(dict.valueType === 'array'){ %>
+            <%  dict.forEach(item => { %>
+            <div class="form-group">
+              <label for="path" class="col-sm-2 control-label"><%=item.name%></label>
+              <div class="col-sm-10">
+                <input name="<%=item.name %>" class="form-control" value="<%=item.value || ''%>"  placeholder="属性值">
+              </div>
+            </div>
+            <% }) %>
+          <% } %>
+        <!-- /.box-body -->
+        <div class="box-footer">
+          <div class="col-sm-offset-2 col-sm-10">
+            <input name="valueType" type="hidden" value="<%=dict.valueType %>" >
+            <input name="_id" type="hidden" value="<%=dict._id%>" >
+            <button type="submit" class="btn btn-info ">保存</button>
+            <button type="reset" class="btn btn-default">重置</button>
+          </div>
+        </div>
+        </div>
+        <!-- /.box-footer -->
+      </form>
+    </div>
+  </div>
+</div>
+<% block('footer').append(`<script>
+    jQuery(function() {
+
+    })
+</script>`)%>

@@ -2,14 +2,15 @@ var express = require('express');
 let router = express.Router();
 // let Image =require('../../models/image');
 let fs=require('fs');
+let qs=require('qs');
 let EventProxy = require('eventproxy')
 let {succJson,errJson} =require('../../utils/sendJson');
 // let User =require('../../models/user');
 // let Pages =require('../../models/pages');
-let {User, Page, Catalog, Article, Goods, Image, Order, Postage} = require('../../viewModels/')
+let {User, Page, Catalog, Article, Goods, Image, Order, Postage, Dict} = require('../../viewModels/')
 
 let imgCode="";
-function getPageNum(count,pageSize){
+function getPageNum(count,pageSize) {
 	if(count%pageSize==0){//转换成页数
 		return  parseInt(count/pageSize);
 	}
@@ -29,6 +30,9 @@ router.get('/login',(req,res)=>{
 router.get('/welcome',(req, res) => {
     res.render('welcome', {title: "首页"})
 })
+
+
+
 router.post('/login',(req,res)=>{
     console.log(req.session,req.session.imgCode,req.body.verifyCode,"imgCode");
     let imgCode=req.session.imgCode;
@@ -61,7 +65,7 @@ router.get('/logout',(req,res)=>{
     return res.redirect('./');
 })
 
-// 用户管理
+// 用户管理 -----------------------------------------------------------------
 router.get('/users/index', (req, res, next) => {
 	User.findAllByPage(req.query.page,10,(err, obj) => {
 		if (err) return next(err)
@@ -95,7 +99,7 @@ router.post('/users/add', (req, res, next) => {
 		next(new Error('后台无法新建用户'))
 	}
 })
-// 商品管理
+// 商品管理 -----------------------------------------------------------------
 router.get('/goods/index', (req, res, next) => {
 	Goods.findAllByPage({},req.query.page,10, (err, obj) => {
 		if (err) return next(err)
@@ -147,26 +151,156 @@ router.post('/goods/add', (req, res, next) => {
 		})
 	}
 })
-//邮费管理
-router.get('/postage/index', (req, res, next) => {
-	let postage = []
-	res.render('postage/index', {title: '邮费管理', postage})
+// 字典管理
+router.get('/dict/index', (req, res, next) => {
+	Dict.findAllByPage(req.query.page,10,(err, obj) => {
+		if (err) return next(err)
+		return res.render('dict/index', Object.assign({title:'字典管理'}, obj))
+	})
 })
+router.get('/dict/field/:name', (req, res, next) => {
+	Dict.findByName(req.params.name, (err, dict) => {
+		if(err) return next(err)
+		console.log(dict, 'dict-----------------------')
+		res.render('dict/update', {title:'属性修改', dict})
+	})
+})
+router.post('/dict/saveField', (req, res, next) => {
+	console.log(req.body, '/dict/saveField - -- - - - -')
+	let valueObj=qs.parse(req.body);
+	Dict.update(req.body._id, valueObj, (err, dict) => {
+		if (err) return next(err)
+		console.log(dict, ' --------')
+		console.log(dict.name)
+		req.flash('success', '保存成功')
+		res.redirect('/admin/dict/field/' + dict.name)
+	})
+})
+router.get('/dict/add', (req, res, next) => {
+	let curr = {
+		isNew: true
+	}
+	if (req.query.update) {
+		Dict.findById(req.query.update, (err, dict) => {
+			if (err) return next(err)
+			curr = dict
+			res.render('dict/add', {title: '字典数据添加', curr})
+		})
+	} else {
+		res.render('dict/add', {title: '字典数据添加', curr})
+	}
+})
+router.post('/dict/add', (req, res, next) => {
+	let param = req.body
+	switch(req.body.valueType) {
+		case 'string': param.value = req.body.value;break;
+		case 'object': param.value = JSON.parse(param.value);break;
+		case 'array': param.value = JSON.parse(param.value);break;
+	}
+	param.isValid = Boolean(req.body.isValid)
+	if(req.body._id) { //更新
+		Dict.update(req.body._id, param, (err, dict) => {
+			if (err) return  next(err)
+			req.flash('success', '更新成功')
+			return res.redirect('/admin/dict/add?update=' + req.body._id)
+		})
+	} else {
+		Dict.create(param, (err, dict) => {
+			if (err) return next(err)
+			req.flash('success', '创建成功')
+			res.redirect('/admin/dict/add')
+		})
+	}
+})
+router.post('/dict/delete',(req, res, next) => {
+	let removeId = req.body.id
+	Dict.remove(removeId, function(err, postage) {
+		if(err) {
+			console.log(err)
+			return res.sendStatus(403)
+		}
+		if (postage) {
+			return res.json({
+				code:0,
+				message:'操作成功'
+			})
+		} else {
+			return res.sendStatus(403)
+		}
+	})
+})
+
+
+//邮费管理 -----------------------------------------------------------------
+router.get('/postage/index', (req, res, next) => {
+	Postage.findAll((err, postages) => {
+		if (err) return next(err)
+		res.render('postage/index', {title: '邮费管理', postages})
+	})
+})
+
 router.get('/postage/add', (req, res, next) => {
 	let curr = {
 		isNew:true
 	}
-	if(req.body._id) {
-		Postage.findBy
+	if(req.query.update) {
+		Postage.findById(req.query.update, (err, postage) => {
+			if (err) return next(err)
+			curr = postage
+			res.render('postage/add', {title: '邮费规则添加', curr})
+		})
+	} else {
+		res.render('postage/add', {title: '邮费规则添加', curr})
 	}
-	res.render('postage/add', {title: '邮费规则添加', curr})
 })
+
 router.post('/postage/add', (req, res, next) => {
-
-	res.redirect('/postage/add')
+	let param = req.body
+	if (req.body.province) {
+		let proArr = req.body.province.split(',')
+		param.provinceId = proArr[0]
+		param.province = proArr[1]
+	}
+	if (req.body.city) {
+		let cityArr = req.body.city.split(',')
+		param.cityId = cityArr[0]
+		param.city = cityArr[1]
+	}
+	param.isValid = Boolean(req.body.isValid)
+	if(req.body._id) { //更新
+		Postage.update(req.body._id, param, (err, postage) => {
+			if (err) return  next(err)
+			req.flash('success', '更新成功')
+			return res.redirect('/admin/postage/add?update=' + req.body._id)
+		})
+	} else {
+		Postage.create(param, (err, postage) => {
+			if (err) return next(err)
+			req.flash('success', '添加成功')
+			res.redirect('/admin/postage/add')
+		})
+	}
+})
+router.post('/postage/delete',(req, res, next) => {
+	let removeId = req.body.id
+	Postage.remove(removeId, function(err, postage) {
+		if(err) {
+			console.log(err)
+			return res.sendStatus(403)
+		}
+		if (postage) {
+			return res.json({
+				code:0,
+				message:'操作成功'
+			})
+		} else {
+			return res.sendStatus(403)
+		}
+	})
 })
 
-// 订单管理
+
+// 订单管理 -----------------------------------------------------------------
 router.get('/orders/index/:status', (req, res, next) => {
 	let queryParam = {}
 	switch(req.params.status) {
@@ -182,7 +316,7 @@ router.get('/orders/index/:status', (req, res, next) => {
 	})
 })
 
-// 单页管理
+// 单页管理 -----------------------------------------------------------------
 router.get('/pages/index', (req, res, next) => {
 	console.log('req.query.page',req.query.page)
 	Page.findAllByPage(req.query.page,10,(err, obj) => {
@@ -240,7 +374,7 @@ router.post('/pages/delete',(req, res, next) => {
 	})
 })
 
-// 文章管理
+// 文章管理 -----------------------------------------------------------------
 router.get('/article/index', (req, res, next) => {
 	let name = req.query.catalogName
 	if (!name) {
@@ -311,7 +445,7 @@ router.post('/article/delete',(req, res, next) => {
 })
 
 
-// 导航管理
+// 导航管理  -----------------------------------------------------------------
 router.get('/catalog/index', (req, res) => {
   Catalog.getCatalogMenu((err, catalogs) => {
     if (err) {
@@ -466,4 +600,5 @@ router.post('/image/delete', (req, res) => {
 // router.all('*',(req,res)=>{
 //     res.redirect
 // })
+// catch 404 and forward to error handler
 module.exports = router;

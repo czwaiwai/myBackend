@@ -10,6 +10,7 @@ var PostageSchema = new Schema({
 	province: {type: String},
 	cityId: {type: Number},
 	city: {type: String},
+	isValid: {type: Boolean, default: false}
 	// isDefault: {type: Boolean}
 })
 mongoose.model('Postage', PostageSchema)

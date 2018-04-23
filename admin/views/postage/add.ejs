@@ -13,13 +13,13 @@
           <div class="form-group">
             <label for="title" class="col-sm-2 control-label">省份</label>
             <div class="col-sm-10">
-              <select id="province" class="form-control" ></select>
+              <select id="province" name="province" class="form-control" ></select>
             </div>
           </div>
           <div class="form-group">
             <label for="path" class="col-sm-2 control-label">城市</label>
             <div class="col-sm-10">
-              <select id="city" class="form-control"  >
+              <select id="city" name="city" class="form-control"  >
                 <option value="">请选择</option>
               </select>
             </div>
@@ -27,14 +27,14 @@
           <div class="form-group">
             <label for="path" class="col-sm-2 control-label">邮费</label>
             <div class="col-sm-10">
-              <input name="fee" class="form-control"  >
+              <input name="fee" class="form-control" value="<%=curr.fee %>"  >
             </div>
           </div>
           <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
               <div class="checkbox">
                 <label>
-                  <input name="isValid" value="1" type="checkbox"> 是否有效
+                  <input name="isValid" <%=curr.isValid?'checked':''%>  value="true" type="checkbox"> 是否有效
                 </label>
               </div>
             </div>
@@ -57,27 +57,44 @@
 </div>
 <% block('footer').append(`<script>
     jQuery(function() {
+    	var dfProvinceId = '${curr.provinceId}'
+    	var dfProvince = '${curr.provinceId},${curr.province}'
+    	var dfCity = '${curr.cityId},${curr.city}'
     	var $province =  $('#province')
     	var $city = $('#city')
-        $.get('/cityAndArea').done(function (res) {
-        	console.log(res)
-        	var tmp = '<option value="">请选择</option>'
-        	res.data.list.forEach(function(item){
-        		tmp += '<option value="' + item.id + ',' + item.name+'" >'+ item.name +'</option>'
-        	})
-            $province.append(tmp)
+      $.get('/cityAndArea').done(function (res) {
+        var tmp = '<option value="">请选择</option>'
+        res.data.list.forEach(function(item){
+          tmp += '<option value="' + item.id + ',' + item.name+'" >'+ item.name +'</option>'
         })
-        $province.on('change', function () {
-        	var $this = $(this)
-        	var val = $this.val()
-        	var arr = val.split(',')
-        	$.get('/cityAndArea?addrId=' + arr[0] + '&name=city').done(function(res){
-        	  var tmp = '<option value="">请选择</option>'
-              res.data.list.forEach(function(item){
-                tmp += '<option value="' + item.id + ',' + item.name+'" >'+ item.name +'</option>'
-                $city.empty().append(tmp)
-              })
-        	})
+        $province.append(tmp)
+        init()
+      })
+      $province.on('change', function () {
+        var $this = $(this)
+        var val = $this.val()
+        var arr = val.split(',')
+        setCity(arr[0])
+      })
+      function init() {
+    		if (dfProvince.length>5) {
+    			$province.val(dfProvince)
+    		}
+    		if (dfCity.length >5) {
+          setCity(dfProvinceId,function () {
+          	$city.val(dfCity)
+          })
+    		}
+    	}
+      function setCity(addrId, cb) {
+        $.get('/cityAndArea?addrId=' + addrId + '&name=city').done(function(res){
+          var tmp = '<option value="">请选择</option>'
+          res.data.list.forEach(function(item){
+            tmp += '<option value="' + item.id + ',' + item.name+'" >'+ item.name +'</option>'
+            $city.empty().append(tmp)
+          })
+          cb && cb()
         })
+      }
     })
 </script>`)%>

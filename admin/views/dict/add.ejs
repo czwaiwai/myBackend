@@ -1,8 +1,76 @@
-<% layout('layout/layout') %>
-<% block('header').append(`<style>
-</style>`) %>
-<div class="container">
-
+<% layout('./layout/layout') %>
+<% block('header').append(`<style></style>`)%>
+<div class="row">
+  <div class="col-md-12">
+    <div class="box box-info">
+      <div class="box-header with-border">
+        <h3 class="box-title"><%=curr.isNew?'添加':'修改'%>字典</h3>
+      </div>
+      <!-- /.box-header -->
+      <!-- form start -->
+      <form action="<%=assetsPath %>/dict/add" method="post" class="form-horizontal" novalidate>
+        <div class="box-body">
+          <div class="form-group">
+            <label for="title" class="col-sm-2 control-label">属性名</label>
+            <div class="col-sm-10">
+              <input name="name" class="form-control" value="<%=curr.name || '' %>"  placeholder="属性名英文或拼音"  >
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="path" class="col-sm-2 control-label">属性中文名</label>
+            <div class="col-sm-10">
+              <input name="nameCn" class="form-control" value="<%=curr.nameCn || ''%>"  placeholder="属性中文名称">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="path" class="col-sm-2 control-label">分组名</label>
+            <div class="col-sm-10">
+              <input name="group" class="form-control" value="<%=curr.group || ''%>"  placeholder="没有的话可以留空" >
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="path" class="col-sm-2 control-label">属性值类型</label>
+            <div class="col-sm-10">
+              <select name="valueType" class="form-control" rows="4" >
+                <option  value="string" <%=curr.valueType==='string'?'selected':''%> >字符串</option>
+                <option  value="object" <%=curr.valueType==='object'?'selected':''%> >json</option>
+                <option  value="array"  <%=curr.valueType==='array'?'selected':''%> >数组</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="path" class="col-sm-2 control-label">属性值</label>
+            <div class="col-sm-10">
+              <textarea name="value" class="form-control" rows="4"><%=typeof curr.value ==='object'?JSON.stringify(curr.value):(curr.value || '') %></textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              <div class="checkbox">
+                <label>
+                  <input name="isValid" <%=curr.isValid?'checked':''%>  value="true" type="checkbox"> 是否有效
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /.box-body -->
+        <div class="box-footer">
+          <div class="col-sm-offset-2 col-sm-10">
+            <% if(!curr.isNew) { %>
+            <input name="_id" type="hidden" value="<%=curr._id%>" >
+            <% }%>
+            <button type="submit" class="btn btn-info ">保存</button>
+            <button type="reset" class="btn btn-default">重置</button>
+          </div>
+        </div>
+        <!-- /.box-footer -->
+      </form>
+    </div>
+  </div>
 </div>
 <% block('footer').append(`<script>
-</script>`) %>
+    jQuery(function() {
+
+    })
+</script>`)%>

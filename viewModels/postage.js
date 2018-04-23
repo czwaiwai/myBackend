@@ -14,7 +14,7 @@ exports.findById = function (id, callback) {
 exports.update = function (id,obj,callback) {
 	Postage.findByIdAndUpdate(id, obj, callback)
 }
-exports.add = function (obj, callback) {
+exports.create = function (obj, callback) {
 	var postage = new Postage(obj)
 	postage.save(callback)
 }
