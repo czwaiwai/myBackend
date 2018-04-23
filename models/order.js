@@ -4,6 +4,7 @@
 var mongoose = require('mongoose')
 var BaseModel = require("./baseModel");
 var Schema = mongoose.Schema
+var tools = require('../utils/tools');
 
 var OrderSchema = new Schema({
 	orderId: {type:Number}, // 订单id简化
@@ -34,6 +35,11 @@ var OrderSchema = new Schema({
 	out_at:{type:Date} // 退款时间
 })
 OrderSchema.plugin(BaseModel)
+OrderSchema.plugin(function (schema) {
+	schema.methods.pay_at_ago = function () {
+		return tools.formatDate(this.create_at, true);
+	}
+})
 //10 为待支付，11为已取消, 12 为已退款 ，20为 已支付, 30待发货 31 为已发货
 OrderSchema.virtual('statusName').get(function() {
 	let sTxt = ''

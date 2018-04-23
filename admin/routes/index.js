@@ -305,15 +305,19 @@ router.get('/orders/index/:status', (req, res, next) => {
 	let queryParam = {}
 	switch(req.params.status) {
 		case "all": break;
-		case "waitPay": break;
-		case "pay": break;
-		case "ship": break; // 已发货
-		case "back": break;
+		case "waitPay": queryParam = {orderStatus: 10};break;
+		case "pay": queryParam = {orderStatus: 20};break;
+		case "ship": queryParam = {orderStatus: 31};break; // 已发货
+		case "back": queryParam = {orderStatus: 12}; break;
 	}
 	Order.findAllByPage(queryParam,req.query.page, 10, (err, obj) => {
 		if (err) return next(err)
 		res.render('orders/index', Object.assign({title:'单页管理'}, obj))
 	})
+})
+router.get('/orders/detail', (req, res, next) => {
+
+	res.render('orders/detail')
 })
 
 // 单页管理 -----------------------------------------------------------------
