@@ -1,8 +1,92 @@
 <% layout('layout/layout') %>
 <% block('header').append(`<style>
 </style>`) %>
-<div class="container">
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-info">
+            <div class="box-header with-border">
+                <h3 class="box-title">订单号：<%=order._id %><span style="padding-left:20px;font-size:18px;"> 下单时间：<%=order.create_at_ago()%></span></h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <p>收件人：<%=order.address.name %></p>
+                <p>联系方式：<%=order.address.mobile %></p>
+                <p>收获地址：<%=order.address.place %></p>
+            </div>
+            <!-- /.box-body -->
+            <!--<div class="box-footer">-->
 
+            <!--</div>-->
+                <!-- /.box-footer -->
+        </div>
+        <div class="box box-info">
+            <div class="box-header with-border">
+                <h3 class="box-title">订单状态： <span class="padding-left20 <%=order.statusColor %>"><%=order.statusName%></span></h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <div class="col-md-6" style="border-right:1px solid #e3e3e3;">
+                    <div >
+                        <p><span class="text-muted text-label">商品合计：</span><span class="text-label">￥<%=order.totalPrice%></span></p>
+                        <p><span class="text-muted text-label">运费：</span><span class="text-label">￥<%=order.feePrice %></span></p>
+                    </div>
+                    <div class="padding-top" style="border-top:1px dashed #e3e3e3;">
+                        <p><span class="text-muted text-label">应付：</span><span class="text-label text-danger fs20">￥<%=order.needPrice %></span></p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div >
+                        <p>相关操作</p>
+                        <a class="btn btn-primary btn-sm"  href="/order/pay/<%=order._id %>"  >改价</a>
+                        <a class="btn btn-default btn-sm"  href="/order/pay/<%=order._id %>" >取消订单</a>
+                        <a class="btn btn-danger btn-sm"  href="/order/pay/<%=order._id %>"  >退款</a>
+                    </div>
+                </div>
+            </div>
+            <!-- /.box-body -->
+            <!--<div class="box-footer">-->
+
+            <!--</div>-->
+            <!-- /.box-footer -->
+        </div>
+
+
+        <div class="box box-info">
+            <div class="box-header with-border">
+                <h3 class="box-title">商品</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <table class="order_goods_table table text-center" style="width:100%">
+                    <thead>
+                    <tr class="text-center">
+                        <th style="width:280px;" >商品信息</th>
+                        <th class="text-center">单价</th>
+                        <th class="text-center">数量</th>
+                        <th class="text-center">小计</th>
+                        <th class="text-center">实付</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <% order.goods.forEach(item => { %>
+                    <tr>
+                        <td class="text-left" style="text-align:left;padding-left:0;">
+                            <div class="vertical-top" style="vertical-align:top;display:inline-block;width:80px;border:1px solid #e3e3e3;height:80px;background:url(<%=item.imgTmb %>) no-repeat center;background-size:cover;"></div>
+                            <span class="padding-top5"><%=item.name %></span>
+                        </td>
+                        <td>￥<%=item.sellPrice %></td>
+                        <td><%= item.num %></td>
+                        <td>￥<%= formatFloat(item.sellPrice * item.num) %></td>
+                        <td>￥<%= formatFloat(item.sellPrice * item.num) %></td>
+                    </tr>
+                    <% }) %>
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.box-body -->
+            <!-- /.box-footer -->
+        </div>
+    </div>
 </div>
 <% block('footer').append(`<script>
 </script>`) %>

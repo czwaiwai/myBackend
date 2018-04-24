@@ -2,9 +2,12 @@
  * Created by Administrator on 2018/4/16 0016.
  */
 var models = require('../models/')
+var {Dict} = require('../viewModels')
+var _ = require('lodash');
 var Cart = models.Cart
 var User = models.User
 var Goods = models.Goods
+
 
 // User.update({_id:'5ab4618fb5ecf926b4b18827', 'cart.isCheck': false}, {
 // 	$set:{'cart.$[].isCheck': false}
@@ -38,8 +41,12 @@ var Goods = models.Goods
 // 	console.log(res)
 // })
 
-User.findOneAndUpdate({_id: userId, 'cart._id': cartObj.id},
-	{$set:{"cart.$.goodsNum":cartObj.num}},
-	{new:true},
-	callback
-)
+// User.findOneAndUpdate({_id: userId, 'cart._id': cartObj.id},
+// 	{$set:{"cart.$.goodsNum":cartObj.num}},
+// 	{new:true},
+// 	callback
+// )
+
+Dict.findByGroup('front', function(err, res){
+console.log(_.keyBy(res,'name'))
+})

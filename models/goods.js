@@ -15,6 +15,7 @@ var GoodSchema = new Schema({
 	virPrice: {type: String}, // 参考价格
 	sellPrice: {type: Number}, // 卖出价格
 	stock: {type: Number, default: 0}, //库存 默认为0
+	unit: {type: String}, // 单位
 	sort: {type: Number}, // 商品排序
 	isTop: {type: Number}, // 是否置顶
 	isHot: {type: Number, default: 0}, // 是否 1：推荐商品 2：热卖商品 3:新品上市

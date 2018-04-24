@@ -5,6 +5,7 @@ let fs=require('fs');
 let qs=require('qs');
 let EventProxy = require('eventproxy')
 let {succJson,errJson} =require('../../utils/sendJson');
+let {formatFloat} = require('../../utils/tools')
 // let User =require('../../models/user');
 // let Pages =require('../../models/pages');
 let {User, Page, Catalog, Article, Goods, Image, Order, Postage, Dict} = require('../../viewModels/')
@@ -315,9 +316,10 @@ router.get('/orders/index/:status', (req, res, next) => {
 		res.render('orders/index', Object.assign({title:'单页管理'}, obj))
 	})
 })
-router.get('/orders/detail', (req, res, next) => {
-
-	res.render('orders/detail')
+router.get('/orders/detail/:id', (req, res, next) => {
+	Order.findById(req.params.id, (err, order) => {
+		res.render('orders/detail', {title: '订单详情', order, formatFloat:formatFloat})
+	})
 })
 
 // 单页管理 -----------------------------------------------------------------

@@ -8,14 +8,17 @@ var _ = require('lodash');
 let {formatFloat} = require('../utils/tools')
 let {loginValid} = require('../utils/helper')
 let EventProxy = require('eventproxy')
-let {Page, User, Catalog, Goods, Article, Cart, Address, Order} = require('../viewModels')
-
+let {Page, User, Catalog, Goods, Article, Cart, Address, Order, Dict, Postage} = require('../viewModels')
+let dicts = []
 router.use((req,res,next) => {
-	Catalog.getFrontCatalog((err, catalogs) => {
-		if(err) return next(err)
+	let ep = EventProxy.create('catalogs', 'dicts', (catalogs, dicts) => {
 		res.locals.catalogs = catalogs
+		res.locals.frontInfo = _.keyBy(dicts,'name')
 		next()
 	})
+	ep.fail(next)
+	Catalog.getFrontCatalog(ep.done('catalogs'))
+	Dict.findByGroup('front',ep.done('dicts'))
 })
 router.use((req, res, next) => {
 	var user = req.session.user

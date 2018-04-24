@@ -38,7 +38,7 @@
             <td><%=item.needPrice%></td>
             <td><%=item.create_at_ago() %></td>
             <td><%=item.pay_at_ago() %></td>
-            <td><p><a href="detail?id=<%=item._id %>">订单详情</a></p></td>
+            <td><p><a href="<%=assetsPath %>/orders/detail/<%=item._id %>">订单详情</a></p></td>
           </tr>
           <% })%>
           </tbody>
