@@ -7,6 +7,11 @@ let imgProcess =require('../utils/imgProcess');
 // let Image=require('../models/image');
 let User=require('../models/user');
 let {Image} = require('../models')
+let {wechat} = require('../utils/wxValid')
+
+router.use('/wxVaild',(req,res) => {
+    wechat(req,res)
+})
 router.get('/createUser',(req,res)=>{
     console.log(req.body);
 
