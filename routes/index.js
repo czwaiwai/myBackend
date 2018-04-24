@@ -13,7 +13,9 @@ let dicts = []
 router.use((req,res,next) => {
 	let ep = EventProxy.create('catalogs', 'dicts', (catalogs, dicts) => {
 		res.locals.catalogs = catalogs
-		res.locals.frontInfo = _.keyBy(dicts,'name')
+		let dictObj = _.keyBy(dicts,'name')
+		res.locals.frontInfo = _.keyBy(dictObj,'name')
+		res.locals.webInfo = dictObj.webInfo.value
 		next()
 	})
 	ep.fail(next)
@@ -34,13 +36,20 @@ router.use((req, res, next) => {
 // router.get(checkLogin);
 router.get('/', (req, res, next)=> {
     //console.log(req.session.user,"这里可以取到session");
-	let ep = EventProxy.create('goodTypes', 'goods', 'news', 'articles', (goodTypes, goods, news, articles) => {
-		res.render('index',{title:"首页", goodTypes, goods, news, articles});
+	let ep = EventProxy.create('goodTypes', 'goods', 'news', 'articles','dicts', (goodTypes, goods, news, articles, dicts) => {
+		let info = _.keyBy(dicts,'name')
+		console.log(info, 'info -- - - ----------------------')
+		res.render('index',{title:"首页", goodTypes, goods, news, articles,
+			companyProfile: info.companyProfile.value,
+			homeBanner: info.homeBanner.value,
+			homeBlockImgs: info.homeBlockImgs.value
+		})
 	})
 	ep.fail(next)
 	Catalog.getChildrenByName('goods',ep.done('goodTypes'))
 	Article.findTopArticle('news', ep.done('news'))
 	Article.findTopArticle('articles', ep.done('articles'))
+	Dict.findByGroup('home',ep.done('dicts'))
 	Goods.getHotGoods (ep.done('goods'))
 });
 router.get('/imgCode',(req,res)=>{

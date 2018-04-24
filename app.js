@@ -1,6 +1,7 @@
 var express = require('express');
 var session=require('express-session');
-var flash=require('connect-flash');
+var compression = require('compression'); // 用户开启Gzip
+var flash=require('connect-flash'); // 用于session提醒
 var engine = require('ejs-mate');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -15,6 +16,7 @@ var mobile = require('./routes/mobile');
 var tool = require('./routes/tool');
 var admin = require('./admin/app');
 var device = require('express-device');
+
 var app = express();
 
 app.engine('ejs',engine);
@@ -37,6 +39,7 @@ app.use(sassMiddleware({
 	outputStyle: 'extended',
 	prefix:  '/css'
 }));
+app.use(compression()); // gzip压缩
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(logger('dev'));
 app.use(bodyParser.json());

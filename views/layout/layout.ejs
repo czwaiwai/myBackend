@@ -69,7 +69,7 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">白石山农场 </a>
+            <a class="navbar-brand" href="/"><%=webInfo.webName.value %></a>
           </div>
           <div id="navbar" class="collapse  navbar-right  navbar-collapse">
             <ul class="nav navbar-nav">
@@ -106,16 +106,16 @@
             <!--</ul>-->
           <!--</div>-->
           <div class="fs14 text-center">
-            <i class="fa fa-map-marker "></i> <span>广东省深圳市福田区创新科技广场一期</span>
-            <i class="fa fa-mobile"></i><span> 13728905705</span>
-            <i class="fa fa-envelope"></i><span>28178596@qq.com</span>
+            <i class="fa fa-map-marker "></i> <span><%=webInfo.address.value %></span>
+            <i class="fa fa-mobile"></i> <span><%=webInfo.mobile.value %></span>
+            <i class="fa fa-envelope"></i> <span><%=webInfo.company.value %></span>
           </div>
         </div>
       </div>
     </div>
     <div class="copyright-bar">
       <div class="container text-center">
-        © 2017 http://www.czwaiwai.com 版权所有| 浙ICP备12345678号
+        <%=webInfo.copyright.value %> | <%=webInfo.record.value %>
       </div>
     </div>
   </div>

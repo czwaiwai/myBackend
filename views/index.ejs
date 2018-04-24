@@ -63,21 +63,17 @@
             <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
                 <!-- Indicators -->
                 <ol class="carousel-indicators">
-                    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-                    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
-                    <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+                  <% homeBanner.forEach(function(item,index){ %>
+                    <li data-target="#carousel-example-generic" data-slide-to="<%=index %>" class="<%= index===0?' active':'' %>"></li>
+                  <% }) %>
                 </ol>
                 <!-- Wrapper for slides -->
                 <div class="carousel-inner" role="listbox">
-                    <div class="item active">
-                        <img src="/upload/banner1.jpg" alt="">
-                    </div>
-                    <div class="item">
-                        <img src="/upload/banner2.jpg" alt="">
-                    </div>
-                    <div class="item">
-                        <img src="/upload/banner3.jpg" alt="">
-                    </div>
+                    <% homeBanner.forEach(function(item,index){ %>
+                        <div class="item <%= index===0?' active':'' %>">
+                            <img src="<%=item.value %>" alt="">
+                        </div>
+                    <% }) %>
                 </div>
                 <!-- Controls -->
                 <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
@@ -128,11 +124,11 @@
                 <h3 class="fs20 padding-h clearfix">公司简介<small class="float_right"><a  href="/page/company" >更多 >></a></small></h3>
                 <div class="padding-h">
                     <div class="spec_img">
-                        <img src="/upload/index_banner01.jpg">
+                        <img src="<%=homeBlockImgs[0] %>">
                     </div>
                 </div>
                 <div class="padding-v padding15-h">
-                    湖南农副产品有限公司有限公司成立于2009年，在一直以来的发展中一直致力于完善自己以助于更好的服务于各餐饮企业。在这些年的发展中，积累了丰富的采购经验，拥有了优良的货源渠道，建立了完善的管理制度，成立了成熟的物流配送，公司已成为一家专业的农产品配送公司，并致力于成为湖南最具有影响力的餐饮企业综合服..
+                    <%=companyProfile %>
                 </div>
             </div>
         </div>
@@ -141,7 +137,7 @@
                 <h2 class="fs20 padding-h clearfix">新闻资讯<small class="float_right"><a  href="/article/list/news" >更多 >></a></small></h2>
                 <div class="padding-h">
                     <div class="spec_img">
-                        <img src="/upload/index_banner03.jpg">
+                        <img src="<%=homeBlockImgs[1] %>">
                     </div>
                 </div>
                 <ul class="list-group list-group-no-border margin-top">
@@ -156,7 +152,7 @@
                 <h2 class="fs20 padding-h clearfix">烹调菜谱<small class="float_right"><a href="/article/list/articles" >更多 >></a></small></h2>
                 <div class="padding-h">
                     <div class="spec_img">
-                        <img src="/upload/index_banner02.jpg">
+                        <img src="<%=homeBlockImgs[2] %>">
                     </div>
                 </div>
                 <ul class="list-group list-group-no-border margin-top">
@@ -178,7 +174,6 @@
         e.stopPropagation()
         var $this = $(this)
         $.post('/add2Cart',{_id:$this.data('id'),num:1}).done(function(res){
-          console.log(res)
           if (res.code === 0) {
             var num = res.data.cart.reduce(function(before,item){
               return before + item.goodsNum
