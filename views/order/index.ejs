@@ -173,10 +173,10 @@ li.addr_card.active:after {
       <form id="orderForm"  method="post" action="/order/pay">
         <input name="addressId" type="hidden" value="<%=address && address._id %>" >
         <input name="goods" type="hidden"  value="<%=JSON.stringify(goods) %>" >
-        <input name="fee" type="hidden"  value="<%=fee %>" >
+        <input name="fee" type="hidden"  value="<%=feeDf %>" >
         <input name="totalPrice" type="hidden"  value="<%=totalPrice %>" >
         <p class="text-muted">商品合计：￥<%=totalPrice %></p>
-        <p>运费：￥<%=fee %></p>
+        <p>运费：￥<span id="showFee"><%=feeDf %></span></p>
         <p>应付总额：<span class="fs20 text-danger">￥<%=totalPrice %></span></p>
         <p><button   class="btn btn-lg btn-primary">去付款</button></p>
       </form>
@@ -213,6 +213,7 @@ jQuery(function(){
    var $addrCancel =  $('.addr_cancel')
    var $addrShowDetail = $('#addrShowDetail')
    var $orderForm = $('#orderForm')
+   var feeDefault = ${feeDf}
    var address = ${JSON.stringify(address)}
    var addrList = ${JSON.stringify(addrList)}
    console.log(address,'address')
@@ -225,7 +226,7 @@ jQuery(function(){
    }
    function setfillAddr(address) {
     $orderForm.find('input[name=addressId]').val(address._id)
-    $orderForm.find('input[name=fee]').val(10) // 重新设置邮费
+    $orderForm.find('input[name=fee]').val(feeDefault) // 重新设置邮费
    	var tmp = _.template($('#addShowDetailTpl').html())({address:address})
    	$addrShowDetail.empty().html(tmp)
    }

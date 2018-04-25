@@ -26,7 +26,8 @@
           <tr>
             <!--<th><label><input name="checkAll" type="checkbox" value="all>">全选</label></th>-->
             <th>图片预览</th>
-            <th style="max-width:150px;">图片名称</th>
+            <!--<th style="max-width:150px;">图片名称</th>-->
+            <th style="max-width:150px;">图片路径</th>
             <th>图片类型</th>
             <th>创建时间</th>
             <th>操作</th>
@@ -39,8 +40,9 @@
           <% images.forEach(function(item){ %>
           <tr>
             <!--<td><input name="check" class="check" type="checkbox" value="<%=item.name %>"></td>-->
-            <td><div style="width:100px;height:100px;"><img src="<%=item.url || ''  %>" style="max-width:100%;max-height:100%;"></div></td>
-            <td style="min-width:140px;white-space: normal;"><div style="max-width:150px;word-break:break-all; "><%=item.name %></div></td>
+            <td><div style="width:100px;height:100px;"><img src="<%=item.thumb.url || ''  %>" style="max-width:100%;max-height:100%;"></div></td>
+            <td style="min-width:140px;white-space: normal;"><div style="max-width:150px;word-break:break-all; "><%=item.url %></div></td>
+            <!--<td style="min-width:140px;white-space: normal;"><div style="max-width:150px;word-break:break-all; "><%=item.name %></div></td>-->
             <td><%=item.type %></td>
             <td><%=item.create_at_ago()%></td>
             <td>

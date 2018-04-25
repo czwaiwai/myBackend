@@ -7,6 +7,7 @@ var _ = require('lodash');
 /* GET home page. */
 let {formatFloat} = require('../utils/tools')
 let {loginValid} = require('../utils/helper')
+let WxPay = require('../utils/wxPay')
 let EventProxy = require('eventproxy')
 let {Page, User, Catalog, Goods, Article, Cart, Address, Order, Dict, Postage} = require('../viewModels')
 let dicts = []
@@ -16,6 +17,7 @@ router.use((req,res,next) => {
 		let dictObj = _.keyBy(dicts,'name')
 		res.locals.frontInfo = _.keyBy(dictObj,'name')
 		res.locals.webInfo = dictObj.webInfo.value
+		res.locals.feeDf = dictObj.fee.value
 		next()
 	})
 	ep.fail(next)
@@ -62,30 +64,29 @@ router.get('/imgCode',(req,res)=>{
 //     res.render('chat',{title:"聊天室"});
 // });
 
-router.get('/about',(req,res)=>{
-    res.render('about',{title:"关于我们"});
-});
+// router.get('/about',(req,res)=>{
+//     res.render('about',{title:"关于我们"});
+// });
 router.get('/page/:pageName', (req, res, next) => {
-	let pages = res.locals.catalogs.filter(item => item.relativeUrl.indexOf('/page') === 0)
+	let nav = res.locals.catalogs.filter(item => item.relativeUrl.indexOf('/page') === 0)
+	let navPage = res.locals.catalogs.find(item => item.relativeUrl === '/page/' + req.params.pageName)
   Page.getPageByPathName(req.params.pageName, function(err, page) {
-    if (err) {
-      console.log(err)
-      return next()
+    if (err || !page) {
+      return next(err)
     }
-    console.log(page, 'page')
-    if (!page) {
-      return next()
-    } else {
-      res.render('page', Object.assign({title:page.title,page}, {pages:pages}))
-    }
+    if (!navPage) {
+    	navPage = {}
+		}
+		res.render('page', {title:page.title, page, nav, navPage})
   })
-   // res.render('about', {title: '关于我们'})
 })
 // 文章管理
 router.get('/article/list/:type', (req, res, next) => {
+	let navPage = res.locals.catalogs.find(item => item.relativeUrl === '/article/list/' + req.params.type)
 	let ep = EventProxy.create('topArticles', 'obj', (topArticles, obj) => {
 		// res.render('index',{title:"首页", goodTypes, goods});
 		obj.topArticles = topArticles
+		obj.navPage = navPage
 		res.render('article/list', obj)
 	})
 	Article.findTopArticle(req.params.type,ep.done('topArticles'))
@@ -137,12 +138,9 @@ router.get('/goods/detail/:id' , (req, res, next) => {
 // 购物车
 router.get('/cart/index', (req, res, next) => {
 	let user = req.session.user
-	console.log(user, '-----------cart/index')
 	let carts = []
 	let total = 0
-	console.log(user, '---------------')
 	if (user) {
-		console.log('user', user)
 		carts = user.cart.map(item => {
 			item.subTotal = formatFloat(item.goodsNum * item.price)
 			item.payTotal = formatFloat(item.goodsNum * item.price)
@@ -224,6 +222,7 @@ router.post('/order/index', loginValid, (req, res, next) => {
 	let address = null
 	let addrList = []
 	let totalPrice = req.body.totalPrice
+	let feeDf = res.locals.feeDf
 	if (req.body.status === 'buy') {
 		let user = req.session.user
 		if (user.address && user.address.length>0) {
@@ -243,7 +242,8 @@ router.post('/order/index', loginValid, (req, res, next) => {
 			}]
 			// console.log(goodOne.sellPrice,parseFloat(goodOne.sellPrice))
 			let totalPrice = formatFloat(goodOne.sellPrice * num)
-			res.render('order/index', {title: '下单',goods:carts, address, fee:10, totalPrice, addrList})
+			let needPrice = formatFloat((goodOne.sellPrice * num) + parseFloat(feeDf))
+			res.render('order/index', {title: '下单',goods:carts, address, feeDf: feeDf, totalPrice, needPrice, addrList})
 		})
 	}
 	if (req.body.status === 'cart') {
@@ -261,7 +261,9 @@ router.post('/order/index', loginValid, (req, res, next) => {
 				item.goods = newOne
 				return item
 			})
-			res.render('order/index', {title: '下单', goods:carts, fee:10, totalPrice, address, addrList})
+			totalPrice = formatFloat(parseFloat(totalPrice))
+			let needPrice = formatFloat(parseFloat(totalPrice) + parseFloat(feeDf))
+			res.render('order/index', {title: '下单', goods:carts, fee: feeDf, totalPrice, needPrice, address, addrList})
 		})
 	}
 })
@@ -270,6 +272,11 @@ router.get('/order/pay/:orderId', loginValid, (req, res, next) => {
 	Order.findById(req.params.orderId, (err, order) => {
 		if (err) next(err)
 		if (order.orderStatus === 10) {
+			// 请求微信接口返回二维码url
+			//
+			// WxPay.order(attach, body, mch_id, openid, bookingNo, total_fee, notify_url).then((data) => {
+			//
+			// })
 			setTimeout(() => { //链接微信获取url
 				res.render('order/pay', {title: '订单支付', order:order, totalPrice: order.needPrice, prepay_id : '12342342352562',
 					code_url: 'www.http.com'})
@@ -284,6 +291,7 @@ router.post('/order/pay', loginValid, (req, res, next) => {
 	let rb = req.body
 	var addrId = rb.addressId
 	let totalPrice = rb.totalPrice
+	let needPrice = rb.needPrice
 	let fee = rb.fee
 	var goods = []
 	try {
@@ -322,9 +330,13 @@ router.post('/order/pay', loginValid, (req, res, next) => {
 		totalPrice: totalPrice,
 		feePrice: fee,
 		type: 'wx',
-		needPrice: totalPrice,
+		needPrice: needPrice,
 	}
 	// 请求微信接口返回二维码url
+	//
+	// WxPay.order(attach, body, mch_id, openid, bookingNo, total_fee, notify_url).then((data) => {
+	//
+	// })
 	setTimeout(() => {
 		// 创建新订单
 		console.log(order,'order---before')
@@ -335,6 +347,23 @@ router.post('/order/pay', loginValid, (req, res, next) => {
 				code_url: 'www.http.com'})
 		})
 	},2000)
+})
+
+// 微信回调的地址
+router.post('/order/notify', (req, res, next) => {
+	res.send('收到结果')
+})
+
+// 查询数据库，查看订单支付状态值是否更改
+router.get('/order/isPay', (req, res, next) => {
+	res.writeHead(200, {
+		"Content-Type": "text/event-stream",
+		"Cache-Control": "no-cache",
+		"Connection": "keep-alive"
+	})
+	setInterVal(function () {
+		res.write("data:" + Date.now() + '\n\n')
+	})
 })
 
 router.get('/order/success', loginValid, (req, res, next) => {
