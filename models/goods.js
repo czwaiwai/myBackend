@@ -18,6 +18,7 @@ var GoodSchema = new Schema({
 	unit: {type: String}, // 单位
 	sort: {type: Number}, // 商品排序
 	isTop: {type: Number}, // 是否置顶
+	dietVal: {type: Number}, //营养值
 	isHot: {type: Number, default: 0}, // 是否 1：推荐商品 2：热卖商品 3:新品上市
 	viewCount: {type: Number, default: 0}, // 访问次数
 	sellCount: {type: Number, default: 0}, // 卖出数量

@@ -1,19 +1,38 @@
-<div class="sidebar-widget newsletter wow  outer-bottom-small margin-bottom20" style="visibility: visible;padding:15px; ">
+<% if(topGoods && topGoods.length>0) { %>
+<div  class="sidebar-widget newsletter wow  outer-bottom-small margin-bottom20" style="visibility: visible;padding:15px; ">
     <h3 class="section-title">推荐商品</h3>
     <div class="sidebar-widget-body margin-top15">
         <ul class="list-group list-group-no-border list-group-other-padding  margin-bottom5">
-            <li class="list-group-item dot">
-                <a class="normal_link">
-                  <div class="margin-bottom" style="border:1px solid #e5e5e5"><img style="max-width:100%;" src="/upload/20180405/nAKPa0U0YZOT_cym7wbgqOwS_$date20180405_$600x680_$sma_330x374.jpg"></div>
-                  <p class="text-center">一杯清茶放空心灵的禅意</p>
-                </a>
-            </li>
+            <% topGoods.forEach(function(item){ %>
             <li class="list-group-item  dot">
-                <a class="normal_link">
-                    <div class="margin-bottom" style="border:1px solid #e5e5e5"><img style="max-width:100%;" src="/upload/20180405/nAKPa0U0YZOT_cym7wbgqOwS_$date20180405_$600x680_$sma_330x374.jpg"></div>
-                    <p class="text-center">一杯清茶放空心灵的禅意</p>
+                <a class="normal_link" href="/goods/detail/<%=item._id %>">
+                    <div class="margin-bottom" style="border:1px solid #e5e5e5;">
+                        <div style="padding-top:100%;background:url('<%=item.imgTmb %>') center no-repeat;background-size:cover;"></div>
+                    </div>
+                    <p class="text-center"><%=item.name %></p>
                 </a>
             </li>
+            <%}) %>
         </ul>
     </div><!-- /.sidebar-widget-body -->
 </div>
+<% } %>
+<% if(newGoods && newGoods.length>0) { %>
+<div class="sidebar-widget newsletter wow  outer-bottom-small margin-bottom20" style="visibility: visible;padding:15px; ">
+    <h3 class="section-title">新品上市</h3>
+    <div class="sidebar-widget-body margin-top15">
+        <ul class="list-group list-group-no-border list-group-other-padding  margin-bottom5">
+          <% newGoods.forEach(function(item){ %>
+            <li class="list-group-item  dot">
+                <a class="normal_link" href="/goods/detail/<%=item._id %>">
+                    <div class="margin-bottom" style="border:1px solid #e5e5e5;">
+                        <div style="padding-top:100%;background:url('<%=item.imgTmb %>') center no-repeat;background-size:cover;"></div>
+                    </div>
+                    <p class="text-center"><%=item.name %></p>
+                </a>
+            </li>
+          <%}) %>
+        </ul>
+    </div><!-- /.sidebar-widget-body -->
+</div>
+<% } %>

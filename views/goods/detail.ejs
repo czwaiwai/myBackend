@@ -102,6 +102,7 @@ jQuery(function () {
       $('#form').submit()
 	})
 	$('#addCart').on('click', function() {
+		if(!isLogin) return $.Toast('您还没有登录','warning')
     $.post('/add2Cart', $('#form').serialize()).done(function(res){
       console.log(res)
       if (res.code === 0) {
@@ -111,7 +112,7 @@ jQuery(function () {
         $('#cartBadge').triggerHandler('change.cartBadge',[num])
         $.Toast('添加成功','success')
       } else {
-        $.Toast(res.message,'warning')
+        $.Toast(res.message || '','warning')
       }
     })
 	})

@@ -12,9 +12,17 @@ exports.findAndUpdate = function (id, obj, callback) {
 exports.findById = function (id, callback) {
 	Goods.findById (id, callback)
 }
+exports.findByIdAddView = function (id, callback) {
+	Goods.findByIdAndUpdate(id, {$inc:{viewCount:1}}, callback)
+}
 exports.getHotGoods = function (callback) {
 	var goods = Goods.find({}) // 填入条件
 	goods.limit(12)
+	goods.exec(callback)
+}
+exports.getHotGoodsByType = function (hotNum, limit = 4, callback) {
+	var goods = Goods.find({isHot: hotNum})
+	goods.limit(limit)
 	goods.exec(callback)
 }
 exports.findByIds = function (ids, callback) {
@@ -25,7 +33,7 @@ exports.findAllByPage = function (query = {}, pageNum = 1,pageSize = 10, callbac
 	pageSize = parseInt(pageSize)
 	Goods.count((err,count) => {
 		if (err) return callback(err)
-		var goods = Goods.find(query)
+		var goods = Goods.find(query, {content:0})
 		goods.sort({create_at:-1})
 		goods.skip(pageSize*(pageNum-1))
 		goods.limit(pageSize)

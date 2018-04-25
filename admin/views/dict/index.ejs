@@ -35,7 +35,9 @@
             <td><%=item.isValid ?'有效':'无效'%></td>
             <td><%=item.group || '无' %></td>
             <td>
+              <% if(item.valueType !=='other') { %>
               <a class="btn  btn-sm btn-success" href="field/<%=item.name %>">属性修改</a>
+              <% } %>
               <a class="btn  btn-sm btn-success" href="add?update=<%=item._id %>">修改</a>
               <a class="btn btn-delete  btn-sm btn-danger" data-id="<%=item._id%>" data-url="<%=assetsPath %>/dict/delete" href="javascript:void(0)">删除</a>
             </td>

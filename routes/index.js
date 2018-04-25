@@ -40,7 +40,7 @@ router.get('/', (req, res, next)=> {
 		let info = _.keyBy(dicts,'name')
 		console.log(info, 'info -- - - ----------------------')
 		res.render('index',{title:"首页", goodTypes, goods, news, articles,
-			companyProfile: info.companyProfile.value,
+			homeCompany: info.companyProfile.value,
 			homeBanner: info.homeBanner.value,
 			homeBlockImgs: info.homeBlockImgs.value
 		})
@@ -125,14 +125,13 @@ router.get('/goods/index' , (req, res, next) => {
 })
 // 商品详情
 router.get('/goods/detail/:id' , (req, res, next) => {
-	Goods.findById(req.params.id, (err, goods) => {
-		if (err) return next(err)
-		if (!goods) {
-			res.status(404)
-			return next(err)
-		}
-		res.render('goods/detail', {title: '商品详情', goods})
+	let ep = EventProxy.create('goods', 'topGoods', 'newGoods', (goods, topGoods, newGoods) => {
+		res.render('goods/detail', {title: '商品详情', goods, topGoods, newGoods})
 	})
+	ep.fail(next)
+	Goods.getHotGoodsByType(1, 4, ep.done('topGoods')) // 推荐产品
+	Goods.getHotGoodsByType(3, 4, ep.done('newGoods')) // 新品上市
+	Goods.findByIdAddView(req.params.id, ep.done('goods')) // 查找商品及更新访问次数
 })
 
 // 购物车
