@@ -60,3 +60,6 @@ typings/
 .idea
 # upload img
 public/upload/
+
+#wx.bak
+wx.bak
