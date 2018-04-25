@@ -141,14 +141,14 @@
             <div class="col-sm-10">
               <div class="img_list_wrap clearfix">
                 <ul class="add_img_list">
-                  <% curr.imgs.forEach(function(item) { %>
+                  <% curr.imgs && curr.imgs.forEach(function(item) { %>
                   <li class="img"  data-tmb="<%=item %>" style="background:url(<%=item %>)  no-repeat center;background-size:cover;">
                     <i class="del fa  fa-trash-o"></i>
                   </li>
                   <% })%>
                   <li class="img_file"></li>
                 </ul>
-                <input name="imgs" type="hidden" class="imgs_input" value="<%=curr.imgs.join(',') %>">
+                <input name="imgs" type="hidden" class="imgs_input" value="<%=curr.imgs && curr.imgs.join(',') %>">
               </div>
             </div>
           </div>
