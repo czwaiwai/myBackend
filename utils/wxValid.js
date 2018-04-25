@@ -1,5 +1,6 @@
 var crypto = require('crypto');
 var url = require('url');
+
 exports.wechat = function(req,res){
 	var query = url.parse(req.url,true).query;
 	var signature = query.signature;

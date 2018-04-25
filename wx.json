@@ -1,0 +1,10 @@
+{
+	"token": "bssfood",
+	"appID": "wx2b6b34e4a0735bc0",
+	"appScrect": "553d8c89d340ea66635ec18590e99dc7",
+	"appDomain": "https://api.weixin.qq.com/",
+	"apiURL": {
+		"accessTokenApi": "%scgi-bin/token?grant_type=client_credential&appid=%s&secret=%s",
+		"createMenu": "%scgi-bin/menu/create?access_token=%s"
+	}
+}
