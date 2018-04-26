@@ -4,6 +4,8 @@
 const crypto = require('crypto');
 const request = require('request')
 const util = require('util')
+const xml2js = require('xml2js')
+let {txtMsg, imgMsg, graphicMsg} = require('./wxMsgTpl') //回复的消息模板
 // var config = require('../wx.json')
 var accessToken = {
 	accessToken: "",
@@ -48,6 +50,28 @@ Wechat.prototype.setMenu = function (json) {
 		})
 	})
 }
+Wechat.prototype.handleMsg = function (req, res) {
+	var msgXml = req.body
+	let res = xml2js.parseString(msgXml)
+	let data = res.xml
+	switch(data.MsgType) {
+		case 'text':       // 文本消息
+		case 'voice':     // 语音消息
+		case 'video':     // 视频消息
+		case 'shortvideo': // 小视屏消息
+		case 'location': // 地理位置消息
+		case 'link':  // 链接消息
+		case 'image': this.textHandle(data, req, res);break;
+		case 'event': this.eventHandle(data, req, res);break;
+		default: res.send('success')
+	}
+}
+Wechat.prototype.textHandle = function (obj, req, res) {
+
+}
+Wechat.prototype.eventHandle = function (obj, req, res) {
+
+}
 Wechat.prototype.getAccessToken = function () {
 	return new Promise((resolve,reject) => {
 		 let currentTime = new Date().getTime()
@@ -61,12 +85,13 @@ Wechat.prototype.getAccessToken = function () {
 		 		if (err) {
 		 			return reject(err)
 				}
-				if (body.indexOf('errcode') < 0) {
-					accessToken.accessToken = body.accessToken
-					accessToken.expiresTime = new Date().getTime() + (parseInt(body.expires_in) - 200) * 10
+				if (typeof body && typeof body === 'string') {
+		 			let data = JSON.parse(body)
+					accessToken.accessToken = data.access_token
+					accessToken.expiresTime = new Date().getTime() + (parseInt(data.expires_in) - 200) * 10
 					resolve(accessToken.accessToken)
 				} else {
-		 			resolve(body)
+		 			return reject(new Error('body为空'))
 				}
 		 	})
 		} else {

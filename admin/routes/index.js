@@ -197,6 +197,12 @@ router.post('/dict/add', (req, res, next) => {
 		case 'string': param.value = req.body.value;break;
 		case 'object': param.value = JSON.parse(param.value);break;
 		case 'array': param.value = JSON.parse(param.value);break;
+		case 'other':
+			try {
+				param.value = JSON.parse(param.value);break;
+			} catch (e) {
+				param.value = req.body.value
+			}
 	}
 	param.isValid = Boolean(req.body.isValid)
 	if(req.body._id) { //更新
@@ -313,13 +319,34 @@ router.get('/orders/index/:status', (req, res, next) => {
 	}
 	Order.findAllByPage(queryParam,req.query.page, 10, (err, obj) => {
 		if (err) return next(err)
-		res.render('orders/index', Object.assign({title:'单页管理'}, obj))
+		res.render('orders/index', Object.assign({title:'订单管理'}, obj))
 	})
 })
 router.get('/orders/detail/:id', (req, res, next) => {
 	Order.findById(req.params.id, (err, order) => {
 		res.render('orders/detail', {title: '订单详情', order, formatFloat:formatFloat})
 	})
+})
+  // 取消订单
+router.post('/order/cancel/:id', (req, res, next) => {
+	Order.cancelById(req.params.id, (err, order) => {
+		res.json({
+			code: 0,
+			message: '操作成功'
+		})
+	})
+})
+	// 改价
+router.post('/order/changeAmt/:id', (req, res, next) => {
+
+})
+ // 退款
+router.post('/order/backAmt/:id', (req, res, next) => {
+
+})
+// 关联物流单号
+router.post('/order/linkTrain/:id', (req, res, next) => {
+
 })
 
 // 单页管理 -----------------------------------------------------------------

@@ -23,6 +23,24 @@ exports.findById = function (id, callback) {
 	Order.findById(id,callback)
 }
 
+// 取消订单
+exports.cancelById = function (id, callback) {
+	Order.findByIdAndUpdate(id, {orderStatus: 11}, {isNew:true}, callback)
+}
+// 退款中
+exports.backAmtById = function (id, callback) {
+	Order.findByIdAndUpdate(id, {orderStatus: 12}, {isNew:true}, callback)
+}
+// 已退款
+exports.backAmtByIdStore = function (id, callback) {
+	Order.findByIdAndUpdate(id, {orderStatus: 13}, {isNew: true}, callback)
+}
+// 改价
+exports.changeAmtById = function (id, amt, callback) {
+	Order.findByIdAndUpdate(id, {orderStatus: 13}, {isNew: true}, callback)
+}
+
+
 // 按查询分页
 exports.findAllByPage = function (query = {}, pageNum = 1,pageSize = 10, callback) {
 	pageNum = parseInt(pageNum)

@@ -42,9 +42,48 @@ jQuery(function(){
             });
         })
     }
+    function prompt(msg,title,options) {
+    	return new Promise(function(resolve,reject) {
+				BootstrapDialog.show({
+					title: title || '提示',
+					message: msg +
+					'<input type="text" class="form-control"><p class="text-danger"></p>',
+					buttons: [{
+						label: '取消',
+						cssClass: 'btn btn-default',
+						action: function(dialogRef) {
+							dialogRef.close();
+						}
+					},{
+						label: '确定',
+						cssClass: 'btn btn-primary',
+						action: function(dialogRef) {
+							var $input = dialogRef.getModalBody().find('input')
+							var val = $input.val();
+							if(options && options.regx) {
+								if (options.regx.test(val)){
+									$input.off()
+									console.log(val)
+									resolve(val)
+									return dialogRef.close();
+								} else {
+									dialogRef.getModalBody().find('.text-danger').text(options.errorMsg)
+									reject(false)
+								}
+							}else {
+								$input.off()
+								resolve(val)
+								return dialogRef.close();
+							}
+						}
+					}]
+				});
+			})
+		}
     $.extend({
         alert:alert,
         confirm:confirm,
+				prompt:prompt
     });
 
 })

@@ -9,7 +9,7 @@ var tools = require('../utils/tools');
 var OrderSchema = new Schema({
 	orderId: {type:Number}, // 订单id简化
 	userId: {type: Schema.ObjectId}, // 用户ID
-	orderStatus: {type: Number }, // 10 为待支付，11为已取消, 12 为已退款 ，20为 已支付, 30待发货 31 为已发货
+	orderStatus: {type: Number }, // 10 为待支付，11为已取消, 12退款中 13已退款 ，20为 已支付, 30待发货 31 为已发货
 	create_at:{type:Date, default: Date.now},
 	update_at:{type:Date, default: Date.now},
 	goods: [{
@@ -29,15 +29,22 @@ var OrderSchema = new Schema({
 	payId: {type: String, default: ''}, // 支付端信息编码 payId
 	totalNum: {type: Number}, // 总数量
 	totalPrice: {type: Number}, // 商品总价
-	feePrice: {type:Number}, //邮费
-	needPrice: {type: Number}, //应付金额
+	feePrice: {type:Number, default: 0}, // 邮费
+	offerPrice: {type: Number, default: 0}, // 优惠金额
+	needPrice: {type: Number}, // 应付金额
+	offerType: {type: String}, // 优惠方式
+	realPrice: {type: Number}, //实际支付
 	pay_at:{type:Date}, // 支付时间
 	out_at:{type:Date} // 退款时间
 })
 OrderSchema.plugin(BaseModel)
 OrderSchema.plugin(function (schema) {
 	schema.methods.pay_at_ago = function () {
-		return tools.formatDate(this.create_at, true);
+		if(this.pay_at) {
+			return tools.formatDate(this.pay_at, true);
+		} else {
+			return ''
+		}
 	}
 })
 //10 为待支付，11为已取消, 12 为已退款 ，20为 已支付, 30待发货 31 为已发货

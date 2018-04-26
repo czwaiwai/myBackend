@@ -37,9 +37,10 @@
                 <div class="col-md-6">
                     <div >
                         <p>相关操作</p>
-                        <a class="btn btn-primary btn-sm"  href="/order/pay/<%=order._id %>"  >改价</a>
-                        <a class="btn btn-default btn-sm"  href="/order/pay/<%=order._id %>" >取消订单</a>
-                        <a class="btn btn-danger btn-sm"  href="/order/pay/<%=order._id %>"  >退款</a>
+                        <a id="cancelOrder" class="btn btn-default btn-sm" data-url="/order/cancel/<%=order._id %>" href="javascript:void(0)" >取消订单</a>
+                        <a id="changeAmt"  class="btn btn-primary btn-sm" data-url="/order/changeAmt/<%=order._id %>" href="javascript:void(0)" >改价</a>
+                        <a id="backAmt" class="btn btn-danger btn-sm" data-url="/order/backAmt/<%=order._id %>"  href="javascript:void(0)" >退款</a>
+                        <a id="linkTrain" class="btn btn-info btn-sm" data-url="/order/linkTrain/<%=order._id %>"   href="javascript:void(0)" >关联物流信息</a>
                     </div>
                 </div>
             </div>
@@ -89,4 +90,29 @@
     </div>
 </div>
 <% block('footer').append(`<script>
+  jQuery(function() {
+    $('#cancelOrder').on('click',function() {
+      $.confirm('你确定要帮助用户取消这笔订单么?','取消订单').then(function(res){
+      	console.log(res)
+      })
+    })
+    $('#changeAmt').on('click', function () {
+      $.prompt('你填写修改的订单支付总金额','改价', {
+        regx:/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/,
+        errorMsg: '请输入有效金额'
+      }).then(function(res){
+      	console.log(res)
+      })
+    })
+    $('#backAmt').on('click', function () {
+       $.confirm('你确定操作退款么，已支付金额将会通过微信返还用户?','退款').then(function(res){
+      	console.log(res)
+      })
+    })
+    $('#linkTrain').on('click', function () {
+      $.prompt('请输入你要关联的物流单号','关联物流单号').then(function(res){
+      	console.log(res)
+      })
+    })
+  })
 </script>`) %>

@@ -169,7 +169,7 @@
 <% block('footer').append(`<script src='js/iframeDialog.js'></script>`)%>
 <% block('footer').append(`<script>
     jQuery(function(){
-
+      var isLogin =${user?true:false}
       $('.add_cart').on('click',function(e){
         e.preventDefault()
         e.stopPropagation()

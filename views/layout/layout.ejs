@@ -69,7 +69,12 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/"><%=webInfo.webName.value %></a>
+            <a class="navbar-brand" style="padding:0" href="/">
+              <div style="background:#FFF;display:inline-block;width: 40px;padding: 3px;">
+                <img src="/logo.png" style="max-width:100%;">
+              </div>
+              <span style="font-size: 32px;font-weight: bold;vertical-align: middle;"><%=webInfo.webName.value %></span>
+            </a>
           </div>
           <div id="navbar" class="collapse  navbar-right  navbar-collapse">
             <ul class="nav navbar-nav">

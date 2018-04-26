@@ -25,17 +25,27 @@
             <th>订单Id</th>
             <th>商品图片</th>
             <th>订单状态</th>
-            <th>订单总价</th>
+            <th>商品总额</th>
+            <th>邮费</th>
+            <th>应付总额</th>
             <th>下单时间</th>
             <th>支付时间</th>
             <th>操作</th>
           </tr>
           <%  orders.forEach(function(item){ %>
           <tr>
-            <td><%=item._id %></td>
-            <td><img src="<%=item.imgTmb %>" ></td>
-            <td><%=item.statusName %></td>
-            <td><%=item.needPrice%></td>
+            <td width="100"><%=item._id %></td>
+            <td>
+              <% item.goods.forEach(function(goods){ %>
+              <div style="width:80px;width:80px;display:inline-block">
+                <img src="<%=goods.imgTmb %>" style="max-width:100%;" >
+              </div>
+              <% }) %>
+            </td>
+            <td class="<%=item.statusColor%>" ><%=item.statusName %></td>
+            <td class="text-center">￥<%=item.totalPrice%></td>
+            <td class="text-center">￥<%=item.feePrice %></td>
+            <td class="text-center" style="font-weight:bold;" >￥<%=item.needPrice%></td>
             <td><%=item.create_at_ago() %></td>
             <td><%=item.pay_at_ago() %></td>
             <td><p><a href="<%=assetsPath %>/orders/detail/<%=item._id %>">订单详情</a></p></td>
