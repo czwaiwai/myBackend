@@ -177,7 +177,7 @@ li.addr_card.active:after {
         <input name="totalPrice" type="hidden"  value="<%=totalPrice %>" >
         <p class="text-muted">商品合计：￥<%=totalPrice %></p>
         <p>运费：￥<span id="showFee"><%=feeDf %></span></p>
-        <p>应付总额：<span class="fs20 text-danger">￥<%=totalPrice %></span></p>
+        <p>应付总额：<span id="showNeedPrice" class="fs20 text-danger">￥<%=needPrice %></span></p>
         <p><button   class="btn btn-lg btn-primary">去付款</button></p>
       </form>
     </div>
@@ -208,6 +208,8 @@ jQuery(function(){
    // var $addrAdd = $('.addr_add')
    // var $addrUpdate = $('.addr_update')
    // var $addrChange = $('.addr_change')
+   var $showFee = $('#showFee')
+   var $showNeedPrice = $('#showNeedPrice')
    var $addrShow = $('#addrShow')
    var $addrForm = $('#addrForm')
    var $addrCancel =  $('.addr_cancel')
@@ -229,6 +231,20 @@ jQuery(function(){
     $orderForm.find('input[name=fee]').val(feeDefault) // 重新设置邮费
    	var tmp = _.template($('#addShowDetailTpl').html())({address:address})
    	$addrShowDetail.empty().html(tmp)
+   	getRemotePostage({
+   	    area: address.areaId + ',' + address.area,
+   	    city: address.cityId + ',' + address.city,
+   	    province: address.provinceId + ',' + address.province
+   	})
+   }
+   function getRemotePostage (data) {
+   	    $.post('/order/postage',data).done(function(res) {
+        	if(res.code === 0) {
+        		$showFee.text(res.data.feePrice)
+        		$showNeedPrice.text(res.data.needPrice)
+        		$orderForm.find('input[name=fee]').val(res.data.feePrice)
+        	}
+        })
    }
    init(address)
     $addressChoose.adChoose({
@@ -237,6 +253,7 @@ jQuery(function(){
       areaUrl: '/cityAndArea?name=area',
       callback: function(data) {
         console.log(data)
+        getRemotePostage(data)
       }
    })
    // 订单提交

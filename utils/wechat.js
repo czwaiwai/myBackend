@@ -52,8 +52,8 @@ Wechat.prototype.setMenu = function (json) {
 }
 Wechat.prototype.handleMsg = function (req, res) {
 	var msgXml = req.body
-	let res = xml2js.parseString(msgXml)
-	let data = res.xml
+	let xmlData = xml2js.parseString(msgXml)
+	let data = xmlData.xml
 	switch(data.MsgType) {
 		case 'text':       // 文本消息
 		case 'voice':     // 语音消息
@@ -67,7 +67,7 @@ Wechat.prototype.handleMsg = function (req, res) {
 	}
 }
 Wechat.prototype.textHandle = function (obj, req, res) {
-
+	txtMsg(toUser, formUser, content)
 }
 Wechat.prototype.eventHandle = function (obj, req, res) {
 

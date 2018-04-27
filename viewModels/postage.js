@@ -5,6 +5,9 @@ var models = require('../models/')
 var getPageNum =  require('../utils/tools').getPageNum
 var Postage = models.Postage
 
+exports.findByAddr = function (addr, callback) {
+	Postage.find(addr, callback)
+}
 exports.findAll = function (callback) {
 	Postage.find(callback)
 }

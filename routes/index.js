@@ -267,6 +267,29 @@ router.post('/order/index', loginValid, (req, res, next) => {
 		})
 	}
 })
+// 地址变更邮费按规则变更
+router.post('/order/postage', (req, res, next) => {
+	// Postage.
+	let data = req.body
+	let addr = {}
+	if(data) {
+		let proArr =	data.province.split(',')
+		let cityArr =	data.city.split(',')
+		addr.province = proArr[0]
+		addr.provinceId = proArr[1]
+		addr.cityId = cityArr[1]
+		addr.city = cityArr[1]
+	}
+
+	res.json({
+		code: 0,
+		message: '操作成功',
+		data: {
+			feePrice: 20,
+			needPrice: 200
+		}
+	})
+})
 
 router.get('/order/pay/:orderId', loginValid, (req, res, next) => {
 	Order.findById(req.params.orderId, (err, order) => {
@@ -288,6 +311,8 @@ router.get('/order/pay/:orderId', loginValid, (req, res, next) => {
 })
 // 订单支付
 router.post('/order/pay', loginValid, (req, res, next) => {
+	// 验证req.body 数据真实性
+
 	let rb = req.body
 	var addrId = rb.addressId
 	let totalPrice = rb.totalPrice
@@ -333,20 +358,13 @@ router.post('/order/pay', loginValid, (req, res, next) => {
 		needPrice: needPrice,
 	}
 	// 请求微信接口返回二维码url
-	//
-	// WxPay.order(attach, body, mch_id, openid, bookingNo, total_fee, notify_url).then((data) => {
-	//
-	// })
-	setTimeout(() => {
-		// 创建新订单
-		console.log(order,'order---before')
-		Order.create(order, (err, newOrder) => {
-			if (err) return next(err)
-			console.log(newOrder, 'newOrder ---- after')
+	Order.create(order, (err, newOrder) => {
+		if (err) return next(err)
+		WxPay.sacnOrder(newOrder.userId, '白石山商品购买', newOrder._id, newOrder.needPrice).then((data) => {
 			res.render('order/pay', {title: '订单支付', order:newOrder, totalPrice, prepay_id : '12342342352562',
 				code_url: 'www.http.com'})
 		})
-	},2000)
+	})
 })
 
 // 微信回调的地址
