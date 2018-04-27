@@ -369,7 +369,9 @@ router.post('/order/pay', loginValid, (req, res, next) => {
 
 // 微信回调的地址
 router.post('/order/notify', (req, res, next) => {
-	res.send('收到结果')
+	
+	let tpl = WxPay.notify()
+	res.send(tpl)
 })
 
 // 查询数据库，查看订单支付状态值是否更改

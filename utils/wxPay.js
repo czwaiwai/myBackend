@@ -1,7 +1,10 @@
 var config = require('../config'); //配置文件 appid 等信息
+var wxConfig = require('../wx.json')
+let MD5 = require('md5');
 // var Q = require("q");
 var request = require("request");
 var crypto = require('crypto');
+var xml2js = require('xml2js')
 // var ejs = require('ejs');
 // var fs = require('fs');
 var key = config.wxPayKey;
@@ -74,10 +77,52 @@ var WxPay = {
 		return parseInt(new Date().getTime() / 1000) + '';
 	},
 	sacnOrder: function (attach, body, bookingNo, total_fee) {
-		var mch_id = config.wxMchId
-		var openid = ''
-		var notify_url = config.wxNotifyUrl
-		return this.order(attach, body, mch_id, openid, bookingNo, total_fee, notify_url)
+		let url = "https://api.mch.weixin.qq.com/pay/unifiedorder",// 下单请求地址
+			appid = wxConfig.appID,
+			mch_id = wxConfig.mchID,
+		  notify_url = wxConfig.notifyUrl,
+			out_trade_no = '自己设置的订单号',// 微信会有自己订单号、我们自己的系统需要设置自己的订单号
+			total_fee = '订单金额',// 注意，单位为分
+			body = '商品简单描述',
+			trade_type = 'NATIVE',// 交易类型，JSAPI--公众号支付、NATIVE--原生扫码支付、APP--app支付
+			nonce_str = moment().format('YYYYMMDDHHmmssSSS'),// 随机字符串32位以下
+			stringA = `appid=${公众号id}&body=${body}&mch_id=${微信商户号}&nonce_str=${nonce_str}&notify_url=${notify_url}&out_trade_no=${out_trade_no}&product_id=${商品id}&spbill_create_ip=${ctx.request.ip}&total_fee=${total_fee}&trade_type=${trade_type}`,
+			stringSignTemp = stringA + "&key=xxxxxxxxxxxxxxxxx", //注：key为商户平台设置的密钥key
+			sign = MD5(stringSignTemp).toUpperCase();  //注：MD5签名方式
+		return new Promise((resolve,reject) => {
+			let formData = "<xml>";
+			formData += "<appid>" + appid + "</appid>"; //appid
+			formData += "<body>" + body + "</body>"; //商品或支付单简要描述
+			formData += "<mch_id>" + mch_id + "</mch_id>"; //商户号
+			formData += "<nonce_str>" + nonce_str + "</nonce_str>"; //随机字符串，不长于32位
+			formData += "<notify_url>" + notify_url + "</notify_url>"; //支付成功后微信服务器通过POST请求通知这个地址
+			formData += "<out_trade_no>" + out_trade_no + "</out_trade_no>"; //订单号
+			formData += "<product_id>" + product_id +"</product_id>";// 商品id
+			formData += "<spbill_create_ip></spbill_create_ip>"; //ip
+			formData += "<total_fee>" + total_fee + "</total_fee>"; //金额
+			formData += "<trade_type>" + trade_type + "</trade_type>"; //NATIVE会返回code_url ，JSAPI不会返回
+			formData += "<sign>" + sign + "</sign>";
+			formData += "</xml>";
+			request({
+				url: url,
+				method: "POST",
+				body: formData
+			}, function(error, response, body) {
+				if (!error && response.statusCode == 200) {
+					xml2js.parseString(body,{
+						normalize: true,     // Trim whitespace inside text nodes
+						normalizeTags: true, // Transform tags to lowercase
+						explicitArray: false // Only put nodes in array if >1
+					}, (err, xml) => {
+						if(err) {
+							reject(err)
+						}
+						let data = xml.xml
+						resolve(data)
+					})
+				}
+			});
+		})
 	},
 	// 此处的attach不能为空值 否则微信提示签名错误
 	order: function(attach, body, mch_id, openid, bookingNo, total_fee, notify_url) {
@@ -97,8 +142,8 @@ var WxPay = {
 			formData += "<out_trade_no>" + bookingNo + "</out_trade_no>"; //订单号
 			formData += "<spbill_create_ip></spbill_create_ip>"; //不是必须的
 			formData += "<total_fee>" + total_fee + "</total_fee>"; //金额
-			formData += "<trade_type>NATIVE</trade_type>"; //NATIVE会返回code_url ，JSAPI不会返回
-			formData += "<sign>" + this.paysignjsapi(appid, attach, body, mch_id, nonce_str, notify_url, openid, bookingNo, '', total_fee, 'NATIVE') + "</sign>";
+			formData += "<trade_type>JSAPI</trade_type>"; //NATIVE会返回code_url ，JSAPI不会返回
+			formData += "<sign>" + this.paysignjsapi(appid, attach, body, mch_id, nonce_str, notify_url, openid, bookingNo, '', total_fee, 'JSAPI') + "</sign>";
 			formData += "</xml>";
 			var self = this;
 			request({
@@ -144,12 +189,11 @@ var WxPay = {
 				return_msg: "FAIL"
 			};
 		}
-	// <xml>
-	// 	<return_code><![CDATA[<%-return_code%>]]></return_code>
-	// 	<return_msg><![CDATA[<%=return_msg%>]]></return_msg>
-	// 	</xml>
 		// output = ejs.render(messageTpl, reply);
-		return output;
+		return `<xml>
+<return_code><![CDATA[${reply.return_code}]]></return_code>
+<return_msg><![CDATA[${reply.return_msg}]]></return_msg>
+</xml>`;
 	},
 };
 module.exports = WxPay;
