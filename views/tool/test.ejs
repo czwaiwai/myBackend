@@ -96,8 +96,22 @@
         </div>
     </div>
 </div>
+
 <% block('footer').append(`<script src="/js/uploadImg.js"></script>`)%>
 <% block('footer').append(`<script>
+    	$.ajax({
+        url:'/wx/',
+        dataType:'xml',
+        type:'POST',
+				contentType:'text/xml',
+				processData: false,
+        data:'<xml><ToUserName><![CDATA[toUser]]></ToUserName><FromUserName><![CDATA[FromUser]]></FromUserName><CreateTime>123456789</CreateTime><MsgType><![CDATA[event]]></MsgType><Event><![CDATA[subscribe]]></Event></xml>',
+        success:function(res) {
+        	console.log(res)
+        }
+      })
+
+
     var $imgShowWrap = $('#imgShowWrap')
     var $imgMain = $('.img_main', $imgShowWrap)
     var $ulImgList = $('.ul_img_list',$imgShowWrap)
@@ -191,5 +205,6 @@
 
     $('#imgUpload').uploadImg(function(imgs){
         $(this).css({"background":"url("+imgs[0].thumb.url+") no-repeat center","background-size":"cover"});
+
    });
 </script>`) %>

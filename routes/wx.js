@@ -10,7 +10,7 @@ router.get('/', (req, res, next) =>{
 
 	wechat.auth(req, res)
 })
-router.post('/', (req, res, next) => {
+router.post('/', wechat.textHandle,wechat.eventHandle, (req, res, next) => {
 	wechat.handleMsg(req, res)
 })
 router.get('/getAccessToken', (req, res, next) => {

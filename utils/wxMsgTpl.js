@@ -2,11 +2,11 @@
  * Created by Administrator on 2018/4/26 0026.
  */
 // 文本消息
-exports.txtMsg = function (toUser, formUser, content) {
+exports.txtMsg = function (toUser, fromUser, content) {
 	let tpl = `<xml>
 <ToUserName><![CDATA[${toUser}]]></ToUserName>
 <FromUserName><![CDATA[${fromUser}]]></FromUserName>
-<CreateTime>${new Data.getTime()}</CreateTime>
+<CreateTime>${new Date().getTime()}</CreateTime>
 <MsgType><![CDATA[text]]></MsgType>
 <Content><![CDATA[${content}]]></Content>
 </xml>`

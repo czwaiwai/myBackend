@@ -34,8 +34,20 @@ router.get('/upload',(req,res)=>{
 
 });
 router.get('/test', (req, res, next) => {
-   console.log(req.body)
+
     res.render('tool/test',{title:'测试'})
+})
+router.post('/test',(req,res,next) => {
+	console.log(req.body)
+  console.log(req.rawBody)
+    res.json({
+      code:0,
+      message:'啊哈哈',
+      data:{
+          a:req.body,
+          b:req.rawBody,
+      }
+    })
 })
 router.post('/upload',(req,res)=>{
     imgProcess(req,function(err,fields,files){
