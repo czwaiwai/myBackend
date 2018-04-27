@@ -62,4 +62,6 @@ typings/
 public/upload/
 
 #wx.bak
+#config.js
 wx.bak
+wx.json

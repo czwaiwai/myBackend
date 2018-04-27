@@ -5,8 +5,8 @@ const config = {
 	uploadDir: 'public/upload/',
 	// mongodb 数据库链接
 	db: 'mongodb://localhost/waiShop',
-	wxPayKey: 'BGR8etsLQMCkH7bi9LhJjS3Xl4zCh1E8',
-	wxAppId: 'wx2b6b34e4a0735bc0',
+	wxPayKey: '',
+	wxAppId: '',
 	wxMchId: '',
 	wxNotifyUrl: 'http://www.bssfood.com/order/notify'
 }

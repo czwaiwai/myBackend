@@ -14,10 +14,9 @@ router.use('/wxVaild',(req,res) => {
 })
 router.get('/createUser',(req,res)=>{
     console.log(req.body);
-
-
     res.render('tool/createUser',{title:"添加用户"});
 })
+
 
 router.post('/createUser',(req,res)=>{
     let userObj=qs.parse(req.body);
@@ -35,7 +34,7 @@ router.get('/upload',(req,res)=>{
 
 });
 router.get('/test', (req, res, next) => {
-    
+   console.log(req.body)
     res.render('tool/test',{title:'测试'})
 })
 router.post('/upload',(req,res)=>{

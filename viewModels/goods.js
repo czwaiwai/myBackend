@@ -31,7 +31,7 @@ exports.findByIds = function (ids, callback) {
 exports.findAllByPage = function (query = {}, pageNum = 1,pageSize = 10, callback) {
 	pageNum = parseInt(pageNum)
 	pageSize = parseInt(pageSize)
-	Goods.count((err,count) => {
+	Goods.count(query, (err,count) => {
 		if (err) return callback(err)
 		var goods = Goods.find(query, {content:0})
 		goods.sort({create_at:-1})
