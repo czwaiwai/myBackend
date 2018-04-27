@@ -1,8 +1,10 @@
 var express = require('express');
 var session=require('express-session');
+var FileStreamRotator = require('file-stream-rotator') // 日志分割
 var compression = require('compression'); // 用户开启Gzip
 var flash=require('connect-flash'); // 用于session提醒
 var engine = require('ejs-mate');
+var fs = require('fs')
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -20,8 +22,9 @@ var admin = require('./admin/app');
 
 var device = require('express-device');
 
-var app = express();
 
+var app = express();
+app.set('env', 'production');
 app.engine('ejs',engine);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -29,6 +32,9 @@ app.set('view engine', 'ejs');
 app.disable('x-powered-by');
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+var errorLogfile
+var logDirectory = path.join(__dirname, 'log')
+fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory)
 
 app.use(sassMiddleware({
 	src: path.join(__dirname, 'public/css'),
@@ -45,7 +51,21 @@ app.use(sassMiddleware({
 
 app.use(compression()); // gzip压缩
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(logger('dev'));
+console.log(app.get('env'))
+if (app.get('env') === 'development') {
+	app.use(logger('dev', {stream: process.stdout}));
+} else {
+	errorLogfile = fs.createWriteStream(path.join(logDirectory,'error.log'), {flags: 'a'});
+	var accessLogStream = FileStreamRotator.getStream({
+		date_format: 'YYYYMMDD',
+		filename: path.join(logDirectory, 'access-%DATE%.log'),
+		frequency: 'daily',
+		verbose: false
+	})
+	logger.token('type', function (req, res) { return req.headers['content-type'] })
+	app.use(logger('short', {stream: process.stdout}))
+	app.use(logger('short', {stream: accessLogStream}))
+}
 app.use(bodyParser.xml({
 	limit: '100kb',   // Reject payload bigger than 1 MB
 	defaultCharset:'utf-8',
@@ -105,10 +125,12 @@ app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
-
+  if (errorLogfile) {
+		errorLogfile.write('[' + new Date() + '] ' + req.url + '\n' + err.stack)
+	}
   // render the error page
   res.status(err.status || 500);
-  res.render('error',{title:"网站错误"});
+	res.render('error',{title:"网站错误"});
 });
 
 module.exports = app;

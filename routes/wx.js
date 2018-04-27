@@ -7,7 +7,7 @@ const wxConfig = require('../wx.json')
 const router = express.Router();
 const wechat = new Wechat(wxConfig)
 router.get('/', (req, res, next) =>{
-
+	console.log(req.body)
 	wechat.auth(req, res)
 })
 router.post('/', wechat.textHandle,wechat.eventHandle, (req, res, next) => {

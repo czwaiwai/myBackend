@@ -69,6 +69,7 @@ Wechat.prototype.handleMsg = function (req, res, next) {
 	res.send('success')
 }
 Wechat.prototype.textHandle = function (req, res, next) {
+	console.log(req.body, '----------------------------------------------')
 	let data = req.body.xml
 	console.log(data,'------------------------')
 	let formUser = data.tousername // 开发者微信号
@@ -80,6 +81,7 @@ Wechat.prototype.textHandle = function (req, res, next) {
 	}
 }
 Wechat.prototype.eventHandle = function (req, res, next) {
+	console.log(req.body, '----------------------------------------------')
 	let data = req.body.xml
 	let formUser = data.tousername // 开发者微信号
 	let toUser = data.fromusername  // 用户的openId
