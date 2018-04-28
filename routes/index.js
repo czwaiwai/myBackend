@@ -368,9 +368,9 @@ router.post('/order/pay', loginValid, (req, res, next) => {
 	Order.create(order, (err, newOrder) => {
 		if (err) return next(err)
 		WxPay.sacnOrder(newOrder.userId, '白石山商品购买',newOrder.orderId, newOrder._id, newOrder.needPrice).then((data) => {
-			if (data.return_code=== 'FAIL') {
-				return next(new Error(data.return_msg))
-			}
+			// if (data.return_code === 'FAIL') {
+			// 	return next(new Error(data.return_msg))
+			// }
 			res.render('order/pay', {title: '订单支付', order:newOrder, totalPrice, data, prepay_id : '12342342352562',
 				code_url: 'www.http.com'})
 		})

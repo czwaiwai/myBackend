@@ -84,22 +84,23 @@ var WxPay = {
 	* totalFee totalFee 单位为分
 	 */
 	sacnOrder: function (attachTxt, goodsRemark, tradeNo, productId, totalFee) {
-		let url = "https://api.mch.weixin.qq.com/pay/unifiedorder",// 下单请求地址
-			appid = wxConfig.appID,
-			mch_id = wxConfig.mchID,
-		  key = wxConfig.key,
-		  notify_url = wxConfig.notifyUrl,
-			out_trade_no = '自己设置的订单号',// 微信会有自己订单号、我们自己的系统需要设置自己的订单号
-			product_id = productId,
-			total_fee = (totalFee * 100),// 注意，单位为分
-			attach = attachTxt,
-			body = goodsRemark,
-			trade_type = 'NATIVE',// 交易类型，JSAPI--公众号支付、NATIVE--原生扫码支付、APP--app支付
-			nonce_str = this.createNonceStr(),// 随机字符串32位以下
-			stringA = `appid=${appid}&attach=${attach}&body=${body}&mch_id=${mch_id}&nonce_str=${nonce_str}&notify_url=${notify_url}&out_trade_no=${out_trade_no}&product_id=${product_id}&spbill_create_ip=&total_fee=${total_fee}&trade_type=${trade_type}`,
-			stringSignTemp = stringA + "&key="+key, //注：key为商户平台设置的密钥key
-			sign = this.md5(stringSignTemp).toUpperCase();  //注：MD5签名方式
 		return new Promise((resolve,reject) => {
+			let url = "https://api.mch.weixin.qq.com/pay/unifiedorder",// 下单请求地址
+				appid = wxConfig.appID,
+				mch_id = wxConfig.mchID,
+				key = wxConfig.key,
+				notify_url = wxConfig.notifyUrl,
+				out_trade_no = tradeNo,// 微信会有自己订单号、我们自己的系统需要设置自己的订单号
+				product_id = productId,
+				total_fee = (totalFee * 100),// 注意，单位为分
+				attach = attachTxt,
+				body = goodsRemark,
+				trade_type = 'NATIVE',// 交易类型，JSAPI--公众号支付、NATIVE--原生扫码支付、APP--app支付
+				nonce_str = this.createNonceStr(),// 随机字符串32位以下
+				stringA = `appid=${appid}&attach=${attach}&body=${body}&mch_id=${mch_id}&nonce_str=${nonce_str}&notify_url=${notify_url}&out_trade_no=${out_trade_no}&product_id=${product_id}&total_fee=${total_fee}&trade_type=${trade_type}`,
+				stringSignTemp = stringA + "&key="+key, //注：key为商户平台设置的密钥key
+				sign = this.md5(stringSignTemp).toUpperCase();  //注：MD5签名方式
+			
 			let formData = "<xml>";
 			formData += "<appid>" + appid + "</appid>"; //appid
 			formData += "<attach>" + attach + "</attach>"; //附加数据
@@ -109,11 +110,13 @@ var WxPay = {
 			formData += "<notify_url>" + notify_url + "</notify_url>"; //支付成功后微信服务器通过POST请求通知这个地址
 			formData += "<out_trade_no>" + out_trade_no + "</out_trade_no>"; //订单号
 			formData += "<product_id>" + product_id +"</product_id>";// 商品id
-			formData += "<spbill_create_ip></spbill_create_ip>"; //ip
+			// formData += "<spbill_create_ip></spbill_create_ip>"; //ip
 			formData += "<total_fee>" + total_fee + "</total_fee>"; //金额
 			formData += "<trade_type>" + trade_type + "</trade_type>"; //NATIVE会返回code_url ，JSAPI不会返回
 			formData += "<sign>" + sign + "</sign>";
 			formData += "</xml>";
+			console.log(formData, 'formData------------')
+			return resolve(formData)
 			request({
 				url: url,
 				method: "POST",
