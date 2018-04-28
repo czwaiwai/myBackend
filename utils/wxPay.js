@@ -77,6 +77,22 @@ var WxPay = {
 	createTimeStamp: function() {
 		return parseInt(new Date().getTime() / 1000) + '';
 	},
+	// https://api.mch.weixin.qq.com/pay/orderquery
+	queryOrder: function (id) {
+		return new Promise((resolve, reject) => {
+			let url = 'https://api.mch.weixin.qq.com/pay/orderquery'
+			let appid = wxConfig.appID;
+			let	mch_id = wxConfig.mchID;
+			let nonce_str = this.createNonceStr()
+			let formData = `<xml>
+<appid>${appid}</appid>
+<mch_id>${mch_id}</mch_id>
+<nonce_str>${nonce_str}</nonce_str>
+<out_trade_no>${id}</out_trade_no>
+<sign>FDD167FAA73459FD921B144BAF4F4CA2</sign>
+</xml>`
+		})
+	},
 	/*
 	* params goodsRemark //商品详情
 	* params tradeNO  // OrderId
