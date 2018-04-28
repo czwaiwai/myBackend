@@ -303,16 +303,23 @@ router.get('/order/pay/:orderId', loginValid, (req, res, next) => {
 		if (err) next(err)
 		if (order.orderStatus === 10) {
 			// 请求微信接口返回二维码url
-			//
-			// WxPay.order(attach, body, mch_id, openid, bookingNo, total_fee, notify_url).then((data) => {
-			//
-			// })
-			setTimeout(() => { //链接微信获取url
-				res.render('order/pay', {title: '订单支付', order:order, totalPrice: order.needPrice, prepay_id : '12342342352562',
-					code_url: 'www.http.com'})
-			}, 2000)
+			WxPay.sacnOrder(order.userId, '白石山商品购买',order.orderId, order._id, order.needPrice).then((data) => {
+				if (data.return_code === 'SUCCESS') {
+					res.render('order/pay', {title: '订单支付', order:newOrder, needPrice: order.needPrice, prepay_id : data.prepay_id,
+						code_url: data.code_url})
+				} else {
+					return next(new Error({
+						name:data.return_msg,
+						message: data.return_msg + '/n' + JSON.stringify(data)
+					}))
+				}
+			})
+			// setTimeout(() => { //链接微信获取url
+			// 	res.render('order/pay', {title: '订单支付', order:order, totalPrice: order.needPrice, prepay_id : '12342342352562',
+			// 		code_url: 'www.http.com'})
+			// }, 2000)
 		} else {
-			return next(new Error('订单不是为支付状态'))
+			return next(new Error('订单不是未支付状态'))
 		}
 	})
 })
@@ -368,36 +375,71 @@ router.post('/order/pay', loginValid, (req, res, next) => {
 	Order.create(order, (err, newOrder) => {
 		if (err) return next(err)
 		WxPay.sacnOrder(newOrder.userId, '白石山商品购买',newOrder.orderId, newOrder._id, newOrder.needPrice).then((data) => {
-			// if (data.return_code === 'FAIL') {
-			// 	return next(new Error(data.return_msg))
-			// }
-			res.render('order/pay', {title: '订单支付', order:newOrder, totalPrice, data, prepay_id : '12342342352562',
-				code_url: 'www.http.com'})
+			if (data.return_code === 'SUCCESS') {
+				res.render('order/pay', {title: '订单支付', order:newOrder, needPrice, prepay_id : data.prepay_id,
+					code_url: data.code_url})
+			} else {
+				return next(new Error({
+					name:data.return_msg,
+					message: data.return_msg + '/n' + JSON.stringify(data)
+				}))
+			}
 		})
 	})
 })
-
+/*
+	_returnData = { xml:
+		{ appid: 'wxbc8b10******************',
+			attach: '支付功能',
+			bank_type: 'CFT',
+			cash_fee: '1',
+			fee_type: 'CNY',
+			is_subscribe: 'Y',
+			mch_id: '137*******',
+			nonce_str: '10fskie7bymn29',
+			openid: 'ooqSov0HufIdX7YGY1ePDC5NJS-w',
+			out_trade_no: 'pro_wxpay649',
+			result_code: 'SUCCESS',
+			return_code: 'SUCCESS',
+			sign: '549B3D77F7C5E2766406A68BA3E27D78',
+			time_end: '20160823162731',
+			total_fee: '1',
+			trade_type: 'JSAPI',
+			transaction_id: '4000732001201608232045230805'
+		}
+	}
+	*/
 // 微信回调的地址
 router.post('/order/notify', (req, res, next) => {
-	
-	let tpl = WxPay.notify()
-	res.send(tpl)
+	console.log(req.body, '----notify---req--------')
+	if(req.body &&  req.body.xml ) {
+		let resData =  req.body.xml
+		console.log(resData, '-------')
+		// 更新订单状态
+		Order.savePay(resData.out_trade_no, resData, (err, order) => {
+			if (err) return next(err)
+			let tpl = WxPay.notify(resData)
+			res.send(tpl)
+		})
+	}
 })
 
 // 查询数据库，查看订单支付状态值是否更改
-router.get('/order/isPay', (req, res, next) => {
+router.use('/order/isPay', (req, res, next) => {
 	res.writeHead(200, {
 		"Content-Type": "text/event-stream",
 		"Cache-Control": "no-cache",
 		"Connection": "keep-alive"
 	})
-	setInterVal(function () {
-		res.write("data:" + Date.now() + '\n\n')
-	})
+	// console.log('/order/isPay',Date.now())
+	// setInterval(function () {
+	// 	res.send("data:" + Date.now() + '\n\n')
+	// 	// res.write("data:" + Date.now() + '\n\n')
+	// },3000)
 })
 
 router.get('/order/success', loginValid, (req, res, next) => {
-	Order.findById('5ad741d9c361b72ee43ca252', (err, order) => {
+	Order.findById(req.query.id, (err, order) => {
 		if(err) return next(err)
 		res.render('order/success', {title: '订单支付完成', order})
 	})

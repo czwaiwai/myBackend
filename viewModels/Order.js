@@ -29,7 +29,17 @@ exports.noPay = function (userId, callback) {
 exports.findById = function (id, callback) {
 	Order.findById(id,callback)
 }
-
+exports.savePay = function (orderId, obj, callback) {
+	Order.findOne({orderId: orderId}, (err, order) => {
+		order.update_at= new Date()
+		order.orderStatus = 20
+		order.type = 'wx'
+		order.payId = obj.transaction_id || ''
+		order.openId = obj.openid
+		order.realPrice = obj.total_fee
+		order.save(callback)
+	})
+}
 // 取消订单
 exports.cancelById = function (id, callback) {
 	Order.findByIdAndUpdate(id, {orderStatus: 11}, {new:true}, callback)

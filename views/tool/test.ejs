@@ -95,22 +95,28 @@
             </div>
         </div>
     </div>
+    <ul id="msg"></ul>
 </div>
 
 <% block('footer').append(`<script src="/js/uploadImg.js"></script>`)%>
 <% block('footer').append(`<script>
-    	$.ajax({
-        url:'/wx/',
-        dataType:'xml',
-        type:'POST',
-				contentType:'text/xml',
-				processData: false,
-        data:'<xml><ToUserName><![CDATA[toUser]]></ToUserName><FromUserName><![CDATA[FromUser]]></FromUserName><CreateTime>123456789</CreateTime><MsgType><![CDATA[event]]></MsgType><Event><![CDATA[subscr11ibe]]></Event></xml>',
-        success:function(res) {
-        	console.log(res)
-        }
-      })
+//    	$.ajax({
+//        url:'/wx/',
+//        dataType:'xml',
+//        type:'POST',
+//				contentType:'text/xml',
+//				processData: false,
+//        data:'<xml><ToUserName><![CDATA[toUser]]></ToUserName><FromUserName><![CDATA[FromUser]]></FromUserName><CreateTime>123456789</CreateTime><MsgType><![CDATA[event]]></MsgType><Event><![CDATA[subscr11ibe]]></Event></xml>',
+//        success:function(res) {
+//        	console.log(res)
+//        }
+//      })
 
+
+    var es = new EventSource('/order/isPay');
+    es.onmessage = function (e) {
+        document.querySelector('#msg').innerHTML += '<li>'+ e.data +'</li>'
+    };
 
     var $imgShowWrap = $('#imgShowWrap')
     var $imgMain = $('.img_main', $imgShowWrap)

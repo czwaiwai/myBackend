@@ -27,6 +27,7 @@ var OrderSchema = new Schema({
 	},
 	type: {type: String, default: 'wx'}, // 支付方式 'wx', 'ali'
 	payId: {type: String, default: ''}, // 支付端信息编码 payId
+	openId: {type: String, default: ''},
 	totalNum: {type: Number}, // 总数量
 	totalPrice: {type: Number}, // 商品总价
 	feePrice: {type:Number, default: 0}, // 邮费

@@ -14,7 +14,6 @@ exports.findEqual = function (addr, callback) {
 			{cityId: null}
 		]).sort({cityId:-1}).exec((err, postages) => {
 		if(err) return callback(err)
-		console.log(postages,'1111111111111111')
 		if (postages && postages.length >0) {
 			callback(err,postages[0])
 		} else{
