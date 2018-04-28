@@ -272,22 +272,29 @@ router.post('/order/postage', (req, res, next) => {
 	// Postage.
 	let data = req.body
 	let addr = {}
+	let feeDf = res.locals.feeDf
 	if(data) {
 		let proArr =	data.province.split(',')
 		let cityArr =	data.city.split(',')
-		addr.province = proArr[0]
-		addr.provinceId = proArr[1]
-		addr.cityId = cityArr[1]
+		addr.provinceId = proArr[0]
+		addr.province = proArr[1]
+		addr.cityId = cityArr[0]
 		addr.city = cityArr[1]
 	}
-
-	res.json({
-		code: 0,
-		message: '操作成功',
-		data: {
-			feePrice: 20,
-			needPrice: 200
+	Postage.findEqual(addr, (err, postage) => {
+		if(err) return next(err)
+		console.log(postage, 'postage')
+		let fee = feeDf
+		if(postage) {
+			fee = postage.fee
 		}
+		res.json({
+			code: 0,
+			message: '操作成功',
+			data: {
+				feePrice: fee
+			}
+		})
 	})
 })
 
@@ -360,10 +367,12 @@ router.post('/order/pay', loginValid, (req, res, next) => {
 	// 请求微信接口返回二维码url
 	Order.create(order, (err, newOrder) => {
 		if (err) return next(err)
-		WxPay.sacnOrder(newOrder.userId, '白石山商品购买', newOrder._id, newOrder.needPrice).then((data) => {
-			res.render('order/pay', {title: '订单支付', order:newOrder, totalPrice, prepay_id : '12342342352562',
-				code_url: 'www.http.com'})
-		})
+		// WxPay.sacnOrder(newOrder.userId, '白石山商品购买', newOrder._id, newOrder.needPrice).then((data) => {
+		// 	res.render('order/pay', {title: '订单支付', order:newOrder, totalPrice, prepay_id : '12342342352562',
+		// 		code_url: 'www.http.com'})
+		// })
+		res.render('order/pay', {title: '订单支付', order:newOrder, totalPrice, prepay_id : '12342342352562',
+			code_url: 'www.http.com'})
 	})
 })
 

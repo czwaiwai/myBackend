@@ -4,11 +4,18 @@
 var models = require('../models')
 var getPageNum =  require('../utils/tools').getPageNum
 var Order = models.Order
+var Counters = models.Counters
 
 
 exports.create = function (obj, callback) {
 	var order = new Order(obj)
-	order.save(callback)
+	console.log(order, '-----------------------')
+	Counters.findOneAndUpdate({name:'order'},{$inc: {index:1}},{isNew: true, upsert: true}, (err, function(counter) {
+		if (err) return  callback(err)
+		console.log(counter, ' --------counter----------')
+		order.orderId = 5200000000 + counter.index
+		order.save(callback)
+	}))
 }
 
 // 查询支付订单

@@ -1,6 +1,6 @@
 var config = require('../config'); //配置文件 appid 等信息
 var wxConfig = require('../wx.json')
-let MD5 = require('md5');
+// let MD5 = require('md5');
 // var Q = require("q");
 var request = require("request");
 var crypto = require('crypto');
@@ -76,7 +76,7 @@ var WxPay = {
 	createTimeStamp: function() {
 		return parseInt(new Date().getTime() / 1000) + '';
 	},
-	sacnOrder: function (attach, body, bookingNo, total_fee) {
+	sacnOrder: function (attach1, body1, bookingNo1, totalFee) {
 		let url = "https://api.mch.weixin.qq.com/pay/unifiedorder",// 下单请求地址
 			appid = wxConfig.appID,
 			mch_id = wxConfig.mchID,

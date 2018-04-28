@@ -175,10 +175,11 @@ li.addr_card.active:after {
         <input name="goods" type="hidden"  value="<%=JSON.stringify(goods) %>" >
         <input name="fee" type="hidden"  value="<%=feeDf %>" >
         <input name="totalPrice" type="hidden"  value="<%=totalPrice %>" >
+        <input name="needPrice" type="hidden" value="<%=needPrice %>"
         <p class="text-muted">商品合计：￥<%=totalPrice %></p>
         <p>运费：￥<span id="showFee"><%=feeDf %></span></p>
         <p>应付总额：<span id="showNeedPrice" class="fs20 text-danger">￥<%=needPrice %></span></p>
-        <p><button   class="btn btn-lg btn-primary">去付款</button></p>
+        <p><button class="btn btn-lg btn-primary">去付款</button></p>
       </form>
     </div>
 </div>
@@ -218,6 +219,7 @@ jQuery(function(){
    var feeDefault = ${feeDf}
    var address = ${JSON.stringify(address)}
    var addrList = ${JSON.stringify(addrList)}
+   var totalPrice = ${totalPrice}
    console.log(address,'address')
    function init () {
    	 if (!address) {
@@ -238,13 +240,15 @@ jQuery(function(){
    	})
    }
    function getRemotePostage (data) {
-   	    $.post('/order/postage',data).done(function(res) {
-        	if(res.code === 0) {
-        		$showFee.text(res.data.feePrice)
-        		$showNeedPrice.text(res.data.needPrice)
-        		$orderForm.find('input[name=fee]').val(res.data.feePrice)
-        	}
-        })
+     $.post('/order/postage',data).done(function(res) {
+        if(res.code === 0) {
+            let payPrice = $.formatFloat(parseFloat(totalPrice) + parseFloat(res.data.feePrice))
+            $showFee.text(res.data.feePrice)
+            $showNeedPrice.text(payPrice)
+            $orderForm.find('input[name=needPrice]').val(payPrice)
+            $orderForm.find('input[name=fee]').val(res.data.feePrice)
+        }
+     })
    }
    init(address)
     $addressChoose.adChoose({
