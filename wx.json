@@ -1,9 +1,9 @@
 {
-	"token": "bssfood",
-	"appID": "wx2b6b34e4a0735bc0",
-	"appScrect": "553d8c89d340ea66635ec18590e99dc7",
-	"key": "BGR8etsLQMCkH7bi9LhJjS3Xl4zCh1E8",
-	"mchID": "1500403302",
+	"token": "",
+	"appID": "",
+	"appScrect": "",
+	"key": "",
+	"mchID": "",
 	"appDomain": "https://api.weixin.qq.com",
 	"notifyUrl": "http://www.bssfood.com/order/notify",
 	"apiURL": {
