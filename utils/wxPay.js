@@ -83,7 +83,7 @@ var WxPay = {
 	* params productId  _id
 	* totalFee totalFee 单位为分
 	 */
-	sacnOrder: function (goodsRemark, tradeNo, productId, totalFee) {
+	sacnOrder: function (attachTxt, goodsRemark, tradeNo, productId, totalFee) {
 		let url = "https://api.mch.weixin.qq.com/pay/unifiedorder",// 下单请求地址
 			appid = wxConfig.appID,
 			mch_id = wxConfig.mchID,
@@ -92,15 +92,17 @@ var WxPay = {
 			out_trade_no = '自己设置的订单号',// 微信会有自己订单号、我们自己的系统需要设置自己的订单号
 			product_id = productId,
 			total_fee = (totalFee * 100),// 注意，单位为分
+			attach = attachTxt,
 			body = goodsRemark,
 			trade_type = 'NATIVE',// 交易类型，JSAPI--公众号支付、NATIVE--原生扫码支付、APP--app支付
 			nonce_str = this.createNonceStr(),// 随机字符串32位以下
-			stringA = `appid=${appid}&body=${body}&mch_id=${mch_id}&nonce_str=${nonce_str}&notify_url=${notify_url}&out_trade_no=${out_trade_no}&product_id=${product_id}&spbill_create_ip=&total_fee=${total_fee}&trade_type=${trade_type}`,
-			stringSignTemp = stringA + "&key=${key}", //注：key为商户平台设置的密钥key
+			stringA = `appid=${appid}&attach=${attach}&body=${body}&mch_id=${mch_id}&nonce_str=${nonce_str}&notify_url=${notify_url}&out_trade_no=${out_trade_no}&product_id=${product_id}&spbill_create_ip=&total_fee=${total_fee}&trade_type=${trade_type}`,
+			stringSignTemp = stringA + "&key="+key, //注：key为商户平台设置的密钥key
 			sign = this.md5(stringSignTemp).toUpperCase();  //注：MD5签名方式
 		return new Promise((resolve,reject) => {
 			let formData = "<xml>";
 			formData += "<appid>" + appid + "</appid>"; //appid
+			formData += "<attach>" + attach + "</attach>"; //附加数据
 			formData += "<body>" + body + "</body>"; //商品或支付单简要描述
 			formData += "<mch_id>" + mch_id + "</mch_id>"; //商户号
 			formData += "<nonce_str>" + nonce_str + "</nonce_str>"; //随机字符串，不长于32位
@@ -121,7 +123,7 @@ var WxPay = {
 					console.log(error, 'error')
 					return reject(error)
 				}
-				console.log(body, '------------------------')
+				console.log(body, '---------原始data---------------')
 				if (!error && response.statusCode == 200) {
 					xml2js.parseString(body,{
 						normalize: true,     // Trim whitespace inside text nodes
@@ -132,7 +134,7 @@ var WxPay = {
 							reject(err)
 						}
 						let data = xml.xml
-						console.log(data, '------------')
+						console.log(data, '------covert - data------')
 						resolve(data)
 					})
 				} else {
