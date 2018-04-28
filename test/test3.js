@@ -7,7 +7,7 @@ var _ = require('lodash');
 var Cart = models.Cart
 var User = models.User
 var Goods = models.Goods
-
+var Counters = models.Counters
 
 // User.update({_id:'5ab4618fb5ecf926b4b18827', 'cart.isCheck': false}, {
 // 	$set:{'cart.$[].isCheck': false}
@@ -47,6 +47,12 @@ var Goods = models.Goods
 // 	callback
 // )
 
-Dict.findByGroup('front', function(err, res){
-console.log(_.keyBy(res,'name'))
+// Dict.findByGroup('front', function(err, res){
+// console.log(_.keyBy(res,'name'))
+// })
+Counters.findOneAndUpdate({name:'order'},{$inc: {index:1}},{new: true, upsert: true}, (err, counter) => {
+	if (err) {
+		console.log(err)
+	}
+	console.log(counter, '--------------')
 })

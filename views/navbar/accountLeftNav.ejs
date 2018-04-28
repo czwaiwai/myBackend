@@ -5,7 +5,7 @@
             <li class="<% if(basePath=='/account/index'){ %>active<% } %>" ><a href="/account/index">个人主页</a></li>
             <li class="<% if(basePath=='/account/accountInfo'){ %>active<% } %>" ><a href="/account/accountInfo">个人信息</a></li>
             <li class="<% if(basePath=='/account/address'){ %>active<% } %>" ><a href="/account/address">地址管理</a></li>
-            <li class="<% if(basePath=='/account/orderManage'){ %>active<% } %>" ><a href="/account/orderManage">订单管理</a></li>
+            <li class="<% if(basePath=='/account/orderManage' || basePath.indexOf('/account/orderDetail/')>-1){ %>active<% } %>" ><a href="/account/orderManage">订单管理</a></li>
         </ul>
     </div><!-- /.sidebar-widget-body -->
 </div>

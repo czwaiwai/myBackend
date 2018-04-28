@@ -1,6 +1,5 @@
 var config = require('../config'); //配置文件 appid 等信息
 var wxConfig = require('../wx.json')
-// let MD5 = require('md5');
 // var Q = require("q");
 var request = require("request");
 var crypto = require('crypto');
@@ -45,7 +44,9 @@ var WxPay = {
 		var sign = crypto.createHash('md5').update(string, 'utf8').digest('hex');
 		return sign.toUpperCase();
 	},
-	
+	md5:function(string){
+		return crypto.createHash('md5').update(string, 'utf8').digest('hex')
+	},
 	paysignjsapi: function(appid, attach, body, mch_id, nonce_str, notify_url, openid, out_trade_no, spbill_create_ip, total_fee, trade_type) {
 		var ret = {
 			appid: appid,
@@ -76,19 +77,27 @@ var WxPay = {
 	createTimeStamp: function() {
 		return parseInt(new Date().getTime() / 1000) + '';
 	},
-	sacnOrder: function (attach1, body1, bookingNo1, totalFee) {
+	/*
+	* params goodsRemark //商品详情
+	* params tradeNO  // OrderId
+	* params productId  _id
+	* totalFee totalFee 单位为分
+	 */
+	sacnOrder: function (goodsRemark, tradeNo, productId, totalFee) {
 		let url = "https://api.mch.weixin.qq.com/pay/unifiedorder",// 下单请求地址
 			appid = wxConfig.appID,
 			mch_id = wxConfig.mchID,
+		  key = wxConfig.key,
 		  notify_url = wxConfig.notifyUrl,
 			out_trade_no = '自己设置的订单号',// 微信会有自己订单号、我们自己的系统需要设置自己的订单号
-			total_fee = '订单金额',// 注意，单位为分
-			body = '商品简单描述',
+			product_id = productId,
+			total_fee = (totalFee * 100),// 注意，单位为分
+			body = goodsRemark,
 			trade_type = 'NATIVE',// 交易类型，JSAPI--公众号支付、NATIVE--原生扫码支付、APP--app支付
-			nonce_str = moment().format('YYYYMMDDHHmmssSSS'),// 随机字符串32位以下
-			stringA = `appid=${公众号id}&body=${body}&mch_id=${微信商户号}&nonce_str=${nonce_str}&notify_url=${notify_url}&out_trade_no=${out_trade_no}&product_id=${商品id}&spbill_create_ip=${ctx.request.ip}&total_fee=${total_fee}&trade_type=${trade_type}`,
-			stringSignTemp = stringA + "&key=xxxxxxxxxxxxxxxxx", //注：key为商户平台设置的密钥key
-			sign = MD5(stringSignTemp).toUpperCase();  //注：MD5签名方式
+			nonce_str = this.createNonceStr(),// 随机字符串32位以下
+			stringA = `appid=${appid}&body=${body}&mch_id=${mch_id}&nonce_str=${nonce_str}&notify_url=${notify_url}&out_trade_no=${out_trade_no}&product_id=${product_id}&spbill_create_ip=&total_fee=${total_fee}&trade_type=${trade_type}`,
+			stringSignTemp = stringA + "&key=${key}", //注：key为商户平台设置的密钥key
+			sign = this.md5(stringSignTemp).toUpperCase();  //注：MD5签名方式
 		return new Promise((resolve,reject) => {
 			let formData = "<xml>";
 			formData += "<appid>" + appid + "</appid>"; //appid
@@ -108,6 +117,11 @@ var WxPay = {
 				method: "POST",
 				body: formData
 			}, function(error, response, body) {
+				if (error) {
+					console.log(error, 'error')
+					return reject(error)
+				}
+				console.log(body, '------------------------')
 				if (!error && response.statusCode == 200) {
 					xml2js.parseString(body,{
 						normalize: true,     // Trim whitespace inside text nodes
@@ -118,8 +132,11 @@ var WxPay = {
 							reject(err)
 						}
 						let data = xml.xml
+						console.log(data, '------------')
 						resolve(data)
 					})
+				} else {
+					console.log(body, '----------------')
 				}
 			});
 		})

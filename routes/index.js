@@ -367,12 +367,10 @@ router.post('/order/pay', loginValid, (req, res, next) => {
 	// 请求微信接口返回二维码url
 	Order.create(order, (err, newOrder) => {
 		if (err) return next(err)
-		// WxPay.sacnOrder(newOrder.userId, '白石山商品购买', newOrder._id, newOrder.needPrice).then((data) => {
-		// 	res.render('order/pay', {title: '订单支付', order:newOrder, totalPrice, prepay_id : '12342342352562',
-		// 		code_url: 'www.http.com'})
-		// })
-		res.render('order/pay', {title: '订单支付', order:newOrder, totalPrice, prepay_id : '12342342352562',
-			code_url: 'www.http.com'})
+		WxPay.sacnOrder('白石山商品购买',newOrder.orderId, newOrder._id, newOrder.needPrice).then((data) => {
+			res.render('order/pay', {title: '订单支付', order:newOrder, totalPrice, data, prepay_id : '12342342352562',
+				code_url: 'www.http.com'})
+		})
 	})
 })
 
@@ -402,14 +400,6 @@ router.get('/order/success', loginValid, (req, res, next) => {
 	})
 })
 
-// goodsId: {type: Schema.ObjectId}, // 产品Id
-// goodsName: {type: String}, // 产品名称
-// goodsSubName: {type: String}, // 产品sub名称
-// imgUrl: {type: String}, // 图片
-// goodsNum: {type: Number, default:1}, //数量
-// isCheck: {type: Boolean, default: false}, // 是否选中
-// price: {type: Number}, // 单价
-
 //添加到购物车
 router.post('/add2Cart', loginValid, (req, res, next) => {
 	Goods.findById(req.body._id, (err, goods) => {
@@ -424,7 +414,6 @@ router.post('/add2Cart', loginValid, (req, res, next) => {
 		}
 		console.log(cart)
 		if (req.session.user) {
-			// console.log(req.session.user)
 			Cart.add2Update(req.session.user._id, cart, (err, user) => {
 				req.session.user.cart=user.cart
 				res.json({
@@ -433,15 +422,6 @@ router.post('/add2Cart', loginValid, (req, res, next) => {
 					message:'操作成功'
 				})
 			})
-			// Cart.create(req.session.user._id, cart, (err, newUser) => {
-			// 	if (err) return next(err)
-			// 	req.session.user.cart = newUser.cart
-			// 	res.json({
-			// 		data: {cart: newUser.cart},
-			// 		code:0,
-			// 		message:'操作成功'
-			// 	})
-			// })
 		} else {
 			res.json({
 				data: {},
@@ -532,7 +512,7 @@ router.post('/account/orderManage', loginValid, (req, res, next) => {
 	}
 	
 	// type.userId = req.session.user._id
-	Order.findAllByPage(type, req.body.page, 1, (err, obj) => {
+	Order.findAllByPage(type, req.body.page, 10, (err, obj) => {
 		if(err) return next(err)
 		obj.orders = obj.orders.map(item => {
 			let newObj = item.toObject()
@@ -554,7 +534,17 @@ router.get('/account/orderDetail/:id', loginValid, (req, res, next) => {
 	  res.render('account/orderDetail', {title: '订单详情', order, formatFloat:formatFloat})
   })
 })
-
+router.post('/account/orderCancel/:id', loginValid, (req, res, next) => {
+	Order.cancelById(req.params.id,(err, order) => {
+		res.json({
+			data: {
+				order: order,
+			},
+			code: 0,
+			message: '操作成功',
+		})
+	})
+})
 // 获取所有地址
 router.get('/account/getAllAddress', loginValid, (req, res, next) => {
 	Address.findAllAddress(req.session.user._id, (err, address) => {

@@ -42,7 +42,7 @@ max-width:100%;
         <div class="col-md-3">
             <% include ../navbar/accountLeftNav.ejs %>
         </div>
-        <div class="col-md-9">
+        <div id="orderManageWrap" class="col-md-9">
 
             <div class="panel panel-default ">
                 <div class="panel-body no-padding" style="min-height:300px;">
@@ -75,7 +75,7 @@ max-width:100%;
     <li class="order_item">
         <div class="order_item_header padding-left15">
             下单时间：<@=item.create_time @>
-            <span class="padding-left20">订单号：<@=item._id @></span>
+            <span class="padding-left20">订单号：<@=item.orderId @></span>
         </div>
         <div class="order_item_body">
             <div class="clearfix" >
@@ -90,15 +90,18 @@ max-width:100%;
                    <p class="fs12  text-muted" style="padding-top: 35px; line-height: 20px;">共<@=item.totalNum @>件商品</p>
                 </div>
                 <div class="col-md-1 text-center no-padding">
-                   <p class="<@=item.statusColor @>" style="padding-top:35px;"><@=item.statusName @><p>
+                   <p  class="status_txt <@=item.statusColor @>" style="padding-top:35px;"><@=item.statusName @><p>
                 </div>
                 <div class="col-md-2 text-center padding-top20" style="height:90px;border-left:1px solid #e3e3e3;border-right:1px solid #e3e3e3">
                   <p class="fs16 bold">￥<@= item.needPrice @></p>
                   <span class="fs12 text-muted"> (含运费：￥<@=item.feePrice @>)</span>
                 </div>
                 <div class="col-md-2 text-center ">
-                    <p style="padding-top:30px;">
+                    <p style="padding-top:15px;">
                       <a class="btn btn-link" href="/account/orderDetail/<@=item._id @>">查看详情</a>
+                      <@ if(item.orderStatus === 10) { @>
+                      <a class="btn btn_cancel btn-link normal_link" href="/account/orderCancel/<@=item._id @>">取消订单</a>
+                      <@ } @>
                     </p>
                 </div>
             </div>
@@ -133,6 +136,18 @@ jQuery(function () {
         getData($curr, p)
         console.log('页面变化', p)
       }
+    })
+    $('#orderManageWrap').on('click','.btn_cancel',function(e){
+      e.preventDefault()
+      var $this = $(this)
+      $.confirm('你确定要取消这个订单么','提示',function(res) {
+      	if(res) {
+          $.post($this.attr('href')).done(function(res){
+          	console.log(res)
+          	$this.closest('.order_item_body').find('.status_txt').text('已取消')
+          })
+      	}
+      })
     })
 
 })

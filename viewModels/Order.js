@@ -10,12 +10,12 @@ var Counters = models.Counters
 exports.create = function (obj, callback) {
 	var order = new Order(obj)
 	console.log(order, '-----------------------')
-	Counters.findOneAndUpdate({name:'order'},{$inc: {index:1}},{isNew: true, upsert: true}, (err, function(counter) {
+	Counters.findOneAndUpdate({name:'order'},{$inc: {index:1}},{new: true, upsert: true}, (err, counter) => {
 		if (err) return  callback(err)
 		console.log(counter, ' --------counter----------')
 		order.orderId = 5200000000 + counter.index
 		order.save(callback)
-	}))
+	})
 }
 
 // 查询支付订单
@@ -32,19 +32,19 @@ exports.findById = function (id, callback) {
 
 // 取消订单
 exports.cancelById = function (id, callback) {
-	Order.findByIdAndUpdate(id, {orderStatus: 11}, {isNew:true}, callback)
+	Order.findByIdAndUpdate(id, {orderStatus: 11}, {new:true}, callback)
 }
 // 退款中
 exports.backAmtById = function (id, callback) {
-	Order.findByIdAndUpdate(id, {orderStatus: 12}, {isNew:true}, callback)
+	Order.findByIdAndUpdate(id, {orderStatus: 12}, {new:true}, callback)
 }
 // 已退款
 exports.backAmtByIdStore = function (id, callback) {
-	Order.findByIdAndUpdate(id, {orderStatus: 13}, {isNew: true}, callback)
+	Order.findByIdAndUpdate(id, {orderStatus: 13}, {new: true}, callback)
 }
 // 改价
 exports.changeAmtById = function (id, amt, callback) {
-	Order.findByIdAndUpdate(id, {orderStatus: 13}, {isNew: true}, callback)
+	Order.findByIdAndUpdate(id, {orderStatus: 13}, {new: true}, callback)
 }
 
 

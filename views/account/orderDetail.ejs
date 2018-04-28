@@ -25,7 +25,7 @@
         </div>
         <div class="col-md-9">
             <div class="panel panel-default " >
-                <div class="panel-heading">订单号：<%=order._id %>
+                <div class="panel-heading">订单号：<%=order.orderId %>
                     <span class="padding-left20">下单时间：<%=order.create_at_ago() %></span>
                 </div>
                 <div class="panel-body " >
@@ -42,7 +42,9 @@
                             </div>
                            <div class="padding-top" style="border-top:1px dashed #e3e3e3;">
                                <p><span class="text-muted text-label">应付：</span><span class="text-label text-danger fs20">￥<%=order.needPrice %></span></p>
+                               <% if(order.orderStatus===10){ %>
                                <a class="btn btn-primary"  href="/order/pay/<%=order._id %>"  style="width:100px;">付款</a>
+                               <% } %>
                            </div>
                         </div>
                     </div>
@@ -86,4 +88,7 @@
     </div>
 </div>
 <% block('footer').append(`<script>
+jQuery(function(){
+
+})
 </script>`) %>
