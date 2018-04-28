@@ -116,7 +116,7 @@ var WxPay = {
 			formData += "<sign>" + sign + "</sign>";
 			formData += "</xml>";
 			console.log(formData, 'formData------------')
-			return resolve(formData)
+			// return resolve(formData)
 			request({
 				url: url,
 				method: "POST",
