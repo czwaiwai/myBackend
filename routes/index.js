@@ -437,6 +437,7 @@ router.use('/order/isPay', (req, res, next) => {
 			data: data
 		})
 	})
+	// 订单未找到
 	// {
 	// 	"code": 0,
 	// 	"message": "操作成功",
@@ -452,6 +453,18 @@ router.use('/order/isPay', (req, res, next) => {
 	// 		"err_code_des": "order not exist"
 	// 	}
 	// }
+	// 订单未支付
+	// { return_code: 'SUCCESS',
+	// 	return_msg: 'OK',
+	// 	appid: 'wx2b6b34e4a0735bc0',
+	// 	mch_id: '1500403302',
+	// 	nonce_str: 'x9C3FVFngjH9BKPV',
+	// 	sign: 'DBBADEA7851B39323C7CADA2A408078D',
+	// 	result_code: 'SUCCESS',
+	// 	out_trade_no: '5200000006',
+	// 	trade_state: 'NOTPAY',
+	// 	trade_state_desc: '订单未支付' }
+	// 订单已支付
 	// {
 	// 	"code": 0,
 	// 	"message": "操作成功",
