@@ -28,20 +28,28 @@
 <% block('footer').append(`<script>
  jQuery(function(){
  	  var url = '${code_url}'
+ 	  var orderId = '${order.orderId}'
+ 	  var id = ${order._id}
  	  $('#qrcode').qrcode(url);
-
  	  function poll () {
  	  	$.ajax({
  	  	  url: '/order/isPay',
  	  	  type: 'POST',
+ 	  	  data: {id: id, orderId: orderId}
  	  	  success: function (res) {
- 	  	  	setTimeout(poll, 2000)
+ 	  	  	if (res.data.result_code === 'SUCCESS') {
+            console.log(res)
+             location.href='/order/success?id='+id
+ 	  	  	} else {
+ 	  	  		setTimeout(poll, 3000)
+ 	  	  	}
  	  	  },
  	  	  error: function () {
- 	  	  	setTimeout(poll, 2000)
+ 	  	  	setTimeout(poll, 3000)
  	  	  }
  	  	})
  	  }
+ 	  setTimeout(poll, 4000)
 //    setTimeout(function(){
 //    	location.href='/order/success'
 //    },5000)

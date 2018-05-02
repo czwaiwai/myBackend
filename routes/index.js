@@ -305,7 +305,7 @@ router.get('/order/pay/:orderId', loginValid, (req, res, next) => {
 			// 请求微信接口返回二维码url
 			WxPay.sacnOrder(order.userId, '白石山商品购买',order.orderId, order._id, order.needPrice).then((data) => {
 				if (data.return_code === 'SUCCESS') {
-					res.render('order/pay', {title: '订单支付', order:newOrder, needPrice: order.needPrice, prepay_id : data.prepay_id,
+					res.render('order/pay', {title: '订单支付', order:order, needPrice: order.needPrice, prepay_id : data.prepay_id,
 						code_url: data.code_url})
 				} else {
 					return next(new Error({
@@ -430,22 +430,28 @@ router.use('/order/isPay', (req, res, next) => {
 	let id = req.body.id
 	let orderId = req.body.orderId
 	WxPay.queryOrder(orderId).then(data => {
+		console.log(data, 'queryOrder --------------------------')
 		res.json({
 			code: 0,
 			message: '操作成功',
 			data: data
 		})
 	})
-	// res.writeHead(200, {
-	// 	"Content-Type": "text/event-stream",
-	// 	"Cache-Control": "no-cache",
-	// 	"Connection": "keep-alive"
-	// })
-	// console.log('/order/isPay',Date.now())
-	// setInterval(function () {
-	// 	res.send("data:" + Date.now() + '\n\n')
-	// 	// res.write("data:" + Date.now() + '\n\n')
-	// },3000)
+	// {
+	// 	"code": 0,
+	// 	"message": "操作成功",
+	// 	"data": {
+	// 	"return_code": "SUCCESS",
+	// 		"return_msg": "OK",
+	// 		"appid": "wx2b6b34e4a0735bc0",
+	// 		"mch_id": "1500403302",
+	// 		"nonce_str": "2QI0fLaDhnzupSWL",
+	// 		"sign": "88A086F2D6EE8AAE9C8CFF88B5FDBFD0",
+	// 		"result_code": "FAIL",
+	// 		"err_code": "ORDERNOTEXIST",
+	// 		"err_code_des": "order not exist"
+	// 	}
+	// }
 })
 
 router.get('/order/success', loginValid, (req, res, next) => {

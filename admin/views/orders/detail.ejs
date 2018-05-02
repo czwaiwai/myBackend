@@ -117,8 +117,7 @@
     })
     $('#queryOrderPay').on('click', function () {
     	var $this = $(this)
-    	$.post('/order/isPay',{id: $this.data('id'),orderId: $this.data('orderId')}).done(function(res){
-        alert(JSON.stringify(re))
+    	$.post('/order/isPay',{id: $this.data('id'),orderId: $this.data('orderid')}).done(function(res){
         console.log(res)
     	})
     })

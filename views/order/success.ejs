@@ -12,10 +12,11 @@
     <li class="active"><%= title %></li>
   </ol>
   <div class="order_success section">
-    <p class="fs20"><i class="iconfont icon-success vertical-middle text-primary padding-right20" style="font-size: 50px;"></i><span class="vertical-middle">你已成功付款 <span class="bold  text-primary">1000.00</span>元</span></p>
-    <p class="text-muted">货物寄送至：上海市</p>
+    <p class="fs20"><i class="iconfont icon-success vertical-middle text-primary padding-right20" style="font-size: 50px;"></i>
+      <span class="vertical-middle">你已成功付款 <span class="bold  text-primary"><%=order.realPrice %></span>元</span></p>
+    <p class="text-muted">货物寄送至：<%=order.address.place %></p>
     <a href="/goods/index" class="btn btn-primary">再去逛逛</a>
-    <a href="/account/orderManage/12345" class="btn btn-default" >查看订单详情</a>
+    <a href="/account/orderDetail/<%=order._id %>" class="btn btn-default" >查看订单详情</a>
   </div>
 </div>
 <% block('footer').append(`<script>

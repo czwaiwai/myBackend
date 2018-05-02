@@ -2,7 +2,7 @@
  * Created by Administrator on 2018/4/14 0014.
  */
 var models = require('../models')
-var getPageNum =  require('../utils/tools').getPageNum
+var {formatFloat, getPageNum } =  require('../utils/tools')
 var Order = models.Order
 var Counters = models.Counters
 
@@ -31,12 +31,12 @@ exports.findById = function (id, callback) {
 }
 exports.savePay = function (orderId, obj, callback) {
 	Order.findOne({orderId: orderId}, (err, order) => {
-		order.update_at= new Date()
+		order.pay_at = new Date()
 		order.orderStatus = 20
 		order.type = 'wx'
 		order.payId = obj.transaction_id || ''
 		order.openId = obj.openid
-		order.realPrice = obj.total_fee
+		order.realPrice = formatFloat(obj.total_fee/100)
 		order.save(callback)
 	})
 }
