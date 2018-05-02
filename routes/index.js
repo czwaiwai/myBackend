@@ -502,7 +502,8 @@ router.get('/order/success', loginValid, (req, res, next) => {
 
 //添加到购物车
 router.post('/add2Cart', loginValid, (req, res, next) => {
-	Goods.findById(req.body._id, (err, goods) => {
+	let id = req.body.id || req.body._id
+	Goods.findById(id, (err, goods) => {
 		if (err) return  next(err)
 		let cart = {
 			goodsId: goods._id,

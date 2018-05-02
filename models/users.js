@@ -59,7 +59,7 @@ UserSchema.plugin(function(schema){
 UserSchema.index({userName: 1}, {unique: true})
 UserSchema.index({mobile: 1}, {unique: true})
 UserSchema.pre('save', function (next) {
-	this.updateTime = Date.now
+	this.update_at = Date.now
 	next()
 })
 mongoose.model('Cart',CartSchema)

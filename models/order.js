@@ -76,7 +76,7 @@ OrderSchema.virtual('statusColor').get(function() {
 	return sTxt
 })
 OrderSchema.pre('save', function (next) {
-	this.updateTime = Date.now
+	this.update_at = Date.now
 	next()
 })
 mongoose.model('Order', OrderSchema)

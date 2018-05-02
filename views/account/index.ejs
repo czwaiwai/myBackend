@@ -36,7 +36,7 @@ max-width:100%;
         <li><a href="/account/index">用户中心</a></li>
         <li class="active"><%= title %></li>
     </ol>
-    <div class="row">
+    <div id="accountIndex" class="row">
         <div class="col-md-3">
             <% include ../navbar/accountLeftNav.ejs %>
         </div>
@@ -70,6 +70,9 @@ max-width:100%;
                                   <ul class="good_sub_img_ul clearfix">
                                     <% item.goods.forEach(sub => { %>
                                       <li class="good_sub_img_item"><img  src="<%=sub.imgTmb %>" ></li>
+                                      <% if (item.goods.length === 1 ) { %>
+                                        <li class="good_sub_img_item" style="width: 188px;text-align: left;padding-top: 5px;border: none;"><%=sub.name %></li>
+                                      <% }%>
                                     <% }) %>
                                   </ul>
                                 </td>
@@ -78,8 +81,11 @@ max-width:100%;
                                     <span class="<%=item.statusColor %>"><%=item.statusName %></span>
                                 </td>
                                 <td class="text-center padding">
-                                    <a class="btn btn-primary btn-sm" href="/order/pay/<%=item._id %>" >付款</a><br />
-                                    <a href="/account/orderDetail/<%=item._id %>" class="btn btn-link">查看</a>
+                                    <a class="btn btn-primary btn-sm" href="/order/pay/<%=item._id %>" >付款</a>
+                                    <p style="margin:0;">
+                                        <a href="/account/orderDetail/<%=item._id %>" class="btn btn-link">查看</a>
+                                        <a href="/account/orderCancel/<@=item._id @>" class="btn btn-link normal_link btn_cancel">取消</a>
+                                    </p>
                                 </td>
                             </tr>
                             <%})%>
@@ -91,4 +97,19 @@ max-width:100%;
     </div>
 </div>
 <% block('footer').append(`<script>
+jQuery(function(){
+    $('#accountIndex').on('click','.btn_cancel',function(e){
+      e.preventDefault()
+      var $this = $(this)
+      $.confirm('你确定要取消这个订单么','提示',function(res) {
+        if(res) {
+          $.post($this.attr('href')).done(function(res){
+            console.log(res)
+            $this.closest('.order_item_body').find('.status_txt').text('已取消')
+          })
+        }
+      })
+    })
+})
+
 </script>`) %>
