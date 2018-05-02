@@ -35,7 +35,7 @@
  	  	$.ajax({
  	  	  url: '/order/isPay',
  	  	  type: 'POST',
- 	  	  data: 'id='+id+'&orderId='+orderId
+ 	  	  data: 'id='+id+'&orderId='+orderId,
  	  	  success: function (res) {
  	  	  	if (res.data.result_code === 'SUCCESS') {
             console.log(res)
