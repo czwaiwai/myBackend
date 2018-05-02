@@ -11,7 +11,7 @@ module.exports.loginValid = function (req, res, next) {
 	} else{
 		if (req.isAjax) {
 			return res.json({
-				code:0,
+				code:-1,
 				message: '你还没有登录哦~',
 				data: {}
 			})

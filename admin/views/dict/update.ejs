@@ -34,11 +34,12 @@
             <% } %>
           <% } %>
           <% if(dict.valueType === 'array'){ %>
-            <%  dict.value.forEach(item => { %>
+            <%  dict.value.forEach((item, index)=> { %>
             <div class="form-group">
               <label for="path" class="col-sm-2 control-label"><%=item.name%></label>
               <div class="col-sm-10">
-                <input name="<%=item.name %>" class="form-control" value="<%=item.value || ''%>"  placeholder="属性值">
+                <input name="value[<%=index%>][name]" type="hidden" value="<%=item.name %>" >
+                <input name="value[<%=index%>][value]" class="form-control" value="<%=item.value || ''%>"  placeholder="属性值">
               </div>
             </div>
             <% }) %>

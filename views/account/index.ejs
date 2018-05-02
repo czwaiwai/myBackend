@@ -84,7 +84,7 @@ max-width:100%;
                                     <a class="btn btn-primary btn-sm" href="/order/pay/<%=item._id %>" >付款</a>
                                     <p style="margin:0;">
                                         <a href="/account/orderDetail/<%=item._id %>" class="btn btn-link">查看</a>
-                                        <a href="/account/orderCancel/<@=item._id @>" class="btn btn-link normal_link btn_cancel">取消</a>
+                                        <a href="/account/orderCancel/<%=item._id %>" class="btn btn-link normal_link btn_cancel">取消</a>
                                     </p>
                                 </td>
                             </tr>
@@ -105,7 +105,7 @@ jQuery(function(){
         if(res) {
           $.post($this.attr('href')).done(function(res){
             console.log(res)
-            $this.closest('.order_item_body').find('.status_txt').text('已取消')
+            $this.closest('.tr_border').remove()
           })
         }
       })

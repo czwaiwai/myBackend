@@ -45,6 +45,9 @@
                                <% if(order.orderStatus===10){ %>
                                <a class="btn btn-primary"  href="/order/pay/<%=order._id %>"  style="width:100px;">付款</a>
                                <% } %>
+                               <% if(order.orderStatus >= 20 ) { %>
+                                 <p style="border-top:1px dashed #e3e3e3;"><span class="text-muted text-label">实付：</span><span class="text-label text-success fs20">￥<%=order.realPrice %></span></p>
+                               <% }%>
                            </div>
                         </div>
                     </div>
@@ -53,6 +56,7 @@
             <div class="panel panel-default " style="height:auto;">
                 <div class="panel-heading">商品
                     <span class="padding-left20 <%=order.statusColor %>"><%=order.statusName%></span>
+
                 </div>
                 <div class="panel-body " >
                     <div style="margin-top:-10px;">

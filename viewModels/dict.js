@@ -20,7 +20,7 @@ exports.findAll = function (callback) {
 	Dict.find({}, callback)
 }
 exports.update = function (id, obj, callback) {
-	Dict.findByIdAndUpdate(id, obj, callback)
+	Dict.findByIdAndUpdate(id, obj, {new: true}, callback)
 }
 exports.remove = function (id, callback) {
 	Dict.findByIdAndRemove(id, callback)
