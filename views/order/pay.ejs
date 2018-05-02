@@ -29,7 +29,7 @@
  jQuery(function(){
  	  var url = '${code_url}'
  	  var orderId = '${order.orderId}'
- 	  var id = ${order._id}
+ 	  var id = '${order._id}'
  	  $('#qrcode').qrcode(url);
  	  function poll () {
  	  	$.ajax({

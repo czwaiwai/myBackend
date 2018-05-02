@@ -452,6 +452,32 @@ router.use('/order/isPay', (req, res, next) => {
 	// 		"err_code_des": "order not exist"
 	// 	}
 	// }
+	// {
+	// 	"code": 0,
+	// 	"message": "操作成功",
+	// 	"data": {
+	// 	"return_code": "SUCCESS",
+	// 		"return_msg": "OK",
+	// 		"appid": "wx2b6b34e4a0735bc0",
+	// 		"mch_id": "1500403302",
+	// 		"nonce_str": "oGhuTBn5iX5YT9l0",
+	// 		"sign": "344731F36894202102041BD99399E2CF",
+	// 		"result_code": "SUCCESS",
+	// 		"openid": "o5W010h6MfsZS-j1ZEUE-ZwKPelA",
+	// 		"is_subscribe": "Y",
+	// 		"trade_type": "NATIVE",
+	// 		"bank_type": "CFT",
+	// 		"total_fee": "1",
+	// 		"fee_type": "CNY",
+	// 		"transaction_id": "4200000132201805020809878493",
+	// 		"out_trade_no": "5200000008",
+	// 		"attach": "5ab3bff3d0bbdf1871e62861",
+	// 		"time_end": "20180502110841",
+	// 		"trade_state": "SUCCESS",
+	// 		"cash_fee": "1",
+	// 		"trade_state_desc": "支付成功"
+	//   }
+	// }
 })
 
 router.get('/order/success', loginValid, (req, res, next) => {
