@@ -29,6 +29,19 @@
  jQuery(function(){
  	  var url = '${code_url}'
  	  $('#qrcode').qrcode(url);
+
+ 	  function poll () {
+ 	  	$.ajax({
+ 	  	  url: '/order/isPay',
+ 	  	  type: 'POST',
+ 	  	  success: function (res) {
+ 	  	  	setTimeout(poll, 2000)
+ 	  	  },
+ 	  	  error: function () {
+ 	  	  	setTimeout(poll, 2000)
+ 	  	  }
+ 	  	})
+ 	  }
 //    setTimeout(function(){
 //    	location.href='/order/success'
 //    },5000)

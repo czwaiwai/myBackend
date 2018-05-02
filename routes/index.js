@@ -426,11 +426,21 @@ router.post('/order/notify', (req, res, next) => {
 
 // 查询数据库，查看订单支付状态值是否更改
 router.use('/order/isPay', (req, res, next) => {
-	res.writeHead(200, {
-		"Content-Type": "text/event-stream",
-		"Cache-Control": "no-cache",
-		"Connection": "keep-alive"
+	// let resData = req.body.xml
+	let id = req.body.id
+	let orderId = req.body.orderId
+	Order.queryOrder(orderId).then(data => {
+		res.json({
+			code: 0,
+			message: '操作成功',
+			data: data
+		})
 	})
+	// res.writeHead(200, {
+	// 	"Content-Type": "text/event-stream",
+	// 	"Cache-Control": "no-cache",
+	// 	"Connection": "keep-alive"
+	// })
 	// console.log('/order/isPay',Date.now())
 	// setInterval(function () {
 	// 	res.send("data:" + Date.now() + '\n\n')

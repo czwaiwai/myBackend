@@ -82,15 +82,46 @@ var WxPay = {
 		return new Promise((resolve, reject) => {
 			let url = 'https://api.mch.weixin.qq.com/pay/orderquery'
 			let appid = wxConfig.appID;
+			let key = wxConfig.key;
 			let	mch_id = wxConfig.mchID;
 			let nonce_str = this.createNonceStr()
+			let stringA = `appid=${appid}&mch_id=${mch_id}&nonce_str=${nonce_str}&out_trade_no=${id}`;
+			let	stringSignTemp = stringA + "&key="+key; //注：key为商户平台设置的密钥key
+			let	sign = this.md5(stringSignTemp).toUpperCase();  //注：MD5签名方式
 			let formData = `<xml>
 <appid>${appid}</appid>
 <mch_id>${mch_id}</mch_id>
 <nonce_str>${nonce_str}</nonce_str>
 <out_trade_no>${id}</out_trade_no>
-<sign>FDD167FAA73459FD921B144BAF4F4CA2</sign>
+<sign>${sign}</sign>
 </xml>`
+			request({
+				url: url,
+				method: "POST",
+				body: formData
+			}, function(error, response, body) {
+				if (error) {
+					console.log(error, 'error')
+					return reject(error)
+				}
+				console.log(body, '---------原始data---------------')
+				if (!error && response.statusCode == 200) {
+					xml2js.parseString(body,{
+						normalize: true,     // Trim whitespace inside text nodes
+						normalizeTags: true, // Transform tags to lowercase
+						explicitArray: false // Only put nodes in array if >1
+					}, (err, xml) => {
+						if(err) {
+							reject(err)
+						}
+						let data = xml.xml
+						console.log(data, '------covert - data------')
+						resolve(data)
+					})
+				} else {
+					console.log(body, '----------------')
+				}
+			})
 		})
 	},
 	/*

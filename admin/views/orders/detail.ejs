@@ -41,6 +41,7 @@
                         <a id="changeAmt"  class="btn btn-primary btn-sm" data-url="/order/changeAmt/<%=order._id %>" href="javascript:void(0)" >改价</a>
                         <a id="backAmt" class="btn btn-danger btn-sm" data-url="/order/backAmt/<%=order._id %>"  href="javascript:void(0)" >退款</a>
                         <a id="linkTrain" class="btn btn-info btn-sm" data-url="/order/linkTrain/<%=order._id %>"   href="javascript:void(0)" >关联物流信息</a>
+                        <a id="queryOrderPay" class="btn btn-info btn-sm" data-id="<%=order.id %>" data-orderid="<%=order.orderId %>" data-url="/order/linkTrain/<%=order._id %>"   href="javascript:void(0)" >查询订单支付状况</a>
                     </div>
                 </div>
             </div>
@@ -113,6 +114,13 @@
       $.prompt('请输入你要关联的物流单号','关联物流单号').then(function(res){
       	console.log(res)
       })
+    })
+    $('#queryOrderPay').on('click', function () {
+    	var $this = $(this)
+    	$.post('/order/isPay',{id: $this.data('id'),orderId: $this.data('orderId')}).done(function(res){
+        alert(JSON.stringify(re))
+        console.log(res)
+    	})
     })
   })
 </script>`) %>
