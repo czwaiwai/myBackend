@@ -4,27 +4,43 @@
 var express = require('express');
 let router = express.Router();
 var ccap=require('../utils/verifycode');
+var _ = require('lodash');
 // var schema=require('async-validator');
 // var User =require('../models/user');
 /* GET home page. */
 let EventProxy = require('eventproxy')
-let {Page, User, Catalog, Goods, Article, Cart} = require('../viewModels')
+let {Page, User, Catalog, Goods, Article, Cart, Dict} = require('../viewModels')
 
 router.get('/', (req, res)=> {
 	//console.log(req.session.user,"这里可以取到session");
 	res.redirect('/index')
-	
 });
 router.get('/index', (req,res,next) => {
-	let ep = EventProxy.create('goodTypes', 'goods', 'news', 'articles', (goodTypes, goods, news, articles) => {
-		res.render('app/index',{title:"首页", goodTypes, goods, news, articles});
+	let ep = EventProxy.create('goodTypes', 'goods', 'news', 'articles','dicts', (goodTypes, goods, news, articles, dicts) => {
+		let info = _.keyBy(dicts,'name')
+		console.log(info, 'info -- - - ----------------------')
+		res.render('app/index',{title:"首页", goodTypes, goods, news, articles,
+			homeCompany: info.companyProfile.value,
+			homeBanner: info.homeBanner.value,
+			homeBlockImgs: info.homeBlockImgs.value
+		})
 	})
 	ep.fail(next)
 	Catalog.getChildrenByName('goods',ep.done('goodTypes'))
 	Article.findTopArticle('news', ep.done('news'))
 	Article.findTopArticle('articles', ep.done('articles'))
+	Dict.findByGroup('home',ep.done('dicts'))
 	Goods.getHotGoods (ep.done('goods'))
-
+	
+	
+	// let ep = EventProxy.create('goodTypes', 'goods', 'news', 'articles', (goodTypes, goods, news, articles) => {
+	// 	res.render('app/index',{title:"首页", goodTypes, goods, news, articles});
+	// })
+	// ep.fail(next)
+	// Catalog.getChildrenByName('goods',ep.done('goodTypes'))
+	// Article.findTopArticle('news', ep.done('news'))
+	// Article.findTopArticle('articles', ep.done('articles'))
+	// Goods.getHotGoods (ep.done('goods'))
 })
 router.get('/type', (req, res)=> {
 	Catalog.getChildrenByName('goods', (err,catalogs) => {

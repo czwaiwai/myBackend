@@ -1,5 +1,5 @@
 <% layout('layout/appLayout') %>
-<div class="page">
+<div class="page has_head">
   <div class="page__hd weui-flex">
     <div style="width:60px;padding-left:10px;">
       <a href="/app/index">首页</a>
@@ -7,10 +7,39 @@
     <div class="weui-flex__item">
       <h1 class="title"><%=title %></h1>
     </div>
-    <div style="width:60px;"></div>
+    <div class="text-right" style="width:60px;padding-right:10px;">
+      <a>新增</a>
+    </div>
   </div>
   <div class="page__bd">
-
+    <div class="margin-top weui-panel weui-panel_access">
+      <div class="weui-panel__bd">
+        <a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
+          <div class="weui-media-box__hd">
+            姓名
+          </div>
+          <div class="weui-media-box__bd">
+            <h4 class="weui-media-box__title">13728905705</h4>
+            <p class="weui-media-box__desc">由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。</p>
+          </div>
+          <div class="weui-media-box__ft">
+            删除
+          </div>
+        </a>
+        <a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
+          <div class="weui-media-box__hd">
+            姓名
+          </div>
+          <div class="weui-media-box__bd">
+            <h4 class="weui-media-box__title">标题二</h4>
+            <p class="weui-media-box__desc">由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。</p>
+          </div>
+          <div class="weui-media-box__ft">
+            删除
+          </div>
+        </a>
+      </div>
+    </div>
   </div>
   <div class="page__ft">
 
