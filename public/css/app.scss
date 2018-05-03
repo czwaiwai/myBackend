@@ -1,0 +1,49 @@
+//@import './frozenUI/frozenui.css';
+@import './fonts/shop/iconfont.css';
+//@import './swipeslider';
+@import '../app/css/jquery-weui.css';
+@import '../app/css/weui.css';
+@import './tool';
+* {
+	box-sizing: border-box;
+}
+a {
+	color:#656565;
+}
+body, .page {
+	background:#f4f4f4;
+}
+.page.has_tab {
+	padding-bottom:50px;
+}
+.main-color{
+	color:#59b210;
+}
+.text-muted{
+	color:#989898;
+}
+.swiper-slide img{
+	max-width:100%;
+	vertical-align: top;
+}
+.light-bg {
+	background:#FFF;
+}
+.page__hd h1.title  {
+	text-align:center;
+	font-size:20px;
+}
+.page__hd {
+	position:fixed;
+	width:100%;
+	top:0;
+	left:0;
+	background:#FFF;
+	height:43px;
+	line-height:43px;
+	z-index: 100;
+	border-bottom:1px solid #e3e3e3;
+}
+.has_head {
+	padding-top:44px;
+}

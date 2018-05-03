@@ -3,65 +3,122 @@
 .navside {
     width: 81px;
     position: fixed;
-    top: 44px;
+    top: 0px;
     font-size: 13px;
     height: 100%;
     left: 0;
     bottom: 55px;
     background: #FFF;
     overflow-y: auto;
+    padding-top:20px;
+}
+.navside .navside_ul{
+  list-style:none;
+}
+.navside .navside_ul .navside_item{
+  font-size:14px;
+    height: 40px;
+    text-align:center;
+    line-height:40px;
+}
+.navside_item a{
+  color:#131313;
+  display:block;
+  height:100%;
+}
+.navside_item.active a{
+  background:#04BE02;
+  color:#FFF;
+  font-weight:bold;
+}
+.goods_list_ul {
+  list-style:none;
+}
+.goods_list_ul li {
+    float: left;
+    width: 50%;
+    margin-bottom: 5px;
+}
+.goods_list_ul li a {
+  border:1px solid #e3e3e3;
+  background:#FFF;
+  display:block;
+  margin-left:5px;
+  color:#656565;
+}
+.goods_list_ul .goods_img {
+  padding-top:100%;
+  background-size:cover;
 }
 </style>`)%>
-<div class="page">
+<div class="page has_tab">
   <div class="navside">
-    <ul class="ui-list ui-list-text ui-list-active ui-list-cover ui-border-tb">
+    <ul class="navside_ul">
+      <li class="navside_item <%=!query.catalog?' active':''%>"  >
+        <a href="/app/type" >全部商品</a>
+       </li>
       <% goodTypes.forEach(function(item) { %>
-        <li class="ui-border-t ">
-          <a href="?catalog=<%=item.name %>" ><%=item.nameCn %></a>
-        </li>
+      <li class="navside_item <%=query.catalog === item.name?' active':'' %>" >
+        <a href="?catalog=<%=item.name %>" ><%=item.nameCn %></a>
+      </li>
       <% }) %>
     </ul>
   </div>
-  <section class="ui-panel " style="padding-left:81px;" >
+  <div class="page__bd">
+    <div style="padding-left:81px;padding-top:10px;padding-right:5px;">
+      <ul class="goods_list_ul clearfix" style="">
+        <% goods.forEach(function(item){  %>
+        <li class="goods_item">
+          <a href="/app/goods/detail/<%=item._id %>" class="thumbnail">
+            <div class="goods_img" style="background:url(<%=item.imgTmb %>) no-repeat center;background-size:cover;"></div>
+            <p class="padding-left5 fs14"><%=item.name%></p>
+            <p class="padding-left5 fs16 weui-cell_warn">￥<%=item.sellPrice%></p>
+          </a>
+        </li>
+        <% }) %>
+      </ul>
+    </div>
+  </div>
+  <!--<section class="ui-panel " style="padding-left:81px;" >-->
 
-    <ul class="ui-grid-halve" style="padding-left: 5px;padding-right: 0px;">
-      <% goods.forEach(function(item){  %>
-      <li>
-        <a href="/goods/detail/<%=item._id %>" class="thumbnail">
-        <div class="ui-grid-halve-img">
-          <span style="background-image:url(<%=item.imgTmb %>) no-repeat center"></span>
-          <p><%=item.name%></p>
-        </div>
-        </a>
-      </li>
-      <!--<div  class="col-xs-6 col-sm-4 col-md-4  col-lg-3">-->
+    <!--<ul class="ui-grid-halve" style="padding-left: 5px;padding-right: 0px;">-->
+      <!--<% goods.forEach(function(item){  %>-->
+      <!--<li>-->
         <!--<a href="/goods/detail/<%=item._id %>" class="thumbnail">-->
-          <!--<div style="">-->
-            <!--<img data-src="holder.js/100%x200" src="<%=item.imgTmb %>" alt="100%x200" style="width: 100%; display: block;" >-->
-          <!--</div>-->
-          <!--<div class="caption">-->
-            <!--<h5 class="dot text-center"><%=item.name%></h5>-->
-            <!--<p class="text-center">￥<%=item.sellPrice %></p>-->
-          <!--</div>-->
+        <!--<div class="ui-grid-halve-img">-->
+          <!--<span style="background-image:url(<%=item.imgTmb %>) no-repeat center"></span>-->
+          <!--<p><%=item.name%></p>-->
+        <!--</div>-->
         <!--</a>-->
-      <!--</div>-->
-      <% }) %>
+      <!--</li>-->
+      <!--&lt;!&ndash;<div  class="col-xs-6 col-sm-4 col-md-4  col-lg-3">&ndash;&gt;-->
+        <!--&lt;!&ndash;<a href="/goods/detail/<%=item._id %>" class="thumbnail">&ndash;&gt;-->
+          <!--&lt;!&ndash;<div style="">&ndash;&gt;-->
+            <!--&lt;!&ndash;<img data-src="holder.js/100%x200" src="<%=item.imgTmb %>" alt="100%x200" style="width: 100%; display: block;" >&ndash;&gt;-->
+          <!--&lt;!&ndash;</div>&ndash;&gt;-->
+          <!--&lt;!&ndash;<div class="caption">&ndash;&gt;-->
+            <!--&lt;!&ndash;<h5 class="dot text-center"><%=item.name%></h5>&ndash;&gt;-->
+            <!--&lt;!&ndash;<p class="text-center">￥<%=item.sellPrice %></p>&ndash;&gt;-->
+          <!--&lt;!&ndash;</div>&ndash;&gt;-->
+        <!--&lt;!&ndash;</a>&ndash;&gt;-->
+      <!--&lt;!&ndash;</div>&ndash;&gt;-->
+      <!--<% }) %>-->
 
-      <li>
-        <div class="ui-grid-halve-img">
-          <span style="background-image:url(http://placeholder.qiniudn.com/290x160)"></span>
-        </div>
-      </li>
-      <li>
-        <div class="ui-grid-halve-img">
-          <span style="background-image:url(http://placeholder.qiniudn.com/290x160)"></span>
-        </div>
-      </li>
-      <li>
-        <div class="ui-grid-halve-img">
-          <span style="background-image:url(http://placeholder.qiniudn.com/290x160)"></span>
-        </div>
-      </li>
-    </ul>
-  </section>
+      <!--<li>-->
+        <!--<div class="ui-grid-halve-img">-->
+          <!--<span style="background-image:url(http://placeholder.qiniudn.com/290x160)"></span>-->
+        <!--</div>-->
+      <!--</li>-->
+      <!--<li>-->
+        <!--<div class="ui-grid-halve-img">-->
+          <!--<span style="background-image:url(http://placeholder.qiniudn.com/290x160)"></span>-->
+        <!--</div>-->
+      <!--</li>-->
+      <!--<li>-->
+        <!--<div class="ui-grid-halve-img">-->
+          <!--<span style="background-image:url(http://placeholder.qiniudn.com/290x160)"></span>-->
+        <!--</div>-->
+      <!--</li>-->
+    <!--</ul>-->
+  <!--</section>-->
 </div>

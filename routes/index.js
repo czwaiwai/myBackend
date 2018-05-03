@@ -431,6 +431,7 @@ router.use('/order/isPay', (req, res, next) => {
 	let orderId = req.body.orderId
 	WxPay.queryOrder(orderId).then(data => {
 		console.log(data, 'queryOrder --------------------------')
+		let {return_code, return_msg , result_code, out_trade_no, trade_state, trade_state_desc} = data
 		res.json({
 			code: 0,
 			message: '操作成功',

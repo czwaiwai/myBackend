@@ -2,47 +2,80 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
   <meta name="format-detection" content="telephone=no">
   <title>白石山农场</title>
-  <script type="text/javascript" src="http://tajs.qq.com/stats?sId=37342703" charset="UTF-8"></script>
-  <link rel="stylesheet" href="/css/mainMobile.css">
+  <!--<script type="text/javascript" src="http://tajs.qq.com/stats?sId=37342703" charset="UTF-8"></script>-->
+  <link rel="stylesheet" href="/css/app.css">
   <%- block('header') %>
 </head>
 
-<body ontouchstart="">
-<header class="ui-header ui-header-positive ui-border-b">
-  <i class="ui-icon-return" onclick="history.back()"></i>
-  <h1><%=title %> </h1>
-</header>
-<footer class="ui-footer ui-footer-btn">
-  <ul class="ui-tiled ui-border-t">
-    <li class="footer_item <% if(basePath=='/app/index'){ %>active<% } %>" >
-      <a   href="/app/index">
-        <i class="iconfont icon-store"></i>
-        <div>首页</div>
-      </a>
-    </li>
-    <li class="footer_item <% if(basePath=='/app/type'){ %>active<% } %>">
-      <a href="/app/type">
-        <i class="iconfont icon-category"></i>
-        <div>全部分类</div>
-      </a>
-    </li>
-    <li class="footer_item <% if(basePath=='/app/cart'){ %>active<% } %>">
-      <a href="/app/cart">
-        <i class="iconfont icon-cart"></i>
-        <div>购物车</div>
-      </a>
-    </li>
-    <li class="footer_item <% if(basePath=='/app/center'){ %>active<% } %>">
-      <a href="/app/center">
-        <i class="iconfont icon-account"></i>
-        <div>个人中心</div>
-      </a>
-    </li>
-  </ul>
-</footer>
+<body ontouchstart>
+<div class="mainPage">
+  <%- body %>
+  <% if (['/app/index', '/app/type', '/app/cart', '/app/center'].indexOf(basePath) > -1) { %>
+  <div class="weui-tabbar" style="position:fixed">
+    <a href="/app/index" class="weui-tabbar__item  <% if(basePath=='/app/index'){ %>weui-bar__item--on<% } %>">
+      <div class="weui-tabbar__icon">
+        <i class="iconfont icon-store weui-tabbar__label" style="line-height: 30px;"></i>
+      </div>
+      <p class="weui-tabbar__label">首页</p>
+    </a>
+    <a href="/app/type" class="weui-tabbar__item <% if(basePath=='/app/type'){ %>weui-bar__item--on<% } %>" >
+      <div class="weui-tabbar__icon">
+        <i class="iconfont icon-category weui-tabbar__label" style="line-height: 30px;"></i>
+      </div>
+      <p class="weui-tabbar__label">全部分类</p>
+    </a>
+    <a href="/app/cart" class="weui-tabbar__item  <% if(basePath=='/app/cart'){ %>weui-bar__item--on<% } %>">
+      <span class="weui-badge" style="position: absolute;top: 0px;right: 2em;">8</span>
+      <div class="weui-tabbar__icon">
+        <i class="iconfont  icon-cart weui-tabbar__label" style="line-height: 30px;"></i>
+      </div>
+      <p class="weui-tabbar__label">购物车</p>
+    </a>
+    <a href="/app/center" class="weui-tabbar__item <% if(basePath=='/app/center'){ %>weui-bar__item--on<% } %>">
+      <div class="weui-tabbar__icon">
+        <i class="iconfont icon-account weui-tabbar__label" style="line-height: 30px;"></i>
+      </div>
+      <p class="weui-tabbar__label">个人中心</p>
+    </a>
+  </div>
+  <% } %>
+</div>
+<!--<header class="ui-header ui-header-positive ui-border-b">-->
+  <!--<i class="ui-icon-return" onclick="history.back()"></i>-->
+  <!--<h1><%=title %> </h1>-->
+<!--</header>-->
+<!--<footer class="ui-footer ui-footer-btn">-->
+  <!--<ul class="ui-tiled ui-border-t">-->
+    <!--<li class="footer_item <% if(basePath=='/app/index'){ %>active<% } %>" >-->
+      <!--<a   href="/app/index">-->
+        <!--<i class="iconfont icon-store"></i>-->
+        <!--<div>首页</div>-->
+      <!--</a>-->
+    <!--</li>-->
+    <!--<li class="footer_item <% if(basePath=='/app/type'){ %>active<% } %>">-->
+      <!--<a href="/app/type">-->
+        <!--<i class="iconfont icon-category"></i>-->
+        <!--<div>全部分类</div>-->
+      <!--</a>-->
+    <!--</li>-->
+    <!--<li class="footer_item <% if(basePath=='/app/cart'){ %>active<% } %>">-->
+      <!--<a href="/app/cart">-->
+        <!--<i class="iconfont icon-cart"></i>-->
+        <!--<div>购物车</div>-->
+      <!--</a>-->
+    <!--</li>-->
+    <!--<li class="footer_item <% if(basePath=='/app/center'){ %>active<% } %>">-->
+      <!--<a href="/app/center">-->
+        <!--<i class="iconfont icon-account"></i>-->
+        <!--<div>个人中心</div>-->
+      <!--</a>-->
+    <!--</li>-->
+  <!--</ul>-->
+<!--</footer>-->
 <!--<div class="visible-xs ">-->
   <!--<div class="xs_footer   flex_box text-center">-->
     <!--<a class="flex_item " href="/">-->
@@ -63,10 +96,17 @@
     <!--</a>-->
   <!--</div>-->
 <!--</div>-->
-<section class="ui-container">
-  <%- body %>
-</section><!-- /.ui-container-->
-<script src="/js/jquery-1.12.0.min.js"></script>
+
+
+<script src="/app/js/lib/jquery-2.1.4.js"></script>
+<script src="/app/js/lib/fastclick.js"></script>
+<script>
+  jQuery(function(){
+		FastClick.attach(document.body);
+  })
+</script>
+<script src="/app/js/lib/jquery-weui.js"></script>
+<script src="/app/js/app.js"></script>
 <%- block('footer') %>
 </body>
 </html>

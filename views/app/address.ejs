@@ -1,0 +1,23 @@
+<% layout('layout/appLayout') %>
+<div class="page">
+  <div class="page__hd weui-flex">
+    <div style="width:60px;padding-left:10px;">
+      <a href="/app/index">首页</a>
+    </div>
+    <div class="weui-flex__item">
+      <h1 class="title"><%=title %></h1>
+    </div>
+    <div style="width:60px;"></div>
+  </div>
+  <div class="page__bd">
+
+  </div>
+  <div class="page__ft">
+
+  </div>
+</div>
+<% block('footer').append(`<script>
+jQuery(function(){
+
+})
+</script>`)%>

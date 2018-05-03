@@ -1,66 +1,202 @@
 <% layout('layout/appLayout') %>
-<div class="page">
-  <div id="full_feature" class="swipslider">
-    <ul class="sw-slides">
-      <li class="sw-slide">
-        <img src="/upload/banner1.jpg" alt="Summer beach concept">
+<% block('header').append(`<style>
+.index_goods_wrap {
+  overflow: hidden;
+
+  padding:10px 3px;
+}
+.index_goods_list {
+  list-style: none;
+  margin:0;
+  padding:0;
+}
+.index_goods_list li.item {
+  float:left;
+  width:25%;
+  text-align:center;
+  height:55px;
+  line-height:55px;
+  position:relative;
+  margin-bottom:5px;
+}
+.index_goods_list li.item > div {
+  margin: 3px;
+  background:#f4f4f4;
+}
+/*.index_goods_list li.item:after{*/
+    /*content: "";*/
+    /*position: absolute;*/
+    /*width: 100%;*/
+    /*left: 0;*/
+    /*top: 0;*/
+    /*height: 100%;*/
+    /*border-right: 1px solid #e3e3e3;*/
+    /*border-bottom: 1px solid #e3e3e3;*/
+/*}*/
+.product_list_wrap {
+  padding:10px 5px 0;
+}
+.product_list_wrap  .product_list {
+  list-style: none;
+  margin:0;
+  padding:0;
+
+}
+.product_list .pro_item {
+   float:left;
+   padding:5px;
+   width:50%;
+
+}
+</style>`) %>
+<div class="page has_tab" >
+  <div class="light-bg">
+    <div class="swiper-container" data-space-between='10' data-pagination='.swiper-pagination' data-autoplay="1000">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide"><img src="/upload/banner1.jpg" alt=""></div>
+        <div class="swiper-slide"><img src="/upload/banner2.jpg" alt=""></div>
+        <div class="swiper-slide"><img src="/upload/banner3.jpg" alt=""></div>
+      </div>
+    </div>
+    <div class="fs13">欢迎您的到来</div>
+  </div>
+  <div class="index_goods_wrap margin-top light-bg">
+    <ul class="index_goods_list clearfix ">
+      <li class="item">
+        <div>畜牧系列</div>
       </li>
-      <li class="sw-slide">
-        <img src="/upload/banner2.jpg" alt="Lang from Yie Ar Kung Fu">
+      <li class="item">
+        <div>家禽系列</div>
       </li>
-      <li class="sw-slide">
-        <img src="/upload/banner3.jpg" alt="Tiny Tina">
+      <li class="item">
+        <div>水产系列</div>
+      </li>
+      <li class="item">
+        <div>瓜果</div>
+      </li>
+      <li class="item">
+        <div>有机蔬菜</div>
+      </li>
+      <li class="item">
+        <div>农副产品</div>
+      </li>
+      <li class="item">
+        <div>饲料系列</div>
+      </li>
+      <li class="item">
+        <div>旅游接待</div>
       </li>
     </ul>
   </div>
-  <section class="ui-panel" >
-    <ul class="ui-row-flex">
-      <li class="ui-col ">畜牧</li>
-      <li class="ui-col ">家禽</li>
-      <li class="ui-col ">水产</li>
-      <li class="ui-col ">瓜果</li>
+
+  <div class="product_list_wrap light-bg margin-top">
+    <h3 class="title main-color text-center padding-bottom5">推荐产品</h3>
+    <ul class="product_list clearfix">
+      <li class="pro_item">
+        <div class="pro_img" style="padding-top:100%;background:url('http://www.bssfood.com/upload/20180426/iaIYLL-Ztd7JvyfzSfvMAUfY_$date20180426_$600x680_$sma_330x374.jpg');background-size:cover;">
+        </div>
+        <div class="pro_name">
+          <p class="fs14">土鸡</p>
+          <p class="text-danger">￥20.0</p>
+        </div>
+      </li>
+      <li class="pro_item">
+        <div class="pro_img" style="padding-top:100%;background:url('http://www.bssfood.com/upload/20180426/iaIYLL-Ztd7JvyfzSfvMAUfY_$date20180426_$600x680_$sma_330x374.jpg');background-size:cover;">
+        </div>
+        <div class="pro_name">
+          <p>土鸡</p>
+          <p>￥20.0</p>
+        </div>
+      </li>
+      <!--<li class="pro_item">-->
+        <!--<div class="pro_img">-->
+          <!--<img src="http://www.bssfood.com/upload/20180426/iaIYLL-Ztd7JvyfzSfvMAUfY_$date20180426_$600x680_$sma_330x374.jpg">-->
+        <!--</div>-->
+        <!--<div class="pro_name">-->
+          <!--<p>土鸡</p>-->
+          <!--<p>￥20.0</p>-->
+        <!--</div>-->
+      <!--</li>-->
     </ul>
-    <ul class="ui-row-flex">
-      <li class="ui-col ">有机蔬菜</li>
-      <li class="ui-col ">农副产品</li>
-      <li class="ui-col ">饲料</li>
-      <li class="ui-col ">旅游接待</li>
-    </ul>
-  </section>
-  <section class="ui-panel">
-    <p class="padding-left">推荐产品</p>
-    <ul class="ui-grid-halve">
-      <li>
-        <div class="ui-grid-halve-img">
-          <span style="background-image:url(http://placeholder.qiniudn.com/290x160)"></span>
-        </div>
-      </li>
-      <li>
-        <div class="ui-grid-halve-img">
-          <span style="background-image:url(http://placeholder.qiniudn.com/290x160)"></span>
-        </div>
-      </li>
-      <li>
-        <div class="ui-grid-halve-img">
-          <span style="background-image:url(http://placeholder.qiniudn.com/290x160)"></span>
-        </div>
-      </li>
-      <li>
-        <div class="ui-grid-halve-img">
-          <span style="background-image:url(http://placeholder.qiniudn.com/290x160)"></span>
-        </div>
-      </li>
-      <li>
-        <div class="ui-grid-halve-img">
-          <span style="background-image:url(http://placeholder.qiniudn.com/290x160)"></span>
-        </div>
-      </li>
-    </ul>
-  </section>
+  </div>
+  <!--<div class="weui-flex">-->
+    <!--<div class="weui-flex__item">畜牧系列</div>-->
+    <!--<div class="weui-flex__item">家禽系列</div>-->
+    <!--<div class="weui-flex__item">水产系列</div>-->
+    <!--<div class="weui-flex__item">瓜果</div>-->
+  <!--</div>-->
+  <!--<div class="weui-flex">-->
+    <!--<div class="weui-flex__item">有机蔬菜</div>-->
+    <!--<div class="weui-flex__item">农副产品</div>-->
+    <!--<div class="weui-flex__item">饲料系列</div>-->
+    <!--<div class="weui-flex__item">旅游接待</div>-->
+  <!--</div>-->
+  <!--<div class="weui-grids">-->
+    <!--<a href="" class="weui-grid js_grid">-->
+      <!--<div class="weui-grid__icon">-->
+        <!--<img src="images/icon_nav_button.png" alt="">-->
+      <!--</div>-->
+      <!--<p class="weui-grid__label">-->
+        <!--Button-->
+      <!--</p>-->
+    <!--</a>-->
+    <!--<a href="" class="weui-grid js_grid">-->
+      <!--<div class="weui-grid__icon">-->
+        <!--<img src="images/icon_nav_cell.png" alt="">-->
+      <!--</div>-->
+      <!--<p class="weui-grid__label">-->
+        <!--List-->
+      <!--</p>-->
+    <!--</a>-->
+  <!--</div>-->
+  <!--<section class="ui-panel" >-->
+    <!--<ul class="ui-row-flex">-->
+      <!--<li class="ui-col ">畜牧</li>-->
+      <!--<li class="ui-col ">家禽</li>-->
+      <!--<li class="ui-col ">水产</li>-->
+      <!--<li class="ui-col ">瓜果</li>-->
+    <!--</ul>-->
+    <!--<ul class="ui-row-flex">-->
+      <!--<li class="ui-col ">有机蔬菜</li>-->
+      <!--<li class="ui-col ">农副产品</li>-->
+      <!--<li class="ui-col ">饲料</li>-->
+      <!--<li class="ui-col ">旅游接待</li>-->
+    <!--</ul>-->
+  <!--</section>-->
+  <!--<section class="ui-panel">-->
+    <!--<p class="padding-left">推荐产品</p>-->
+    <!--<ul class="ui-grid-halve">-->
+      <!--<li>-->
+        <!--<div class="ui-grid-halve-img">-->
+          <!--<span style="background-image:url(http://placeholder.qiniudn.com/290x160)"></span>-->
+        <!--</div>-->
+      <!--</li>-->
+      <!--<li>-->
+        <!--<div class="ui-grid-halve-img">-->
+          <!--<span style="background-image:url(http://placeholder.qiniudn.com/290x160)"></span>-->
+        <!--</div>-->
+      <!--</li>-->
+      <!--<li>-->
+        <!--<div class="ui-grid-halve-img">-->
+          <!--<span style="background-image:url(http://placeholder.qiniudn.com/290x160)"></span>-->
+        <!--</div>-->
+      <!--</li>-->
+      <!--<li>-->
+        <!--<div class="ui-grid-halve-img">-->
+          <!--<span style="background-image:url(http://placeholder.qiniudn.com/290x160)"></span>-->
+        <!--</div>-->
+      <!--</li>-->
+      <!--<li>-->
+        <!--<div class="ui-grid-halve-img">-->
+          <!--<span style="background-image:url(http://placeholder.qiniudn.com/290x160)"></span>-->
+        <!--</div>-->
+      <!--</li>-->
+    <!--</ul>-->
+  <!--</section>-->
 </div>
-<% block('footer').append(`<script src='/js/swipeslider.js'></script>`)%>
+<% block('footer').append(`<script src='/app/js/swiper.js'></script>`)%>
 <% block('footer').append(`<script>
 jQuery(function(){
-    $('#full_feature').swipeslider();
+    $(".swiper-container").swiper({})
 })
 </script>`)%>

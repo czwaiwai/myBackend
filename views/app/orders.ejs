@@ -1,0 +1,55 @@
+<% layout('layout/appLayout') %>
+<div class="page has_head">
+  <div class="page__hd weui-flex">
+    <div style="width:60px;padding-left:10px;">
+      <a href="/app/index">首页</a>
+    </div>
+    <div class="weui-flex__item">
+      <h1 class="title"><%=title %></h1>
+    </div>
+    <div style="width:60px;"></div>
+  </div>
+  <div class="page__bd">
+    <div class="weui-tab">
+      <div class="weui-navbar">
+        <a class="weui-navbar__item weui-bar__item--on" href="#tab1">
+          全部
+        </a>
+        <a class="weui-navbar__item" href="#tab2">
+          待付款
+        </a>
+        <a class="weui-navbar__item" href="#tab3">
+          待发货
+        </a>
+        <a class="weui-navbar__item" href="#tab4">
+          已发货
+        </a>
+        <a class="weui-navbar__item" href="#tab5">
+          已完成
+        </a>
+      </div>
+      <div class="weui-tab__bd">
+        <div id="tab1" class="weui-tab__bd-item weui-tab__bd-item--active">
+          <h1>页面一</h1>
+        </div>
+        <div id="tab2" class="weui-tab__bd-item">
+          <h1>页面二</h1>
+        </div>
+        <div id="tab3" class="weui-tab__bd-item">
+          <h1>页面三</h1>
+        </div>
+        <div id="tab4" class="weui-tab__bd-item">
+          <h1>页面四</h1>
+        </div>
+        <div id="tab5" class="weui-tab__bd-item">
+          <h1>页面五</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<% block('footer').append(`<script>
+jQuery(function(){
+
+})
+</script>`)%>

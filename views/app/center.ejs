@@ -1,79 +1,174 @@
 <% layout('layout/appLayout') %>
-<div class="page">
-  <section class="margin-bottom">
+<% block('header').append(`<style>
+.no_login_wrap {
+  width:250px;
+  margin:0 auto;
+  background:#FFF;
+  padding: 15px 0 10px 0;
+}
+.no_login_wrap .no_login_head {
+  padding-right:15px;
+}
+.no_login_wrap .img_head {
+  width:60px;
+  height:60px;
+  background:url('/app/img/head.png') no-repeat center;
+  background-size:cover;
+}
+.order_wrap .weui-flex__item + .weui-flex__item{
+  border-left:1px solid #e3e3e3;
+}
+</style>`) %>
+<div class="page has_tab">
+  <div class=""></div>
+  <div class="page__bd">
+    <div class="light-bg">
+      <div class="no_login_wrap">
+        <div class="weui-flex ">
+          <div class="no_login_head">
+            <div class="img_head"></div>
+          </div>
+          <div class="weui-flex__item">
+            <p class="fs14 padding-bottom5">你还没有登录</p>
+            <a href="javascript:;" class="weui-btn weui-btn_mini weui-btn_default">立即登录/注册</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="weui-cells__title">
+      订单管理
+      <a href="/app/orders" class="float_right">查看全部订单</a>
+    </div>
+    <div class="light-bg padding-v order_wrap">
+      <div class="weui-flex text-center">
+        <a class="weui-flex__item" href="/app/orders" >
+          <i class="weui-icon-info-circle"></i>
+          <p class="fs14">待付款</p>
+        </a>
+        <a class="weui-flex__item" href="/app/orders">
+          <i class="weui-icon-info-circle"></i>
+          <p class="fs14">待发货</p>
+        </a>
+        <a class="weui-flex__item" href="/app/orders">
+          <i class="weui-icon-info-circle"></i>
+          <p class="fs14">已发货</p>
+        </a>
+        <a class="weui-flex__item" href="/app/orders">
+          <i class="weui-icon-info-circle"></i>
+          <p class="fs14">已完成</p>
+        </a>
+      </div>
+    </div>
+    <div class="weui-cells__title"></div>
+    <div class="weui-cells">
+      <a class="weui-cell weui-cell_access" href="/app/cart">
+        <div class="weui-cell__bd">
+          <p>购物车</p>
+        </div>
+        <div class="weui-cell__ft">
+        </div>
+      </a>
+      <a class="weui-cell weui-cell_access" href="/app/address">
+        <div class="weui-cell__bd">
+          <p>收货地址</p>
+        </div>
+        <div class="weui-cell__ft">
+        </div>
+      </a>
+    </div>
+    <div class="weui-cells__title"></div>
+    <div class="weui-cells">
+      <a class="weui-cell weui-cell_access" href="/app/page/company">
+        <div class="weui-cell__bd">
+          <p>公司介绍</p>
+        </div>
+        <div class="weui-cell__ft">
+        </div>
+      </a>
+      <a class="weui-cell weui-cell_access" href="/app/page/about">
+        <div class="weui-cell__bd">
+          <p>联系我们</p>
+        </div>
+        <div class="weui-cell__ft">
+        </div>
+      </a>
+    </div>
 
-  </section>
-  <section class="margin-bottom">
-    <ul class="ui-list ui-border-tb ">
-      <li>
-        <div class="ui-avatar ui-list-img-square" style="width:65px;height:65px;">
-          <span style="background-image:url(http://placeholder.qiniudn.com/188x188)"></span>
-        </div>
-        <div class="ui-list-info ui-border-t">
-          <h4 class="ui-nowrap">歪歪</h4>
-          <p class="ui-nowrap">欢迎您的登录</p>
-        </div>
-      </li>
-    </ul>
-  </section>
-  <section class="margin-bottom">
-    <ul class="ui-list ui-list-single ui-list-link ui-border-tb">
-      <li class="ui-border-t">
-        <div class="ui-list-info">
-          <h4 class="ui-nowrap">我的订单</h4>
-          <div class="ui-txt-info">查看全部订单</div>
-        </div>
-      </li>
-    </ul>
-    <ul class="ui-tiled light-bg">
-      <li><i>2</i><div>待付款</div></li>
-      <li><i>1</i><div>待发货</div></li>
-      <li><i>3</i><div>已发货</div></li>
-      <!--<li><i>3</i><div>退换货</div></li>-->
-    </ul>
-  </section>
-  <section class="margin-bottom">
-    <ul class="ui-list ui-list-single ui-list-link ui-border-tb">
-      <li class="ui-border-t">
-        <div class="ui-list-info">
-          <div >
-            <i class="iconfont icon-cart padding-right5"></i>
-          </div>
-          <h4 class="ui-nowrap">我的购物车</h4>
-          <div class="ui-txt-info"></div>
-        </div>
-      </li>
-      <li class="ui-border-t">
-        <div class="ui-list-info">
-          <div >
-           <i class="iconfont icon-map padding-right5"></i>
-          </div>
-          <h4 class="ui-nowrap">收货地址管理</h4>
-          <div class="ui-reddot ui-reddot-static"></div>
-        </div>
-      </li>
-    </ul>
-  </section>
-  <section class="margin-bottom">
-    <ul class="ui-list ui-list-single ui-list-link ui-border-tb">
-      <li class="ui-border-t">
-        <div class="ui-list-info">
-          <div >
-            <i class="iconfont icon-cart padding-right5"></i>
-          </div>
-          <h4 class="ui-nowrap">公司介绍</h4>
-          <div class="ui-txt-info"></div>
-        </div>
-      </li>
-      <li class="ui-border-t">
-        <div class="ui-list-info">
-          <div >
-            <i class="iconfont icon-map padding-right5"></i>
-          </div>
-          <h4 class="ui-nowrap">联系我们</h4>
-          <div class="ui-reddot ui-reddot-static"></div>
-        </div>
-      </li>
-    </ul>
-  </section>
+  </div>
+  <!--<section class="margin-bottom">-->
+
+  <!--</section>-->
+  <!--<section class="margin-bottom">-->
+    <!--<ul class="ui-list ui-border-tb ">-->
+      <!--<li>-->
+        <!--<div class="ui-avatar ui-list-img-square" style="width:65px;height:65px;">-->
+          <!--<span style="background-image:url(http://placeholder.qiniudn.com/188x188)"></span>-->
+        <!--</div>-->
+        <!--<div class="ui-list-info ui-border-t">-->
+          <!--<h4 class="ui-nowrap">歪歪</h4>-->
+          <!--<p class="ui-nowrap">欢迎您的登录</p>-->
+        <!--</div>-->
+      <!--</li>-->
+    <!--</ul>-->
+  <!--</section>-->
+  <!--<section class="margin-bottom">-->
+    <!--<ul class="ui-list ui-list-single ui-list-link ui-border-tb">-->
+      <!--<li class="ui-border-t">-->
+        <!--<div class="ui-list-info">-->
+          <!--<h4 class="ui-nowrap">我的订单</h4>-->
+          <!--<div class="ui-txt-info">查看全部订单</div>-->
+        <!--</div>-->
+      <!--</li>-->
+    <!--</ul>-->
+    <!--<ul class="ui-tiled light-bg">-->
+      <!--<li><i>2</i><div>待付款</div></li>-->
+      <!--<li><i>1</i><div>待发货</div></li>-->
+      <!--<li><i>3</i><div>已发货</div></li>-->
+      <!--&lt;!&ndash;<li><i>3</i><div>退换货</div></li>&ndash;&gt;-->
+    <!--</ul>-->
+  <!--</section>-->
+  <!--<section class="margin-bottom">-->
+    <!--<ul class="ui-list ui-list-single ui-list-link ui-border-tb">-->
+      <!--<li class="ui-border-t">-->
+        <!--<div class="ui-list-info">-->
+          <!--<div >-->
+            <!--<i class="iconfont icon-cart padding-right5"></i>-->
+          <!--</div>-->
+          <!--<h4 class="ui-nowrap">我的购物车</h4>-->
+          <!--<div class="ui-txt-info"></div>-->
+        <!--</div>-->
+      <!--</li>-->
+      <!--<li class="ui-border-t">-->
+        <!--<div class="ui-list-info">-->
+          <!--<div >-->
+           <!--<i class="iconfont icon-map padding-right5"></i>-->
+          <!--</div>-->
+          <!--<h4 class="ui-nowrap">收货地址管理</h4>-->
+          <!--<div class="ui-reddot ui-reddot-static"></div>-->
+        <!--</div>-->
+      <!--</li>-->
+    <!--</ul>-->
+  <!--</section>-->
+  <!--<section class="margin-bottom">-->
+    <!--<ul class="ui-list ui-list-single ui-list-link ui-border-tb">-->
+      <!--<li class="ui-border-t">-->
+        <!--<div class="ui-list-info">-->
+          <!--<div >-->
+            <!--<i class="iconfont icon-cart padding-right5"></i>-->
+          <!--</div>-->
+          <!--<h4 class="ui-nowrap">公司介绍</h4>-->
+          <!--<div class="ui-txt-info"></div>-->
+        <!--</div>-->
+      <!--</li>-->
+      <!--<li class="ui-border-t">-->
+        <!--<div class="ui-list-info">-->
+          <!--<div >-->
+            <!--<i class="iconfont icon-map padding-right5"></i>-->
+          <!--</div>-->
+          <!--<h4 class="ui-nowrap">联系我们</h4>-->
+          <!--<div class="ui-reddot ui-reddot-static"></div>-->
+        <!--</div>-->
+      <!--</li>-->
+    <!--</ul>-->
+  <!--</section>-->
 </div>

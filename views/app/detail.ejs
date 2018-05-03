@@ -1,0 +1,103 @@
+<% layout('layout/appLayout') %>
+<% block('header').append(`<style>
+
+
+.page__ft {
+  position:fixed;
+  width:100%;
+  bottom:0;
+  left:0;
+  z-index: 100;
+  background:#FFF;
+  height:49px;
+  line-height:49px;
+  border-top:1px solid #e3e3e3;
+}
+.goods_section {
+  font-size:14px;
+  line-height:1.4;
+  overflow-x:hidden;
+}
+.goods_section img {
+  max-width:100%;
+}
+.goods_btn_primary {
+  color:#FFF;
+  display:inline-block;
+  background:#59b210;
+  padding:0 20px;
+  text-align:center;
+  border-left:1px solid #e3e3e3;
+  border-right:1px solid #e3e3e3;
+}
+.goods_btn_default {
+  width:120px;
+  color:#656565;
+  display:inline-block;
+  background:#FFF;
+  padding:0 20px;
+  text-align:center;
+  border-left:1px solid #e3e3e3;
+  border-right:1px solid #e3e3e3;
+}
+</style>`)%>
+<div class="page has_head has_tab">
+  <div class="page__hd weui-flex">
+    <div style="width:60px;padding-left:10px;">
+      <a href="/app/index">首页</a>
+    </div>
+    <div class="weui-flex__item">
+      <h1 class="title">商品详情</h1>
+    </div>
+    <div style="width:60px;">
+
+    </div>
+  </div>
+  <div class="page__bd">
+    <div class="light-bg">
+      <div class="swiper-container" data-space-between='10' data-pagination='.swiper-pagination' data-autoplay="1000">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide"><img src="/upload/banner1.jpg" alt=""></div>
+          <div class="swiper-slide"><img src="/upload/banner2.jpg" alt=""></div>
+          <div class="swiper-slide"><img src="/upload/banner3.jpg" alt=""></div>
+        </div>
+      </div>
+      <div class="padding15-h padding-bottom border-bottom">
+        <h1 class="product_name fs18"><%=goods.name %></h1>
+        <p class="fs14 text-muted"><%=goods.subName%></p>
+        <p class="fs14">
+         <span class="fs20 weui-cell_warn">￥<%=goods.sellPrice%></span>
+          <del class="padding-left20 text-muted" style="color:#989898;">原价:￥<%=goods.virPrice %> </del>
+        </p>
+        <!--<div class="product_stock margin-top">-->
+          <!--<p class="fs14">库存：<%=goods.stock%></p>-->
+        <!--</div>-->
+      </div>
+    </div>
+    <div class="margin-top padding light-bg  border-top border-bottom">
+      <p class="fs14 text-muted">库存：<%=goods.stock || ''%></p>
+      <p class="fs14 text-muted">产地：<%=goods.place || ''%></p>
+    </div>
+    <div class="margin-top light-bg padding border-top border-bottom">
+      <h4 class="fs16 normal padding-bottom">商品详情</h4>
+      <div class="goods_section">
+        <%- goods.content %>
+      </div>
+    </div>
+  </div>
+  <div class="page__ft weui-flex">
+    <div class="weui-flex__item"></div>
+    <div style="margin-right:-2px;">
+      <a class="goods_btn goods_btn_default">立即购买</a>
+    </div>
+    <div >
+      <a class="goods_btn goods_btn_primary">加入购物车</a>
+    </div>
+  </div>
+</div>
+<% block('footer').append(`<script src='/app/js/swiper.js'></script>`)%>
+<% block('footer').append(`<script>
+jQuery(function(){
+    $(".swiper-container").swiper({})
+})
+</script>`)%>

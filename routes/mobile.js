@@ -39,6 +39,16 @@ router.get('/type', (req, res)=> {
 		})
 	})
 })
+// 商品详情
+router.get('/goods/detail/:id', (req, res, next) => {
+	let ep = EventProxy.create('goods', 'topGoods', 'newGoods', (goods, topGoods, newGoods) => {
+		res.render('app/detail', {title: '商品详情', goods, topGoods, newGoods})
+	})
+	ep.fail(next)
+	Goods.getHotGoodsByType(1, 4, ep.done('topGoods')) // 推荐产品
+	Goods.getHotGoodsByType(3, 4, ep.done('newGoods')) // 新品上市
+	Goods.findByIdAddView(req.params.id, ep.done('goods')) // 查找商品及更新访问次数
+})
 router.get('/cart', (req, res)=> {
 	res.render('app/cart',{title:"购物车"});
 })
@@ -47,5 +57,26 @@ router.get('/center', (req, res)=> {
 	res.render('app/center',{title:"个人中心"});
 });
 
+router.get('/address', (req, res, next) => {
+	res.render('app/address', {title:'地址管理'})
+})
+
+router.get('/orders', (req, res, next) => {
+	res.render('app/orders', {title: '我的订单'})
+})
+
+router.get('/page/:pageName', (req, res, next) => {
+	let nav = res.locals.catalogs.filter(item => item.relativeUrl.indexOf('/page') === 0)
+	let navPage = res.locals.catalogs.find(item => item.relativeUrl === '/page/' + req.params.pageName)
+	Page.getPageByPathName(req.params.pageName, function(err, page) {
+		if (err || !page) {
+			return next(err)
+		}
+		if (!navPage) {
+			navPage = {}
+		}
+		res.render('app/page', {title:page.title, page, nav, navPage})
+	})
+})
 
 module.exports = router;
