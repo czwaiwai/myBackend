@@ -66,12 +66,18 @@
   </div>
   <div class="page__bd">
     <div style="padding-left:81px;padding-top:10px;padding-right:5px;">
+      <% if(goods && goods.length === 0) { %>
+      	<div class="text-center text-muted" style="padding-top:40%;">
+          <i class="iconfont icon-box" style="font-size:36px;"></i>
+          <p>没有找到任何商品</p>
+        </div>
+      <% } %>
       <ul class="goods_list_ul clearfix" style="">
         <% goods.forEach(function(item){  %>
         <li class="goods_item">
           <a href="/app/goods/detail/<%=item._id %>" class="thumbnail">
             <div class="goods_img" style="background:url(<%=item.imgTmb %>) no-repeat center;background-size:cover;"></div>
-            <p class="padding-left5 fs14"><%=item.name%></p>
+            <p class="padding-left5 fs14 dot"><%=item.name%></p>
             <p class="padding-left5 fs16 weui-cell_warn">￥<%=item.sellPrice%></p>
           </a>
         </li>
