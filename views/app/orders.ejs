@@ -1,5 +1,5 @@
 <% layout('layout/appLayout') %>
-<div class="page has_head">
+<div class="page has_head" style="height:100%;">
   <div class="page__hd weui-flex">
     <div style="width:60px;padding-left:10px;">
       <a href="/app/index">首页</a>
@@ -9,47 +9,143 @@
     </div>
     <div style="width:60px;"></div>
   </div>
-  <div class="page__bd">
+  <div class="page__bd" style="height:100%;">
     <div class="weui-tab">
       <div class="weui-navbar">
-        <a class="weui-navbar__item weui-bar__item--on" href="#tab1">
-          全部
-        </a>
-        <a class="weui-navbar__item" href="#tab2">
-          待付款
-        </a>
-        <a class="weui-navbar__item" href="#tab3">
-          待发货
-        </a>
-        <a class="weui-navbar__item" href="#tab4">
-          已发货
-        </a>
-        <a class="weui-navbar__item" href="#tab5">
-          已完成
-        </a>
+        <a class="weui-navbar__item weui-bar__item--on" style="padding: 8px 0;" data-type="all" href="#tab1">全部</a>
+        <a class="weui-navbar__item " style="padding: 8px 0;"  data-type="waitPay"  href="#tab2">待付款</a>
+        <a class="weui-navbar__item" style="padding: 8px 0;"  data-type="pay" href="#tab3">待发货</a>
+        <a class="weui-navbar__item" style="padding: 8px 0;" data-type="ship" href="#tab4">已发货</a>
+        <a class="weui-navbar__item" style="padding: 8px 0;" data-type="back" href="#tab5">已完成</a>
       </div>
       <div class="weui-tab__bd">
-        <div id="tab1" class="weui-tab__bd-item weui-tab__bd-item--active">
-          <h1>页面一</h1>
+        <div id="tab1" class="weui-tab__bd-item infinite  weui-tab__bd-item--active">
+          <div class="tab-content">
+
+          </div>
+          <div class="weui-loadmore">
+            <i class="weui-loading"></i>
+            <span class="weui-loadmore__tips">正在加载</span>
+          </div>
         </div>
-        <div id="tab2" class="weui-tab__bd-item">
-          <h1>页面二</h1>
+        <div id="tab2" class="weui-tab__bd-item infinite ">
+          <div class="tab-content">
+
+          </div>
+          <div class="weui-loadmore">
+            <i class="weui-loading"></i>
+            <span class="weui-loadmore__tips">正在加载</span>
+          </div>
         </div>
-        <div id="tab3" class="weui-tab__bd-item">
-          <h1>页面三</h1>
+        <div id="tab3" class="weui-tab__bd-item infinite">
+          <div class="tab-content">
+            <h1>页面三</h1>
+          </div>
+          <div class="weui-loadmore">
+            <i class="weui-loading"></i>
+            <span class="weui-loadmore__tips">正在加载</span>
+          </div>
         </div>
-        <div id="tab4" class="weui-tab__bd-item">
-          <h1>页面四</h1>
+        <div id="tab4" class="weui-tab__bd-item infinite">
+          <div class="tab-content">
+            <h1>页面四</h1>
+          </div>
+          <div class="weui-loadmore">
+            <i class="weui-loading"></i>
+            <span class="weui-loadmore__tips">正在加载</span>
+          </div>
         </div>
-        <div id="tab5" class="weui-tab__bd-item">
-          <h1>页面五</h1>
+        <div id="tab5" class="weui-tab__bd-item infinite">
+          <div class="tab-content">
+            <h1>页面五</h1>
+          </div>
+          <div class="weui-loadmore">
+            <i class="weui-loading"></i>
+            <span class="weui-loadmore__tips">正在加载</span>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+<% block('footer').append(`<script id="orderItemTpl" type="text/template" >
+<@ orders.forEach(function(item){ @>
+<div class="weui-panel weui-panel_access">
+  <div class="weui-panel__hd weui-flex">
+    <div>订单：<@=item.orderId @></div>
+    <div class="weui-flex__item"></div>
+    <div class="<@=item.statusColor @>"><@=item.statusName @></div>
+  </div>
+  <div class="weui-panel__bd">
+    <a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
+     <@ _.each(item.goods, function(sub) { @>
+      <div class="weui-media-box__hd">
+        <img class="weui-media-box__thumb" src="<@=sub.imgTmb @>" alt="">
+      </div>
+     <@ })@>
+
+      <!--<div class="weui-media-box__bd">-->
+        <!--<h4 class="weui-media-box__title">标题一</h4>-->
+        <!--<p class="weui-media-box__desc"></p>-->
+      <!--</div>-->
+    </a>
+  </div>
+  <div class="weui-panel__ft">
+    <a href="javascript:void(0);" class="weui-cell weui-cell_access weui-cell_link">
+      <div class="weui-cell__bd">订单详情</div>
+      <span class="weui-cell__ft"></span>
+    </a>
+  </div>
+</div>
+<@ }) @>
+</script>`) %>
 <% block('footer').append(`<script>
 jQuery(function(){
+  var currType = 'all'
+  var orderItemCompile = _.template($('#orderItemTpl')[0].innerHTML)
+  $('.weui-navbar a').on('click',function(e) {
+ 	   var href = $(e.target).attr('href')
+ 	   currType = $(e.target).data('type')
+ 	   var $tabA = $(href)
+ 	   var $curr = $tabA.find('.tab-content')
+ 	   var page = $curr.data('page') || 1
+ 	   getData($curr,page)
+  })
 
+  function getData($curr,page) {
+  	if( parseInt(page) === 1) {
+  		$curr.empty()
+  		$curr.next('.weui-loadmore').removeClass('weui-loadmore_line').find('.weui-loading').show().next().text('没有更多数据！')
+  	}
+    $.post('/account/orderManage', {page:page, orderType: currType}).done(function(res) {
+      var resData = res.data
+      if (resData.orders.length < 10){
+        $curr.next('.weui-loadmore').addClass('weui-loadmore_line').find('.weui-loading').hide().next().text('没有更多数据！')
+      }
+      $curr.append(orderItemCompile({orders:resData.orders}))
+    })
+  }
+  function initPage() {
+     var href =  $('.weui-bar__item--on').attr('href')
+     currType= $('.weui-bar__item--on').data('type')
+     var $tabA = $(href)
+ 	   var $curr = $tabA.find('.tab-content')
+ 	   var page = $curr.data('page') || 1
+ 	   console.log($curr,page)
+ 	   getData($curr,page)
+  }
+  initPage()
+
+  $(".infinite").infinite().on("infinite", function() {
+    var self = this;
+    if(self.loading) return;
+    console.log(self)
+    self.loading = true;
+    console.log(self);
+    setTimeout(function() {
+      $(self).find(".tab-content").append("<p>我是加载的新内容。我是加载的新内容。。。我是加载的新内容。。。我是加载的新内容。。。我是加载的新内容。。。我是加载的新内容。。。我是加载的新内容。。。我是加载的新内容。。。我是加载的新内容。。。。。</p>");
+      self.loading = false;
+    }, 2000)   //模拟延迟
+  });
 })
 </script>`)%>

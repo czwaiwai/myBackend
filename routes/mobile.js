@@ -9,8 +9,8 @@ var _ = require('lodash');
 // var User =require('../models/user');
 /* GET home page. */
 let EventProxy = require('eventproxy')
-let {Page, User, Catalog, Goods, Article, Cart, Dict} = require('../viewModels')
-
+let {Page, User, Catalog, Goods, Article, Cart, Dict, Address} = require('../viewModels')
+let {formatFloat} = require('../utils/tools')
 router.get('/', (req, res)=> {
 	//console.log(req.session.user,"这里可以取到session");
 	res.redirect('/index')
@@ -66,7 +66,19 @@ router.get('/goods/detail/:id', (req, res, next) => {
 	Goods.findByIdAddView(req.params.id, ep.done('goods')) // 查找商品及更新访问次数
 })
 router.get('/cart', (req, res)=> {
-	res.render('app/cart',{title:"购物车"});
+	let user = req.session.user
+	let carts = []
+	let total = 0
+	if (user) {
+		carts = user.cart.map(item => {
+			item.subTotal = formatFloat(item.goodsNum * item.price)
+			item.payTotal = formatFloat(item.goodsNum * item.price)
+			total += item.payTotal
+			return item
+		})
+		total = formatFloat(total)
+	}
+	res.render('app/cart', {title: '购物车', carts, total})
 })
 router.get('/center', (req, res)=> {
 	//console.log(req.session.user,"这里可以取到session");
@@ -74,7 +86,10 @@ router.get('/center', (req, res)=> {
 });
 
 router.get('/address', (req, res, next) => {
-	res.render('app/address', {title:'地址管理'})
+	Address.findAllAddress(req.session.user._id, (err, address) => {
+		if (err) return next(err)
+		res.render('app/address',  {title: '地址管理', address:address.address})
+	})
 })
 
 router.get('/orders', (req, res, next) => {
@@ -95,4 +110,38 @@ router.get('/page/:pageName', (req, res, next) => {
 	})
 })
 
+router.get('/login', (req, res, next) => {
+	res.render('app/login', {title: '登录'})
+})
+router.post('/login', (req, res, next) => {
+	req.checkBody('userName',"用户名不能为空").notEmpty()
+		.isTooShort(6).withMessage("用户名太短");
+	req.checkBody('password',"密码不能为空").notEmpty()
+		.isTooShort(6).withMessage("密码太短");
+	req.checkBody('verifyCode',"验证码不能为空").notEmpty()
+		.isEqual(req.session.imgCode).withMessage("验证码不正确");
+	req.asyncValidationErrors().then(function(){
+		console.log(req.body)
+		User.findByUserName(req.body.userName,function(err,user){
+			if (err) {
+				return next(err)
+			}
+			if (!user) {
+				req.flash("error","账户名或密码错误")
+				return res.redirect('/app/login')
+			}
+			if(user.pwd!=req.body.password){
+				req.flash("error","账户名或密码错误");
+				return  res.redirect('/app/login');
+			}
+			console.log(user, 'user')
+			delete user.pwd
+			req.session.user=user;
+			return  res.redirect('/app/center');
+		});
+	},function(errors){
+		req.flash("error",errors[0].msg);
+		return   res.redirect('/app/login');
+	});
+})
 module.exports = router;

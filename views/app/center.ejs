@@ -22,7 +22,8 @@
 <div class="page has_tab">
   <div class=""></div>
   <div class="page__bd">
-    <div class="light-bg">
+    <% if(!user) {  %>
+    <div class="light-bg padding border-bottom">
       <div class="no_login_wrap">
         <div class="weui-flex ">
           <div class="no_login_head">
@@ -30,11 +31,28 @@
           </div>
           <div class="weui-flex__item">
             <p class="fs14 padding-bottom5">你还没有登录</p>
-            <a href="javascript:;" class="weui-btn weui-btn_mini weui-btn_default">立即登录/注册</a>
+            <a href="/app/login" class="weui-btn weui-btn_mini weui-btn_default">立即登录/注册</a>
           </div>
         </div>
       </div>
     </div>
+    <% } else { %>
+      <div class="weui-cells">
+        <div class="weui-cell">
+          <div class="weui-cell__hd" style="position: relative;margin-right: 10px;">
+            <img src="images/pic_160.png" style="width: 50px;display: block">
+            <span class="weui-badge" style="position: absolute;top: -.4em;right: -.4em;">8</span>
+          </div>
+          <div class="weui-cell__bd">
+            <p><%=user.nickname %></p>
+            <p style="font-size: 13px;color: #888888;"></p>
+          </div>
+        </div>
+      </div>
+    <% } %>
+    <!--<div class="light-bg padding">-->
+
+    <!--</div>-->
     <div class="weui-cells__title">
       订单管理
       <a href="/app/orders" class="float_right">查看全部订单</a>

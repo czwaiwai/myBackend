@@ -2,51 +2,173 @@
 <div class="page has_head">
   <div class="page__hd weui-flex">
     <div style="width:60px;padding-left:10px;">
-      <a href="/app/index">首页</a>
+      <a class="nav_left_btn" href="/app/index">首页</a>
     </div>
     <div class="weui-flex__item">
       <h1 class="title"><%=title %></h1>
     </div>
     <div class="text-right" style="width:60px;padding-right:10px;">
-      <a>新增</a>
+      <a id="addAddrBtn" class="nav_right_btn" >新增</a>
     </div>
   </div>
-  <div class="page__bd">
-    <div class="margin-top weui-panel weui-panel_access">
-      <div class="weui-panel__bd">
-        <a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
-          <div class="weui-media-box__hd">
-            姓名
-          </div>
+  <div id="addressManage" class="page__bd padding-top">
+    <div class="weui-panel weui-panel_access">
+      <div  class="weui-panel__bd">
+        <% address.forEach(item => { %>
+        <a href="javascript:void(0);" data-id="<%=item._id%>" data-name="<%=item.name%>" data-address="<%=item.address%>" data-mobile="<%=item.mobile %>" data-addrs="<%=item.province%> <%=item.city%> <%=item.area%>" data-codes="<%=item.provinceId %>,<%=item.cityId %>,<%=item.areaId %>" class="addr_item weui-media-box weui-media-box_appmsg">
+          <div class="weui-media-box__hd"><%=item.name %></div>
           <div class="weui-media-box__bd">
-            <h4 class="weui-media-box__title">13728905705</h4>
-            <p class="weui-media-box__desc">由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。</p>
+            <h4 class="weui-media-box__title"><%=item.mobile %></h4>
+            <p class="weui-media-box__desc"><%=item.province%><%=item.city%><%=item.area%><%=item.address %></p>
           </div>
           <div class="weui-media-box__ft">
-            删除
+            <span class="del_btn" data-id="<%=item._id %>">
+              <i class="iconfont icon-delete"></i>
+            </span>
           </div>
         </a>
-        <a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
-          <div class="weui-media-box__hd">
-            姓名
-          </div>
-          <div class="weui-media-box__bd">
-            <h4 class="weui-media-box__title">标题二</h4>
-            <p class="weui-media-box__desc">由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。</p>
-          </div>
-          <div class="weui-media-box__ft">
-            删除
-          </div>
-        </a>
+        <% }) %>
       </div>
     </div>
   </div>
   <div class="page__ft">
 
   </div>
+  <div id="addAddr" class="weui-popup__container" style="z-index:111">
+    <div class="weui-popup__overlay"></div>
+    <div class="weui-popup__modal">
+      <div class="toolbar">
+        <div class="toolbar-inner">
+          <a href="javascript:;" class="picker-button close-popup">关闭</a>
+          <h1 class="title">新增地址</h1>
+        </div>
+      </div>
+      <div class="modal-content" style="min-height:300px;">
+        <form id="addrForm" autocomplete="off"  method="post" novalidate>
+          <div class="weui-cells weui-cells_form">
+            <div class="weui-cell">
+              <div class="weui-cell__hd"><label class="weui-label">联系人</label></div>
+              <div class="weui-cell__bd">
+                <input name="name" class="weui-input" type="text"  placeholder="请输入联系人">
+              </div>
+            </div>
+            <div class="weui-cell">
+              <div class="weui-cell__hd">
+                <label class="weui-label">手机号</label>
+              </div>
+              <div class="weui-cell__bd">
+                <input  name="mobile" class="weui-input" type="tel" placeholder="请输入联系人手机号">
+              </div>
+            </div>
+            <div class="weui-cell">
+              <div class="weui-cell__hd"><label for="" class="weui-label">地区选择</label></div>
+              <div class="weui-cell__bd">
+                <input  class="weui-input" id="city-picker" type="text" value="" placeholder="">
+              </div>
+            </div>
+            <div class="weui-cells weui-cells_form">
+              <div class="weui-cell">
+                <div class="weui-cell__bd">
+                  <textarea name="address" class="weui-textarea" placeholder="请输入详细地址" rows="3"></textarea>
+                  <!--<div class="weui-textarea-counter"><span>0</span>/200</div>-->
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="weui-btn-area">
+            <input id="updateAddr" name="isUpdate" type="hidden" >
+            <button class="weui-btn weui-btn_primary" >保存</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
+<!--city-picker.js-->
+<% block('footer').append(`<script src='/app/js/city-picker.js'></script>`)%>
+<% block('footer').append(`<script id="addrItemTpl" type="text/template">
+<a href="javascript:void(0);" data-id="<@= item._id @>" data-name="<@=item.name@>" data-address="<@=item.address@>" data-mobile="<@=item.mobile @>" data-addrs="<@=item.province@> <@=item.city@> <@=item.area@>" data-codes="<@=item.provinceId @>,<@=item.cityId @>,<@=item.areaId @>" class="addr_item weui-media-box weui-media-box_appmsg">
+  <div class="weui-media-box__hd"><@=item.name @></div>
+  <div class="weui-media-box__bd">
+  <h4 class="weui-media-box__title"><@=item.mobile @></h4>
+    <p class="weui-media-box__desc"><@=item.province@><@=item.city@><@=item.area@><@=item.address @></p>
+  </div>
+  <div class="weui-media-box__ft">
+      <span class="del_btn" data-id="<@=item._id @>">
+        <i class="iconfont icon-delete"></i>
+      </span>
+  </div>
+</a>
+</script>`)%>
 <% block('footer').append(`<script>
 jQuery(function(){
+	var $cityPicker = $("#city-picker")
+	var $addrForm = $('#addrForm')
+	var $addAddrPopup = $('#addAddr')
+	var addrItemCompile = _.template($('#addrItemTpl')[0].innerHTML)
+	$cityPicker.cityPicker({
+      title: "请选择地区",
+      onClose:function (picker,codes) {
+      	$cityPicker.data('codes',picker.value.join(','))
+      }
+  });
 
+	$addrForm.on('submit', function(e) {
+		e.preventDefault()
+    var $this = $(this)
+    var arr = $this.serializeArray()
+    var addrObj = {}
+    arr.forEach(function(item, index) {
+    	addrObj[item.name] = item.value
+    })
+    if ($cityPicker.val()) {
+			var nameArr = $cityPicker.val().split(' ')
+      var codeArr =$cityPicker.data('codes').split(',')
+      addrObj.province = codeArr[0] + ',' + nameArr[0]
+      addrObj.city = codeArr[1] + ',' + nameArr[1]
+      addrObj.area = codeArr[2] + ',' + nameArr[2]
+    }
+
+    $.post('/account/address',addrObj).done(function(res){
+    	if(addrObj.isUpdate) { // 更新
+    	  $('#addressManage').find('a[data-id='+res.data.address._id+']').replaceWith(addrItemCompile({item:res.data.address}))
+     	} else { // 添加
+     		$('#addressManage').find('.weui-panel__bd').append(addrItemCompile({item:res.data.address}))
+     	}
+      $.closePopup()
+     	$.toptip('操作成功', 'success');
+    })
+    console.log(addrObj)
+		return false
+	})
+
+	$('#addAddrBtn').on('click', function() {
+		$cityPicker.val('')
+//    $cityPicker.data('codes', '')
+    $addrForm.find('input').val('')
+		$('#addAddr').popup()
+	})
+	$('#addressManage').on('click','.addr_item',function() {
+		var $this = $(this)
+		var adObj = $this.data()
+		$addrForm.find('input[name=name]').val(adObj.name)
+		$addrForm.find('textarea[name=address]').val(adObj.address)
+		$addrForm.find('input[name=mobile]').val(adObj.mobile)
+		$addrForm.find('input[name=isUpdate]').val(adObj.id)
+		$cityPicker.val(adObj.addrs)
+    $cityPicker.data('codes', adObj.codes)
+		$('#addAddr').popup()
+	})
+	$('#addressManage').on('click', '.del_btn', function(e) {
+		e.preventDefault()
+		var $this = $(this)
+		$.confirm('确定要删除当前地址么',function(){
+			// 确定
+      $.post('/account/addressRemove',{_id:$this.data('id')},function(res){
+         $this.closest('.addr_item').remove();
+      })
+		})
+		return false
+	})
 })
 </script>`)%>
