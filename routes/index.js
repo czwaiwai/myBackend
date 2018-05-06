@@ -614,7 +614,7 @@ router.post('/account/orderManage', loginValid, (req, res, next) => {
 	}
 	
 	// type.userId = req.session.user._id
-	Order.findAllByPage(type, req.body.page, 10, (err, obj) => {
+	Order.findAllByPage(type, req.body.page, 2, (err, obj) => {
 		if(err) return next(err)
 		obj.orders = obj.orders.map(item => {
 			let newObj = item.toObject()

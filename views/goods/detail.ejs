@@ -103,18 +103,18 @@ jQuery(function () {
 	})
 	$('#addCart').on('click', function() {
 		if(!isLogin) return $.Toast('您还没有登录','warning')
-    $.post('/add2Cart', $('#form').serialize()).done(function(res){
-      console.log(res)
-      if (res.code === 0) {
-        var num = res.data.cart.reduce(function(before,item){
-          return before + item.goodsNum
-        }, 0)
-        $('#cartBadge').triggerHandler('change.cartBadge',[num])
-        $.Toast('添加成功','success')
-      } else {
-        $.Toast(res.message || '','warning')
-      }
-    })
+        $.post('/add2Cart', $('#form').serialize()).done(function(res){
+          console.log(res)
+          if (res.code === 0) {
+            var num = res.data.cart.reduce(function(before,item){
+              return before + item.goodsNum
+            }, 0)
+            $('#cartBadge').triggerHandler('change.cartBadge',[num])
+            $.Toast('添加成功','success')
+          } else {
+            $.Toast(res.message || '','warning')
+          }
+        })
 	})
 
     var $imgShowWrap = $('#imgShowWrap')

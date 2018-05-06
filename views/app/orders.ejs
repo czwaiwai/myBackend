@@ -1,4 +1,20 @@
 <% layout('layout/appLayout') %>
+<% block('header').append(`<style>
+.weui-navbar + .weui-tab__bd {
+    padding-top: 40px;
+}
+.whblock{
+    background:#FFF;
+    margin-bottom:10px;
+    padding:10px;
+    font-size:14px;
+}
+.wh_line + .wh_line{
+   margin-top:7px;
+   padding-top:7px;
+   border-top:1px solid #e3e3e3;
+}
+</style>`)%>
 <div class="page has_head" style="height:100%;">
   <div class="page__hd weui-flex">
     <div style="width:60px;padding-left:10px;">
@@ -9,7 +25,7 @@
     </div>
     <div style="width:60px;"></div>
   </div>
-  <div class="page__bd" style="height:100%;">
+  <div id="orders" class="page__bd" style="height:100%;">
     <div class="weui-tab">
       <div class="weui-navbar">
         <a class="weui-navbar__item weui-bar__item--on" style="padding: 8px 0;" data-type="all" href="#tab1">全部</a>
@@ -67,7 +83,65 @@
       </div>
     </div>
   </div>
+  <div id="orderDetail" class="weui-popup__container" style="z-index:500">
+    <div class="weui-popup__overlay"></div>
+    <div class="weui-popup__modal">
+      <div class="toolbar">
+        <div class="toolbar-inner">
+          <a href="javascript:;" class="picker-button close-popup">关闭</a>
+          <h1 class="title">订单详情</h1>
+        </div>
+      </div>
+      <div  class="modal-content" >
+
+      </div>
+    </div>
+  </div>
 </div>
+<% block('footer').append(`<script id="orderDetailTpl" type="text/template" >
+<div>
+  <div class="whblock">
+    <div>下单时间：<@=order.create_at @></div>
+    <div>订单编号：<@=order.orderId @></div>
+  </div>
+  <div class="whblock no-padding">
+    <div class="weui-panel weui-panel_access">
+      <div class="weui-panel__hd">
+        商品
+        <span class="float_right"><@= order.statusName @></span>
+      </div>
+      <div class="weui-panel__bd">
+        <@ order.goods.forEach(function(item){ @>
+        <div class="weui-media-box weui-media-box_appmsg">
+          <div class="weui-media-box__hd">
+            <img class="weui-media-box__thumb" src="<@=item.imgTmb @>" alt="">
+          </div>
+          <div class="weui-media-box__bd">
+            <h4 class="weui-media-box__title"><@= item.name @></h4>
+            <p class=""><@=item.num @></p>
+            <p class="weui-media-box__desc">￥<@=item.sellPrice @></p>
+          </div>
+        </div>
+        <@ }) @>
+      </div>
+
+    </div>
+  </div>
+  <div class="whblock ">
+    <div class="wh_line">
+      <p><@=order.address.name @> <span class="padding-left15"><@=order.address.mobile @></span></p>
+      <p class="text-muted"><@=order.address.place @></p>
+    </div>
+    <div class="wh_line" >
+      <p>商品合计：￥523.00</p>
+      <p>运费:￥0.00</p>
+    </div>
+    <div class="wh_line">
+      <p class="weui-cell_warn">应付：￥523.00</p>
+    </div>
+  </div>
+</div>
+</script>`) %>
 <% block('footer').append(`<script id="orderItemTpl" type="text/template" >
 <@ orders.forEach(function(item){ @>
 <div class="weui-panel weui-panel_access">
@@ -77,30 +151,37 @@
     <div class="<@=item.statusColor @>"><@=item.statusName @></div>
   </div>
   <div class="weui-panel__bd">
-    <a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
+    <a data-id="<@=item._id @>" href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
      <@ _.each(item.goods, function(sub) { @>
       <div class="weui-media-box__hd">
         <img class="weui-media-box__thumb" src="<@=sub.imgTmb @>" alt="">
       </div>
      <@ })@>
-
-      <!--<div class="weui-media-box__bd">-->
-        <!--<h4 class="weui-media-box__title">标题一</h4>-->
-        <!--<p class="weui-media-box__desc"></p>-->
-      <!--</div>-->
     </a>
   </div>
-  <div class="weui-panel__ft">
-    <a href="javascript:void(0);" class="weui-cell weui-cell_access weui-cell_link">
-      <div class="weui-cell__bd">订单详情</div>
-      <span class="weui-cell__ft"></span>
-    </a>
-  </div>
+  <!--<div class="weui-panel__ft">-->
+    <!--<a href="javascript:void(0);" class="weui-cell weui-cell_access weui-cell_link">-->
+      <!--<div class="weui-cell__bd">订单详情</div>-->
+      <!--<span class="weui-cell__ft"></span>-->
+    <!--</a>-->
+  <!--</div>-->
 </div>
 <@ }) @>
 </script>`) %>
 <% block('footer').append(`<script>
 jQuery(function(){
+  var $orderDetail = $('#orderDetail')
+  var orderDetailCompile = _.template($('#orderDetailTpl')[0].innerHTML)
+  var $orders = $('#orders')
+  $orders.on('click','.weui-media-box',function(){
+  	var $this = $(this)
+    var id = $this.data('id')
+    $.get('/app/orders/detail/'+id).done(function(res){
+      var order = res.data.order
+      $orderDetail.find('.modal-content').empty().append(orderDetailCompile({order:order}))
+      $orderDetail.popup()
+    })
+  })
   var currType = 'all'
   var orderItemCompile = _.template($('#orderItemTpl')[0].innerHTML)
   $('.weui-navbar a').on('click',function(e) {
@@ -108,21 +189,34 @@ jQuery(function(){
  	   currType = $(e.target).data('type')
  	   var $tabA = $(href)
  	   var $curr = $tabA.find('.tab-content')
- 	   var page = $curr.data('page') || 1
+ 	   $curr.data('stop', false)
+ 	   // var page = $curr.data('page') || 1
+ 	   var page = 1
  	   getData($curr,page)
   })
 
-  function getData($curr,page) {
+  function loading ($curr) {
+    $curr.next('.weui-loadmore').removeClass('weui-loadmore_line').find('.weui-loading').show().next().text('加载数据中')
+  }
+  function loadingStop ($curr) {
+    $curr.next('.weui-loadmore').addClass('weui-loadmore_line').find('.weui-loading').hide().next().text('没有更多数据！')
+  }
+  function getData($curr,page, cb) {
   	if( parseInt(page) === 1) {
   		$curr.empty()
-  		$curr.next('.weui-loadmore').removeClass('weui-loadmore_line').find('.weui-loading').show().next().text('没有更多数据！')
+  		loading($curr)
   	}
+  	$curr.data('page',page)
     $.post('/account/orderManage', {page:page, orderType: currType}).done(function(res) {
       var resData = res.data
-      if (resData.orders.length < 10){
-        $curr.next('.weui-loadmore').addClass('weui-loadmore_line').find('.weui-loading').hide().next().text('没有更多数据！')
+      console.log(resData.orders.length, '-----------')
+      if (resData.orders.length < 2){
+      	loadingStop($curr)
+      	$curr.data('stop', true)
+        // $curr.next('.weui-loadmore').addClass('weui-loadmore_line').find('.weui-loading').hide().next().text('没有更多数据！')
       }
       $curr.append(orderItemCompile({orders:resData.orders}))
+      cb && cb()
     })
   }
   function initPage() {
@@ -138,14 +232,22 @@ jQuery(function(){
 
   $(".infinite").infinite().on("infinite", function() {
     var self = this;
+    var $self = $(self)
     if(self.loading) return;
-    console.log(self)
     self.loading = true;
-    console.log(self);
-    setTimeout(function() {
-      $(self).find(".tab-content").append("<p>我是加载的新内容。我是加载的新内容。。。我是加载的新内容。。。我是加载的新内容。。。我是加载的新内容。。。我是加载的新内容。。。我是加载的新内容。。。我是加载的新内容。。。我是加载的新内容。。。。。</p>");
-      self.loading = false;
-    }, 2000)   //模拟延迟
+    var $curr = $self.find('.tab-content')
+    console.log(true)
+    console.log($curr.data('stop'))
+    if($curr.data('stop') === true) return ;
+    loading($curr)
+    getData($curr,parseInt($curr.data('page'))+1, function() {
+        self.loading = false
+    })
+
+    // setTimeout(function() {
+    //   $(self).find(".tab-content").append("<p>我是加载的新内容。我是加载的新内容。。。我是加载的新内容。。。我是加载的新内容。。。我是加载的新内容。。。我是加载的新内容。。。我是加载的新内容。。。我是加载的新内容。。。我是加载的新内容。。。。。</p>");
+    //   self.loading = false;
+    // }, 2000)   //模拟延迟
   });
 })
 </script>`)%>

@@ -37,16 +37,18 @@
       </div>
     </div>
     <% } else { %>
-      <div class="weui-cells">
-        <div class="weui-cell">
+      <div class="weui-cells padding-v" style="margin-top:0;">
+        <div class="weui-cell weui-cell_access">
           <div class="weui-cell__hd" style="position: relative;margin-right: 10px;">
-            <img src="images/pic_160.png" style="width: 50px;display: block">
-            <span class="weui-badge" style="position: absolute;top: -.4em;right: -.4em;">8</span>
+            <div style="width:60px;height:60px;border-radius:100%;background:url(<%=user.headImg %>) no-repeat center;background-size:cover;"></div>
+            <!--<img src="<%=user.headImg %>" style="width: 50px;display: block">-->
+            <!--<span class="weui-badge" style="position: absolute;top: -.4em;right: -.4em;">8</span>-->
           </div>
           <div class="weui-cell__bd">
             <p><%=user.nickname %></p>
-            <p style="font-size: 13px;color: #888888;"></p>
+            <p style="font-size: 13px;color: #888888;">白石山农场欢迎您的到来</p>
           </div>
+          <span class="weui-cell__ft"></span>
         </div>
       </div>
     <% } %>

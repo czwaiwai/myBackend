@@ -24,7 +24,7 @@
 .goods_btn_primary {
   color:#FFF;
   display:inline-block;
-  background:#59b210;
+  background:#58953b;
   padding:0 20px;
   text-align:center;
   border-left:1px solid #e3e3e3;
@@ -58,8 +58,6 @@
           <% goods.imgs.forEach(function(item ){ %>
             <div class="swiper-slide"><img src="<%=item %>" alt=""></div>
           <% })%>
-          <div class="swiper-slide"><img src="/upload/banner2.jpg" alt=""></div>
-          <div class="swiper-slide"><img src="/upload/banner3.jpg" alt=""></div>
         </div>
       </div>
       <div class="padding15-h padding-top padding-bottom border-bottom">
@@ -87,7 +85,7 @@
   </div>
   <div class="page__ft weui-flex">
     <div class="weui-flex__item padding-left15">
-      <a><i class="iconfont icon-cart fs22"></i></a>
+      <a class="" href="/app/cart"><i class="iconfont icon-cart fs22"></i></a>
     </div>
     <div style="margin-right:-2px;">
       <a id="quickBuy" class="goods_btn goods_btn_default">立即购买</a>
@@ -97,7 +95,7 @@
     </div>
   </div>
 </div>
-<div id="test" class="weui-popup__container popup-bottom " style="z-index:110;">
+<div id="numPopup" class="weui-popup__container popup-bottom " style="z-index:110;">
   <div class="weui-popup__overlay" ></div>
   <div class="weui-popup__modal">
     <div class="toolbar">
@@ -107,36 +105,77 @@
       </div>
     </div>
     <div class="modal-content" style="min-height:300px;">
-      <div class="weui-cells">
-        <div class="weui-cell">
-          <div class="weui-cell__bd">
-            <p>选择数量</p>
-          </div>
-          <div class="weui-cell__ft">
-            <div class="weui-count">
-              <a class="weui-count__btn weui-count__decrease"></a>
-              <input class="weui-count__number" type="number" value="1">
-              <a class="weui-count__btn weui-count__increase"></a>
+      <form id="form" action="/order/index" method="post"  novalidate>
+        <div class="weui-cells">
+          <div class="weui-cell">
+            <div class="weui-cell__bd">
+              <p>选择数量</p>
+            </div>
+            <div class="weui-cell__ft padding-top5">
+              <div class="spinner "  >
+                <input name="num"  type="text" value="1" >
+              </div>
+              <input name="id" type="hidden" value="<%=goods._id%>">
+              <input name="status" type="hidden" value="buy">
+              <!--<div class="weui-count">-->
+                <!--<a class="weui-count__btn weui-count__decrease"></a>-->
+                <!--<input class="weui-count__number" type="number" value="1">-->
+                <!--<a class="weui-count__btn weui-count__increase"></a>-->
+              <!--</div>-->
             </div>
           </div>
         </div>
-      </div>
+      </form>
       <div style="height:160px;"></div>
       <div class="weui-btn-area">
-        <a href="javascript:;" class="weui-btn weui-btn_primary">确定</a>
+        <button id="confirmAdd" href="javascript:;" class="weui-btn weui-btn_primary">确定</button>
       </div>
     </div>
   </div>
 </div>
 <% block('footer').append(`<script src='/app/js/swiper.js'></script>`)%>
+<% block('footer').append(`<script src="/js/spinner.js" ></script>`); %>
 <% block('footer').append(`<script>
 jQuery(function(){
+	var isLogin =${user?true:false}
     $(".swiper-container").swiper({})
+    var $spinner = $(".spinner")
+    $spinner.Spinner({
+      callback:function(num) {
+       console.log(num)
+      }
+    });
+	var isSubmit = ''
     $('#addCart').on('click',function(){
-    	$("#test").popup()
+    	if(!isLogin) return $.toast('您还没有登录','text')
+    	isSubmit = 'cart'
+    	$("#numPopup").popup()
     })
     $('#quickBuy').on('click', function () {
-    	$("#test").popup()
+    	if(!isLogin) return $.toast('您还没有登录','text')
+    	isSubmit = 'buy'
+    	$("#numPopup").popup()
+    })
+    $('#confirmAdd').on('click', function () {
+    	if(isSubmit ==='buy') {
+            $('#form').submit()
+    	}
+    	// 添加到购物车
+    	if(isSubmit === 'cart') {
+            $.post('/add2Cart', $('#form').serialize()).done(function(res){
+              console.log(res)
+              if (res.code === 0) {
+                var num = res.data.cart.reduce(function(before,item){
+                  return before + item.goodsNum
+                }, 0)
+                $('#cartBadge').triggerHandler('change.cartBadge',[num])
+                $.toast("添加成功", "text");
+                $.closePopup()
+              } else {
+                $.toast(res.message || '添加错误','text')
+              }
+            })
+    	}
     })
     // $('#chooseNum').find('.weui-popup__container').popup()
 })

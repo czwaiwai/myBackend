@@ -1,39 +1,58 @@
 <% layout('layout/appLayout') %>
+<% block('header').append(`<style>
+.sub_tab_bar {
+    position: fixed;
+    width: 100%;
+    bottom: 52px;
+    background: #FFF;
+    height: 41px;
+    border-top: 1px solid #e3e3e3;
+}
+.confirm_btn{
+    display: block;
+    border: none;
+    width: 100%;
+    height: 100%;
+    background: #58953b;
+    color: #FFF;
+    outline: none;
+    font-size: 16px;
+}
+</style>`)%>
 <div class="page has_tab">
-
   <div class="page__bd">
     <div class="empty_cart text-muted text-center <%=carts.length>0?'hide':'' %>" style="padding-top:40%;">
       <i class="iconfont icon-cart" style="font-size:36px;"></i>
       <p class="fs14">您还没有添加任何商品</p>
       <a class="weui-btn weui-btn_mini weui-btn_primary" href="/app/index" ></a>
     </div>
-    <div class="weui-panel weui-panel_access <%=carts.length===0?'hide':'' %>" >
+    <div style="margin-top:0;" class="weui-panel weui-panel_access <%=carts.length===0?'hide':'' %>" >
       <div class="weui-panel__hd weui-flex">
-        <div style="width:80px;margin-right: .8em;">商品图片</div>
+        <div style="width:85px;margin-right: .8em;">商品图片</div>
         <div class="weui-flex__item">商品名称</div>
         <div>数量/总价</div>
       </div>
-      <div class="weui-panel__bd">
+      <div id="cartList" class="weui-panel__bd">
         <%  carts.forEach(function(item,index){ %>
-        <div href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
+        <div  class="weui-media-box cart_item weui-media-box_appmsg" data-cart-id="<%=item._id%>" data-id="<%=item.goodsId%>"   data-check="<%=item.isCheck %>"  data-num="<%=item.goodsNum %>" data-price="<%=item.price %>" >
           <div class="weui-cells_checkbox" style="margin-left:-10px;">
             <label class="weui-check__label" for="ch1<%=index %>" style="height: 50px;display: block;padding-top: 10px;">
-                <input type="checkbox" class="weui-check" name="checkbox<%=index %>" id="ch1<%=index %>" checked="checked">
+                <input type="checkbox" class="weui-check" name="checkbox<%=index %>" id="ch1<%=index %>"  <%=item.isCheck?'checked':'' %> value="<%item._id%>" >
                 <i class="weui-icon-checked"></i>
             </label>
           </div>
           <div class="weui-media-box__hd">
             <img class="weui-media-box__thumb" src="<%=item.imgUrl%>" alt="">
           </div>
-          <div class="weui-media-box__bd">
-            <h4 class="weui-media-box__title"><%=item.goodsName %></h4>
+          <div class="weui-media-box__bd" style="height:60px;">
+            <h4 class="weui-media-box__title" style="font-size: 14px;height: 40px;"><%=item.goodsName %></h4>
             <p class="weui-media-box__desc">单价：￥<%=item.price %></p>
           </div>
-          <div class="weui-media-box__ft">
+          <div class="weui-media-box__ft" style="height:60px;">
+            <p class="text-right" style="height: 35px;color: #656565;" >￥<span class="sub_total"><%=item.subTotal %></span></p>
             <div class="spinner" >
               <input name="num"  type="text" value="<%=item.goodsNum %>" >
             </div>
-            <p>￥<%=item.subTotal %></p>
           </div>
         </div>
         <% }) %>
@@ -41,14 +60,90 @@
     </div>
   </div>
 </div>
+<div class="sub_tab_bar weui-flex">
+  <div class="weui-cells_checkbox" >
+    <label class="weui-check__label" for="allCheck" style="height: 40px;display: block;padding-top: 5px;">
+      <input type="checkbox" class="weui-check" name="checkboxAll" id="allCheck" >
+      <i class="weui-icon-checked"></i>
+      <span style="font-size: 14px;vertical-align: middle;">全选</span>
+    </label>
+  </div>
+  <div class="weui-flex__item text-right padding-right5" style="line-height:40px;">
+    <span class="fs14">合计：</span><span class="fs16 bold weui-cell_warn">￥<span id="allAmt">100</span></span>
+  </div>
+  <div style="width:100px;">
+    <form id="form" action="/order/index" method="post" novalidate>
+      <input type="hidden" name="status" value="cart">
+      <input type="hidden" name="carts" value="">
+      <input type="hidden" name="totalPrice" value="">
+    </form>
+    <button id="confirmBtn" class="confirm_btn">下单</button>
+  </div>
+</div>
 <% block('footer').append(`<script src="/js/spinner.js" ></script>`); %>
 <% block('footer').append(`<script>
 jQuery(function(){
-	var $spinner = $(".spinner")
+  var $spinner = $(".spinner")
+  var $cartList = $('#cartList')
+  var $allAmt = $('#allAmt')
+  var $allCheck = $('#allCheck')
+  var $confirmBtn = $('#confirmBtn')
+  var $form = $('#form')
   $spinner.Spinner({
     callback:function(num) {
      console.log(num)
+     var $item = this.closest('.cart_item')
+     $item.data('num', num)
+     var price = parseFloat($item.data('price'))
+     $.post('/cart/changeCartNum',{id:$item.data('cartId'),num:num})
+     $item.find('.sub_total').text($.formatFloat(num * price))
+     renderAll()
     }
   });
+  $cartList.on('change','input[type=checkbox]',function(){
+  	var $this = $(this)
+  	var $item = $this.closest('.cart_item')
+    $item.data('check',$this.prop('checked'))
+    $.post('/cart/changeCartCheck', {id:$item.data('cartId'),check:$this.prop('checked')})
+  	renderAll()
+  })
+  $allCheck.on('change',function () {
+  	var $this = $(this)
+  	var bool = $this.prop('checked')
+  	$cartList.find('input[type=checkbox]').prop('checked', bool)
+    $cartList.children().each(function(){
+      $(this).data('check',bool)
+    })
+    $.post('/cart/checkAll',{check:$this.prop('checked')})
+    renderAll()
+  })
+  function renderAll () {
+    var carts = []
+    var checkPayAmt = 0
+    var isAllCheck = true
+  	$cartList.children().each(function() {
+      var $this = $(this)
+      var data = $this.data()
+      carts.push(data)
+      isAllCheck = isAllCheck && data.check
+      if(data.check === true) {
+      	checkPayAmt += $.formatFloat(parseFloat(data.price) * parseInt(data.num))
+      }
+    })
+    if(isAllCheck && $allCheck.prop('checked')===false) {
+      $allCheck.prop('checked',true)
+    }
+    $allAmt.text(checkPayAmt)
+    // carts.
+
+  }
+  $confirmBtn.on('click',function() {
+
+  	$form.submit()
+  })
+  function init () {
+    renderAll()
+  }
+  init()
 })
 </script>`)%>

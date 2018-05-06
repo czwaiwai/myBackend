@@ -9,7 +9,7 @@ var _ = require('lodash');
 // var User =require('../models/user');
 /* GET home page. */
 let EventProxy = require('eventproxy')
-let {Page, User, Catalog, Goods, Article, Cart, Dict, Address} = require('../viewModels')
+let {Page, User, Catalog, Goods, Article, Cart, Dict, Address, Order} = require('../viewModels')
 let {formatFloat} = require('../utils/tools')
 router.get('/', (req, res)=> {
 	//console.log(req.session.user,"这里可以取到session");
@@ -94,6 +94,24 @@ router.get('/address', (req, res, next) => {
 
 router.get('/orders', (req, res, next) => {
 	res.render('app/orders', {title: '我的订单'})
+})
+router.get('/orders/detail/:id', (req, res, next) => {
+	Order.findById(req.params.id, (err, order) => {
+		res.json({
+			code: 0,
+			message: '查询成功',
+			data: {title: '订单详情', order}
+		})
+		// res.render('account/orderDetail', {title: '订单详情', order, formatFloat:formatFloat})
+	})
+})
+router.get('/orderPay',(req, res, next) => {
+
+	res.render('app/orderPay', {title: '订单确认'})
+})
+router.get('/paySucc', (req, res, next) => {
+
+	res.render('app/paySucc', {title: '支付成功'})
 })
 
 router.get('/page/:pageName', (req, res, next) => {
