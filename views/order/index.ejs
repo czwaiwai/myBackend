@@ -242,7 +242,7 @@ jQuery(function(){
    function getRemotePostage (data) {
      $.post('/order/postage',data).done(function(res) {
         if(res.code === 0) {
-            let payPrice = $.formatFloat(parseFloat(totalPrice) + parseFloat(res.data.feePrice))
+            var payPrice = $.formatFloat(parseFloat(totalPrice) + parseFloat(res.data.feePrice))
             $showFee.text(res.data.feePrice)
             $showNeedPrice.text(payPrice)
             $orderForm.find('input[name=needPrice]').val(payPrice)

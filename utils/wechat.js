@@ -3,6 +3,7 @@
  */
 const crypto = require('crypto');
 const request = require('request')
+const qs = require('qs')
 const util = require('util')
 const xml2js = require('xml2js')
 let {txtMsg, imgMsg, graphicMsg} = require('./wxMsgTpl') //回复的消息模板
@@ -120,4 +121,55 @@ Wechat.prototype.getAccessToken = function () {
 		 	resolve(accessToken.accessToken)
 		}
 	})
+}
+// 静默授权
+Wechat.prototype.authLogin  = function () {
+	let appid = this.config.appID;
+	let reirect_uri = encodeURIComponent('http://www.bssfood.com/auth')
+	let scope = 'snsapi_base';
+	let state = 'bssfood';
+	
+	let reqUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${reirect_uri}&response_type=code&scope=${scope}&state=${state}#wechat_redirect`
+	return new Promise((resolve,reject) => {
+		request.get(reqUrl,(err,response,body) => {
+			if(err) {
+				return reject(err)
+			}
+			console.log(body, 'authLogin')
+			return resolve(body)
+		})
+	})
+}
+// 用户微信登录code换取openId
+Wechat.prototype.getCodeToken = function (code) {
+	let reqUrl = 'https://api.weixin.qq.com/sns/oauth2/access_token?';
+	let params = {
+		appid: this.config.appID,
+		secret: this.config.appScrect,
+		code: code,
+		grant_type: 'authorization_code'
+	}
+	return new Promise((resolve, reject) => {
+		request.get(reqUrl+qs.stringify(params),(err,response,body) => {
+			if(err) {
+				return reject(err)
+			}
+			console.log(body, 'authorization_code')
+			// { "access_token":"ACCESS_TOKEN",
+			// 	"expires_in":7200,
+			// 	"refresh_token":"REFRESH_TOKEN",
+			// 	"openid":"OPENID",
+			// 	"scope":"SCOPE" }
+			// {"errcode":40029,"errmsg":"invalid code"}
+			return resolve(body)
+		})
+	})
+}
+Wechat.prototype.reflashToken = function () {
+	let reqUrl = 'https://api.weixin.qq.com/sns/oauth2/refresh_token?appid=APPID&grant_type=refresh_token&refresh_token=REFRESH_TOKEN'
+	// { "access_token":"ACCESS_TOKEN",
+	// 	"expires_in":7200,
+	// 	"refresh_token":"REFRESH_TOKEN",
+	// 	"openid":"OPENID",
+	// 	"scope":"SCOPE" }
 }

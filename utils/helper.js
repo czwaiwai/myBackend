@@ -16,6 +16,9 @@ module.exports.loginValid = function (req, res, next) {
 				data: {}
 			})
 		}
+		if(req.baseUrl === '/app') {
+			return res.redirect('/app/login')
+		}
 		return res.redirect('/login')
 	}
 }

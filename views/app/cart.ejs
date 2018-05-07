@@ -148,8 +148,8 @@ jQuery(function(){
       $allCheck.prop('checked',true)
     }
     $form.find('input[name=carts]').val(JSON.stringify(carts))
-    $form.find('input[name=totalPrice]').val(checkPayAmt)
-    $allAmt.text(checkPayAmt)
+    $form.find('input[name=totalPrice]').val($.formatFloat(checkPayAmt))
+    $allAmt.text($.formatFloat(checkPayAmt))
     // carts.
 
   }

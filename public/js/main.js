@@ -103,8 +103,9 @@ jQuery(function(){
 					});
 				},
 				formatFloat:  function(f, digit) {
-					var m = Math.pow(10, digit || 2);
-					return parseInt(f * m, 10) / m;
+					return Math.round(f*100)/100
+					// var m = Math.pow(10, digit || 2);
+					// return parseInt(f * m, 10) / m;
 				}
     })
 

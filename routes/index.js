@@ -54,6 +54,22 @@ router.get('/', (req, res, next)=> {
 	Dict.findByGroup('home',ep.done('dicts'))
 	Goods.getHotGoods (ep.done('goods'))
 });
+
+router.get('/auth', (req, res) => {
+	let code = req.query.code
+	let state = req.query.state
+	// 得到code
+	console.log(code,state, 'code-------------state-------')
+	res.json({
+		code:0,
+		message:'success',
+		data: {
+			code,
+			state
+		}
+	})
+})
+
 router.get('/imgCode',(req,res)=>{
    var arr= ccap.get();
    req.session.imgCode=arr[0]+"";

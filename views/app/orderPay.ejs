@@ -25,6 +25,13 @@
     font-size: 16px;
     height: 100%;
 }
+.edit_btn {
+    display: block;
+    width: 40px;
+    text-align: center;
+    height: 40px;
+    line-height: 40px;
+}
 </style>`) %>
 <div class="page has_head has_tab">
     <div class="page__hd weui-flex">
@@ -40,12 +47,33 @@
         <div class="weui-cells__title">收货地址</div>
         <div class="weui-panel weui-panel_access" style="margin-top:0;">
             <div class="weui-panel__bd">
-                <a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
+                <% if (address) { %>
+                <a id="addrChoose" class=" weui-media-box weui-media-box_appmsg  weui-cell_access"  href="javascript:void(0);">
+                    <div  class="padding-right text-muted">
+                        <i class="iconfont icon-map fs24 "></i>
+                    </div>
                     <div class="weui-media-box__bd">
                         <h4 class="weui-media-box__title"><%=address.name %> <span class="padding-left"><%=address.mobile%></span></h4>
-                        <p class="weui-media-box__desc"><%=address.address %></p>
+                        <p class="weui-media-box__desc">
+                          <%=address.province %><%=address.city %><%=address.area%><%=address.address %>
+                        </p>
                     </div>
+                    <div class="weui-cell__ft"></div>
                 </a>
+                <% } else { %>
+                <a id="addrChoose" class=" weui-media-box weui-media-box_appmsg weui-cell_access"  href="javascript:void(0);">
+                    <div  class="padding-right text-muted">
+                        <i class="iconfont icon-map fs24 "></i>
+                    </div>
+                    <div class="weui-media-box__bd">
+                        <h4 class="weui-media-box__title">添加收货地址</h4>
+                        <p class="weui-media-box__desc">
+
+                        </p>
+                    </div>
+                    <div class="weui-cell__ft"></div>
+                </a>
+                <% } %>
             </div>
         </div>
         <div class="weui-cells__title">商品详情</div>
@@ -68,21 +96,266 @@
                 <% }) %>
             </div>
             <div class="weui-panel__ft">
-                <div class="weui-cell   weui-flex">
+                <div class="weui-cell  weui-cell_link weui-flex">
                     <div class="weui-cell__bd"></div>
-                    <span class="weui-cell__ft" style="color:#656565;">合计金额：￥<%=totalPrice %></span>
+                    <span class="weui-cell__ft" style="color:#656565;">
+                        商品总计：<span class="fs16">￥<%=totalPrice %></span>
+                    </span>
+                </div>
+                <div class="weui-cell  weui-cell_link weui-flex">
+                    <div class="weui-cell__bd"></div>
+                    <span class="weui-cell__ft" style="color:#656565;">邮费：￥<span id="showFee"><%=feeDf %></span></span>
                 </div>
             </div>
         </div>
     </div>
     <div class="page__ft weui-flex">
         <div class="weui-flex__item padding-left15">
-           应付：
+           应付：<span class="main-color fs18">￥<span id="showNeedPrice"><%=needPrice %></span></span>
         </div>
         <div >
+        <form id="orderForm">
+            <input name="goods" type="hidden"  value="<%=JSON.stringify(goods) %>" >
+            <input name="totalPrice" type="hidden"  value="<%=totalPrice %>" >
+            <input name="fee" type="hidden"  value="<%=feeDf %>" >
+            <input name="addressId" type="hidden" value="<%=address && address._id %>" >
+            <input name="needPrice" type="hidden" value="<%=needPrice %>">
+        </form>
           <a id="addCart" href="/app/paySucc" class="goods_btn goods_btn_primary">微信支付</a>
         </div>
     </div>
 </div>
+<div id="addrList" class="weui-popup__container" style="z-index:111">
+    <div class="weui-popup__overlay"></div>
+    <div class="weui-popup__modal">
+        <div class="toolbar">
+            <div class="toolbar-inner">
+                <a href="javascript:;" class="picker-button close-popup"  style="left:0;right:auto;">返回</a>
+                <h1 class="title">地址列表</h1>
+                <a id="newAddr" href="javascript:;" class="picker-button "  >新增</a>
+            </div>
+        </div>
+        <div class="modal-content" style="min-height:300px;">
+            <div class="weui-panel weui-panel_access">
+                <div class="weui-panel__bd">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="addAddr" class="weui-popup__container" style="z-index:112">
+    <div class="weui-popup__overlay"></div>
+    <div class="weui-popup__modal">
+        <div class="toolbar">
+            <div class="toolbar-inner">
+                <a href="javascript:;" class="picker-button close-popup"  style="left:0;right:auto;">返回</a>
+                <h1 class="title">新增地址</h1>
+            </div>
+        </div>
+        <div class="modal-content" style="min-height:300px;">
+            <form id="addrForm" autocomplete="off"  method="post" novalidate>
+                <div class="weui-cells weui-cells_form">
+                    <div class="weui-cell">
+                        <div class="weui-cell__hd"><label class="weui-label">联系人</label></div>
+                        <div class="weui-cell__bd">
+                            <input name="name" class="weui-input" type="text"  placeholder="请输入联系人">
+                        </div>
+                    </div>
+                    <div class="weui-cell">
+                        <div class="weui-cell__hd">
+                            <label class="weui-label">手机号</label>
+                        </div>
+                        <div class="weui-cell__bd">
+                            <input  name="mobile" class="weui-input" type="tel" placeholder="请输入联系人手机号">
+                        </div>
+                    </div>
+                    <div class="weui-cell">
+                        <div class="weui-cell__hd"><label for="" class="weui-label">地区选择</label></div>
+                        <div class="weui-cell__bd">
+                            <input  class="weui-input" id="city-picker" type="text" value="" placeholder="">
+                        </div>
+                    </div>
+                    <div class="weui-cells weui-cells_form">
+                        <div class="weui-cell">
+                            <div class="weui-cell__bd">
+                                <textarea name="address" class="weui-textarea" placeholder="请输入详细地址" rows="3"></textarea>
+                                <!--<div class="weui-textarea-counter"><span>0</span>/200</div>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="weui-btn-area">
+                    <input id="updateAddr" name="isUpdate" type="hidden" >
+                    <button class="weui-btn weui-btn_primary" >保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<% block('footer').append(`<script src='/app/js/city-picker.js'></script>`)%>
+<% block('footer').append(`<script id="showAddrTpl" type="text/template" >
+<div  class="padding-right text-muted">
+  <i class="iconfont icon-map fs24 "></i>
+</div>
+<div class="weui-media-box__bd">
+  <@ if(address.name) { @>
+    <h4 class="weui-media-box__title">
+      <@=address.name @><span class="padding-left"><@=address.mobile @></span>
+    </h4>
+    <p class="weui-media-box__desc">
+      <@=address.province@><@=address.city@><@=address.area@><@=address.address@>
+    </p>
+  <@ }else { @>
+    <h4 class="weui-media-box__title">添加收货地址</h4>
+    <p class="weui-media-box__desc"></p>
+  <@ } @>
+</div>
+<div class="weui-cell__ft"></div>
+</script>`)%>
+<% block('footer').append(`<script id="addrChooseTpl" type="text/template">
+<@ _.each(list,function(item){ @>
+<a class="weui-media-box weui-media-box_appmsg" data-id="<@=item._id @>"  data-addrs="<@=item.province@> <@=item.city@> <@=item.area@>" data-codes="<@=item.provinceId @>,<@=item.cityId @>,<@=item.areaId @>"  data-province="<@=item.province @>" data-city="<@=item.city @>" data-area="<@=item.area@>" data-address="<@=item.address @>" data-name="<@=item.name @>" data-mobile="<@=item.mobile @>">
+    <div class="weui-media-box__bd">
+        <h4 class="weui-media-box__title"><@=item.name @> <span class="padding-left15"><@=item.mobile @></span></h4>
+        <p class="weui-media-box__desc"><@=item.province @><@=item.city @><@=item.area@><@=item.address @></p>
+    </div>
+    <div class="weui-media-box__ft">
+      <span class="edit_btn "><i class="iconfont icon-edit fs20"></i></span>
+    </div>
+</a>
+<@ }) @>
+</script>`)%>
 <% block('footer').append(`<script>
+var $addAddr = $('#addAddr')
+var $newAddr = $('#newAddr')
+var $cityPicker = $('#city-picker')
+var $addrList = $('#addrList')
+var $addrForm = $('#addrForm')
+var $orderForm = $('#orderForm')
+var $addrChoose = $('#addrChoose')
+
+var $showFee = $('#showFee')
+var $showNeedPrice =  $('#showNeedPrice')
+
+var addrChooseTplCompile = _.template($('#addrChooseTpl')[0].innerHTML)
+var showAddrTplCompile = _.template($('#showAddrTpl')[0].innerHTML)
+$cityPicker.cityPicker({
+  title: "请选择地区",
+  onClose:function (picker,codes) {
+    $cityPicker.data('codes',picker.value.join(','))
+  }
+})
+$newAddr.on('click',function () {
+	$addrForm.find('input').val('')
+	$addrForm.find('textarea').val('')
+	$addAddr.popup()
+})
+
+$addrForm.on('submit',function (e) {
+	e.preventDefault()
+    var $this = $(this)
+    var arr = $this.serializeArray()
+    var addrObj = {}
+    arr.forEach(function(item, index) {
+      addrObj[item.name] = item.value
+    })
+    if ($cityPicker.val()) {
+      var nameArr = $cityPicker.val().split(' ')
+      var codeArr =$cityPicker.data('codes').split(',')
+      addrObj.province = codeArr[0] + ',' + nameArr[0]
+      addrObj.city = codeArr[1] + ',' + nameArr[1]
+      addrObj.area = codeArr[2] + ',' + nameArr[2]
+    }
+    $.post('/account/address',addrObj).done(function(res){
+      console.log(res)
+      var address = res.data.address
+      setNewAddr(address)
+      getRemotePostage({
+        area: address.areaId + ',' + address.area,
+        city: address.cityId + ',' + address.city,
+        province: address.provinceId + ',' + address.province
+      })
+      // 保存并选择上
+//      if(addrObj.isUpdate) { // 更新
+//        $('#addressManage').find('a[data-id='+res.data.address._id+']').replaceWith(addrItemCompile({item:res.data.address}))
+//      } else { // 添加
+//        $('#addressManage').find('.weui-panel__bd').append(addrItemCompile({item:res.data.address}))
+//      }
+      $.closePopup()
+      $.toptip('操作成功', 'success');
+    })
+    console.log(addrObj)
+	return false
+})
+$('#addrChoose').on('click',function(){
+	var $listWrap = $addrList.find('.weui-panel__bd')
+  addrListShow(function(list){
+  	  $listWrap.empty().append(addrChooseTplCompile({list:list}))
+      $addrList.popup()
+  })
+})
+$addrList.on('click','.weui-media-box',function() {
+  var $this = $(this)
+  var data = $this.data()
+  console.log(data)
+  // 选择上
+  var address = data
+  address._id = data.id
+  var arr = data.codes.split(',')
+  address.provinceId = arr[0]
+  address.cityId = arr[1]
+  address.areaId = arr[2]
+  setNewAddr(address)
+  getRemotePostage({
+    area: address.areaId + ',' + address.area,
+    city: address.cityId + ',' + address.city,
+    province: address.provinceId + ',' + address.province
+  })
+  $.closePopup()
+})
+
+$addrList.on('click','.edit_btn',function(e) {
+	e.preventDefault()
+  var $this = $(this)
+  var data = $this.closest('.weui-media-box').data()
+  console.log(data, '0------')
+  $addrForm.find('input[name=name]').val(data.name)
+  $addrForm.find('input[name=mobile]').val(data.mobile)
+  $addrForm.find('textarea[name=address]').val(data.address)
+  $addrForm.find('input[name=isUpdate]').val(data.id)
+  $cityPicker.val(data.addrs)
+  $cityPicker.data('codes', data.codes)
+  $addAddr.popup()
+  return false
+//  $.closePopup()
+})
+
+// 设置新的地址
+function setNewAddr (address) {
+	$orderForm.find('input[name=addressId]').val(address._id)
+	$addrChoose.empty().append(showAddrTplCompile({address:address}))
+}
+// 计算新邮费并设置
+function getRemotePostage (data) {
+ $.post('/order/postage',data).done(function(res) {
+    if(res.code === 0) {
+      var totalPrice = $orderForm.find('input[name=totalPrice]').val()
+      var payPrice = $.formatFloat(parseFloat(totalPrice) + parseFloat(res.data.feePrice))
+      console.log(parseFloat(totalPrice) + parseFloat(res.data.feePrice), '-----------')
+      console.log($.formatFloat(parseFloat(totalPrice) + parseFloat(res.data.feePrice)))
+      $showFee .text(res.data.feePrice)
+      $showNeedPrice.text(payPrice)
+      $orderForm.find('input[name=needPrice]').val(payPrice)
+      $orderForm.find('input[name=fee]').val(res.data.feePrice)
+    }
+ })
+}
+
+function addrListShow (cb) {
+  $.get('/account/getAllAddress').done(function(res) {
+        console.log(res.data.address)
+        var addrList = res.data.address
+        cb && cb(addrList)
+    })
+}
 </script>`) %>

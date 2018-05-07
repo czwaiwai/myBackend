@@ -8,6 +8,7 @@ var _ = require('lodash');
 // var schema=require('async-validator');
 // var User =require('../models/user');
 /* GET home page. */
+let {loginValid} = require('../utils/helper')
 let EventProxy = require('eventproxy')
 let {Page, User, Catalog, Goods, Article, Cart, Dict, Address, Order} = require('../viewModels')
 let {formatFloat} = require('../utils/tools')
@@ -80,19 +81,19 @@ router.get('/cart', (req, res)=> {
 	}
 	res.render('app/cart', {title: '购物车', carts, total})
 })
-router.get('/center', (req, res)=> {
+router.get('/center',  (req, res)=> {
 	//console.log(req.session.user,"这里可以取到session");
 	res.render('app/center',{title:"个人中心"});
 });
 
-router.get('/address', (req, res, next) => {
+router.get('/address',loginValid, (req, res, next) => {
 	Address.findAllAddress(req.session.user._id, (err, address) => {
 		if (err) return next(err)
 		res.render('app/address',  {title: '地址管理', address:address.address})
 	})
 })
 
-router.get('/orders', (req, res, next) => {
+router.get('/orders',loginValid, (req, res, next) => {
 	res.render('app/orders', {title: '我的订单'})
 })
 router.get('/orders/detail/:id', (req, res, next) => {
@@ -105,7 +106,11 @@ router.get('/orders/detail/:id', (req, res, next) => {
 		// res.render('account/orderDetail', {title: '订单详情', order, formatFloat:formatFloat})
 	})
 })
-router.post('/orderPay',(req, res, next) => {
+// 手机支付
+router.post('/pay', loginValid, (req, res, next) => {
+
+})
+router.post('/orderPay',loginValid,(req, res, next) => {
 	let address = null
 	let addrList = []
 	let totalPrice = req.body.totalPrice
@@ -155,7 +160,7 @@ router.post('/orderPay',(req, res, next) => {
 	}
 	// res.render('app/orderPay', {title: '订单确认'})
 })
-router.get('/paySucc', (req, res, next) => {
+router.get('/paySucc',loginValid, (req, res, next) => {
 
 	res.render('app/paySucc', {title: '支付成功'})
 })
