@@ -128,7 +128,6 @@ Wechat.prototype.authLogin  = function () {
 	let reirect_uri = encodeURIComponent('http://www.bssfood.com/auth')
 	let scope = 'snsapi_base';
 	let state = 'bssfood';
-	
 	let reqUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${reirect_uri}&response_type=code&scope=${scope}&state=${state}#wechat_redirect`
 	return new Promise((resolve,reject) => {
 		request.get(reqUrl,(err,response,body) => {
@@ -142,15 +141,17 @@ Wechat.prototype.authLogin  = function () {
 }
 // 用户微信登录code换取openId
 Wechat.prototype.getCodeToken = function (code) {
-	let reqUrl = 'https://api.weixin.qq.com/sns/oauth2/access_token?';
-	let params = {
-		appid: this.config.appID,
-		secret: this.config.appScrect,
-		code: code,
-		grant_type: 'authorization_code'
-	}
+	//
+	// let reqUrl = 'https://api.weixin.qq.com/sns/oauth2/access_token?';
+	// let params = {
+	// 	appid: this.config.appID,
+	// 	secret: this.config.appScrect,
+	// 	code: code,
+	// 	grant_type: 'authorization_code'
+	// }
+	let reqUrl = `https://api.weixin.qq.com/sns/oauth2/access_token?appid=${this.config.appID}&secret=${this.config.appScrect}&code=${code}&grant_type=authorization_code`
 	return new Promise((resolve, reject) => {
-		request.get(reqUrl+qs.stringify(params),(err,response,body) => {
+		request.get(reqUrl,(err,response,body) => {
 			if(err) {
 				return reject(err)
 			}
@@ -161,6 +162,17 @@ Wechat.prototype.getCodeToken = function (code) {
 			// 	"openid":"OPENID",
 			// 	"scope":"SCOPE" }
 			// {"errcode":40029,"errmsg":"invalid code"}
+			return resolve(body)
+		})
+	})
+}
+Wechat.prototype.getUserInfo = function (accToken, openId) {
+	let reqUrl = `https://api.weixin.qq.com/sns/userinfo?access_token=${accToken}&openid=${openId}&lang=zh_CN`
+	return new Promise((resolve,reject) => {
+		request.get(reqUrl, (err, response, body) => {
+			if(err) {
+				return  reject(err)
+			}
 			return resolve(body)
 		})
 	})

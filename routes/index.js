@@ -8,6 +8,7 @@ var _ = require('lodash');
 let {formatFloat} = require('../utils/tools')
 let {loginValid} = require('../utils/helper')
 let WxPay = require('../utils/wxPay')
+let Wechat = require('../utils/wechat')
 let EventProxy = require('eventproxy')
 let {Page, User, Catalog, Goods, Article, Cart, Address, Order, Dict, Postage} = require('../viewModels')
 let dicts = []
@@ -55,19 +56,36 @@ router.get('/', (req, res, next)=> {
 	Goods.getHotGoods (ep.done('goods'))
 });
 
+router.get('/authLogin', (req, res) => {
+	let code = req.query.code
+	let state = req.query.state
+	Wechat.getCodeToken(code).then((json) => {
+		console.log('json', json)
+		Wechat.getUserInfo(json.access_token, json.openid).then(userInfo => {
+			console.log('这里创建用户', userInfo)
+			console.log('跳转到首页')
+			res.redirect('/app/index')
+		})
+	})
+})
+
 router.get('/auth', (req, res) => {
 	let code = req.query.code
 	let state = req.query.state
 	// 得到code
 	console.log(code,state, 'code-------------state-------')
-	res.json({
-		code:0,
-		message:'success',
-		data: {
-			code,
-			state
-		}
+	Wechat.getCodeToken(code).then((json) => {
+		console.log('json', json)
+		res.json({
+			code:0,
+			message:'success',
+			data: {
+				code,
+				state
+			}
+		})
 	})
+	// {"code":0,"message":"success","data":{"code":"081BUZWE07xN3k2cCi0F00vWWE0BUZWT","state":"bssfood"}}
 })
 
 router.get('/imgCode',(req,res)=>{
