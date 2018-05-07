@@ -65,7 +65,7 @@ router.get('/authLogin', (req, res, next) => {
 		console.log('json', json)
 		console.log(typeof json)
 		wechat.getUserInfo(json.access_token, json.openid).then(wxUser=> {
-			console.log('这里创建用户', userInfo)
+			console.log('这里创建用户', wxUser)
 			// { openid: 'o5W010h6MfsZS-j1ZEUE-ZwKPelA',
 			// 	nickname: '歪歪😰',
 			// 	sex: 1,
