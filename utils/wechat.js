@@ -135,7 +135,12 @@ Wechat.prototype.authLogin  = function () {
 				return reject(err)
 			}
 			console.log(body, 'authLogin')
-			return resolve(body)
+			// return resolve(body)
+			try {
+				return resolve(JSON.parse(body))
+			} catch (e) {
+				return reject(e)
+			}
 		})
 	})
 }
@@ -162,7 +167,11 @@ Wechat.prototype.getCodeToken = function (code) {
 			// 	"openid":"OPENID",
 			// 	"scope":"SCOPE" }
 			// {"errcode":40029,"errmsg":"invalid code"}
-			return resolve(body)
+			try {
+				return resolve(JSON.parse(body))
+			} catch (e) {
+				return reject(e)
+			}
 		})
 	})
 }
@@ -173,7 +182,12 @@ Wechat.prototype.getUserInfo = function (accToken, openId) {
 			if(err) {
 				return  reject(err)
 			}
-			return resolve(body)
+			try {
+				return resolve(JSON.parse(body))
+			} catch (e) {
+				return reject(e)
+			}
+			// return resolve(body)
 		})
 	})
 }
