@@ -9,6 +9,8 @@ let {formatFloat} = require('../utils/tools')
 let {loginValid} = require('../utils/helper')
 let WxPay = require('../utils/wxPay')
 let Wechat = require('../utils/wechat')
+const wxConfig = require('../wx.json')
+const wechat = new Wechat(wxConfig)
 let EventProxy = require('eventproxy')
 let {Page, User, Catalog, Goods, Article, Cart, Address, Order, Dict, Postage} = require('../viewModels')
 let dicts = []
@@ -59,9 +61,9 @@ router.get('/', (req, res, next)=> {
 router.get('/authLogin', (req, res) => {
 	let code = req.query.code
 	let state = req.query.state
-	Wechat.getCodeToken(code).then((json) => {
+	wechat.getCodeToken(code).then((json) => {
 		console.log('json', json)
-		Wechat.getUserInfo(json.access_token, json.openid).then(userInfo => {
+		wechat.getUserInfo(json.access_token, json.openid).then(userInfo => {
 			console.log('这里创建用户', userInfo)
 			console.log('跳转到首页')
 			res.redirect('/app/index')
@@ -74,7 +76,7 @@ router.get('/auth', (req, res) => {
 	let state = req.query.state
 	// 得到code
 	console.log(code,state, 'code-------------state-------')
-	Wechat.getCodeToken(code).then((json) => {
+	wechat.getCodeToken(code).then((json) => {
 		console.log('json', json)
 		res.json({
 			code:0,
