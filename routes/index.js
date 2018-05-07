@@ -75,7 +75,8 @@ router.get('/authLogin', (req, res, next) => {
 			// 	country: '奥地利',
 			// 	headimgurl: 'http://thirdwx.qlogo.cn/mmopen/vi_32/Vu0c5PibbGxXRRsjAUJnllGWGeXbibV2eQtgCOLCAnORQey6l5f46ZMyD0qgLiaez1fPIoWmFBicnZuQKmd7ibias4ww/132',
 			// 	privilege: [] }
-			User.findByOpenId (wxUser.openid, function(user) {
+			User.findByOpenId (wxUser.openid, function(err, user) {
+				if (err) return next(err)
 				if(user) { // 找到user并登录
 					req.session.user = user
 					return res.redirect('/app/index')

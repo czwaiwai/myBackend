@@ -106,10 +106,7 @@ router.get('/orders/detail/:id', (req, res, next) => {
 		// res.render('account/orderDetail', {title: '订单详情', order, formatFloat:formatFloat})
 	})
 })
-// 手机支付
-router.post('/pay', loginValid, (req, res, next) => {
-
-})
+// 下单 支付确认
 router.post('/orderPay',loginValid,(req, res, next) => {
 	let address = null
 	let addrList = []
@@ -160,10 +157,20 @@ router.post('/orderPay',loginValid,(req, res, next) => {
 	}
 	// res.render('app/orderPay', {title: '订单确认'})
 })
+// 手机支付
+router.post('/pay', loginValid, (req, res, next) => {
+
+})
 router.get('/paySucc',loginValid, (req, res, next) => {
 
 	res.render('app/paySucc', {title: '支付成功'})
 })
+
+router.get('/setting',loginValid, (req, res, next) => {
+
+	res.render('app/setting', {title: '个人设置'})
+})
+
 
 router.get('/page/:pageName', (req, res, next) => {
 	let nav = res.locals.catalogs.filter(item => item.relativeUrl.indexOf('/page') === 0)

@@ -15,4 +15,9 @@
 			// return parseInt(f * m, 10) / m;
 		}
 	})
+	$.ajaxSetup({
+		headers: {
+			'X-Requested-With': 'XMLHttpRequest'
+		}
+	})
 })(jQuery)

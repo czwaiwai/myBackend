@@ -38,7 +38,7 @@
     </div>
     <% } else { %>
       <div class="weui-cells padding-v" style="margin-top:0;">
-        <div class="weui-cell weui-cell_access">
+        <a href="/app/setting"  class="weui-cell weui-cell_access">
           <div class="weui-cell__hd" style="position: relative;margin-right: 10px;">
             <div style="width:60px;height:60px;border-radius:100%;background:url(<%=user.headImg %>) no-repeat center;background-size:cover;"></div>
             <!--<img src="<%=user.headImg %>" style="width: 50px;display: block">-->
@@ -49,7 +49,7 @@
             <p style="font-size: 13px;color: #888888;">白石山农场欢迎您的到来</p>
           </div>
           <span class="weui-cell__ft"></span>
-        </div>
+        </a>
       </div>
     <% } %>
     <!--<div class="light-bg padding">-->
@@ -62,20 +62,20 @@
     <div class="light-bg padding-v order_wrap">
       <div class="weui-flex text-center">
         <a class="weui-flex__item" href="/app/orders" >
-          <i class="weui-icon-info-circle"></i>
-          <p class="fs14">待付款</p>
+          <i class="iconfont  icon-daifukuan" style="font-size:25px;"></i>
+          <p class="fs13">待付款</p>
         </a>
         <a class="weui-flex__item" href="/app/orders">
-          <i class="weui-icon-info-circle"></i>
-          <p class="fs14">待发货</p>
+          <i class="iconfont icon-daifahuo" style="font-size:25px;"></i>
+          <p class="fs13">待发货</p>
         </a>
         <a class="weui-flex__item" href="/app/orders">
-          <i class="weui-icon-info-circle"></i>
-          <p class="fs14">已发货</p>
+          <i class="iconfont icon-yifahuo1" style="font-size:25px;"></i>
+          <p class="fs13">已发货</p>
         </a>
         <a class="weui-flex__item" href="/app/orders">
-          <i class="weui-icon-info-circle"></i>
-          <p class="fs14">已完成</p>
+          <i class="iconfont icon-yiwancheng" style="font-size:25px;"></i>
+          <p class="fs13">已完成</p>
         </a>
       </div>
     </div>
