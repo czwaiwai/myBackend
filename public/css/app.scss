@@ -4,6 +4,9 @@
 @import '../app/css/jquery-weui.css';
 @import '../app/css/weui.css';
 @import './tool';
+.weui-toast {
+ margin-left:0;
+}
 * {
 	box-sizing: border-box;
 }

@@ -332,6 +332,9 @@
   overflow: auto;
   -webkit-overflow-scrolling: touch; }
 
+.weui-toast {
+  margin-left: 0; }
+
 * {
   box-sizing: border-box; }
 

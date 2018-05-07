@@ -72,7 +72,7 @@
     <span class="fs14">合计：</span><span class="fs16 bold weui-cell_warn">￥<span id="allAmt">100</span></span>
   </div>
   <div style="width:100px;">
-    <form id="form" action="/order/index" method="post" novalidate>
+    <form id="form" action="/app/orderPay" method="post" novalidate>
       <input type="hidden" name="status" value="cart">
       <input type="hidden" name="carts" value="">
       <input type="hidden" name="totalPrice" value="">
@@ -89,6 +89,7 @@ jQuery(function(){
   var $allCheck = $('#allCheck')
   var $confirmBtn = $('#confirmBtn')
   var $form = $('#form')
+  var checkLen = 0
   $spinner.Spinner({
     callback:function(num) {
      console.log(num)
@@ -120,25 +121,42 @@ jQuery(function(){
   function renderAll () {
     var carts = []
     var checkPayAmt = 0
+    checkLen = 0
     var isAllCheck = true
+    if($cartList.children().length === 0) {
+      $('.sub_tab_bar').hide()
+    }
   	$cartList.children().each(function() {
       var $this = $(this)
       var data = $this.data()
-      carts.push(data)
+      // carts.push(data)
       isAllCheck = isAllCheck && data.check
       if(data.check === true) {
+      	checkLen++
       	checkPayAmt += $.formatFloat(parseFloat(data.price) * parseInt(data.num))
+        carts.push({
+                id:data.id,
+                num:data.num,
+                price:data.price,
+                subTotal:$.formatFloat(parseInt(data.num) * parseFloat(data.price)),
+                payTotal:$.formatFloat(parseInt(data.num) * parseFloat(data.price))
+            })
       }
+
     })
     if(isAllCheck && $allCheck.prop('checked')===false) {
       $allCheck.prop('checked',true)
     }
+    $form.find('input[name=carts]').val(JSON.stringify(carts))
+    $form.find('input[name=totalPrice]').val(checkPayAmt)
     $allAmt.text(checkPayAmt)
     // carts.
 
   }
   $confirmBtn.on('click',function() {
-
+    if(checkLen === 0) {
+      return $.toast('你还没有选择商品','text')
+    }
   	$form.submit()
   })
   function init () {
