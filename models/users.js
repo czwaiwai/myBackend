@@ -40,10 +40,11 @@ var UserSchema = new Schema({
 	headImg: {type: String}, // 图片url
 	nickname: {type: String}, // 昵称
 	realname: {type: String}, // 真实姓名
-	token: {type: String},
 	card_id: {type: String}, // 用户证件
 	mobile: {type: String}, // 手机号吗
 	cart: {type: [CartSchema]},
+	openId: {type: String}, // 微信OpenID
+	token: {type: String},    // 微信access_token
 	address: {type: [AddressSchema]}, // 地址
 	create_at: {type: Date , default: Date.now},
 	update_at: {type: Date , default: Date.now},

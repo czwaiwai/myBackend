@@ -16,6 +16,9 @@ exports.saveById = function (id, obj, callback) {
 		user.save(callback)
 	})
 }
+exports.findByOpenId = function(openId, callback) {
+	User.findOne({openId:openId},callback)
+}
 exports.findAllByRegister = function (callback) {
 	var users = User.find({isAdmin:0})
 	users.sort({create_at:1})

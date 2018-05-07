@@ -58,16 +58,43 @@ router.get('/', (req, res, next)=> {
 	Goods.getHotGoods (ep.done('goods'))
 });
 
-router.get('/authLogin', (req, res) => {
+router.get('/authLogin', (req, res, next) => {
 	let code = req.query.code
 	let state = req.query.state
 	wechat.getCodeToken(code).then((json) => {
 		console.log('json', json)
 		console.log(typeof json)
-		wechat.getUserInfo(json.access_token, json.openid).then(userInfo => {
+		wechat.getUserInfo(json.access_token, json.openid).then(wxUser=> {
 			console.log('这里创建用户', userInfo)
-			console.log('跳转到首页')
-			res.redirect('/app/index')
+			// { openid: 'o5W010h6MfsZS-j1ZEUE-ZwKPelA',
+			// 	nickname: '歪歪😰',
+			// 	sex: 1,
+			// 	language: 'zh_CN',
+			// 	city: '',
+			// 	province: '维也纳',
+			// 	country: '奥地利',
+			// 	headimgurl: 'http://thirdwx.qlogo.cn/mmopen/vi_32/Vu0c5PibbGxXRRsjAUJnllGWGeXbibV2eQtgCOLCAnORQey6l5f46ZMyD0qgLiaez1fPIoWmFBicnZuQKmd7ibias4ww/132',
+			// 	privilege: [] }
+			User.findByOpenId (wxUser.openid, function(user) {
+				if(user) { // 找到user并登录
+					req.session.user = user
+					return res.redirect('/app/index')
+				} else { // 找不到user 创建新User
+					let newUser = {
+						nickname: wxUser.nickname,
+						sex: wxUser.sex,
+						headImg: wxUser.headimgurl,
+						openId: wxUser.openid,
+						token: json.access_token
+					}
+					User.create(newUser, (err, user) => {
+						if (err) return next(err)
+						req.session.user = user
+						return res.redirect('/app/index')
+					})
+				}
+			})
+			// console.log('跳转到首页')
 		})
 	})
 })
@@ -80,6 +107,7 @@ router.get('/auth', (req, res) => {
 	wechat.getCodeToken(code).then((json) => {
 		console.log('json', json)
 		console.log(typeof json)
+		req.session.openid = json.openid
 		res.json({
 			code:0,
 			message:'success',
