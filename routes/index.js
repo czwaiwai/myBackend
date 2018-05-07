@@ -63,6 +63,7 @@ router.get('/authLogin', (req, res) => {
 	let state = req.query.state
 	wechat.getCodeToken(code).then((json) => {
 		console.log('json', json)
+		console.log(typeof json)
 		wechat.getUserInfo(json.access_token, json.openid).then(userInfo => {
 			console.log('这里创建用户', userInfo)
 			console.log('跳转到首页')
@@ -78,6 +79,7 @@ router.get('/auth', (req, res) => {
 	console.log(code,state, 'code-------------state-------')
 	wechat.getCodeToken(code).then((json) => {
 		console.log('json', json)
+		console.log(typeof json)
 		res.json({
 			code:0,
 			message:'success',
