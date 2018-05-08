@@ -8,6 +8,7 @@ var _ = require('lodash');
 // var schema=require('async-validator');
 // var User =require('../models/user');
 /* GET home page. */
+let WxPay = require('../utils/wxPay')
 const wechat = require('../utils/wechat').getInstance()
 let {loginValid, isWeixin} = require('../utils/helper')
 let EventProxy = require('eventproxy')
@@ -18,18 +19,31 @@ router.use((req, res, next) => {
 	// console.log(req.get('userAgent'))
 	// console.log(req.headers)
 	console.log(req.get('user-agent'))
+	let local = req.protocol + '://' + req.get('host')
 	let url = req.protocol + '://' + req.get('host') + req.originalUrl
 	if(isWeixin(req.get('user-agent'))){
-		console.log('进入微信路径')
+		console.log('微信环境')
+		let shareUrl = encodeURIComponent(req.originalUrl)
+		let shareUrlTpl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx2b6b34e4a0735bc0&redirect_uri=http%3A%2F%2Fwww.bssfood.com%2FauthLogin&response_type=code&scope=snsapi_userinfo&state=${shareUrl}#wechat_redirect`
 		wechat.getAccessToken().then(accessTokeken => {
+			console.log('accessTokeken', accessTokeken)
 			wechat.getJsApiTicket(accessTokeken).then(ticket => {
+				console.log('ticket',ticket)
 				res.locals.signJson = wechat.getSignTicket(ticket, url)
-				console.log('signJson----', res.locals.signJson)
+				res.locals.isWeixin = true
+				res.locals.dfShare = {
+					title: '白云山生态农场',
+					link: shareUrlTpl,
+					imgUrl: local + '/logo.png',
+					desc: '湖北省赤壁市白石山生态农业科技有限公司成立于2017年10月，位于湖北省赤壁市茶庵岭镇罗峰村村委会大院内， 白石山生态农业科技有限公司专注做好有机农产品，为赤壁人民的菜篮子安全保驾护航，用山泉水灌溉水田和养殖水产品，用有机肥料培植农作物，100%保证农产品有机化生产，如有虚假，假一赔十。',
+				}
+				console.log('signJson----', res.locals)
 			  return next()
 			}).catch(e => next(e))
 		}).catch(e => next(e))
 	} else {
-		console.log('没有进去')
+		res.locals.isWeixin = false
+		console.log('不是微信环境')
 		return next()
 	}
 })
@@ -189,7 +203,76 @@ router.post('/orderPay',loginValid,(req, res, next) => {
 })
 // 手机支付
 router.post('/pay', loginValid, (req, res, next) => {
-
+	// 验证req.body 数据真实性
+	let openId = ''
+	if(req.session.user && req.session.user.openId) {
+		openId = req.session.user.openId
+	}
+	let rb = req.body
+	var addrId = rb.addressId
+	let totalPrice = rb.totalPrice
+	let needPrice = rb.needPrice
+	let fee = rb.fee
+	var goods = []
+	try {
+		console.log(req.body.goods)
+		goods = JSON.parse(req.body.goods)
+	} catch (e) {
+		return next(e)
+	}
+	let totalNum = 0;
+	let orderGoods = goods.map(item => {
+		totalNum += item.num
+		return {
+			goodsId:item.id,
+			name: item.goods.name,
+			subName: item.goods.subName,
+			imgTmb: item.goods.imgTmb,
+			sellPrice: item.goods.sellPrice,
+			num: item.num
+		}
+	})
+	let user = req.session.user
+	let addrObj =user.address.find(item => item._id === addrId)
+	if(!addrObj) {
+		return next(new Error('订单地址没有找到'))
+	}
+	var order = {
+		userId: user._id,
+		orderStatus: 10, //为支付
+		goods: orderGoods,
+		address: {
+			name: addrObj.name,
+			mobile: addrObj.mobile,
+			place: addrObj.province + addrObj.city + addrObj.area + addrObj.address
+		},
+		totalNum: totalNum,
+		totalPrice: totalPrice,
+		feePrice: fee,
+		type: 'wx',
+		needPrice: needPrice,
+	}
+	// 请求微信接口返回二维码url
+	Order.create(order, (err, newOrder) => {
+		if (err) return next(err)
+		WxPay.order(newOrder.userId+ '_' +newOrder._id, '白石山商品购买', newOrder.orderId, newOrder.needPrice, openId).then((data) => {
+			res.json({
+				code:0,
+				message:'success',
+				data:data
+			})
+			// if (data.return_code === 'SUCCESS') {
+			// 	res.render('order/pay', {title: '订单支付', order:newOrder, needPrice, prepay_id : data.prepay_id,
+			// 		code_url: data.code_url})
+			// } else {
+			// 	return next(new Error({
+			// 		name:data.return_msg,
+			// 		message: data.return_msg + '/n' + JSON.stringify(data)
+			// 	}))
+			// }
+		})
+	})
+	
 })
 router.get('/paySucc',loginValid, (req, res, next) => {
 

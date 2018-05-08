@@ -121,7 +121,7 @@
             <input name="addressId" type="hidden" value="<%=address && address._id %>" >
             <input name="needPrice" type="hidden" value="<%=needPrice %>">
         </form>
-          <button id="orderSubmit" href="/app/paySucc" class="goods_btn goods_btn_primary">微信支付</button>
+          <button id="orderSubmit" class="goods_btn goods_btn_primary">微信支付</button>
         </div>
     </div>
 </div>
@@ -234,12 +234,11 @@ var $addrForm = $('#addrForm')
 var $orderForm = $('#orderForm')
 var $orderSubmit = $('#orderSubmit')
 var $addrChoose = $('#addrChoose')
-
 var $showFee = $('#showFee')
 var $showNeedPrice =  $('#showNeedPrice')
-
 var addrChooseTplCompile = _.template($('#addrChooseTpl')[0].innerHTML)
 var showAddrTplCompile = _.template($('#showAddrTpl')[0].innerHTML)
+
 $cityPicker.cityPicker({
   title: "请选择地区",
   onClose:function (picker,codes) {
@@ -253,40 +252,33 @@ $newAddr.on('click',function () {
 })
 
 $addrForm.on('submit',function (e) {
-	e.preventDefault()
-    var $this = $(this)
-    var arr = $this.serializeArray()
-    var addrObj = {}
-    arr.forEach(function(item, index) {
-      addrObj[item.name] = item.value
-    })
-    if ($cityPicker.val()) {
-      var nameArr = $cityPicker.val().split(' ')
-      var codeArr =$cityPicker.data('codes').split(',')
-      addrObj.province = codeArr[0] + ',' + nameArr[0]
-      addrObj.city = codeArr[1] + ',' + nameArr[1]
-      addrObj.area = codeArr[2] + ',' + nameArr[2]
-    }
-    $.post('/account/address',addrObj).done(function(res){
-      console.log(res)
-      var address = res.data.address
-      setNewAddr(address)
-      getRemotePostage({
-        area: address.areaId + ',' + address.area,
-        city: address.cityId + ',' + address.city,
-        province: address.provinceId + ',' + address.province
-      })
-      // 保存并选择上
-//      if(addrObj.isUpdate) { // 更新
-//        $('#addressManage').find('a[data-id='+res.data.address._id+']').replaceWith(addrItemCompile({item:res.data.address}))
-//      } else { // 添加
-//        $('#addressManage').find('.weui-panel__bd').append(addrItemCompile({item:res.data.address}))
-//      }
-      $.closePopup()
-      $.toptip('操作成功', 'success');
-    })
-    console.log(addrObj)
-	return false
+  e.preventDefault()
+  var $this = $(this)
+  var arr = $this.serializeArray()
+  var addrObj = {}
+  arr.forEach(function(item, index) {
+    addrObj[item.name] = item.value
+  })
+  if ($cityPicker.val()) {
+    var nameArr = $cityPicker.val().split(' ')
+    var codeArr =$cityPicker.data('codes').split(',')
+    addrObj.province = codeArr[0] + ',' + nameArr[0]
+    addrObj.city = codeArr[1] + ',' + nameArr[1]
+    addrObj.area = codeArr[2] + ',' + nameArr[2]
+  }
+  $.post('/account/address',addrObj).done(function(res){
+    console.log(res)
+    var address = res.data.address
+    setNewAddr(address)
+    getRemotePostage({
+      area: address.areaId + ',' + address.area,
+      city: address.cityId + ',' + address.city,
+      province: address.provinceId + ',' + address.province
+  })
+  $.closePopup()
+  $.toptip('操作成功', 'success');
+})
+return false
 })
 $('#addrChoose').on('click',function(){
 	var $listWrap = $addrList.find('.weui-panel__bd')
@@ -314,7 +306,6 @@ $addrList.on('click','.weui-media-box',function() {
   })
   $.closePopup()
 })
-
 $addrList.on('click','.edit_btn',function(e) {
 	e.preventDefault()
   var $this = $(this)
@@ -328,13 +319,33 @@ $addrList.on('click','.edit_btn',function(e) {
   $cityPicker.data('codes', data.codes)
   $addAddr.popup()
   return false
-//  $.closePopup()
 })
 // 下单并微信支付
 $orderSubmit.on('click',function(e) {
-
+    $.post('/app/pay',$orderForm.serialize()).done(function(res){
+        var obj = res.data
+        wxPayReady(function() {
+               WeixinJSBridge.invoke(
+               'getBrandWCPayRequest', {
+                   "appId":obj.appId,
+                   "timeStamp":obj.timeStamp,
+                   "nonceStr":obj.nonceStr,
+                   "package":obj.package,
+                   "signType": obj.signType,
+                   "paySign": obj.paySign
+               },
+               function(res){
+                 if(res.err_msg == "get_brand_wcpay_request:ok" ) {
+                   location.href='/app/paySucc'
+                 } else {
+                   console.log('支付取消或支付失败')
+                   console.log('跳转到')
+                 }
+               }
+           );
+        })
+    })
 })
-
 
 // 设置新的地址
 function setNewAddr (address) {
@@ -363,5 +374,12 @@ function addrListShow (cb) {
         var addrList = res.data.address
         cb && cb(addrList)
     })
+}
+function wxPayReady (cb) {
+  if (typeof WeixinJSBridge == 'undefined') {
+    document.addEventListener('WeixinJSBridgeReady', cb, false)
+  } else {
+    cb()
+  }
 }
 </script>`) %>

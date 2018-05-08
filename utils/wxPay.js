@@ -47,7 +47,7 @@ var WxPay = {
 	md5:function(string){
 		return crypto.createHash('md5').update(string, 'utf8').digest('hex')
 	},
-	paysignjsapi: function(appid, attach, body, mch_id, nonce_str, notify_url, openid, out_trade_no, spbill_create_ip, total_fee, trade_type) {
+	paysignjsapi: function(appid, attach, body, mch_id, nonce_str, notify_url, openid, out_trade_no, total_fee, trade_type, key) {
 		var ret = {
 			appid: appid,
 			attach: attach,
@@ -57,7 +57,7 @@ var WxPay = {
 			notify_url: notify_url,
 			openid: openid,
 			out_trade_no: out_trade_no,
-			spbill_create_ip: spbill_create_ip,
+			// spbill_create_ip: spbill_create_ip,
 			total_fee: total_fee,
 			trade_type: trade_type
 		};
@@ -193,10 +193,18 @@ var WxPay = {
 			});
 		})
 	},
+	// apiOrder: function (attachTxt, goodsRemark, tradeNo, productId, totalFee) {
+	// 	let mch_id = wxConfig.mchID
+	// 	let notify_url = wxConfig.notifyUrl
+	// 	this.order(attachTxt, goodsRemark, mch_id, openid, tradeNo, totalFee, notify_url)
+	// },
 	// 此处的attach不能为空值 否则微信提示签名错误
-	order: function(attach, body, mch_id, openid, bookingNo, total_fee, notify_url) {
+	order: function(attach, body, bookingNo, total_fee, openid) {
 		return new Promise((resolve,reject) => {
-			var appid = config.wxAppId;
+			var appid = wxConfig.appID;
+			var key = wxConfig.key;
+			var mch_id = wxConfig.mchID
+			var notify_url = wxConfig.notifyUrl
 			var nonce_str = this.createNonceStr();
 			var timeStamp = this.createTimeStamp();
 			var url = "https://api.mch.weixin.qq.com/pay/unifiedorder";
@@ -209,10 +217,10 @@ var WxPay = {
 			formData += "<notify_url>" + notify_url + "</notify_url>"; // 支付成功后微信服务器通过POST请求通知这个地址
 			formData += "<openid>" + openid + "</openid>"; // 扫码支付这个参数不是必须的
 			formData += "<out_trade_no>" + bookingNo + "</out_trade_no>"; //订单号
-			formData += "<spbill_create_ip></spbill_create_ip>"; //不是必须的
+			// formData += "<spbill_create_ip></spbill_create_ip>"; //不是必须的
 			formData += "<total_fee>" + total_fee + "</total_fee>"; //金额
 			formData += "<trade_type>JSAPI</trade_type>"; //NATIVE会返回code_url ，JSAPI不会返回
-			formData += "<sign>" + this.paysignjsapi(appid, attach, body, mch_id, nonce_str, notify_url, openid, bookingNo, '', total_fee, 'JSAPI') + "</sign>";
+			formData += "<sign>" + this.paysignjsapi(appid, attach, body, mch_id, nonce_str, notify_url, openid, bookingNo, total_fee, 'JSAPI', key) + "</sign>";
 			formData += "</xml>";
 			var self = this;
 			request({
