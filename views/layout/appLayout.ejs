@@ -60,8 +60,8 @@
 <% if(isWeixin) { %>
 <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 <script>
-	var signJson=<%=JSON.stringify(signJson) %>
-	var dfShare=<%=JSON.stringify(dfShare) %>
+	var signJson=<%-JSON.stringify(signJson) %>
+	var dfShare=<%-JSON.stringify(dfShare) %>
 		wx.ready(function() {
 			wx.config({
 				debug: false,
@@ -98,11 +98,13 @@
 			var len=onMenuArr.length;
 			for(var i=0;i<len;i++){
 				var onMenuOption= {
-					title: '',
-					link: '',
-					imgUrl: '',
-					desc: '',
-					success:function(){},
+					title: dfShare.title,
+					link: dfShare.link,
+					imgUrl: dfShare.imgUrl,
+					desc: dfShare.desc,
+					success:function(){
+						$.toast('已分享','success');
+          },
 					cancel:function(){
 						$.toast('分享已取消','cancel');
 					}
