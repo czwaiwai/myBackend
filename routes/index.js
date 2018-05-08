@@ -61,6 +61,11 @@ router.get('/', (req, res, next)=> {
 router.get('/authLogin', (req, res, next) => {
 	let code = req.query.code
 	let state = req.query.state
+	console.log(state)
+	console.log('查看是否存在user：',req.session.user)
+	let url = decodeURIComponent(state)
+	url = url.replace('bssfood_','')
+	console.log(url)
 	wechat.getCodeToken(code).then((json) => {
 		console.log('json', json)
 		console.log(typeof json)
@@ -79,7 +84,11 @@ router.get('/authLogin', (req, res, next) => {
 				if (err) return next(err)
 				if(user) { // 找到user并登录
 					req.session.user = user
-					return res.redirect('/app/index')
+					if (url.indexOf('/app')> -1) {
+						return res.redirect(url)
+					} else {
+						return res.redirect('/app/index')
+					}
 				} else { // 找不到user 创建新User
 					let newUser = {
 						nickname: wxUser.nickname,
@@ -91,7 +100,11 @@ router.get('/authLogin', (req, res, next) => {
 					User.create(newUser, (err, user) => {
 						if (err) return next(err)
 						req.session.user = user
-						return res.redirect('/app/index')
+						if (url.indexOf('/app') > -1) {
+							return res.redirect(url)
+						} else {
+							return res.redirect('/app/index')
+						}
 					})
 				}
 			})

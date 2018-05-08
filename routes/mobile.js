@@ -14,7 +14,7 @@ let {Page, User, Catalog, Goods, Article, Cart, Dict, Address, Order} = require(
 let {formatFloat} = require('../utils/tools')
 router.get('/', (req, res)=> {
 	//console.log(req.session.user,"这里可以取到session");
-	res.redirect('/index')
+	res.redirect('/app/index')
 });
 router.get('/index', (req,res,next) => {
 	let ep = EventProxy.create('goodTypes', 'goods', 'news', 'articles','dicts', (goodTypes, goods, news, articles, dicts) => {
