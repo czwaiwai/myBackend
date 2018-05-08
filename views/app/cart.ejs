@@ -126,14 +126,17 @@ jQuery(function(){
     if($cartList.children().length === 0) {
       $('.sub_tab_bar').hide()
     }
+    var allNum = 0
   	$cartList.children().each(function() {
       var $this = $(this)
       var data = $this.data()
       // carts.push(data)
+      allNum += parseInt(data.num)
       isAllCheck = isAllCheck && data.check
       if(data.check === true) {
       	checkLen++
       	checkPayAmt += $.formatFloat(parseFloat(data.price) * parseInt(data.num))
+
         carts.push({
                 id:data.id,
                 num:data.num,
@@ -147,6 +150,7 @@ jQuery(function(){
     if(isAllCheck && $allCheck.prop('checked')===false) {
       $allCheck.prop('checked',true)
     }
+    $('#cartBadge').triggerHandler('change.cartBadge',[allNum])
     $form.find('input[name=carts]').val(JSON.stringify(carts))
     $form.find('input[name=totalPrice]').val($.formatFloat(checkPayAmt))
     $allAmt.text($.formatFloat(checkPayAmt))

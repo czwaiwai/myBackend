@@ -20,4 +20,17 @@
 			'X-Requested-With': 'XMLHttpRequest'
 		}
 	})
+	var $cartBadge = $('#cartBadge')
+	if($cartBadge && $cartBadge[0]) {
+		$cartBadge.bind('change.cartBadge',function(e, num){
+			console.log(e,num)
+			var $this = $(this)
+			if(num > 0){
+				$this.removeClass('hide').show()
+				$this.text(num)
+			} else {
+				$this.hide()
+			}
+		})
+	}
 })(jQuery)

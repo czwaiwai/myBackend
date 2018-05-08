@@ -12,6 +12,10 @@ var accessToken = {
 	accessToken: "",
 	expiresTime: 0,
 }
+var apiTicket = {
+	ticket: '',
+	expiresTime: 0,
+}
 var Wechat = function (config) {
 	this.config = config
 	this.token = config
@@ -21,6 +25,25 @@ function check(timestamp,nonce,signature,token){
 	tmp = [token,timestamp,nonce].sort().join("");
 	currSign = crypto.createHash("sha1").update(tmp).digest("hex");
 	return (currSign === signature);
+}
+function genTimeStamp() {
+	return parseInt(new Date().getTime() / 1000) + '';
+}
+function genNonceStr() {
+	return Math.random().toString(36).substr(2, 15);
+}
+function genSignature (jsapi_ticket,noncestr,timestamp,url) {
+	let tmp = [jsapi_ticket,noncestr,timestamp,url].sort().join('&')
+	return crypto.createHash("sha1").update(tmp).digest("hex");
+}
+var instance = null
+Wechat.getInstance = function () {
+	if(!instance) {
+		let config = require('../wx.json')
+		console.log(config, '我开始实例化了，我只会出现一次')
+		instance = new Wechat(config)
+	}
+	return instance
 }
 module.exports = Wechat
 Wechat.prototype.auth = function (req, res) {
@@ -88,13 +111,15 @@ Wechat.prototype.eventHandle = function (req, res, next) {
 	let toUser = data.fromusername  // 用户的openId
 	if(data.msgtype === 'event') {
 		switch(data.event){
-			case 'subscribe':res.send(txtMsg(toUser,formUser,'用户订阅了白云山生态农场'));break;
+			case 'subscribe':res.send(txtMsg(toUser,formUser,'欢迎您订阅了白云山生态农场，本农场所有农副产品都自产自销，不参任何添加剂和防腐剂，大山深处的产品值得您信赖！'));break;
 			default :res.send('success')
 		}
 	} else {
 		next()
 	}
 }
+
+// 获取accessToken
 Wechat.prototype.getAccessToken = function () {
 	return new Promise((resolve,reject) => {
 		 let currentTime = new Date().getTime()
@@ -122,6 +147,53 @@ Wechat.prototype.getAccessToken = function () {
 		}
 	})
 }
+// 获取jsapi_ticket
+Wechat.prototype.getJsApiTicket = function (accessToken) {
+	return  new Promise((resolve,reject) => {
+		let url =`https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=${accessToken}&type=jsapi`
+		request.get(url, (err, response, body) => {
+			if (err) {
+				return reject(err)
+			}
+			if (apiTicket.ticket === "" || apiTicket.expiresTime < currentTime) {
+				request.get(url, (err, response, body) => {
+					if (err) {
+						return reject(err)
+					}
+					if (typeof body && typeof body === 'string') {
+						let data = JSON.parse(body)
+						apiTicket.ticket = data.ticket
+						apiTicket.expiresTime = new Date().getTime() + (parseInt(data.expires_in) - 200) * 10
+						resolve(apiTicket.accessToken)
+					} else {
+						return reject(new Error('body为空'))
+					}
+				})
+			} else {
+				resolve(apiTicket.ticket)
+			}
+			// {
+			// 	"errcode":0,
+			// 	"errmsg":"ok",
+			// 	"ticket":"bxLdikRXVbTPdHSM05e5u5sUoXNKd8-41ZO3MhKoyN5OfkWITDGgnr2fwJ0m9E8NYzWKVZvdVtaUgWvsdshFKA",
+			// 	"expires_in":7200
+			// }
+		})
+	})
+}
+// 微信签名jsApiTicket
+Wechat.prototype.getSignTicket = function (ticket,url) {
+		let noncestr = genNonceStr()
+		let timestamp = genTimeStamp()
+		let signature = genSignature(`jsapi_ticket=${ticket}`,`noncestr=${noncestr}`,`timestamp=${timestamp}`,`url=${url}`)
+		return {
+			appid: this.config.appID,
+			noncestr: noncestr,
+			timestamp: timestamp,
+			signature: signature,
+		}
+}
+
 // 静默授权
 Wechat.prototype.authLogin  = function () {
 	let appid = this.config.appID;

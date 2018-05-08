@@ -4,7 +4,7 @@
 <div class="page has_head">
     <div class="page__hd weui-flex">
         <div style="width:60px;padding-left:10px;">
-            <a href="/app/index">首页</a>
+            <a href="javascript:;" onclick="history.back()"><i class="iconfont icon-back"></i>返回</a>
         </div>
         <div class="weui-flex__item">
             <h1 class="title"><%=title %></h1>
@@ -12,7 +12,7 @@
         <div style="width:60px;"></div>
     </div>
     <div class="page_bd">
-        <div class="weui-cells__title">带说明、跳转的列表项</div>
+        <!--<div class="weui-cells__title">个人设置</div>-->
         <div class="weui-cells">
             <a class="weui-cell weui-cell_access" href="javascript:;">
                 <div class="weui-cell__bd">
@@ -21,16 +21,16 @@
                 <div class="weui-cell__ft">
                 </div>
             </a>
-            <a class="weui-cell weui-cell_access" href="javascript:;">
-                <div class="weui-cell__bd">
-                    <p>修改密码</p>
-                </div>
-                <div class="weui-cell__ft">
-                </div>
-            </a>
+            <!--<a class="weui-cell weui-cell_access" href="javascript:;">-->
+                <!--<div class="weui-cell__bd">-->
+                    <!--<p>修改密码</p>-->
+                <!--</div>-->
+                <!--<div class="weui-cell__ft">-->
+                <!--</div>-->
+            <!--</a>-->
         </div>
         <div class="weui-btn-area">
-            <a class="weui-btn weui-btn_warn" href="javascript:" id="showTooltips">退出登录</a>
+            <a class="weui-btn weui-btn_warn" href="/logout" id="showTooltips">退出登录</a>
         </div>
     </div>
 </div>

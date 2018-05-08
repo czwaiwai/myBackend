@@ -5,7 +5,8 @@ const express = require('express');
 const Wechat = require('../utils/wechat')
 const wxConfig = require('../wx.json')
 const router = express.Router();
-const wechat = new Wechat(wxConfig)
+// const wechat = new Wechat(wxConfig)
+const wechat = Wechat.getInstance()
 router.get('/', (req, res, next) =>{
 	console.log(req.body)
 	wechat.auth(req, res)

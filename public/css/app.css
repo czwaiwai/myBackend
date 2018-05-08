@@ -353,6 +353,12 @@ html, body, .mainPage {
 .main-color {
   color: #59b210; }
 
+.text-danger {
+  color: #E64340; }
+
+.text-success {
+  color: #59b210; }
+
 .text-muted {
   color: #989898; }
 

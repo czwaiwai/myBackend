@@ -60,7 +60,7 @@
         <% }) %>
       </div>
     </div>
-    <div class="fs13">欢迎您的到来</div>
+    <!--<div class="fs13"></div>-->
   </div>
   <div class="index_goods_wrap margin-top light-bg">
     <ul class="index_goods_list clearfix ">
@@ -106,6 +106,27 @@
         <!--</div>-->
       <!--</li>-->
     </ul>
+  </div>
+  <div class="weui-panel weui-panel_access">
+    <div class="weui-panel__bd">
+      <a href="/app/page/company" class="weui-media-box weui-media-box_appmsg">
+        <div class="weui-media-box__hd">
+          <img class="weui-media-box__thumb" src="<%=homeBlockImgs[0].value %>" alt="">
+        </div>
+        <div class="weui-media-box__bd">
+          <h4 class="weui-media-box__title"><%=webInfo.webName.value %></h4>
+          <p class="weui-media-box__desc" style="-webkit-line-clamp: 4;"><%=homeCompany %></p>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="weui-footer margin-top15">
+    <!--<p class="weui-footer__links">-->
+      <!--<a href="javascript:void(0);" class="weui-footer__link">公司简介</a>-->
+      <!--<a href="javascript:void(0);" class="weui-footer__link">底部链接</a>-->
+    <!--</p>-->
+    <p class="weui-footer__text"><%=webInfo.copyright.value %></p>
+    <p class="weui-footer__text"><%=webInfo.record.value %></p>
   </div>
 </div>
 <% block('footer').append(`<script src='/app/js/swiper.js'></script>`)%>

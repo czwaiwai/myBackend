@@ -22,3 +22,6 @@ module.exports.loginValid = function (req, res, next) {
 		return res.redirect('/login')
 	}
 }
+module.exports.isWeixin = function (useragent) {
+	return /micromessenger/.test(useragent.toLocaleLowerCase())
+}

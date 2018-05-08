@@ -8,10 +8,31 @@ var _ = require('lodash');
 // var schema=require('async-validator');
 // var User =require('../models/user');
 /* GET home page. */
-let {loginValid} = require('../utils/helper')
+const wechat = require('../utils/wechat').getInstance()
+let {loginValid, isWeixin} = require('../utils/helper')
 let EventProxy = require('eventproxy')
 let {Page, User, Catalog, Goods, Article, Cart, Dict, Address, Order} = require('../viewModels')
 let {formatFloat} = require('../utils/tools')
+router.use((req, res, next) => {
+	console.log('这个是app路径使用的router')
+	// console.log(req.get('userAgent'))
+	// console.log(req.headers)
+	console.log(req.get('user-agent'))
+	let url = req.protocol + '://' + req.get('host') + req.originalUrl
+	if(isWeixin(req.get('user-agent'))){
+		console.log('进入微信路径')
+		wechat.getAccessToken().then(accessTokeken => {
+			wechat.getJsApiTicket(accessTokeken).then(ticket => {
+				res.locals.signJson = wechat.getSignTicket(ticket, url)
+				console.log('signJson----', res.locals.signJson)
+			  return next()
+			}).catch(e => next(e))
+		}).catch(e => next(e))
+	} else {
+		console.log('没有进去')
+		return next()
+	}
+})
 router.get('/', (req, res)=> {
 	//console.log(req.session.user,"这里可以取到session");
 	res.redirect('/app/index')
@@ -98,10 +119,19 @@ router.get('/orders',loginValid, (req, res, next) => {
 })
 router.get('/orders/detail/:id', (req, res, next) => {
 	Order.findById(req.params.id, (err, order) => {
+		let orderObj = order.toObject();
+		orderObj.create_at_ago= order.create_at_ago()
+		orderObj.update_at_ago= order.update_at_ago()
+		orderObj.pay_at_ago = order.pay_at_ago()
+		orderObj.statusName = order.statusName
+		orderObj.statusColor = order.statusColor
+		orderObj.goods.forEach(item => {
+			item.subPrice = formatFloat(item.num * item.sellPrice)
+		})
 		res.json({
 			code: 0,
 			message: '查询成功',
-			data: {title: '订单详情', order}
+			data: {title: '订单详情', order:orderObj}
 		})
 		// res.render('account/orderDetail', {title: '订单详情', order, formatFloat:formatFloat})
 	})
@@ -219,5 +249,10 @@ router.post('/login', (req, res, next) => {
 		req.flash("error",errors[0].msg);
 		return   res.redirect('/app/login');
 	});
+})
+router.get('/logout', loginValid, (req,res)=>{
+	req.session.openid = req.session.user.openId
+	req.session.user=null;
+	return res.redirect('/app/');
 })
 module.exports = router;

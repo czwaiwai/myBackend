@@ -36,7 +36,7 @@
 <div class="page has_head has_tab">
     <div class="page__hd weui-flex">
         <div style="width:60px;padding-left:10px;">
-            <a href="/app/index">返回</a>
+            <a href="javascript:;" onclick="history.back()"><i class="iconfont icon-back"></i>返回</a>
         </div>
         <div class="weui-flex__item">
             <h1 class="title"><%=title%></h1>
@@ -121,7 +121,7 @@
             <input name="addressId" type="hidden" value="<%=address && address._id %>" >
             <input name="needPrice" type="hidden" value="<%=needPrice %>">
         </form>
-          <a id="addCart" href="/app/paySucc" class="goods_btn goods_btn_primary">微信支付</a>
+          <button id="orderSubmit" href="/app/paySucc" class="goods_btn goods_btn_primary">微信支付</button>
         </div>
     </div>
 </div>
@@ -130,7 +130,7 @@
     <div class="weui-popup__modal">
         <div class="toolbar">
             <div class="toolbar-inner">
-                <a href="javascript:;" class="picker-button close-popup"  style="left:0;right:auto;">返回</a>
+                <a href="javascript:;" class="picker-button close-popup"  style="left:0;right:auto;color:inherit;"><i class="iconfont icon-back"></i>返回</a>
                 <h1 class="title">地址列表</h1>
                 <a id="newAddr" href="javascript:;" class="picker-button "  >新增</a>
             </div>
@@ -148,7 +148,7 @@
     <div class="weui-popup__modal">
         <div class="toolbar">
             <div class="toolbar-inner">
-                <a href="javascript:;" class="picker-button close-popup"  style="left:0;right:auto;">返回</a>
+                <a href="javascript:;" class="picker-button close-popup"  style="left:0;right:auto;color:inherit;"><i class="iconfont icon-back"></i>返回</a>
                 <h1 class="title">新增地址</h1>
             </div>
         </div>
@@ -232,6 +232,7 @@ var $cityPicker = $('#city-picker')
 var $addrList = $('#addrList')
 var $addrForm = $('#addrForm')
 var $orderForm = $('#orderForm')
+var $orderSubmit = $('#orderSubmit')
 var $addrChoose = $('#addrChoose')
 
 var $showFee = $('#showFee')
@@ -329,6 +330,11 @@ $addrList.on('click','.edit_btn',function(e) {
   return false
 //  $.closePopup()
 })
+// 下单并微信支付
+$orderSubmit.on('click',function(e) {
+
+})
+
 
 // 设置新的地址
 function setNewAddr (address) {

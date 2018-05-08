@@ -29,7 +29,7 @@
       <p class="weui-tabbar__label">全部分类</p>
     </a>
     <a href="/app/cart" class="weui-tabbar__item  <% if(basePath=='/app/cart'){ %>weui-bar__item--on<% } %>">
-      <span class="weui-badge" style="position: absolute;top: 0px;right: 2em;">8</span>
+      <span  id="cartBadge"  class="weui-badge <%=cartNum===0?' hide':'' %>" style="position: absolute;top: 0px;right: 2em;"><%=cartNum %></span>
       <div class="weui-tabbar__icon">
         <i class="iconfont  icon-cart weui-tabbar__label" style="line-height: 30px;"></i>
       </div>
@@ -47,6 +47,8 @@
 <script src="/app/js/lib/jquery-2.1.4.js"></script>
 <script src="/app/js/lib/underscore-min.js"></script>
 <script src="/app/js/lib/fastclick.js"></script>
+<!--<script src="//res.wx.qq.com/open/js/jweixin-1.0.0.js" ></script>-->
+<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 <script>
   jQuery(function(){
 		FastClick.attach(document.body);

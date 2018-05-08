@@ -31,24 +31,24 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.disable('x-powered-by');
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 var errorLogfile
 var logDirectory = path.join(__dirname, 'log')
 fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory)
-
-app.use(sassMiddleware({
-	src: path.join(__dirname, 'public/css'),
-	dest: path.join(__dirname, 'public/css'),
-	// includePaths:[path.join(__dirname,"/node_modules/bootstrap-sass/assets/stylesheets/")],
-	// includePaths:[path.join(__dirname,"node_modules/foundation-sites/assets/")],
-	indentedSyntax: false, // true = .sass and false = .scss
-	sourceMap: false,
-	// outputStyle: 'compressed',
-	debug: true,
-	outputStyle: 'extended',
-	prefix:  '/css'
-}));
-
+if(app.get('env') !== 'production') {
+	app.use(sassMiddleware({
+		src: path.join(__dirname, 'public/css'),
+		dest: path.join(__dirname, 'public/css'),
+		// includePaths:[path.join(__dirname,"/node_modules/bootstrap-sass/assets/stylesheets/")],
+		// includePaths:[path.join(__dirname,"node_modules/foundation-sites/assets/")],
+		indentedSyntax: false, // true = .sass and false = .scss
+		sourceMap: false,
+		// outputStyle: 'compressed',
+		debug: true,
+		outputStyle: 'extended',
+		prefix:  '/css'
+	}));
+}
 app.use(compression()); // gzip压缩
 app.use(express.static(path.join(__dirname, 'public')));
 console.log(app.get('env'))

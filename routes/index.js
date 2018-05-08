@@ -9,8 +9,7 @@ let {formatFloat} = require('../utils/tools')
 let {loginValid} = require('../utils/helper')
 let WxPay = require('../utils/wxPay')
 let Wechat = require('../utils/wechat')
-const wxConfig = require('../wx.json')
-const wechat = new Wechat(wxConfig)
+const wechat = Wechat.getInstance()
 let EventProxy = require('eventproxy')
 let {Page, User, Catalog, Goods, Article, Cart, Address, Order, Dict, Postage} = require('../viewModels')
 let dicts = []
@@ -694,7 +693,7 @@ router.post('/account/orderManage', loginValid, (req, res, next) => {
 	}
 	
 	// type.userId = req.session.user._id
-	Order.findAllByPage(type, req.body.page, 2, (err, obj) => {
+	Order.findAllByPage(type, req.body.page, 10, (err, obj) => {
 		if(err) return next(err)
 		obj.orders = obj.orders.map(item => {
 			let newObj = item.toObject()

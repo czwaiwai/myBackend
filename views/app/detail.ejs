@@ -45,7 +45,7 @@
 <div class="page has_head has_tab">
   <div class="page__hd weui-flex">
     <div style="width:60px;padding-left:10px;">
-      <a href="/app/index">首页</a>
+      <a href="javascript:;" onclick="history.back()"><i class="iconfont icon-back"></i>返回</a>
     </div>
     <div class="weui-flex__item">
       <h1 class="title">商品详情</h1>
@@ -86,7 +86,9 @@
   </div>
   <div class="page__ft weui-flex">
     <div class="weui-flex__item padding-left15">
-      <a class="" href="/app/cart"><i class="iconfont icon-cart fs22"></i></a>
+      <a class="" href="/app/cart" style="position:relative;width: 60px;display: block;">
+        <span  id="cartBadge"  class="weui-badge <%=cartNum===0?' hide':'' %>" style="position: absolute;top: 0px;right: 2em;"><%=cartNum %></span>
+        <i class="iconfont icon-cart fs22"></i></a>
     </div>
     <div style="margin-right:-2px;">
       <a id="quickBuy" class="goods_btn goods_btn_default">立即购买</a>
@@ -106,7 +108,7 @@
       </div>
     </div>
     <div class="modal-content" style="min-height:300px;">
-      <form id="form" action="/orderPay" method="post"  novalidate>
+      <form id="form" action="/app/orderPay" method="post"  novalidate>
         <div class="weui-cells">
           <div class="weui-cell">
             <div class="weui-cell__bd">

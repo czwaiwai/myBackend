@@ -120,7 +120,7 @@ jQuery(function(){
 			console.log(e,num)
 			var $this = $(this)
 			if(num > 0){
-				$this.show()
+				$this.removeClass('hide').show()
 				$this.text(num)
 			} else {
 				$this.hide()
