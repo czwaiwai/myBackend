@@ -150,6 +150,7 @@ Wechat.prototype.getAccessToken = function () {
 // 获取jsapi_ticket
 Wechat.prototype.getJsApiTicket = function (accessToken) {
 	return  new Promise((resolve,reject) => {
+		let currentTime = new Date().getTime()
 		let url =`https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=${accessToken}&type=jsapi`
 		request.get(url, (err, response, body) => {
 			if (err) {
