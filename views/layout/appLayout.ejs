@@ -60,8 +60,8 @@
 <% if(isWeixin) { %>
 <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 <script>
-	var signJson=<%=signJson %>
-	var dfShare=<%=dfShare %>
+	var signJson=<%=JSON.stringify(signJson) %>
+	var dfShare=<%=JSON.stringify(dfShare) %>
 		wx.ready(function() {
 			wx.config({
 				debug: false,
