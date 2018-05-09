@@ -14,6 +14,16 @@ let {loginValid, isWeixin} = require('../utils/helper')
 let EventProxy = require('eventproxy')
 let {Page, User, Catalog, Goods, Article, Cart, Dict, Address, Order} = require('../viewModels')
 let {formatFloat} = require('../utils/tools')
+router.use((req,res,next) => {
+	if (req.session.openid || req.session.user) {
+		console.log('存在user对象-----------不用验证',req.session.user)
+		next()
+	} else {
+		console.log('不存在user对象', '去认证' + req.originalUrl)
+		let shareUrl = encodeURIComponent(req.originalUrl)
+		return res.redirect( `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx2b6b34e4a0735bc0&redirect_uri=http%3A%2F%2Fwww.bssfood.com%2FauthLogin&response_type=code&scope=snsapi_userinfo&state=${shareUrl}#wechat_redirect`)
+	}
+})
 router.use((req, res, next) => {
 	console.log('这个是app路径使用的router')
 	// console.log(req.get('userAgent'))
