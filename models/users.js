@@ -31,13 +31,13 @@ CartSchema.plugin(function(schema) {
 	}
 })
 var UserSchema = new Schema({
-	userName: {type: String}, // 登录用户名
-	pwd: {type: String}, // 密码
+	userName: {type: String, default:''}, // 登录用户名
+	pwd: {type: String, default:''}, // 密码
 	isAdmin: {type: Number, default: 0},
 	isLock: {type: Number, default: 0},
 	email: {type: String}, // 邮件
 	sex: {type:Number}, // 0 女 1男
-	headImg: {type: String}, // 图片url
+	headImg: {type: String, default: '' }, // 图片url
 	nickname: {type: String}, // 昵称
 	realname: {type: String}, // 真实姓名
 	card_id: {type: String}, // 用户证件
@@ -57,8 +57,9 @@ UserSchema.plugin(function(schema){
 		},0)
 	}
 })
-UserSchema.index({userName: 1}, {unique: true})
-UserSchema.index({mobile: 1}, {unique: true})
+UserSchema.index({userName: 1}, {unique: true, sparse: true})
+UserSchema.index({mobile: 1}, {unique: true, sparse: true})
+UserSchema.index({openId:1}, {unique: true, sparse: true})
 UserSchema.pre('save', function (next) {
 	this.update_at = Date.now
 	next()

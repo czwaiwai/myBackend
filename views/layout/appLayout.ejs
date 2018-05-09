@@ -94,7 +94,7 @@
 				]
 			});
 			var onMenuArr=['onMenuShareTimeline','onMenuShareAppMessage','onMenuShareQQ']
-			var	sendArr=['pengyouquan','haoyou','qqhaoyou']
+//			var	sendArr=['pengyouquan','haoyou','qqhaoyou']
 			var len=onMenuArr.length;
 			for(var i=0;i<len;i++){
 				var onMenuOption= {
@@ -113,8 +113,6 @@
 			}
 			wx.error(function (err) {
 				console.log("微信签名出错了");
-				Vue.http.post('/feeback/save',{title:'微信签名出错了',content:'微信估计没有签上'+location.href});
-				reject(err);
 			})
 		})
 </script>
