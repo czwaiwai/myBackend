@@ -32,9 +32,9 @@ router.use((req, res, next) => {
 	// console.log('这个是app路径使用的router')
 	// console.log(req.get('userAgent'))
 	// console.log(req.headers)
-	if (req.session.openid || req.session.user) {
-		return next()
-	}
+	// if (req.session.openid || req.session.user) {
+	// 	return next()
+	// }
 	// console.log(req.get('user-agent'))
 	if(isWeixin(req.get('user-agent')) ){
 		let local = req.protocol + '://' + req.get('host')
