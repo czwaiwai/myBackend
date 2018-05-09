@@ -61,10 +61,21 @@ router.get('/authLogin', (req, res, next) => {
 	let code = req.query.code
 	let state = req.query.state
 	console.log(state)
+	
 	console.log('查看是否存在user：',req.session.user)
 	let url = decodeURIComponent(state)
 	url = url.replace('bssfood_','')
-	console.log(url)
+	if (!code) {
+		if (url.indexOf('/app') > -1) {
+			var link = "?"
+			if(url.indexOf('?')> -1) {
+				link = "&"
+			}
+			return res.redirect(url + link + 'wxValid=true')
+		} else {
+			return res.redirect('/app/index?wxVaild=true')
+		}
+	}
 	wechat.getCodeToken(code).then((json) => {
 		console.log('json', json)
 		console.log(typeof json)
@@ -86,7 +97,7 @@ router.get('/authLogin', (req, res, next) => {
 					if (url.indexOf('/app')> -1) {
 						return res.redirect(url)
 					} else {
-						return res.redirect('/app/index')
+						return res.redirect('/app/index?wxVaild=true')
 					}
 				} else { // 找不到user 创建新User
 					let newUser = {
@@ -100,9 +111,13 @@ router.get('/authLogin', (req, res, next) => {
 						if (err) return next(err)
 						req.session.user = user
 						if (url.indexOf('/app') > -1) {
-							return res.redirect(url)
+							var link = "?"
+							if(url.indexOf('?')> -1) {
+								link = "&"
+							}
+							return res.redirect(url + link + 'wxValid=true')
 						} else {
-							return res.redirect('/app/index')
+							return res.redirect('/app/index?wxVaild=true')
 						}
 					})
 				}

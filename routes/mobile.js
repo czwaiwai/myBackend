@@ -19,7 +19,7 @@ router.use((req,res,next) => {
 	if (!res.locals.isWeixin) {
 		return next()
 	}
-	if (req.session.openid || req.session.user ) {
+	if (req.session.openid || req.session.user || req.query.wxVaild) {
 		console.log('存在user对象-----------不用验证',req.session.user)
 		next()
 	} else {
@@ -29,6 +29,7 @@ router.use((req,res,next) => {
 	}
 })
 router.use((req, res, next) => {
+	console.log('来源：',req.get('Referer'))
 	// console.log('这个是app路径使用的router')
 	// console.log(req.get('userAgent'))
 	// console.log(req.headers)

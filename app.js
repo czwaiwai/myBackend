@@ -64,7 +64,7 @@ if (app.get('env') === 'development') {
 	})
 	logger.token('type', function (req, res) { return req.headers['content-type'] })
 	app.use(logger('short', {stream: process.stdout}))
-	app.use(logger('short', {stream: accessLogStream}))
+	app.use(logger(':date[iso] :remote-addr :remote-user :method :url HTTP/:http-version :status :res[content-length] - :response-time ms', {stream: accessLogStream}))
 }
 app.use(bodyParser.xml({
 	limit: '100kb',   // Reject payload bigger than 1 MB
