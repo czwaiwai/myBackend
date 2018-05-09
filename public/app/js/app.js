@@ -18,6 +18,11 @@
 	$.ajaxSetup({
 		headers: {
 			'X-Requested-With': 'XMLHttpRequest'
+		},
+		error: function(err) {
+			if(err.responseJSON) {
+				$.toast(err.responseJSON.message,'cancel')
+			}
 		}
 	})
 	var $cartBadge = $('#cartBadge')

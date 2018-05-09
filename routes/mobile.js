@@ -15,7 +15,11 @@ let EventProxy = require('eventproxy')
 let {Page, User, Catalog, Goods, Article, Cart, Dict, Address, Order} = require('../viewModels')
 let {formatFloat} = require('../utils/tools')
 router.use((req,res,next) => {
-	if (req.session.openid || req.session.user) {
+	res.locals.isWeixin = isWeixin(req.get('user-agent'))
+	if (!res.locals.isWeixin) {
+		return next()
+	}
+	if (req.session.openid || req.session.user ) {
 		console.log('存在user对象-----------不用验证',req.session.user)
 		next()
 	} else {
@@ -25,22 +29,23 @@ router.use((req,res,next) => {
 	}
 })
 router.use((req, res, next) => {
-	console.log('这个是app路径使用的router')
+	// console.log('这个是app路径使用的router')
 	// console.log(req.get('userAgent'))
 	// console.log(req.headers)
-	console.log(req.get('user-agent'))
-	let local = req.protocol + '://' + req.get('host')
-	let url = req.protocol + '://' + req.get('host') + req.originalUrl
-	if(isWeixin(req.get('user-agent'))){
-		console.log('微信环境')
-		let shareUrl = encodeURIComponent(req.originalUrl)
+	if (req.session.openid || req.session.user) {
+		return next()
+	}
+	// console.log(req.get('user-agent'))
+	if(isWeixin(req.get('user-agent')) ){
+		let local = req.protocol + '://' + req.get('host')
+		let url = req.protocol + '://' + req.get('host') + req.originalUrl
+		// let shareUrl = encodeURIComponent(req.originalUrl)
 		// let shareUrlTpl = ``
 		wechat.getAccessToken().then(accessTokeken => {
 			console.log('accessTokeken', accessTokeken)
 			wechat.getJsApiTicket(accessTokeken).then(ticket => {
 				console.log('ticket',ticket)
 				res.locals.signJson = wechat.getSignTicket(ticket, url)
-				res.locals.isWeixin = true
 				res.locals.dfShare = {
 					title: '白云山生态农场',
 					link: url,
@@ -52,8 +57,6 @@ router.use((req, res, next) => {
 			}).catch(e => next(e))
 		}).catch(e => next(e))
 	} else {
-		res.locals.isWeixin = false
-		console.log('不是微信环境')
 		return next()
 	}
 })
@@ -262,6 +265,8 @@ router.post('/pay', loginValid, (req, res, next) => {
 		type: 'wx',
 		needPrice: needPrice,
 	}
+	console.log(order,'------新的order')
+	// return res.json({code:0,message:'success',data:{}})
 	// 请求微信接口返回二维码url
 	Order.create(order, (err, newOrder) => {
 		if (err) return next(err)

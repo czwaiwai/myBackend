@@ -128,9 +128,13 @@ app.use(function(err, req, res, next) {
   if (errorLogfile) {
 		errorLogfile.write('[' + new Date() + '] ' + req.url + '\n' + err.stack)
 	}
-  // render the error page
-  res.status(err.status || 500);
-	res.render('error',{title:"网站错误"});
+	if(req.xhr) {
+		res.status(500).json({ code:-1, message:err.message, stack: err.stack })
+	} else {
+		// render the error page
+		res.status(err.status || 500);
+		res.render('error',{title:"网站错误"});
+	}
 });
 
 module.exports = app;

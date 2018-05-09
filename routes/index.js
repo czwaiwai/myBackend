@@ -762,9 +762,10 @@ router.post('/account/address', loginValid, (req, res, next) => {
 	} else {
 		action = "create"
 	}
-	Address[action](req.session.user._id,param, (err, address) => {
+	Address[action](req.session.user._id,param, (err, address, user) => {
 		if (err) return next(err)
 		console.log(address, 'user -- -address')
+		req.session.user.address = [...user.address]
 		res.json({
 			data: {address},
 			code: 0,
@@ -773,8 +774,9 @@ router.post('/account/address', loginValid, (req, res, next) => {
 	})
 })
 router.post('/account/addressRemove', loginValid, (req, res, next) => {
-	Address.remove(req.session.user._id,req.body._id, (err) => {
+	Address.remove(req.session.user._id,req.body._id, (err, user) => {
 		if (err) return next(err)
+		req.session.user.address = [...user.address]
 		res.json({
 			data: {},
 			code: 0,

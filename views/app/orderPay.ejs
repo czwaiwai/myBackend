@@ -324,9 +324,9 @@ $addrList.on('click','.edit_btn',function(e) {
 $orderSubmit.on('click',function(e) {
     $.post('/app/pay',$orderForm.serialize()).done(function(res){
         var obj = res.data
+        console.log(obj, '---------------------------')
         wxPayReady(function() {
-               WeixinJSBridge.invoke(
-               'getBrandWCPayRequest', {
+               WeixinJSBridge.invoke('getBrandWCPayRequest', {
                    "appId":obj.appId,
                    "timeStamp":obj.timeStamp,
                    "nonceStr":obj.nonceStr,

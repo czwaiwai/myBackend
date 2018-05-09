@@ -13,7 +13,7 @@ exports.create = function (userId, obj, callback) {
 		console.log(address._id)
 		user.save((err,user) => {
 			if (err) return callback(err)
-			callback(err,address)
+			callback(err,address,user)
 		})
 	})
 }
@@ -32,7 +32,7 @@ exports.update= function (userId, obj, callback) {
 		user.save(function(err, subUser) {
 			if (err) return callback(err)
 			let addr = subUser.address.find(item => item._id === address._id)
-			callback(err, addr)
+			callback(err, addr, subUser)
 		})
 	})
 	// User.findOneAndUpdate(
