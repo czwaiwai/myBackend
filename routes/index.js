@@ -691,8 +691,7 @@ router.post('/account/orderManage', loginValid, (req, res, next) => {
 		case 'ship': type = {orderStatus: 30};break;
 		case 'back': type = {orderStatus: 31};break;
 	}
-	
-	// type.userId = req.session.user._id
+	type.userId = req.session.user._id
 	Order.findAllByPage(type, req.body.page, 10, (err, obj) => {
 		if(err) return next(err)
 		obj.orders = obj.orders.map(item => {

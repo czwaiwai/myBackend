@@ -62,37 +62,36 @@
 <script>
 	var signJson=<%-JSON.stringify(signJson) %>
 	var dfShare=<%-JSON.stringify(dfShare) %>
+		wx.config({
+			debug: true,
+			appId: signJson.appid,
+			timestamp:''+signJson.timestamp,
+			nonceStr: signJson.noncestr,
+			signature: signJson.signature,
+			jsApiList: [
+				'onMenuShareTimeline',
+				'onMenuShareAppMessage',
+				'onMenuShareQQ',
+				'onMenuShareWeibo',
+				'onMenuShareQZone',
+				'chooseImage',
+				'uploadImage',
+				'downloadImage',
+				'previewImage',
+				'startRecord',
+				'stopRecord',
+				'onVoiceRecordEnd',
+				'playVoice',
+				'pauseVoice',
+				'stopVoice',
+				'onVoicePlayEnd',
+				'uploadVoice',
+				'getLocation',
+				'openLocation',
+				'scanQRCode'
+			]
+		});
 		wx.ready(function() {
-			wx.config({
-				debug: false,
-				beta: true,
-				appId: signJson.appid,
-				timestamp:''+signJson.timestamp,
-				nonceStr: signJson.noncestr,
-				signature: signJson.signature,
-				jsApiList: [
-					'onMenuShareTimeline',
-					'onMenuShareAppMessage',
-					'onMenuShareQQ',
-					'onMenuShareWeibo',
-					'onMenuShareQZone',
-					'chooseImage',
-					'uploadImage',
-					'downloadImage',
-					'previewImage',
-					'startRecord',
-					'stopRecord',
-					'onVoiceRecordEnd',
-					'playVoice',
-					'pauseVoice',
-					'stopVoice',
-					'onVoicePlayEnd',
-					'uploadVoice',
-					'getLocation',
-					'openLocation',
-					'scanQRCode'
-				]
-			});
 			var onMenuArr=['onMenuShareTimeline','onMenuShareAppMessage','onMenuShareQQ']
 //			var	sendArr=['pengyouquan','haoyou','qqhaoyou']
 			var len=onMenuArr.length;
@@ -111,10 +110,10 @@
 				};
 				wx[onMenuArr[i]](onMenuOption);
 			}
-			wx.error(function (err) {
-				console.log("微信签名出错了");
-			})
 		})
+    wx.error(function (err) {
+      console.log("微信签名出错了");
+    })
 </script>
 <% } %>
 </body>

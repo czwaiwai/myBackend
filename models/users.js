@@ -38,7 +38,7 @@ var UserSchema = new Schema({
 	email: {type: String}, // 邮件
 	sex: {type:Number}, // 0 女 1男
 	headImg: {type: String, default: '' }, // 图片url
-	nickname: {type: String}, // 昵称
+	nickname: {type: String, default:''}, // 昵称
 	realname: {type: String}, // 真实姓名
 	card_id: {type: String}, // 用户证件
 	mobile: {type: String}, // 手机号吗
