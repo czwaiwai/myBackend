@@ -34,7 +34,7 @@ router.use((req, res, next) => {
 	if(isWeixin(req.get('user-agent'))){
 		console.log('微信环境')
 		let shareUrl = encodeURIComponent(req.originalUrl)
-		let shareUrlTpl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx2b6b34e4a0735bc0&redirect_uri=http%3A%2F%2Fwww.bssfood.com%2FauthLogin&response_type=code&scope=snsapi_userinfo&state=${shareUrl}#wechat_redirect`
+		// let shareUrlTpl = ``
 		wechat.getAccessToken().then(accessTokeken => {
 			console.log('accessTokeken', accessTokeken)
 			wechat.getJsApiTicket(accessTokeken).then(ticket => {
@@ -43,7 +43,7 @@ router.use((req, res, next) => {
 				res.locals.isWeixin = true
 				res.locals.dfShare = {
 					title: '白云山生态农场',
-					link: shareUrlTpl,
+					link: url,
 					imgUrl: local + '/logo.png',
 					desc: '湖北省赤壁市白石山生态农业科技有限公司成立于2017年10月，位于湖北省赤壁市茶庵岭镇罗峰村村委会大院内， 白石山生态农业科技有限公司专注做好有机农产品，为赤壁人民的菜篮子安全保驾护航，用山泉水灌溉水田和养殖水产品，用有机肥料培植农作物，100%保证农产品有机化生产，如有虚假，假一赔十。',
 				}

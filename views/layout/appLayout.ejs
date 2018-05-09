@@ -63,7 +63,7 @@
 	var signJson=<%-JSON.stringify(signJson) %>
 	var dfShare=<%-JSON.stringify(dfShare) %>
 		wx.config({
-			debug: true,
+			debug: false,
 			appId: signJson.appid,
 			timestamp:''+signJson.timestamp,
 			nonceStr: signJson.noncestr,
