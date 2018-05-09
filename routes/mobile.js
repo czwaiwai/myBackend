@@ -20,7 +20,7 @@ router.use((req,res,next) => {
 		return next()
 	}
 	console.log('请求的参数：', req.query)
-	if (req.session.openid || req.session.user || req.query.from === 'singlemessage' || req.query.wxVaild) {
+	if (req.session.openid || req.session.user || req.query.wxVaild) {
 		console.log('存在user对象-----------不用验证',req.session.user)
 		next()
 	} else {
@@ -54,7 +54,6 @@ router.use((req, res, next) => {
 					imgUrl: local + '/logo.png',
 					desc: '湖北省赤壁市白石山生态农业科技有限公司成立于2017年10月，位于湖北省赤壁市茶庵岭镇罗峰村村委会大院内， 白石山生态农业科技有限公司专注做好有机农产品，为赤壁人民的菜篮子安全保驾护航，用山泉水灌溉水田和养殖水产品，用有机肥料培植农作物，100%保证农产品有机化生产，如有虚假，假一赔十。',
 				}
-				console.log('signJson----', res.locals)
 			  return next()
 			}).catch(e => next(e))
 		}).catch(e => next(e))

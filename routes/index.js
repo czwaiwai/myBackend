@@ -80,7 +80,7 @@ router.get('/authLogin', (req, res, next) => {
 		console.log('json', json)
 		console.log(typeof json)
 		wechat.getUserInfo(json.access_token, json.openid).then(wxUser=> {
-			console.log('这里创建用户', wxUser)
+			console.log('得到微信User对象', wxUser)
 			// { openid: 'o5W010h6MfsZS-j1ZEUE-ZwKPelA',
 			// 	nickname: '歪歪😰',
 			// 	sex: 1,
@@ -90,8 +90,10 @@ router.get('/authLogin', (req, res, next) => {
 			// 	country: '奥地利',
 			// 	headimgurl: 'http://thirdwx.qlogo.cn/mmopen/vi_32/Vu0c5PibbGxXRRsjAUJnllGWGeXbibV2eQtgCOLCAnORQey6l5f46ZMyD0qgLiaez1fPIoWmFBicnZuQKmd7ibias4ww/132',
 			// 	privilege: [] }
+			
 			User.findByOpenId (wxUser.openid, function(err, user) {
 				if (err) return next(err)
+				console.log('查找数据库user对象', user)
 				if(user) { // 找到user并登录
 					req.session.user = user
 					if (url.indexOf('/app')> -1) {
@@ -100,6 +102,7 @@ router.get('/authLogin', (req, res, next) => {
 						return res.redirect('/app/index?wxVaild=true')
 					}
 				} else { // 找不到user 创建新User
+					console.log('找不到user对象，创建新user', user)
 					let newUser = {
 						nickname: wxUser.nickname,
 						sex: wxUser.sex,
@@ -124,6 +127,8 @@ router.get('/authLogin', (req, res, next) => {
 			})
 			// console.log('跳转到首页')
 		})
+	}).catch(err => {
+		return res.redirect('/app/index?wxVaild=true')
 	})
 })
 

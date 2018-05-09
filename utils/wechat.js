@@ -241,7 +241,12 @@ Wechat.prototype.getCodeToken = function (code) {
 			// 	"scope":"SCOPE" }
 			// {"errcode":40029,"errmsg":"invalid code"}
 			try {
-				return resolve(JSON.parse(body))
+				let json = JSON.parse(body)
+				if(!json.errcode) {
+					resolve(json)
+				} else {
+					reject(json)
+				}
 			} catch (e) {
 				return reject(e)
 			}
@@ -256,7 +261,12 @@ Wechat.prototype.getUserInfo = function (accToken, openId) {
 				return  reject(err)
 			}
 			try {
-				return resolve(JSON.parse(body))
+				let json = JSON.parse(body)
+				if(!json.errcode) {
+					resolve(json)
+				} else {
+					reject(json)
+				}
 			} catch (e) {
 				return reject(e)
 			}
