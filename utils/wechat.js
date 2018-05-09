@@ -210,7 +210,12 @@ Wechat.prototype.authLogin  = function () {
 			console.log(body, 'authLogin')
 			// return resolve(body)
 			try {
-				return resolve(JSON.parse(body))
+				let json = JSON.parse(body)
+				if(!json.errcode) {
+					resolve(json)
+				} else {
+					reject(json)
+				}
 			} catch (e) {
 				return reject(e)
 			}

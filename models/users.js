@@ -31,7 +31,7 @@ CartSchema.plugin(function(schema) {
 	}
 })
 var UserSchema = new Schema({
-	userName: {type: String, default:''}, // 登录用户名
+	userName: {type: String}, // 登录用户名
 	pwd: {type: String, default:''}, // 密码
 	isAdmin: {type: Number, default: 0},
 	isLock: {type: Number, default: 0},
