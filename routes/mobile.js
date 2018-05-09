@@ -19,7 +19,8 @@ router.use((req,res,next) => {
 	if (!res.locals.isWeixin) {
 		return next()
 	}
-	if (req.session.openid || req.session.user || req.query.wxVaild) {
+	console.log('请求的参数：', req.query)
+	if (req.session.openid || req.session.user || req.query.from === 'singlemessage' || req.query.wxVaild) {
 		console.log('存在user对象-----------不用验证',req.session.user)
 		next()
 	} else {
