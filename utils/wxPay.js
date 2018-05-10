@@ -230,7 +230,7 @@ var WxPay = {
 				body: formData
 			}, function(err, response, body) {
 				console.log(body, '---------原始data---------------')
-				if (!error && response.statusCode == 200) {
+				if (!err && response.statusCode == 200) {
 					xml2js.parseString(body,{
 						normalize: true,     // Trim whitespace inside text nodes
 						normalizeTags: true, // Transform tags to lowercase
@@ -240,7 +240,15 @@ var WxPay = {
 							reject(err)
 						}
 						let data = xml.xml
-						// var _paySignjs = self.paysignjs(appid, nonce_str, 'prepay_id=' + tmp1[0], 'MD5', timeStamp);
+						var _paySignjs = self.paysignjs(data.appid, nonce_str, 'prepay_id=' + data.prepay_id, 'MD5', timeStamp);
+						var args = {
+								appId: data.appid,
+								timeStamp: timeStamp,
+								nonceStr: nonce_str,
+								signType: "MD5",
+								package: data.prepay_id,
+								paySign: _paySignjs
+						};
 						console.log(data, '------covert - data------')
 						resolve(data)
 					})
