@@ -257,7 +257,7 @@ var WxPay = {
 								timeStamp: timeStamp,
 								nonceStr: nonce_str,
 								signType: "MD5",
-								package: data.prepay_id,
+								package: 'prepay_id=' + data.prepay_id,
 								paySign: _paySignjs
 						};
 						console.log(args, '------covert - data------')

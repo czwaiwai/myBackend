@@ -165,6 +165,57 @@ router.get('/orders/detail/:id', (req, res, next) => {
 	})
 })
 // 下单 支付确认
+router.post('/pay/orderPay',loginValid,(req, res, next) => {
+	let address = null
+	let addrList = []
+	let totalPrice = req.body.totalPrice
+	let feeDf = res.locals.feeDf
+	if (req.body.status === 'buy') {
+		let user = req.session.user
+		if (user.address && user.address.length>0) {
+			address = user.address[0]
+			addrList = user.addrList
+		}
+		Goods.findByIds([req.body.id], (err, goods) => {
+			var goodOne = goods[0]
+			let num = parseInt(req.body.num)
+			var carts=[{
+				id:goodOne._id,
+				goods:goodOne,
+				num:num,
+				price:goodOne.sellPrice,
+				subTotal:formatFloat(goodOne.sellPrice * num),
+				payTotal:formatFloat(goodOne.sellPrice * num)
+			}]
+			// console.log(goodOne.sellPrice,parseFloat(goodOne.sellPrice))
+			let totalPrice = formatFloat(goodOne.sellPrice * num)
+			let needPrice = formatFloat((goodOne.sellPrice * num) + parseFloat(feeDf))
+			res.render('app/orderPay', {title: '下单',goods:carts, address, feeDf: feeDf, totalPrice, needPrice, addrList})
+		})
+	}
+	if (req.body.status === 'cart') {
+		let user = req.session.user
+		if (user.address && user.address.length>0) {
+			address = user.address[0]
+			addrList = user.addrList
+		}
+		let carts = JSON.parse(req.body.carts)
+		let goodIds = carts.map(item => item.id)
+		Goods.findByIds(goodIds, (err, goods) => {
+			carts.map(item => {
+				let newOne = goods.find(sub => {
+					return sub._id.toString() === item.id})
+				item.goods = newOne
+				return item
+			})
+			totalPrice = formatFloat(parseFloat(totalPrice))
+			let needPrice = formatFloat(parseFloat(totalPrice) + parseFloat(feeDf))
+			res.render('app/orderPay', {title: '下单', goods:carts, fee: feeDf, totalPrice, needPrice, address, addrList})
+		})
+	}
+	// res.render('app/orderPay', {title: '订单确认'})
+})
+// 下单 支付确认
 router.post('/orderPay',loginValid,(req, res, next) => {
 	let address = null
 	let addrList = []
