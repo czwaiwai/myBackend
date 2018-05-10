@@ -47,7 +47,7 @@ var WxPay = {
 	md5:function(string){
 		return crypto.createHash('md5').update(string, 'utf8').digest('hex')
 	},
-	paysignjsapi: function(appid, attach, body, mch_id, nonce_str, notify_url, openid, out_trade_no, total_fee, trade_type, key) {
+	paysignjsapi: function(appid, attach, body, mch_id, nonce_str, notify_url, openid, out_trade_no, spbill_create_ip, total_fee, trade_type, key) {
 		var ret = {
 			appid: appid,
 			attach: attach,
@@ -57,7 +57,7 @@ var WxPay = {
 			notify_url: notify_url,
 			openid: openid,
 			out_trade_no: out_trade_no,
-			// spbill_create_ip: spbill_create_ip,
+			spbill_create_ip: spbill_create_ip,
 			total_fee: total_fee,
 			trade_type: trade_type
 		};
@@ -209,6 +209,7 @@ var WxPay = {
 			var timeStamp = this.createTimeStamp();
 			var url = "https://api.mch.weixin.qq.com/pay/unifiedorder";
 			var totalFee = parseInt(total_fee*100)
+			var spbill_create_ip = '127.0.0.1'
 			var formData = "<xml>";
 			formData += "<appid>" + appid + "</appid>"; //appid
 			formData += "<attach>" + attach + "</attach>"; //附加数据
@@ -218,10 +219,10 @@ var WxPay = {
 			formData += "<notify_url>" + notify_url + "</notify_url>"; // 支付成功后微信服务器通过POST请求通知这个地址
 			formData += "<openid>" + openid + "</openid>"; // 扫码支付这个参数不是必须的
 			formData += "<out_trade_no>" + bookingNo + "</out_trade_no>"; //订单号
-			// formData += "<spbill_create_ip></spbill_create_ip>"; //不是必须的
+			formData += "<spbill_create_ip>"+ spbill_create_ip +"</spbill_create_ip>"; //不是必须的
 			formData += "<total_fee>" + totalFee + "</total_fee>"; //金额
 			formData += "<trade_type>JSAPI</trade_type>"; //NATIVE会返回code_url ，JSAPI不会返回
-			formData += "<sign>" + this.paysignjsapi(appid, attach, body, mch_id, nonce_str, notify_url, openid, bookingNo, totalFee, 'JSAPI', key) + "</sign>";
+			formData += "<sign>" + this.paysignjsapi(appid, attach, body, mch_id, nonce_str, notify_url, openid, bookingNo, spbill_create_ip, totalFee, 'JSAPI', key) + "</sign>";
 			formData += "</xml>";
 			var self = this;
 			request({
