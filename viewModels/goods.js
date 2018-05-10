@@ -16,8 +16,8 @@ exports.findByIdAddView = function (id, callback) {
 	Goods.findByIdAndUpdate(id, {$inc:{viewCount:1}}, callback)
 }
 exports.getHotGoods = function (callback) {
-	var goods = Goods.find({}) // 填入条件
-	goods.limit(12)
+	var goods = Goods.find({}, {content:0}) // 填入条件
+	// goods.limit(12)
 	goods.exec(callback)
 }
 exports.getHotGoodsByType = function (hotNum, limit = 4, callback) {

@@ -248,7 +248,6 @@ var WxPay = {
 					return reject(error)
 					console.log(body, '----------------')
 				}
-				
 				// if (!err && response.statusCode == 200) {
 				// 	console.log(body, '---------------------' );
 				// 	var prepay_id = self.getXMLNodeValue('prepay_id', body.toString("utf-8"));
