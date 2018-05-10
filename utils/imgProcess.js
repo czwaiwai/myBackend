@@ -60,9 +60,9 @@ function imgProcess(req,cb){
                 }
 	              let small=true;
                 if(small){
-                  let smallImg= images(img).resize(330);
+                  let smallImg= images(img).resize(220);
                   let smallName=fullName.replace(imgType,"")+"_$sma_"+smallImg.width()+"x"+smallImg.height()+imgType;
-                  smallImg.save(newPath+smallName);
+                  smallImg.save(newPath+smallName,{quality:60});
                   pushObj.thumb = {
                     name: smallName,
                     url: (newPath+smallName).replace("public","").replace(/\\/g,'/'),

@@ -271,6 +271,7 @@ router.post('/pay', loginValid, (req, res, next) => {
 	// 请求微信接口返回二维码url
 	Order.create(order, (err, newOrder) => {
 		if (err) return next(err)
+		console.log(newOrder, 'newOrder')
 		WxPay.order(newOrder.userId+ '_' +newOrder._id, '白石山商品购买', newOrder.orderId, newOrder.needPrice, openId).then((data) => {
 			res.json({
 				code:0,

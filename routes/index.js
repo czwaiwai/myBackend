@@ -5,7 +5,7 @@ var _ = require('lodash');
 // var schema=require('async-validator');
 // var User =require('../models/user');
 /* GET home page. */
-let {formatFloat} = require('../utils/tools')
+let {formatFloat, bigImg} = require('../utils/tools')
 let {loginValid} = require('../utils/helper')
 let WxPay = require('../utils/wxPay')
 let Wechat = require('../utils/wechat')
@@ -175,6 +175,8 @@ router.get('/page/:pageName', (req, res, next) => {
     }
     if (!navPage) {
     	navPage = {}
+		} else {
+			navPage.imgUrl = bigImg(navPage.imgUrl)
 		}
 		res.render('page', {title:page.title, page, nav, navPage})
   })

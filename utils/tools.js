@@ -19,7 +19,9 @@ exports.getPageNum = function (count,pageSize){
 	}
 	return parseInt(count / pageSize) + 1
 }
-
+exports.bigImg = function (imgUrl) {
+	return imgUrl.replace('_$sma_[^.]+','')
+}
 exports.formatFloat = function(f, digit = 2) {
 	return Math.round(f*100)/100
 	// var m = Math.pow(10, digit);
