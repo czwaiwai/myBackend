@@ -240,6 +240,16 @@ var WxPay = {
 							reject(err)
 						}
 						let data = xml.xml
+						// { return_code: 'SUCCESS',
+						// 	return_msg: 'OK',
+						// 	appid: 'wx2b6b34e4a0735bc0',
+						// 	mch_id: '1500403302',
+						// 	nonce_str: 'rs7shsDP9wGwUYy4',
+						// 	sign: '7CF4AC0FE1483DA0A370B91E45CD16D5',
+						// 	result_code: 'SUCCESS',
+						// 	prepay_id: 'wx101135430438654ac405aa4e0474009808',
+						// 	trade_type: 'JSAPI' } '------covert - data------'
+						//
 						var _paySignjs = self.paysignjs(data.appid, nonce_str, 'prepay_id=' + data.prepay_id, 'MD5', timeStamp);
 						var args = {
 								appId: data.appid,
@@ -249,8 +259,8 @@ var WxPay = {
 								package: data.prepay_id,
 								paySign: _paySignjs
 						};
-						console.log(data, '------covert - data------')
-						resolve(data)
+						console.log(args, '------covert - data------')
+						resolve(args)
 					})
 				} else {
 					return reject(error)
