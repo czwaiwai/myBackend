@@ -175,7 +175,8 @@ router.get('/page/:pageName', (req, res, next) => {
     }
     if (!navPage) {
     	navPage = {}
-		} else {
+		}
+		if(navPage.imgUrl) {
 			navPage.imgUrl = bigImg(navPage.imgUrl)
 		}
 		res.render('page', {title:page.title, page, nav, navPage})

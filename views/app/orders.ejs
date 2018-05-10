@@ -138,7 +138,7 @@
     <div class="wh_line">
       <p class="weui-cell_warn">应付：￥<@=order.needPrice @></p>
       <@ if(order.orderStatus === 20) { @>
-      <p class="main-color">实付：￥<@=order.orderStatus @></p>
+      <p class="main-color">实付：￥<@=order.realPrice @></p>
       <@ } @>
     </div>
   </div>
@@ -234,7 +234,6 @@ jQuery(function(){
  	   getData($curr,page)
   }
   initPage()
-
   $(".infinite").infinite().on("infinite", function() {
     var self = this;
     var $self = $(self)
