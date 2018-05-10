@@ -208,6 +208,7 @@ var WxPay = {
 			var nonce_str = this.createNonceStr();
 			var timeStamp = this.createTimeStamp();
 			var url = "https://api.mch.weixin.qq.com/pay/unifiedorder";
+			var totalFee = parseInt(total__fee*100)
 			var formData = "<xml>";
 			formData += "<appid>" + appid + "</appid>"; //appid
 			formData += "<attach>" + attach + "</attach>"; //附加数据
@@ -218,9 +219,9 @@ var WxPay = {
 			formData += "<openid>" + openid + "</openid>"; // 扫码支付这个参数不是必须的
 			formData += "<out_trade_no>" + bookingNo + "</out_trade_no>"; //订单号
 			// formData += "<spbill_create_ip></spbill_create_ip>"; //不是必须的
-			formData += "<total_fee>" + total_fee + "</total_fee>"; //金额
+			formData += "<total_fee>" + totalFee + "</total_fee>"; //金额
 			formData += "<trade_type>JSAPI</trade_type>"; //NATIVE会返回code_url ，JSAPI不会返回
-			formData += "<sign>" + this.paysignjsapi(appid, attach, body, mch_id, nonce_str, notify_url, openid, bookingNo, total_fee, 'JSAPI', key) + "</sign>";
+			formData += "<sign>" + this.paysignjsapi(appid, attach, body, mch_id, nonce_str, notify_url, openid, bookingNo, totalFee, 'JSAPI', key) + "</sign>";
 			formData += "</xml>";
 			var self = this;
 			request({
@@ -228,25 +229,45 @@ var WxPay = {
 				method: 'POST',
 				body: formData
 			}, function(err, response, body) {
-				if (!err && response.statusCode == 200) {
-					console.log(body, '---------------------' );
-					var prepay_id = self.getXMLNodeValue('prepay_id', body.toString("utf-8"));
-					var tmp = prepay_id.split('[');
-					var tmp1 = tmp[2].split(']');
-					//签名
-					var _paySignjs = self.paysignjs(appid, nonce_str, 'prepay_id=' + tmp1[0], 'MD5', timeStamp);
-					var args = {
-						appId: appid,
-						timeStamp: timeStamp,
-						nonceStr: nonce_str,
-						signType: "MD5",
-						package: tmp1[0],
-						paySign: _paySignjs
-					};
-					resolve(args);
+				console.log(body, '---------原始data---------------')
+				if (!error && response.statusCode == 200) {
+					xml2js.parseString(body,{
+						normalize: true,     // Trim whitespace inside text nodes
+						normalizeTags: true, // Transform tags to lowercase
+						explicitArray: false // Only put nodes in array if >1
+					}, (err, xml) => {
+						if(err) {
+							reject(err)
+						}
+						let data = xml.xml
+						// var _paySignjs = self.paysignjs(appid, nonce_str, 'prepay_id=' + tmp1[0], 'MD5', timeStamp);
+						console.log(data, '------covert - data------')
+						resolve(data)
+					})
 				} else {
-					console.log(body);
+					return reject(error)
+					console.log(body, '----------------')
 				}
+				
+				// if (!err && response.statusCode == 200) {
+				// 	console.log(body, '---------------------' );
+				// 	var prepay_id = self.getXMLNodeValue('prepay_id', body.toString("utf-8"));
+				// 	var tmp = prepay_id.split('[');
+				// 	var tmp1 = tmp[2].split(']');
+				// 	//签名
+				// 	var _paySignjs = self.paysignjs(appid, nonce_str, 'prepay_id=' + tmp1[0], 'MD5', timeStamp);
+				// 	var args = {
+				// 		appId: appid,
+				// 		timeStamp: timeStamp,
+				// 		nonceStr: nonce_str,
+				// 		signType: "MD5",
+				// 		package: tmp1[0],
+				// 		paySign: _paySignjs
+				// 	};
+				// 	resolve(args);
+				// } else {
+				// 	console.log(body);
+				// }
 			});
 		})
 	},
