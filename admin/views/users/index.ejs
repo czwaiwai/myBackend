@@ -23,6 +23,7 @@
           <tbody>
           <tr>
             <th>用户名称</th>
+            <th>昵称</th>
             <th>用户手机号</th>
             <th></th>
             <th>创建时间</th>
@@ -30,8 +31,9 @@
           </tr>
           <% users.forEach(function(item){%>
           <tr>
-            <td><%=item.userName%></td>
-            <td><%=item.mobile %></td>
+            <td><%=item.userName || ''%></td>
+            <td><%=item.nickname  || '' %></td>
+            <td><%=item.mobile   || '' %></td>
             <td><%=item.is_vaild ?'有效':'无效'%></td>
             <td><%=item.create_at_ago()%></td>
             <td>
