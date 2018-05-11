@@ -29,6 +29,8 @@ exports.noPay = function (userId, callback) {
 exports.findById = function (id, callback) {
 	Order.findById(id,callback)
 }
+
+// 修改为已支付
 exports.savePay = function (orderId, obj, callback) {
 	Order.findOne({orderId: orderId}, (err, order) => {
 		order.pay_at = new Date()
@@ -40,21 +42,54 @@ exports.savePay = function (orderId, obj, callback) {
 		order.save(callback)
 	})
 }
+
+// 退款中...
+exports.refunding = function (orderId, obj, callback) {
+	Order.findOne({orderId: orderId}, (err, order) => {
+		if(err) return callback(err)
+		order.refund_at = new Date()
+		order.orderStatus = 12 // 退款中
+		order.refundCurrPrice =  formatFloat(obj.refund_fee/100)
+		order.refundPrice = formatFloat((order.refundPrice || 0 ) + order.refundCurrPrice)
+		order.save(callback)
+	})
+}
+
+// 修改为已退款
+exports.refunded = function (orderId, obj, callback) {
+	Order.findOne({orderId: orderId}, (err, order) => {
+		if(err) return callback(err)
+		order.out_at = new Date()
+		if(order.refundPrice === order.realPrice) {
+			order.orderStatus = 13 // 已全额退款
+		} else {
+			order.orderStatus = 21 // 部分退款
+		}
+		order.save(callback)
+	})
+}
 // 取消订单
 exports.cancelById = function (id, callback) {
 	Order.findByIdAndUpdate(id, {orderStatus: 11}, {new:true}, callback)
 }
-// 退款中
-exports.backAmtById = function (id, callback) {
-	Order.findByIdAndUpdate(id, {orderStatus: 12}, {new:true}, callback)
-}
-// 已退款
-exports.backAmtByIdStore = function (id, callback) {
-	Order.findByIdAndUpdate(id, {orderStatus: 13}, {new: true}, callback)
-}
+// // 退款中
+// exports.backAmtById = function (id, callback) {
+// 	Order.findByIdAndUpdate(id, {orderStatus: 12}, {new:true}, callback)
+// }
+// // 已退款
+// exports.backAmtByIdStore = function (id, callback) {
+// 	Order.findByIdAndUpdate(id, {orderStatus: 13}, {new: true}, callback)
+// }
 // 改价
 exports.changeAmtById = function (id, amt, callback) {
-	Order.findByIdAndUpdate(id, {orderStatus: 13}, {new: true}, callback)
+	Order.findById(id,(err,order) => {
+		if(err) return callback(order)
+		order.needPrice = formatFloat((order.totalPrice +order.feePrice) - amt)
+		order.offerPrice = formatFloat(amt)
+		order.offerType = '客户优惠'
+		order.save(callback)
+	})
+	// Order.findByIdAndUpdate(id, {orderStatus: 13}, {new: true}, callback)
 }
 
 

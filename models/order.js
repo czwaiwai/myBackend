@@ -9,7 +9,7 @@ var tools = require('../utils/tools');
 var OrderSchema = new Schema({
 	orderId: {type:Number}, // 订单id简化
 	userId: {type: Schema.ObjectId}, // 用户ID
-	orderStatus: {type: Number }, // 10 为待支付，11为已取消, 12退款中 13已退款 ，20为 已支付, 30待发货 31 为已发货
+	orderStatus: {type: Number }, // 10 为待支付，11为已取消, 12退款中 13已完全退款 ，20为 已支付 ,21为部分退款, 30待发货 31 为已发货 40 已完成
 	create_at:{type:Date, default: Date.now},
 	update_at:{type:Date, default: Date.now},
 	goods: [{
@@ -27,7 +27,8 @@ var OrderSchema = new Schema({
 	},
 	type: {type: String, default: 'wx'}, // 支付方式 'wx', 'ali'
 	payId: {type: String, default: ''}, // 支付端信息编码 payId
-	openId: {type: String, default: ''},
+	openId: {type: String, default: ''}, // 微信用户openid
+	postageId: {type: String, default: ''}, // 物流单号 -----
 	totalNum: {type: Number}, // 总数量
 	totalPrice: {type: Number}, // 商品总价
 	feePrice: {type:Number, default: 0}, // 邮费
@@ -35,8 +36,11 @@ var OrderSchema = new Schema({
 	needPrice: {type: Number}, // 应付金额
 	offerType: {type: String}, // 优惠方式
 	realPrice: {type: Number}, //实际支付
+	refundCurrPrice: {type: Number}, // 当次退款金额
+	refundPrice: {type: Number}, // 退款总金额
 	pay_at:{type:Date}, // 支付时间
-	out_at:{type:Date} // 退款时间
+	refund_at:{type:Date}, //退款申请时间
+	out_at:{type:Date} // 退款完成时间
 })
 OrderSchema.plugin(BaseModel)
 OrderSchema.plugin(function (schema) {
@@ -54,8 +58,10 @@ OrderSchema.virtual('statusName').get(function() {
 	switch (this.orderStatus) {
 		case 10: sTxt = '未付款';break;
 		case 11: sTxt = '已取消';break;
-		case 12: sTxt = '已退款';break;
+		case 12: sTxt = '退款中';break;
+		case 13: sTxt = '已全额退款';break;
 		case 20: sTxt = '已支付';break;
+		case 21: sTxt = '已部分退款';break;
 		case 30: sTxt = '待发货';break;
 		case 31: sTxt = '已发货';break;
 		default: sTxt ='未知状态'

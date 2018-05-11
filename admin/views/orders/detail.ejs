@@ -37,11 +37,17 @@
                 <div class="col-md-6">
                     <div >
                         <p>相关操作</p>
+                        <% if(order.orderStatus === 10){ %>
                         <a id="cancelOrder" class="btn btn-default btn-sm" data-url="/order/cancel/<%=order._id %>" href="javascript:void(0)" >取消订单</a>
-                        <a id="changeAmt"  class="btn btn-primary btn-sm" data-url="/order/changeAmt/<%=order._id %>" href="javascript:void(0)" >改价</a>
+                        <a id="changeAmt"  class="btn btn-primary btn-sm" data-needprice="<%=order.needPrice %>" data-url="/order/changeAmt/<%=order._id %>" href="javascript:void(0)" >改价</a>
+                        <% } %>
+                        <% if(order.orderStatus >=20 ){ %>
                         <a id="backAmt" class="btn btn-danger btn-sm" data-url="/order/backAmt/<%=order._id %>"  href="javascript:void(0)" >退款</a>
-                        <a id="linkTrain" class="btn btn-info btn-sm" data-url="/order/linkTrain/<%=order._id %>"   href="javascript:void(0)" >关联物流信息</a>
-                        <a id="queryOrderPay" class="btn btn-info btn-sm" data-id="<%=order.id %>" data-orderid="<%=order.orderId %>" data-url="/order/linkTrain/<%=order._id %>"   href="javascript:void(0)" >查询订单支付状况</a>
+                        <% } %>
+                        <% if(order.orderStatus >=30) { %>
+                            <a id="linkTrain" class="btn btn-info btn-sm" data-url="/order/linkTrain/<%=order._id %>"   href="javascript:void(0)" >关联物流信息</a>
+                        <% }%>
+                        <!--<a id="queryOrderPay" class="btn btn-info btn-sm" data-id="<%=order.id %>" data-orderid="<%=order.orderId %>" data-url="/order/linkTrain/<%=order._id %>"   href="javascript:void(0)" >查询订单支付状况</a>-->
                     </div>
                 </div>
             </div>

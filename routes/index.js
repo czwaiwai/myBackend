@@ -511,7 +511,7 @@ router.post('/order/pay', loginValid, (req, res, next) => {
 		}
 	}
 	*/
-// 微信回调的地址
+// 微信支付回调的地址
 router.post('/order/notify', (req, res, next) => {
 	console.log(req.body, '----notify---req--------')
 	if(req.body &&  req.body.xml ) {
@@ -519,6 +519,20 @@ router.post('/order/notify', (req, res, next) => {
 		console.log(resData, '-------')
 		// 更新订单状态
 		Order.savePay(resData.out_trade_no, resData, (err, order) => {
+			if (err) return next(err)
+			let tpl = WxPay.notify(resData)
+			res.send(tpl)
+		})
+	}
+})
+// 微信退款回调
+router.post('/order/refund_notify', (req, res, next) => {
+	console.log(req.body, '-refund-- - url---notify---req--------')
+	if(req.body &&  req.body.xml ) {
+		let resData =  req.body.xml
+		console.log(resData, '-------')
+		// 更新订单状态
+		Order.refunded(resData.out_trade_no, resData, (err, order) => {
 			if (err) return next(err)
 			let tpl = WxPay.notify(resData)
 			res.send(tpl)
