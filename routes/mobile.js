@@ -374,7 +374,7 @@ router.post('/pay', loginValid, (req, res, next) => {
 router.get('/paySucc',loginValid, (req, res, next) => {
 	if(req.query.orderId) {
 		Order.findByOrderId (req.query.orderId ,function(err, order) {
-			WxPay.queryOrder(orderId).then(data => {
+			WxPay.queryOrder(req.query.orderId).then(data => {
 				console.log(data, 'queryOrder --------------------------')
 				let {return_code, return_msg , result_code, out_trade_no, trade_state, trade_state_desc} = data
 				if (return_code === 'SUCCESS') {
