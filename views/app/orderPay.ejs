@@ -324,6 +324,7 @@ $addrList.on('click','.edit_btn',function(e) {
 $orderSubmit.on('click',function(e) {
     $.post('/app/pay',$orderForm.serialize()).done(function(res){
         var obj = res.data
+
         console.log(obj, '---------------------------')
         wxPayReady(function() {
                WeixinJSBridge.invoke('getBrandWCPayRequest', {
@@ -336,7 +337,7 @@ $orderSubmit.on('click',function(e) {
                },
                function(res){
                  if(res.err_msg == "get_brand_wcpay_request:ok" ) {
-                   location.href='/app/paySucc'
+                   location.href='/app/paySucc?orderId=' + obj.outTradeNo
                  } else {
                    console.log('支付取消或支付失败')
                    console.log('跳转到')

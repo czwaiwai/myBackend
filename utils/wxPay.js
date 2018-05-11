@@ -81,6 +81,7 @@ var WxPay = {
 		return parseInt(new Date().getTime() / 1000) + '';
 	},
 	// https://api.mch.weixin.qq.com/pay/orderquery
+	// 查询订单是否支付
 	queryOrder: function (id) {
 		return new Promise((resolve, reject) => {
 			let url = 'https://api.mch.weixin.qq.com/pay/orderquery'
@@ -261,7 +262,8 @@ var WxPay = {
 								nonceStr: nonce_str,
 								signType: "MD5",
 								package: 'prepay_id=' + data.prepay_id,
-								paySign: _paySignjs
+								paySign: _paySignjs,
+								outTradeNo:bookingNo,
 						};
 						console.log(args, '------covert - data------')
 						resolve(args)

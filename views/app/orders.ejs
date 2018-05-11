@@ -14,6 +14,14 @@
    padding-top:7px;
    border-top:1px solid #e3e3e3;
 }
+.page__ft.fixed{
+   position: fixed;
+    width: 100%;
+    bottom: 0px;
+    background: #FFF;
+    height: 41px;
+    border-top: 1px solid #e3e3e3;
+}
 </style>`)%>
 <div class="page has_head" style="height:100%;">
   <div class="page__hd weui-flex">
@@ -28,14 +36,14 @@
   <div id="orders" class="page__bd" style="height:100%;">
     <div class="weui-tab">
       <div class="weui-navbar">
-        <a class="weui-navbar__item weui-bar__item--on" style="padding: 8px 0;" data-type="all" href="#tab1">全部</a>
-        <a class="weui-navbar__item " style="padding: 8px 0;"  data-type="waitPay"  href="#tab2">待付款</a>
-        <a class="weui-navbar__item" style="padding: 8px 0;"  data-type="pay" href="#tab3">待发货</a>
-        <a class="weui-navbar__item" style="padding: 8px 0;" data-type="ship" href="#tab4">已发货</a>
-        <a class="weui-navbar__item" style="padding: 8px 0;" data-type="back" href="#tab5">已完成</a>
+        <a class="weui-navbar__item <%=!query.posi || (query.posi && query.posi ==='all')?' weui-bar__item--on ':'' %>" style="padding: 8px 0;"  data-type="all" href="#tab1">全部</a>
+        <a class="weui-navbar__item <%=query.posi && query.posi ==='waitPay'?' weui-bar__item--on ':'' %>" style="padding: 8px 0;"  data-type="waitPay"  href="#tab2">待付款</a>
+        <a class="weui-navbar__item <%=query.posi && query.posi ==='pay'?' weui-bar__item--on ':'' %>" style="padding: 8px 0;"  data-type="pay" href="#tab3">待发货</a>
+        <a class="weui-navbar__item <%=query.posi && query.posi ==='ship'?' weui-bar__item--on ':'' %>" style="padding: 8px 0;" data-type="ship" href="#tab4">已发货</a>
+        <a class="weui-navbar__item <%=query.posi && query.posi ==='back'?' weui-bar__item--on ':'' %>" style="padding: 8px 0;" data-type="back" href="#tab5">已完成</a>
       </div>
       <div class="weui-tab__bd">
-        <div id="tab1" class="weui-tab__bd-item infinite  weui-tab__bd-item--active">
+        <div id="tab1" class="weui-tab__bd-item infinite <%=!query.posi || (query.posi && query.posi ==='all')?'  weui-tab__bd-item--active':'' %> ">
           <div class="tab-content">
 
           </div>
@@ -44,7 +52,7 @@
             <span class="weui-loadmore__tips">正在加载</span>
           </div>
         </div>
-        <div id="tab2" class="weui-tab__bd-item infinite ">
+        <div id="tab2" class="weui-tab__bd-item infinite  <%=query.posi && query.posi ==='waitPay'?' weui-tab__bd-item--active':'' %>">
           <div class="tab-content">
 
           </div>
@@ -53,7 +61,7 @@
             <span class="weui-loadmore__tips">正在加载</span>
           </div>
         </div>
-        <div id="tab3" class="weui-tab__bd-item infinite">
+        <div id="tab3" class="weui-tab__bd-item infinite <%=query.posi && query.posi ==='pay'?' weui-tab__bd-item--active':'' %>">
           <div class="tab-content">
           </div>
           <div class="weui-loadmore">
@@ -61,7 +69,7 @@
             <span class="weui-loadmore__tips">正在加载</span>
           </div>
         </div>
-        <div id="tab4" class="weui-tab__bd-item infinite">
+        <div id="tab4" class="weui-tab__bd-item infinite <%=query.posi && query.posi ==='ship'?' weui-tab__bd-item--active':'' %>">
           <div class="tab-content">
           </div>
           <div class="weui-loadmore">
@@ -69,7 +77,7 @@
             <span class="weui-loadmore__tips">正在加载</span>
           </div>
         </div>
-        <div id="tab5" class="weui-tab__bd-item infinite">
+        <div id="tab5" class="weui-tab__bd-item infinite <%=query.posi && query.posi ==='back'?' weui-tab__bd-item--active':'' %>">
           <div class="tab-content">
           </div>
           <div class="weui-loadmore">
@@ -94,7 +102,7 @@
   </div>
 </div>
 <% block('footer').append(`<script id="orderDetailTpl" type="text/template" >
-<div>
+<div id="orderDetailWrap" >
   <div class="whblock">
     <div>下单时间：<@=order.create_at_ago @></div>
     <div>订单编号：<@=order.orderId @></div>
@@ -172,6 +180,7 @@
 </script>`) %>
 <% block('footer').append(`<script>
 jQuery(function(){
+	var currType = 'all'
   var $orderDetail = $('#orderDetail')
   var orderDetailCompile = _.template($('#orderDetailTpl')[0].innerHTML)
   var $orders = $('#orders')
@@ -184,7 +193,6 @@ jQuery(function(){
       $orderDetail.popup()
     })
   })
-  var currType = 'all'
   var orderItemCompile = _.template($('#orderItemTpl')[0].innerHTML)
   $('.weui-navbar a').on('click',function(e) {
  	   var href = $(e.target).attr('href')

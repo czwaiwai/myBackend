@@ -15,12 +15,16 @@
         <div class="weui-msg">
             <div class="weui-msg__icon-area"><i class="weui-icon-success weui-icon_msg"></i></div>
             <div class="weui-msg__text-area">
-                <h2 class="weui-msg__title">成功支付 <span class="main-color">0.01</span>元</h2>
+                <h2 class="weui-msg__title">成功支付 <span class="main-color"><%=order.needPrice %></span>元</h2>
+                <% if(isPay) {%>
                 <p class="weui-msg__desc">感谢您的购买，您的商品我们将尽快发货，请耐心等待</p>
+                <% } else { %>
+                <p class="weui-msg__desc">感谢您的购买，您的支付已成功，但结果尚未收到，稍后查看订单详情</p>
+                <% } %>
             </div>
             <div class="weui-msg__opr-area">
                 <p class="weui-btn-area">
-                    <a href="javascript:;" class="weui-btn weui-btn_primary">查看订单详情</a>
+                    <a href="/app/orderDetail/<%=order._id %>" class="weui-btn weui-btn_primary">查看订单详情</a>
                     <a href="/app/index" class="weui-btn weui-btn_default">返回商城首页</a>
                 </p>
             </div>

@@ -29,6 +29,9 @@ exports.noPay = function (userId, callback) {
 exports.findById = function (id, callback) {
 	Order.findById(id,callback)
 }
+exports.findByOrderId = function (orderId, callback) {
+	Order.findOne({orderId: orderId}, callback)
+}
 
 // 修改为已支付
 exports.savePay = function (orderId, obj, callback) {

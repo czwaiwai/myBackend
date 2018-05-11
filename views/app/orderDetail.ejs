@@ -1,0 +1,161 @@
+<% layout('layout/appLayout') %>
+<% block('header').append(`<style>
+.weui-navbar + .weui-tab__bd {
+    padding-top: 40px;
+}
+.whblock{
+    background:#FFF;
+    margin-bottom:10px;
+    padding:10px;
+    font-size:14px;
+}
+.wh_line + .wh_line{
+   margin-top:7px;
+   padding-top:7px;
+   border-top:1px solid #e3e3e3;
+}
+.page__ft.fixed{
+   position: fixed;
+    width: 100%;
+    bottom: 0px;
+    background: #FFF;
+    height: 41px;
+    border-top: 1px solid #e3e3e3;
+}
+</style>`)%>
+<div id="orderDetailWrap" class="page has_head has_tab">
+  <div class="page__hd weui-flex">
+    <div style="width:60px;padding-left:10px;">
+      <a href="/app/center"><i class="iconfont icon-back"></i>返回</a>
+    </div>
+    <div class="weui-flex__item">
+      <h1 class="title"><%=title %></h1>
+    </div>
+    <div style="width:60px;"></div>
+  </div>
+  <div class="page_bd">
+    <div>
+      <div class="whblock">
+        <div>下单时间：<%=order.create_at_ago() %></div>
+        <div>订单编号：<%=order.orderId %></div>
+      </div>
+      <div  class="whblock no-padding">
+        <div class="weui-panel weui-panel_access">
+          <div class="weui-panel__hd">
+            商品
+            <span class="float_right <%=order.statusColor %>"><span class="status_txt"><%= order.statusName %></span></span>
+          </div>
+          <div class="weui-panel__bd">
+            <% order.goods.forEach(function(item){ %>
+            <div class="weui-media-box weui-media-box_appmsg">
+              <div class="weui-media-box__hd">
+                <img class="weui-media-box__thumb" src="<%=item.imgTmb %>" alt="">
+              </div>
+              <div class="weui-media-box__bd">
+                <h4 class="weui-media-box__title fs14" style="height:40px;"><%= item.name %></h4>
+                <p class="weui-media-box__desc">单价：￥<%=item.sellPrice %></p>
+              </div>
+              <div class="weui-media-box__ft" style="height:60px;">
+                <p class="">X<%=item.num %></p>
+                <p>￥<%= formatFloat(item.sellPrice * item.num) %></p>
+              </div>
+            </div>
+            <% }) %>
+          </div>
+        </div>
+      </div>
+      <div class="whblock ">
+        <div class="wh_line">
+          <p><%=order.address.name %> <span class="padding-left15"><%=order.address.mobile %></span></p>
+          <p class="text-muted"><%=order.address.place %></p>
+        </div>
+        <div class="wh_line" >
+          <p>商品总数：<%= order.totalNum %></p>
+          <p>商品合计：￥<%=order.totalPrice %></p>
+          <p>运费:￥<%=order.feePrice %></p>
+        </div>
+        <div class="wh_line">
+          <p class="weui-cell_warn">应付：￥<%=order.needPrice %></p>
+          <% if(order.orderStatus === 20) { %>
+          <p class="main-color">实付：￥<%=order.realPrice %></p>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page__ft fixed">
+    <div class="weui-flex text-right padding15-h" style="padding-top:5px;">
+      <div class="weui-flex__item"></div>
+      <div class="status_txt padding5-h <%=order.statusColor %>"><%= order.statusName %></div>
+      <% if(order.orderStatus === 10 ){ %>
+      <div id="noPayBtn" class="no_pay_btn">
+        <span><a id="cancel"  href="/account/orderCancel/<%=order._id %>" class="weui-btn weui-btn_mini weui-btn_default">取消订单</a></span>
+        <span><a id="toPay"  data-id="<%=order._id %>" href="/account/orderCancel/<%=order._id %>"  class="weui-btn weui-btn_mini weui-btn_primary">立即付款</a></span>
+      </div>
+      <% } %>
+      <% if(order.orderStatus > 30) { %>
+      <!---查看物流信息接口--->
+        <!--<div id="postageBtn">-->
+          <!--<span><a id="postageShow"  href="/account/orderCancel/<%=order._id %>" class="weui-btn weui-btn_mini weui-btn_default">物流信息</a></span>-->
+        <!--</div>-->
+      <% } %>
+    </div>
+  </div>
+</div>
+<% block('footer').append(`<script>
+jQuery(function(){
+	var $orderDetailWrap = $('#orderDetailWrap')
+	var $noPayBtn = $('#noPayBtn')
+	var $postageBtn = $('#postageBtn')
+  $('#cancel').on('click',function(e){
+  	e.preventDefault()
+  	var $this = $(this)
+  	$.confirm('你确定要取消订单么','提示', function(){
+  		console.log('确定')
+      $.post($this.attr('href')).done(function(res){
+      	$noPayBtn.hide()
+        $orderDetailWrap.find('.status_txt').text('已取消')
+      })
+  	})
+  	return false
+  })
+  $('#postageShow').on('click',function (e) {
+  	e.preventDefault()
+
+  	return false;
+  })
+  $('#toPay').on('click',function(e){
+  	e.preventDefault()
+  	var $this = $(this)
+    $.post('/app/orderPayById',{id: $this.data('id')}).done(function(res){
+      var obj = res.data
+      console.log(obj, '---------------------------')
+      wxPayReady(function() {
+        WeixinJSBridge.invoke('getBrandWCPayRequest', {
+          "appId":obj.appId,
+          "timeStamp":obj.timeStamp,
+          "nonceStr":obj.nonceStr,
+          "package":obj.package,
+          "signType": obj.signType,
+          "paySign": obj.paySign
+        },
+        function(res){
+          if(res.err_msg == "get_brand_wcpay_request:ok" ) {
+            location.href='/app/paySucc?orderId=' + obj.outTradeNo
+          } else {
+            $.toast('支付已取消', 'cancel')
+          }
+        });
+      })
+      return false
+    })
+  })
+  function wxPayReady (cb) {
+    if (typeof WeixinJSBridge == 'undefined') {
+      document.addEventListener('WeixinJSBridgeReady', cb, false)
+    } else {
+      cb()
+    }
+  }
+})
+</script>`)%>

@@ -13,6 +13,10 @@ const wechat = Wechat.getInstance()
 let EventProxy = require('eventproxy')
 let {Page, User, Catalog, Goods, Article, Cart, Address, Order, Dict, Postage} = require('../viewModels')
 let dicts = []
+// 对常见字段格式进行校验
+// router.use((req,res,next) => {
+//
+// })
 router.use((req,res,next) => {
 	let ep = EventProxy.create('catalogs', 'dicts', (catalogs, dicts) => {
 		res.locals.catalogs = catalogs
@@ -400,8 +404,8 @@ router.post('/order/postage', (req, res, next) => {
 	})
 })
 
-router.get('/order/pay/:orderId', loginValid, (req, res, next) => {
-	Order.findById(req.params.orderId, (err, order) => {
+router.get('/order/pay/:id', loginValid, (req, res, next) => {
+	Order.findById(req.params.id, (err, order) => {
 		if (err) next(err)
 		if (order.orderStatus === 10) {
 			// 请求微信接口返回二维码url

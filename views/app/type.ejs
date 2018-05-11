@@ -51,7 +51,7 @@
   background-size:cover;
 }
 </style>`)%>
-<div class="page has_tab">
+<div class="page has_tab ">
   <div class="navside">
     <ul class="navside_ul">
       <li class="navside_item <%=!query.catalog?' active':''%>"  >
@@ -72,7 +72,7 @@
           <p>没有找到任何商品</p>
         </div>
       <% } %>
-      <ul class="goods_list_ul clearfix" style="">
+      <ul id="goodsList" class="goods_list_ul clearfix" style="">
         <% goods.forEach(function(item){  %>
         <li class="goods_item">
           <a href="/app/goods/detail/<%=item._id %>" class="thumbnail">
@@ -83,48 +83,76 @@
         </li>
         <% }) %>
       </ul>
+      <div class="weui-loadmore">
+        <i class="weui-loading"></i>
+        <span class="weui-loadmore__tips">正在加载</span>
+      </div>
     </div>
   </div>
-  <!--<section class="ui-panel " style="padding-left:81px;" >-->
-
-    <!--<ul class="ui-grid-halve" style="padding-left: 5px;padding-right: 0px;">-->
-      <!--<% goods.forEach(function(item){  %>-->
-      <!--<li>-->
-        <!--<a href="/goods/detail/<%=item._id %>" class="thumbnail">-->
-        <!--<div class="ui-grid-halve-img">-->
-          <!--<span style="background-image:url(<%=item.imgTmb %>) no-repeat center"></span>-->
-          <!--<p><%=item.name%></p>-->
-        <!--</div>-->
-        <!--</a>-->
-      <!--</li>-->
-      <!--&lt;!&ndash;<div  class="col-xs-6 col-sm-4 col-md-4  col-lg-3">&ndash;&gt;-->
-        <!--&lt;!&ndash;<a href="/goods/detail/<%=item._id %>" class="thumbnail">&ndash;&gt;-->
-          <!--&lt;!&ndash;<div style="">&ndash;&gt;-->
-            <!--&lt;!&ndash;<img data-src="holder.js/100%x200" src="<%=item.imgTmb %>" alt="100%x200" style="width: 100%; display: block;" >&ndash;&gt;-->
-          <!--&lt;!&ndash;</div>&ndash;&gt;-->
-          <!--&lt;!&ndash;<div class="caption">&ndash;&gt;-->
-            <!--&lt;!&ndash;<h5 class="dot text-center"><%=item.name%></h5>&ndash;&gt;-->
-            <!--&lt;!&ndash;<p class="text-center">￥<%=item.sellPrice %></p>&ndash;&gt;-->
-          <!--&lt;!&ndash;</div>&ndash;&gt;-->
-        <!--&lt;!&ndash;</a>&ndash;&gt;-->
-      <!--&lt;!&ndash;</div>&ndash;&gt;-->
-      <!--<% }) %>-->
-
-      <!--<li>-->
-        <!--<div class="ui-grid-halve-img">-->
-          <!--<span style="background-image:url(http://placeholder.qiniudn.com/290x160)"></span>-->
-        <!--</div>-->
-      <!--</li>-->
-      <!--<li>-->
-        <!--<div class="ui-grid-halve-img">-->
-          <!--<span style="background-image:url(http://placeholder.qiniudn.com/290x160)"></span>-->
-        <!--</div>-->
-      <!--</li>-->
-      <!--<li>-->
-        <!--<div class="ui-grid-halve-img">-->
-          <!--<span style="background-image:url(http://placeholder.qiniudn.com/290x160)"></span>-->
-        <!--</div>-->
-      <!--</li>-->
-    <!--</ul>-->
-  <!--</section>-->
 </div>
+<% block('footer').append(`<script id="goodsItem" type="text/template" >
+<@ list.forEach(function(item){ @>
+<li class="goods_item">
+  <a href="/app/goods/detail/<@=item._id @>" class="thumbnail">
+    <div class="goods_img" style="background:url('<@=item.imgTmb @>') no-repeat center;background-size:cover;"></div>
+    <p class="padding-left5 fs14 dot"><@=item.name @></p>
+    <p class="padding-left5 fs16 weui-cell_warn">￥<@=item.sellPrice@></p>
+  </a>
+</li>
+<@ }) @>
+</script>`) %>
+<% block('footer').append(`<script>
+jQuery(function(){
+	var catalog = '${query.catalog || ''}'
+	var len = ${goods.length}
+	var $body = $(document.body)
+	var $curr = $('#goodsList')
+  var goodsItemCompile = _.template($('#goodsItem')[0].innerHTML)
+  function init() {
+		$curr.data('page',1)
+    if(len <=10) {
+      loadingStop($curr)
+    }
+  }
+  init()
+
+  function loading ($curr) {
+    $curr.next('.weui-loadmore').removeClass('weui-loadmore_line').find('.weui-loading').show().next().text('加载数据中')
+  }
+
+  function loadingStop ($curr) {
+    $curr.next('.weui-loadmore')
+    .addClass('weui-loadmore_line').
+    find('.weui-loading')
+    .hide().next().text('没有更多数据！')
+  }
+  function getData($curr,page, cb) {
+  	if( parseInt(page) === 1) {
+  		loading($curr)
+  	}
+  	$curr.data('page',page)
+    $.get('/app/type', {page:page, catalog: catalog}).done(function(res) {
+      var resData = res.data
+      if (resData.goods.length < 10){
+      	loadingStop($curr)
+      	$curr.data('stop', true)
+      }
+      $curr.append(goodsItemCompile({list:resData.goods}))
+      cb && cb()
+    })
+  }
+  $body.infinite().on("infinite", function() {
+    var self = this;
+    var $self = $(self)
+    if(self.loading) return;
+    self.loading = true;
+    if($curr.data('stop') === true) {
+    	return loadingStop($curr)
+    }
+    loading($curr)
+    getData($curr,parseInt($curr.data('page')+1), function() {
+        self.loading = false
+    })
+  });
+})
+</script>`)%>

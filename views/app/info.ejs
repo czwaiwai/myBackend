@@ -1,0 +1,53 @@
+<% layout('layout/appLayout') %>
+<div class="page has_head">
+  <div class="page__hd weui-flex">
+    <div style="width:60px;padding-left:10px;">
+      <a href="javascript:;" onclick="history.back()"><i class="iconfont icon-back"></i>返回</a>
+    </div>
+    <div class="weui-flex__item">
+      <h1 class="title"><%=title %></h1>
+    </div>
+    <div style="width:60px;"></div>
+  </div>
+  <div class="page_bd">
+    <div class="weui-cells__title">个人信息</div>
+    <div class="weui-cells">
+      <div class="weui-cell">
+        <div class="weui-cell__bd">
+          <p>头像</p>
+        </div>
+        <div class="weui-cell__ft">
+          <img src="<%=user.headImg %>" width="60"></div>
+      </div>
+      <div class="weui-cell">
+        <div class="weui-cell__bd">
+          <p>昵称</p>
+        </div>
+        <div class="weui-cell__ft"><%=user.nickname%></div>
+      </div>
+      <div class="weui-cell">
+        <div class="weui-cell__bd">
+          <p>手机号码</p>
+        </div>
+        <div class="weui-cell__ft"><%=user.mobile || '无' %></div>
+      </div>
+      <div class="weui-cell">
+        <div class="weui-cell__bd">
+          <p>电子邮箱</p>
+        </div>
+        <div class="weui-cell__ft"><%=user.email || '无' %></div>
+      </div>
+      <div class="weui-cell">
+        <div class="weui-cell__bd">
+          <p>性别</p>
+        </div>
+        <div class="weui-cell__ft"><%=user.sex==1?'男':'女' %></div>
+      </div>
+    </div>
+  </div>
+</div>
+<% block('footer').append(`<script>
+jQuery(function(){
+
+})
+</script>`)%>

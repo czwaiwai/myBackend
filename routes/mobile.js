@@ -49,7 +49,7 @@ router.use((req, res, next) => {
 				console.log('ticket',ticket)
 				res.locals.signJson = wechat.getSignTicket(ticket, url)
 				res.locals.dfShare = {
-					title: '白云山生态农场',
+					title: '白石山生态农场',
 					link: url,
 					imgUrl: local + '/logo.png',
 					desc: '湖北省赤壁市白石山生态农业科技有限公司成立于2017年10月，位于湖北省赤壁市茶庵岭镇罗峰村村委会大院内， 白石山生态农业科技有限公司专注做好有机农产品，为赤壁人民的菜篮子安全保驾护航，用山泉水灌溉水田和养殖水产品，用有机肥料培植农作物，100%保证农产品有机化生产，如有虚假，假一赔十。',
@@ -81,18 +81,9 @@ router.get('/index', (req,res,next) => {
 	Article.findTopArticle('articles', ep.done('articles'))
 	Dict.findByGroup('home',ep.done('dicts'))
 	Goods.getHotGoods (ep.done('goods'))
-	
-	
-	// let ep = EventProxy.create('goodTypes', 'goods', 'news', 'articles', (goodTypes, goods, news, articles) => {
-	// 	res.render('app/index',{title:"首页", goodTypes, goods, news, articles});
-	// })
-	// ep.fail(next)
-	// Catalog.getChildrenByName('goods',ep.done('goodTypes'))
-	// Article.findTopArticle('news', ep.done('news'))
-	// Article.findTopArticle('articles', ep.done('articles'))
-	// Goods.getHotGoods (ep.done('goods'))
 })
 router.get('/type', (req, res)=> {
+	console.log(req.xhr, '-----------------')
 	Catalog.getChildrenByName('goods', (err,catalogs) => {
 		if (err) return next(err)
 		let params = {}
@@ -101,7 +92,15 @@ router.get('/type', (req, res)=> {
 			params.catalogPath  = new RegExp(`^${catalog.calPath},${catalog.name}`)
 		}
 		Goods.findAllByPage(params, req.query.page, 10, (err, obj) => {
-			res.render('app/type', Object.assign({title: '商品展示', goodTypes: catalogs}, obj))
+			if(req.xhr) {
+				res.json({
+					code:0,
+					message:'success',
+					data:  Object.assign({title: '商品展示'}, obj)
+				})
+			} else{
+				res.render('app/type', Object.assign({title: '商品展示', goodTypes: catalogs}, obj))
+			}
 		})
 	})
 })
@@ -147,21 +146,51 @@ router.get('/orders',loginValid, (req, res, next) => {
 })
 router.get('/orders/detail/:id', (req, res, next) => {
 	Order.findById(req.params.id, (err, order) => {
-		let orderObj = order.toObject();
-		orderObj.create_at_ago= order.create_at_ago()
-		orderObj.update_at_ago= order.update_at_ago()
-		orderObj.pay_at_ago = order.pay_at_ago()
-		orderObj.statusName = order.statusName
-		orderObj.statusColor = order.statusColor
-		orderObj.goods.forEach(item => {
-			item.subPrice = formatFloat(item.num * item.sellPrice)
-		})
-		res.json({
-			code: 0,
-			message: '查询成功',
-			data: {title: '订单详情', order:orderObj}
-		})
-		// res.render('account/orderDetail', {title: '订单详情', order, formatFloat:formatFloat})
+		if(req.xhr) {
+			let orderObj = order.toObject();
+			orderObj.create_at_ago= order.create_at_ago()
+			orderObj.update_at_ago= order.update_at_ago()
+			orderObj.pay_at_ago = order.pay_at_ago()
+			orderObj.statusName = order.statusName
+			orderObj.statusColor = order.statusColor
+			orderObj.goods.forEach(item => {
+				item.subPrice = formatFloat(item.num * item.sellPrice)
+			})
+			res.json({
+				code: 0,
+				message: '查询成功',
+				data: {title: '订单详情', order:orderObj}
+			})
+		} else {
+			res.render('app/orderDetail', {title: '订单详情', order, formatFloat:formatFloat})
+		}
+	})
+})
+router.post('/orderPayById', loginValid, (req, res, next) => {
+	let id = req.body.id
+	let openId = req.session.openid || req.session.user.openId
+	Order.findById(id, (err, order) => {
+		if (err) next(err)
+		if (order.orderStatus === 10) {
+			WxPay.order(order.userId+ '_' +order._id, '白石山商品购买', order.orderId, order.needPrice, openId).then((data) => {
+				res.json({
+					code:0,
+					message:'success',
+					data:data
+				})
+				// if (data.return_code === 'SUCCESS') {
+				// 	res.render('order/pay', {title: '订单支付', order:newOrder, needPrice, prepay_id : data.prepay_id,
+				// 		code_url: data.code_url})
+				// } else {
+				// 	return next(new Error({
+				// 		name:data.return_msg,
+				// 		message: data.return_msg + '/n' + JSON.stringify(data)
+				// 	}))
+				// }
+			})
+		} else {
+			return next(new Error('订单不是未支付状态'))
+		}
 	})
 })
 // 下单 支付确认
@@ -343,13 +372,31 @@ router.post('/pay', loginValid, (req, res, next) => {
 	
 })
 router.get('/paySucc',loginValid, (req, res, next) => {
-
-	res.render('app/paySucc', {title: '支付成功'})
+	if(req.query.orderId) {
+		Order.findByOrderId (req.query.orderId ,function(err, order) {
+			WxPay.queryOrder(orderId).then(data => {
+				console.log(data, 'queryOrder --------------------------')
+				let {return_code, return_msg , result_code, out_trade_no, trade_state, trade_state_desc} = data
+				if (return_code === 'SUCCESS') {
+					if(trade_state === 'SUCCESS') {
+						res.render('app/paySucc', {title: '支付成功', order, isPay: true})
+					} else {
+						res.render('app/paySucc', {title: '支付成功', order, isPay: false})
+					}
+				} else {
+					next(new Error(data))
+				}
+			})
+		})
+	}
 })
 
-router.get('/setting',loginValid, (req, res, next) => {
 
-	res.render('app/setting', {title: '个人设置'})
+router.get('/setting',loginValid, (req, res, next) => {
+	res.render('app/setting', {title: '设置'})
+})
+router.get('/info',loginValid, (req, res, next) => {
+	res.render('app/info', {title:'个人信息'})
 })
 
 

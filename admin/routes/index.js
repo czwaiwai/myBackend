@@ -9,7 +9,8 @@ let {formatFloat} = require('../../utils/tools')
 // let User =require('../../models/user');
 // let Pages =require('../../models/pages');
 let {User, Page, Catalog, Article, Goods, Image, Order, Postage, Dict} = require('../../viewModels/')
-
+let xss = require('xss')
+let xssConfig = require('../../utils/xssConfig')
 let imgCode="";
 function getPageNum(count,pageSize) {
 	if(count%pageSize==0){//转换成页数
@@ -18,6 +19,15 @@ function getPageNum(count,pageSize) {
 	return parseInt(count/pageSize)+1;
 }
 
+router.use((req, res, next) => {
+	console.log('进来了没，---------------')
+	if(req.body.content) {
+		console.log(req.body.content,'before--------')
+		req.body.content = xss(req.body.content,xssConfig)
+		console.log(req.body.content,'after ------------')
+	}
+	return next()
+})
 router.get('/', (req, res)=> {
 
     res.render('index',{title:"首页"});

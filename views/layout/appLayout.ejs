@@ -48,9 +48,9 @@
 <script src="/app/js/lib/underscore-min.js"></script>
 <script src="/app/js/lib/fastclick.js"></script>
 <!--<script src="//res.wx.qq.com/open/js/jweixin-1.0.0.js" ></script>-->
-
 <script src="/app/js/lib/jquery-weui.js"></script>
 <script src="/app/js/app.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 <script>
 	jQuery(function(){
 		FastClick.attach(document.body);
@@ -58,7 +58,7 @@
 </script>
 <%- block('footer') %>
 <% if(isWeixin) { %>
-<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+
 <script>
 	var signJson=<%-JSON.stringify(signJson) %>
 	var dfShare=<%-JSON.stringify(dfShare) %>
@@ -94,6 +94,7 @@
 		wx.ready(function() {
 			var onMenuArr=['onMenuShareTimeline','onMenuShareAppMessage','onMenuShareQQ']
 //			var	sendArr=['pengyouquan','haoyou','qqhaoyou']
+      console.log(dfShare.link, location.href, '-----------------')
 			var len=onMenuArr.length;
 			for(var i=0;i<len;i++){
 				var onMenuOption= {
@@ -111,6 +112,9 @@
 				wx[onMenuArr[i]](onMenuOption);
 			}
 		})
+    if(dfShare.link != location.href) {
+			alert(dfShare.link  + '|' + location.href)
+    }
     wx.error(function (err) {
       console.log("微信签名出错了");
     })
