@@ -276,20 +276,21 @@ var WxPay = {
 		})
 	},
 	refund: function (out_trade_no,refund_fee,total_fee) {
-		var appid = wxConfig.appID;
-		var key = wxConfig.key;
-		var mch_id = wxConfig.mchID
-		var notify_url = 'http://www.bssfood.com/order/refund_notify'
-		var nonce_str = this.createNonceStr();
-		// var timeStamp = this.createTimeStamp();
-		var url = 'https://api.mch.weixin.qq.com/secapi/pay/refund';
-		var refundFee = parseInt(refund_fee*100)
-		var totalFee = parseInt(total_fee*100)
-		// var spbill_create_ip = '127.0.0.1'
-		let stringA = `appid=${appid}&mch_id=${mch_id}&nonce_str=${nonce_str}&notify_url=${notify_url}&out_refund_no=${out_trade_no}&out_trade_no=${out_trade_no}&refund_fee=${refundFee}&total_fee=${totalFee}`,
-			stringSignTemp = stringA + "&key="+key, //注：key为商户平台设置的密钥key
-			sign = this.md5(stringSignTemp).toUpperCase();  //注：MD5签名方式
-	  let formData = `<xml>
+		return new Promise((resolve,reject) => {
+			var appid = wxConfig.appID;
+			var key = wxConfig.key;
+			var mch_id = wxConfig.mchID
+			var notify_url = 'http://www.bssfood.com/order/refund_notify'
+			var nonce_str = this.createNonceStr();
+			// var timeStamp = this.createTimeStamp();
+			var url = 'https://api.mch.weixin.qq.com/secapi/pay/refund';
+			var refundFee = parseInt(refund_fee*100)
+			var totalFee = parseInt(total_fee*100)
+			// var spbill_create_ip = '127.0.0.1'
+			let stringA = `appid=${appid}&mch_id=${mch_id}&nonce_str=${nonce_str}&notify_url=${notify_url}&out_refund_no=${out_trade_no}&out_trade_no=${out_trade_no}&refund_fee=${refundFee}&total_fee=${totalFee}`,
+				stringSignTemp = stringA + "&key="+key, //注：key为商户平台设置的密钥key
+				sign = this.md5(stringSignTemp).toUpperCase();  //注：MD5签名方式
+		  let formData = `<xml>
 <appid>${appid}</appid>
 <mch_id>${mch_id}</mch_id>
 <nonce_str>${nonce_str}</nonce_str>
@@ -300,51 +301,52 @@ var WxPay = {
 <total_fee>${totalFee}</total_fee>
 <sign>${sign}</sign>
 </xml>`
-		request({
-			url: url,
-			method: 'POST',
-			body: formData,
-			agentOptions: {
-				pfx: pfx,
-				passphrase: mch_id
-			}
-		}, function(err, response, body) {
-			console.log(body, '---------原始data---------------')
-			if (!err && response.statusCode == 200) {
-				xml2js.parseString(body,{
-					normalize: true,     // Trim whitespace inside text nodes
-					normalizeTags: true, // Transform tags to lowercase
-					explicitArray: false // Only put nodes in array if >1
-				}, (err, xml) => {
-					if(err) {
-						reject(err)
-					}
-					let data = xml.xml
-					if (data.return_code === 'SUCCESS') {
-						resolve(data)
-					} else {
-						reject(data)
-					}
-				// <xml>
-				// 	<return_code><![CDATA[SUCCESS]]></return_code>
-				// 	<return_msg><![CDATA[OK]]></return_msg>
-				// 	<appid><![CDATA[wx2421b1c4370ec43b]]></appid>
-				// 	<mch_id><![CDATA[10000100]]></mch_id>
-				// 	<nonce_str><![CDATA[NfsMFbUFpdbEhPXP]]></nonce_str>
-				// 	<sign><![CDATA[B7274EB9F8925EB93100DD2085FA56C0]]></sign>
-				// 	<result_code><![CDATA[SUCCESS]]></result_code>
-				// 	<transaction_id><![CDATA[1008450740201411110005820873]]></transaction_id>
-				// 	<out_trade_no><![CDATA[1415757673]]></out_trade_no>
-				// 	<out_refund_no><![CDATA[1415701182]]></out_refund_no>
-				// 	<refund_id><![CDATA[2008450740201411110000174436]]></refund_id>
-				// 	<refund_channel><![CDATA[]]></refund_channel>
-				// 	<refund_fee>1</refund_fee>
-				// 	</xml>
-				})
-			} else {
-				return reject(error)
-				console.log(body, '----------------')
-			}
+			request({
+				url: url,
+				method: 'POST',
+				body: formData,
+				agentOptions: {
+					pfx: pfx,
+					passphrase: mch_id
+				}
+			}, function(err, response, body) {
+				console.log(body, '---------原始data---------------')
+				if (!err && response.statusCode == 200) {
+					xml2js.parseString(body,{
+						normalize: true,     // Trim whitespace inside text nodes
+						normalizeTags: true, // Transform tags to lowercase
+						explicitArray: false // Only put nodes in array if >1
+					}, (err, xml) => {
+						if(err) {
+							reject(err)
+						}
+						let data = xml.xml
+						if (data.return_code === 'SUCCESS') {
+							resolve(data)
+						} else {
+							reject(data)
+						}
+					// <xml>
+					// 	<return_code><![CDATA[SUCCESS]]></return_code>
+					// 	<return_msg><![CDATA[OK]]></return_msg>
+					// 	<appid><![CDATA[wx2421b1c4370ec43b]]></appid>
+					// 	<mch_id><![CDATA[10000100]]></mch_id>
+					// 	<nonce_str><![CDATA[NfsMFbUFpdbEhPXP]]></nonce_str>
+					// 	<sign><![CDATA[B7274EB9F8925EB93100DD2085FA56C0]]></sign>
+					// 	<result_code><![CDATA[SUCCESS]]></result_code>
+					// 	<transaction_id><![CDATA[1008450740201411110005820873]]></transaction_id>
+					// 	<out_trade_no><![CDATA[1415757673]]></out_trade_no>
+					// 	<out_refund_no><![CDATA[1415701182]]></out_refund_no>
+					// 	<refund_id><![CDATA[2008450740201411110000174436]]></refund_id>
+					// 	<refund_channel><![CDATA[]]></refund_channel>
+					// 	<refund_fee>1</refund_fee>
+					// 	</xml>
+					})
+				} else {
+					return reject(error)
+					console.log(body, '----------------')
+				}
+			})
 		})
 	},
 
