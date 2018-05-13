@@ -87,12 +87,11 @@ exports.cancelById = function (id, callback) {
 exports.changeAmtById = function (id, amt, callback) {
 	Order.findById(id,(err,order) => {
 		if(err) return callback(order)
-		order.needPrice = formatFloat((order.totalPrice +order.feePrice) - amt)
-		order.offerPrice = formatFloat(amt)
+		order.needPrice = formatFloat(amt)
+		order.offerPrice = formatFloat((order.totalPrice + order.feePrice) - formatFloat(amt))
 		order.offerType = '客户优惠'
 		order.save(callback)
 	})
-	// Order.findByIdAndUpdate(id, {orderStatus: 13}, {new: true}, callback)
 }
 
 

@@ -322,6 +322,11 @@ $addrList.on('click','.edit_btn',function(e) {
 })
 // 下单并微信支付
 $orderSubmit.on('click',function(e) {
+	let addr = $orderForm.find('input[name=addressId]').val()
+	if(!addr) {
+	  return $.toast('请填写收获地址','text')
+	}
+	$orderSubmit.prop('disabled',true).text('支付中...')
     $.post('/app/pay',$orderForm.serialize()).done(function(res){
         var obj = res.data
 
@@ -337,14 +342,17 @@ $orderSubmit.on('click',function(e) {
                },
                function(res){
                  if(res.err_msg == "get_brand_wcpay_request:ok" ) {
+                   $orderSubmit.prop('disabled',false).text('微信支付')
                    location.href='/app/paySucc?orderId=' + obj.outTradeNo
                  } else {
+                   location.href='/app/orderDetail?orderId=' + obj.outTradeNo
                    console.log('支付取消或支付失败')
-                   console.log('跳转到')
                  }
                }
-           );
+           )
         })
+    }).fail(function(){
+    	$orderSubmit.prop('disabled',false).text('微信支付')
     })
 })
 

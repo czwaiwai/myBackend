@@ -13,7 +13,7 @@ module.exports = function(req, res ,next) {
 	list.forEach(item => {
 		pass = pass && req.url.indexOf(item) === -1
 	})
-	if (/db|php.*\?/.test(req.url)) {
+	if (/\.php.*\?/.test(req.url)) {
 		pass = false
 	}
 	if(pass){

@@ -11,6 +11,7 @@ let {formatFloat} = require('../../utils/tools')
 let {User, Page, Catalog, Article, Goods, Image, Order, Postage, Dict} = require('../../viewModels/')
 let xss = require('xss')
 let xssConfig = require('../../utils/xssConfig')
+let WxPay = require('../utils/wxPay')
 let imgCode="";
 function getPageNum(count,pageSize) {
 	if(count%pageSize==0){//转换成页数
@@ -348,11 +349,42 @@ router.post('/order/cancel/:id', (req, res, next) => {
 })
 	// 改价
 router.post('/order/changeAmt/:id', (req, res, next) => {
-
+	if(parseFloat(req.body.amt)<=0) {
+		res.status(403).json({
+			code:-1,
+			message: '无法修改为小于等于0的值'
+		})
+	}
+	if(req.params.id && req.body.amt) {
+		Order.changeAmtById(req.params.id,formatFloat(req.body.amt),(err,order) => {
+			if(err) return next(err)
+			res.json({
+				code:0,
+				message: 'success',
+				data:{
+					order:order
+				}
+			})
+		})
+	}
 })
  // 退款
 router.post('/order/backAmt/:id', (req, res, next) => {
-
+	Order.findById(req.params.id,(err,order) => {
+		if(err) return next(err)
+		WxPay.refund(order.orderId,order.realPrice,order.realPrice).then(obj => {
+			Order.refunding(req.params.id, obj, (err, order) => {
+				if(err) return next(err)
+				res.json({
+					code:0,
+					message:'success',
+					data: {
+						order:order
+					}
+				})
+			})
+		})
+	})
 })
 // 关联物流单号
 router.post('/order/linkTrain/:id', (req, res, next) => {

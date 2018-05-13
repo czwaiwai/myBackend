@@ -8,7 +8,7 @@
 }
 .text-label {
   text-align:right;
-  width: 70px;
+  width: 80px;
   display: inline-block;
 }
 </style>`) %>
@@ -39,9 +39,13 @@
                             <div>
                                 <p><span class="text-muted text-label">商品合计：</span><span class="text-label">￥<%=order.totalPrice%></span></p>
                                 <p><span class="text-muted text-label">运费：</span><span class="text-label">￥<%=order.feePrice %></span></p>
+                                <% if(order.offerType && order.offerPrice>0){ %>
+                                <p><span class="text-muted text-label">优惠：</span><span class="text-label text-success fs12">减免￥<%=order.offerPrice %></span></p>
+                                <% } %>
                             </div>
                            <div class="padding-top" style="border-top:1px dashed #e3e3e3;">
                                <p><span class="text-muted text-label">应付：</span><span class="text-label text-danger fs20">￥<%=order.needPrice %></span></p>
+
                                <% if(order.orderStatus===10){ %>
                                <a class="btn btn-primary"  href="/order/pay/<%=order._id %>"  style="width:100px;">付款</a>
                                <% } %>

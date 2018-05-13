@@ -28,8 +28,12 @@
 
     $.extend({
         guidGenerator:guidGenerator,
-	      delBtn:delBtn
-
+	      delBtn:delBtn,
+		    formatFloat:  function(f, digit) {
+			    return Math.round(f*100)/100
+			    // var m = Math.pow(10, digit || 2);
+			    // return parseInt(f * m, 10) / m;
+		    }
     });
 
   if($('#content')[0] && $('#editor')[0]) {

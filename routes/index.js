@@ -47,7 +47,7 @@ router.get('/', (req, res, next)=> {
 	let ep = EventProxy.create('goodTypes', 'goods', 'news', 'articles','dicts', (goodTypes, goods, news, articles, dicts) => {
 		let info = _.keyBy(dicts,'name')
 		console.log(info, 'info -- - - ----------------------')
-		res.render('index',{title:"首页", goodTypes, goods, news, articles,
+		res.render('index',{title:"首页", info, goodTypes, goods, news, articles,
 			homeCompany: info.companyProfile.value,
 			homeBanner: info.homeBanner.value,
 			homeBlockImgs: info.homeBlockImgs.value

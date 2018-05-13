@@ -5,7 +5,7 @@
     <div class="col-md-12">
         <div class="box box-info">
             <div class="box-header with-border">
-                <h3 class="box-title">订单号：<%=order._id %><span style="padding-left:20px;font-size:18px;"> 下单时间：<%=order.create_at_ago()%></span></h3>
+                <h3 class="box-title">订单号：<%=order.orderId %><span style="padding-left:20px;font-size:18px;"> 下单时间：<%=order.create_at_ago()%></span></h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -31,21 +31,26 @@
                         <p><span class="text-muted text-label">运费：</span><span class="text-label">￥<%=order.feePrice %></span></p>
                     </div>
                     <div class="padding-top" style="border-top:1px dashed #e3e3e3;">
-                        <p><span class="text-muted text-label">应付：</span><span class="text-label text-danger fs20">￥<%=order.needPrice %></span></p>
+                        <p>
+                            <span class="text-muted text-label">应付：</span><span class="text-label text-danger fs20">￥<%=order.needPrice %></span>
+                            <% if(order.offerType){ %>
+                            <span class="text-info fs12 padding-left">[已改价优惠：￥<%=order.offerPrice%>]</span>
+                            <% }%>
+                        </p>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div >
                         <p>相关操作</p>
                         <% if(order.orderStatus === 10){ %>
-                        <a id="cancelOrder" class="btn btn-default btn-sm" data-url="/order/cancel/<%=order._id %>" href="javascript:void(0)" >取消订单</a>
-                        <a id="changeAmt"  class="btn btn-primary btn-sm" data-needprice="<%=order.needPrice %>" data-url="/order/changeAmt/<%=order._id %>" href="javascript:void(0)" >改价</a>
+                        <a id="cancelOrder" class="btn btn-default btn-sm" data-url="/admin/order/cancel/<%=order._id %>" href="javascript:void(0)" >取消订单</a>
+                        <a id="changeAmt"  class="btn btn-primary btn-sm" data-needprice="<%=order.needPrice %>" data-url="/admin/order/changeAmt/<%=order._id %>" href="javascript:void(0)" >改价</a>
                         <% } %>
                         <% if(order.orderStatus >=20 ){ %>
-                        <a id="backAmt" class="btn btn-danger btn-sm" data-url="/order/backAmt/<%=order._id %>"  href="javascript:void(0)" >退款</a>
+                        <a id="backAmt" class="btn btn-danger btn-sm" data-url="/admin/order/backAmt/<%=order._id %>"  href="javascript:void(0)" >退款</a>
                         <% } %>
                         <% if(order.orderStatus >=30) { %>
-                            <a id="linkTrain" class="btn btn-info btn-sm" data-url="/order/linkTrain/<%=order._id %>"   href="javascript:void(0)" >关联物流信息</a>
+                            <!--<a id="linkTrain" class="btn btn-info btn-sm" data-url="/order/linkTrain/<%=order._id %>"   href="javascript:void(0)" >关联物流信息</a>-->
                         <% }%>
                         <!--<a id="queryOrderPay" class="btn btn-info btn-sm" data-id="<%=order.id %>" data-orderid="<%=order.orderId %>" data-url="/order/linkTrain/<%=order._id %>"   href="javascript:void(0)" >查询订单支付状况</a>-->
                     </div>
@@ -98,22 +103,38 @@
 </div>
 <% block('footer').append(`<script>
   jQuery(function() {
+  	var needPrice = '${order.needPrice}'
     $('#cancelOrder').on('click',function() {
+      var $this = $(this)
       $.confirm('你确定要帮助用户取消这笔订单么?','取消订单').then(function(res){
       	console.log(res)
+      	$.post($this.data('url')).done(function(res){
+      		location.reload()
+      	})
       })
     })
     $('#changeAmt').on('click', function () {
-      $.prompt('你填写修改的订单支付总金额','改价', {
+      var $this = $(this)
+      $.prompt('你填写修改的订单支付总金额,当前应付金额为<span class="text-danger"> ￥' + needPrice +'</span>','改价', {
         regx:/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/,
-        errorMsg: '请输入有效金额'
+        errorMsg: '请输入有效金额',
+        placeholder: '输入要修改的金额',
       }).then(function(res){
-      	console.log(res)
+        $.post($this.data('url'),{amt: $.formatFloat(res)}).done(function(res){
+          location.reload()
+        })
+      	//console.log(res)
       })
     })
     $('#backAmt').on('click', function () {
+       var $this = $(this)
        $.confirm('你确定操作退款么，已支付金额将会通过微信返还用户?','退款').then(function(res){
       	console.log(res)
+      	 $.post($this.data('url')).done(function(res){
+            $.alert('<p>退款请求已提交!</p><p>退款结果可能会有延时</p><p>请告知用户1～3个工作日内到帐</p>').then(function(){
+              location.reload()
+            })
+      	 })
       })
     })
     $('#linkTrain').on('click', function () {

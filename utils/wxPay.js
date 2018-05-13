@@ -275,11 +275,11 @@ var WxPay = {
 			});
 		})
 	},
-	refund: function (out_trade_no,refund_fee,total_fee,notify_url) {
+	refund: function (out_trade_no,refund_fee,total_fee) {
 		var appid = wxConfig.appID;
 		var key = wxConfig.key;
 		var mch_id = wxConfig.mchID
-		var notify_url = 'http://www.bssfood.com/order/notify'
+		var notify_url = 'http://www.bssfood.com/order/refund_notify'
 		var nonce_str = this.createNonceStr();
 		// var timeStamp = this.createTimeStamp();
 		var url = 'https://api.mch.weixin.qq.com/secapi/pay/refund';
