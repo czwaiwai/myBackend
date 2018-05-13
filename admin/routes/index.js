@@ -11,7 +11,7 @@ let {formatFloat} = require('../../utils/tools')
 let {User, Page, Catalog, Article, Goods, Image, Order, Postage, Dict} = require('../../viewModels/')
 let xss = require('xss')
 let xssConfig = require('../../utils/xssConfig')
-let WxPay = require('../utils/wxPay')
+let WxPay = require('../../utils/wxPay')
 let imgCode="";
 function getPageNum(count,pageSize) {
 	if(count%pageSize==0){//转换成页数
