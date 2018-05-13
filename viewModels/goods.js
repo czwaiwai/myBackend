@@ -34,7 +34,7 @@ exports.findAllByPage = function (query = {}, pageNum = 1,pageSize = 10, callbac
 	Goods.count(query, (err,count) => {
 		if (err) return callback(err)
 		var goods = Goods.find(query, {content:0})
-		goods.sort({create_at:-1})
+		goods.sort({sort:1,catalogId:1,create_at:-1})
 		goods.skip(pageSize*(pageNum-1))
 		goods.limit(pageSize)
 		goods.exec(function(err,res){

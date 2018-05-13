@@ -6,8 +6,6 @@ var multiparty= require('multiparty');
 var fs=require("fs");
 var moment=require("moment");
 var images=require('images');
-var Image = require('../viewModels').Image
-let qs=require('qs');
 var path = require('path')
 let uploadPath ="public/upload/";
 function createDir(newPath,cb){

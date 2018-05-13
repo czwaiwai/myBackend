@@ -83,6 +83,12 @@
     </div>
     <div class="col-xs-12 col-sm-9 col-md-9">
       <div class="row">
+        <% if(goods && goods.length === 0) { %>
+        <div class="col-xs-12 text-muted text-center" style="padding-top:15%;">
+          <i class="iconfont icon-box text-muted" style="font-size: 45px;"></i>
+          <p>还没有相关的商品哦～</p>
+        </div>
+        <% } %>
         <% goods.forEach(function(item){  %>
         <div  class="col-xs-6 col-sm-4 col-md-4 col-lg-4">
             <a  href="/goods/detail/<%=item._id %>" class="thumbnail">
@@ -101,9 +107,11 @@
         </div>
         <% }) %>
       </div>
+      <% if(goods && goods.length !== 0) { %>
       <div class="row">
         <div class="j_pager" data-page="<%=page %>"  data-param="<%=query.catalog?'catalog='+query.catalog:'' %>"   data-count="<%=count %>"></div>
       </div>
+      <% } %>
     </div>
   </div>
 </div>

@@ -195,12 +195,12 @@ router.get('/article/list/:type', (req, res, next) => {
 		obj.navPage = navPage
 		res.render('article/list', obj)
 	})
+	ep.fail(next)
 	Article.findTopArticle(req.params.type,ep.done('topArticles'))
 	Catalog.findByName(req.params.type, (err, catalog) => {
-		if (err) return next(err)
+		if (err || !catalog) return ep.emit('error', err || new Error('catalog 没有找到'))
 		Article.findAllByPageCatalogs(catalog.name,req.query.page, 10, (err, obj) => {
-			if (err)  return next(err)
-
+			if (err)  return ep.emit('error', err)
 			ep.emit('obj', Object.assign({title:catalog.nameCn}, obj));
 		})
 	})

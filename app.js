@@ -19,7 +19,7 @@ var wx = require('./routes/wx')
 var mobile = require('./routes/mobile');
 var tool = require('./routes/tool');
 var admin = require('./admin/app');
-
+var pathBlack = require('./utils/pathBlack')
 var device = require('express-device');
 
 
@@ -49,6 +49,7 @@ if(app.get('env') !== 'production') {
 		prefix:  '/css'
 	}));
 }
+
 app.use(compression()); // gzip压缩
 app.use(express.static(path.join(__dirname, 'public')));
 console.log(app.get('env'))
@@ -66,6 +67,7 @@ if (app.get('env') === 'development') {
 	app.use(logger('short', {stream: process.stdout}))
 	app.use(logger(':date[iso] :remote-addr :remote-user :method :url HTTP/:http-version :status :res[content-length] - :response-time ms', {stream: accessLogStream}))
 }
+app.use(pathBlack)
 app.use(bodyParser.xml({
 	limit: '100kb',   // Reject payload bigger than 1 MB
 	defaultCharset:'utf-8',

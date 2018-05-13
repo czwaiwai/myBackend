@@ -12,23 +12,23 @@ let {wechat} = require('../utils/wxValid')
 router.use('/wxVaild',(req,res) => {
     wechat(req,res)
 })
-router.get('/createUser',(req,res)=>{
-    console.log(req.body);
-    res.render('tool/createUser',{title:"添加用户"});
-})
-
-
-router.post('/createUser',(req,res)=>{
-    let userObj=qs.parse(req.body);
-    let user=new User(userObj.user);
-    user.save((err,userData)=>{
-        req.flash("success").toString()
-        console.log(userData);
-        res.redirect('/tool/createUser');
-    });
-    // let user=new User();
-
-})
+// router.get('/createUser',(req,res)=>{
+//     console.log(req.body);
+//     res.render('tool/createUser',{title:"添加用户"});
+// })
+//
+//
+// router.post('/createUser',(req,res)=>{
+//     let userObj=qs.parse(req.body);
+//     let user=new User(userObj.user);
+//     user.save((err,userData)=>{
+//         req.flash("success").toString()
+//         console.log(userData);
+//         res.redirect('/tool/createUser');
+//     });
+//     // let user=new User();
+//
+// })
 router.get('/upload',(req,res)=>{
     res.render('tool/uploadTest',{imgUrl:req.query.imgUrl});
 
