@@ -11,12 +11,12 @@ var xml2js = require('xml2js')
 // var fs = require('fs');
 var key = config.wxPayKey;
 // var messageTpl = fs.readFileSync(__dirname + '/message.ejs', 'utf-8');
-function md5 (str) {
-	var md5sum = crypto.createHash('md5');
-	md5sum.update(str);
-	str = md5sum.digest('hex');
-	return str
-}
+// function md5 (str) {
+// 	var md5sum = crypto.createHash('md5');
+// 	md5sum.update(str);
+// 	str = md5sum.digest('hex');
+// 	return str
+// }
 
 var WxPay = {
 	getXMLNodeValue: function(node_name, xml) {
@@ -356,9 +356,10 @@ var WxPay = {
 		})
 	},
 	refundDecode: function(text){
-		var key = key
+		// var key = key
+		console.log('key', key)
 		var cipherText = new Buffer(text, 'base64');
-		var strKey = md5(key).toLocaleLowerCase()
+		var strKey = this.md5(key).toLocaleLowerCase()
 		var cipherBuffer =  new Buffer(cipherText, 'hex');
 		var aesDec = crypto.createDecipheriv("aes-256-ecb", strKey , '');
 		var output = aesDec.update(cipherBuffer);
