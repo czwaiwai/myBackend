@@ -22,7 +22,6 @@ var admin = require('./admin/app');
 var pathBlack = require('./utils/pathBlack')
 var device = require('express-device');
 
-
 var app = express();
 app.set('env', 'production');
 app.engine('ejs',engine);
@@ -64,7 +63,7 @@ if (app.get('env') === 'development') {
 		verbose: false
 	})
 	logger.token('type', function (req, res) { return req.headers['content-type'] })
-	app.use(logger('short', {stream: process.stdout}))
+	app.use(logger(':date[iso] :remote-addr :remote-user :method :url HTTP/:http-version :status :res[content-length] - :response-time ms', {stream: process.stdout}))
 	app.use(logger(':date[iso] :remote-addr :remote-user :method :url HTTP/:http-version :status :res[content-length] - :response-time ms', {stream: accessLogStream}))
 }
 app.use(pathBlack)

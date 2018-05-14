@@ -11,6 +11,12 @@ var xml2js = require('xml2js')
 // var fs = require('fs');
 var key = config.wxPayKey;
 // var messageTpl = fs.readFileSync(__dirname + '/message.ejs', 'utf-8');
+function md5 (str) {
+	var md5sum = crypto.createHash('md5');
+	md5sum.update(str);
+	str = md5sum.digest('hex');
+	return str
+}
 
 var WxPay = {
 	getXMLNodeValue: function(node_name, xml) {
@@ -349,7 +355,45 @@ var WxPay = {
 			})
 		})
 	},
-
+	refundDecode: function(text){
+		var key = key
+		var cipherText = new Buffer(text, 'base64');
+		var strKey = md5(key).toLocaleLowerCase()
+		var cipherBuffer =  new Buffer(cipherText, 'hex');
+		var aesDec = crypto.createDecipheriv("aes-256-ecb", strKey , '');
+		var output = aesDec.update(cipherBuffer);
+		return output + aesDec.final()
+	},
+	refundDeCodeJson: function(xml) {
+		// <root>
+		// <out_refund_no><![CDATA[5200000029]]></out_refund_no>
+		// <out_trade_no><![CDATA[5200000029]]></out_trade_no>
+		// <refund_account><![CDATA[REFUND_SOURCE_RECHARGE_FUNDS]]></refund_account>
+		// <refund_fee><![CDATA[1]]></refund_fee>
+		// <refund_id><![CDATA[50000306842018051404601414517]]></refund_id>
+		// <refund_recv_accout><![CDATA[支付用户零钱]]></refund_recv_accout>
+		// <refund_request_source><![CDATA[API]]></refund_request_source>
+		// <refund_status><![CDATA[SUCCESS]]></refund_status>
+		// <settlement_refund_fee><![CDATA[1]]></settlement_refund_fee>
+		// <settlement_total_fee><![CDATA[1]]></settlement_total_fee>
+		// <success_time><![CDATA[2018-05-14 00:43:46]]></success_time>
+		// <total_fee><![CDATA[1]]></total_fee>
+		// <transaction_id><![CDATA[4200000115201805117424448763]]></transaction_id>
+		// </root>
+		return new Promise((resolve,reject) => {
+			xml2js.parseString(xml,{
+				normalize: true,     // Trim whitespace inside text nodes
+				normalizeTags: true, // Transform tags to lowercase
+				explicitArray: false // Only put nodes in array if >1
+			}, (err, xml) => {
+				if(err) {
+					reject(err)
+				}
+				let data = xml.root
+				resolve(data)
+			})
+		})
+	},
 	//支付回调通知
 	notify: function(obj) {
 		var output = "";
