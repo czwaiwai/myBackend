@@ -122,7 +122,7 @@ var WxPay = {
 						explicitArray: false // Only put nodes in array if >1
 					}, (err, xml) => {
 						if(err) {
-							reject(err)
+							return reject(err)
 						}
 						let data = xml.xml
 						console.log(data, '------covert - data------')
@@ -191,7 +191,7 @@ var WxPay = {
 						explicitArray: false // Only put nodes in array if >1
 					}, (err, xml) => {
 						if(err) {
-							reject(err)
+							return reject(err)
 						}
 						let data = xml.xml
 						console.log(data, '------covert - data------')
@@ -248,7 +248,7 @@ var WxPay = {
 						explicitArray: false // Only put nodes in array if >1
 					}, (err, xml) => {
 						if(err) {
-							reject(err)
+						  return reject(err)
 						}
 						let data = xml.xml
 						// { return_code: 'SUCCESS',
@@ -324,7 +324,7 @@ var WxPay = {
 						explicitArray: false // Only put nodes in array if >1
 					}, (err, xml) => {
 						if(err) {
-							reject(err)
+							return reject(err)
 						}
 						let data = xml.xml
 						if (data.return_code === 'SUCCESS') {
@@ -381,16 +381,18 @@ var WxPay = {
 		// <total_fee><![CDATA[1]]></total_fee>
 		// <transaction_id><![CDATA[4200000115201805117424448763]]></transaction_id>
 		// </root>
+		console.log('xml---refund------',xml)
 		return new Promise((resolve,reject) => {
 			xml2js.parseString(xml,{
 				normalize: true,     // Trim whitespace inside text nodes
 				normalizeTags: true, // Transform tags to lowercase
 				explicitArray: false // Only put nodes in array if >1
-			}, (err, xml) => {
+			}, (err, xmlObj) => {
 				if(err) {
-					reject(err)
+					return reject(err)
 				}
-				let data = xml.root
+				console.log('xml---refund------',xmlObj)
+				let data = xmlObj.root
 				resolve(data)
 			})
 		})

@@ -544,7 +544,8 @@ router.post('/order/refund_notify', (req, res, next) => {
 		// 进行数据解密
 		WxPay.refundDeCodeJson(WxPay.refundDecode(resData.req_info)).then(resCodeData => {
 			// 解密后更新数据订单状态
-			Order.refunded(resData.out_trade_no, resData, (err, order) => {
+			console.log(resCodeData,'resCodeData----------------------')
+			Order.refunded(resCodeData.out_trade_no, resCodeData, (err, order) => {
 				if (err) return next(err)
 				let tpl = WxPay.notify(resData)
 				res.send(tpl)
