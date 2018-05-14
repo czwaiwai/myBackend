@@ -187,7 +187,7 @@ jQuery(function(){
   $orders.on('click','.weui-media-box',function(){
   	var $this = $(this)
     var id = $this.data('id')
-    $.get('/app/orders/detail/'+id).done(function(res){
+    $.get('/app/orderDetail?id='+id).done(function(res){
       var order = res.data.order
       $orderDetail.find('.modal-content').empty().append(orderDetailCompile({order:order}))
       $orderDetail.popup()

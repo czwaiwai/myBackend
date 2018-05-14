@@ -47,13 +47,16 @@ exports.savePay = function (orderId, obj, callback) {
 }
 
 // 退款中...
-exports.refunding = function (orderId, obj, callback) {
-	Order.findOne({orderId: orderId}, (err, order) => {
+exports.refunding = function (id, amt, callback) {
+	Order.findById(id, (err, order) => {
 		if(err) return callback(err)
+		if(amt > order.needPrice) {
+			return callback(new Error('金额大于支付金额'))
+		}
 		order.refund_at = new Date()
 		order.orderStatus = 12 // 退款中
-		order.refundCurrPrice =  formatFloat(obj.refund_fee/100)
-		order.refundPrice = formatFloat((order.refundPrice || 0 ) + order.refundCurrPrice)
+		order.refundCurrPrice =  formatFloat(amt) // 本次退款金额
+		order.refundPrice = formatFloat((order.refundPrice || 0 ) + order.refundCurrPrice) // 总退款金额
 		order.save(callback)
 	})
 }
@@ -70,6 +73,14 @@ exports.refunded = function (orderId, obj, callback) {
 		}
 		order.save(callback)
 	})
+}
+// 修改订单为已发货
+exports.realSend	= function (id, postId, callback) {
+	Order.findByIdAndUpdate(id,{ postageId:postId || '', orderStatus:30 },{new: true}, callback)
+}
+// 修改订单为已完成
+exports.finish = function (id, callback) {
+	Order.findByIdAndUpdate(id, {orderStatus: 40}, {new:true}, callback)
 }
 // 取消订单
 exports.cancelById = function (id, callback) {

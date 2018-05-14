@@ -9,7 +9,7 @@ var tools = require('../utils/tools');
 var OrderSchema = new Schema({
 	orderId: {type:Number}, // 订单id简化
 	userId: {type: Schema.ObjectId}, // 用户ID
-	orderStatus: {type: Number }, // 10 为待支付，11为已取消, 12退款中 13已完全退款 ，20为 已支付 ,21为部分退款, 30待发货 31 为已发货 40 已完成
+	orderStatus: {type: Number }, // 10 为待支付，11为已取消, 12退款中 13已完全退款 ，20为 已支付 ,21为部分退款, 30 为已发货 40 已完成
 	create_at:{type:Date, default: Date.now},
 	update_at:{type:Date, default: Date.now},
 	goods: [{
@@ -62,8 +62,9 @@ OrderSchema.virtual('statusName').get(function() {
 		case 13: sTxt = '已全额退款';break;
 		case 20: sTxt = '已支付';break;
 		case 21: sTxt = '已部分退款';break;
-		case 30: sTxt = '待发货';break;
-		case 31: sTxt = '已发货';break;
+		case 30: sTxt = '已发货';break;
+		case 40: sTxt = '已完成';break;
+		// case 31: sTxt = '已发货';break;
 		default: sTxt ='未知状态'
 	}
 	return sTxt
@@ -77,6 +78,7 @@ OrderSchema.virtual('statusColor').get(function() {
 		case 20: sTxt = 'text-success';break;
 		case 30: sTxt = 'text-info';break;
 		case 31: sTxt = 'text-info';break;
+		case 40: sTxt = 'text-success';break;
 		default: sTxt ='text-danger'
 	}
 	return sTxt

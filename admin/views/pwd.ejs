@@ -1,0 +1,49 @@
+<% layout('./layout/layout') %>
+<% block('header').append(`<style></style>`)%>
+<div class="row">
+  <div class="col-md-12">
+    <div class="box box-info">
+      <div class="box-header with-border">
+        <h3 class="box-title">修改密码</h3>
+      </div>
+      <!-- /.box-header -->
+      <!-- form start -->
+      <form action="<%=assetsPath %>/changePwd" method="post" class="form-horizontal" novalidate>
+        <div class="box-body">
+          <div class="form-group">
+            <label for="oldpwd" class="col-sm-2 control-label">旧密码</label>
+            <div class="col-sm-10">
+              <input name="oldpwd" type="text" value="" class="form-control"  placeholder="请输入旧密码">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="pwd" class="col-sm-2 control-label">新密码</label>
+            <div class="col-sm-10">
+              <input name="pwd" type="text" value="" class="form-control" placeholder="请输入新密码">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="pwdRepeat" class="col-sm-2 control-label">重复密码</label>
+            <div class="col-sm-10">
+              <input name="pwdRepeat" type="text" value="" class="form-control" placeholder="请重复新密码">
+            </div>
+          </div>
+        </div>
+        <!-- /.box-body -->
+        <div class="box-footer">
+          <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-info ">保存</button>
+            <button type="reset" class="btn btn-default">重置</button>
+          </div>
+        </div>
+        <!-- /.box-footer -->
+      </form>
+    </div>
+  </div>
+</div>
+<% block('footer').append(`<script src="${assetsPath}/js/wangeditor/wangEditor.js"></script>`); %>
+<% block('footer').append(`<script>
+    jQuery(function() {
+
+    })
+</script>`)%>

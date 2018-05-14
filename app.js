@@ -96,7 +96,7 @@ app.use(session({
 app.use(flash());
 app.use(function(req,res,next){
     res.locals = Object.assign(res.locals, {
-      title:"飞常赞",
+      title:"白石山农场",
       basePath:req.path,
       error:req.flash("error").toString(),
       success:req.flash("success").toString(),

@@ -191,24 +191,24 @@ desired effect
                 </p>
               </li>
               <!-- Menu Body -->
-              <li class="user-body">
-                <div class="row">
-                  <div class="col-xs-4 text-center">
-                    <a href="#">Followers</a>
-                  </div>
-                  <div class="col-xs-4 text-center">
-                    <a href="#">Sales</a>
-                  </div>
-                  <div class="col-xs-4 text-center">
-                    <a href="#">Friends</a>
-                  </div>
-                </div>
-                <!-- /.row -->
-              </li>
+              <!--<li class="user-body">-->
+                <!--<div class="row">-->
+                  <!--<div class="col-xs-4 text-center">-->
+                    <!--<a href="#">Followers</a>-->
+                  <!--</div>-->
+                  <!--<div class="col-xs-4 text-center">-->
+                    <!--<a href="#">Sales</a>-->
+                  <!--</div>-->
+                  <!--<div class="col-xs-4 text-center">-->
+                    <!--<a href="#">Friends</a>-->
+                  <!--</div>-->
+                <!--</div>-->
+                <!--&lt;!&ndash; /.row &ndash;&gt;-->
+              <!--</li>-->
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left">
-                  <a href="info" class="btn btn-default btn-flat">修改密码</a>
+                  <a href="/admin/changePwd" class="btn btn-default btn-flat">修改密码</a>
                 </div>
                 <div class="pull-right">
                   <a href="/admin/logout" class="btn btn-default btn-flat">退出登录</a>
@@ -301,7 +301,7 @@ desired effect
             <li><a href="<%=assetsPath %>/orders/index/waitPay">待付款</a></li>
             <li><a href="<%=assetsPath %>/orders/index/pay">已付款</a></li>
             <li><a href="<%=assetsPath %>/orders/index/ship">已发货</a></li>
-            <li><a href="<%=assetsPath %>/orders/index/back">退款订单</a></li>
+            <li><a href="<%=assetsPath %>/orders/index/finish">已完成</a></li>
           </ul>
         </li>
         <li class="treeview  <% if(["/users/index"].indexOf(path) > -1){ %>active<% } %> ">
@@ -353,7 +353,8 @@ desired effect
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        <%=title %><small>Optional description</small>
+        <%=title %>
+        <!--<small>Optional description</small>-->
       </h1>
       <ol class="breadcrumb">
         <li><a href="./"><i class="fa fa-dashboard"></i>首页</a></li>

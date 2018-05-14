@@ -47,7 +47,7 @@ jQuery(function(){
 				BootstrapDialog.show({
 					title: title || '提示',
 					message: msg +
-					'<input type="text" class="form-control" placeholder="'+options.placeholder+'"><p class="text-danger"></p>',
+					'<input type="text" class="form-control" placeholder="'+ (options && options.placeholder) +'"><p class="text-danger"></p>',
 					buttons: [{
 						label: '取消',
 						cssClass: 'btn btn-default',

@@ -42,8 +42,33 @@ router.get('/login',(req,res)=>{
 router.get('/welcome',(req, res) => {
     res.render('welcome', {title: "首页"})
 })
-
-
+router.get('/changePwd', (req, res) => {
+	res.render('pwd', {title:'修改密码'})
+})
+router.post('/changePwd', (req, res, next) => {
+	req.checkBody('oldpwd',"原始密码不能为空").notEmpty()
+		.isTooShort(6).withMessage("密码错误");
+	req.checkBody('pwd',"密码不能为空").notEmpty()
+		.isTooShort(6).withMessage("密码太短");
+	req.checkBody('pwdRepeat').notEmpty()
+		.isSame(req.body.pwd).withMessage('密码不一致')
+	req.asyncValidationErrors().then(function(){
+		User.findById(req.session.user._id, function(err,user){
+			if (err) return next(err)
+			if (user.pwd !== req.body.oldpwd) {
+				req.flash("error","账户名或密码错误")
+				return  res.redirect('/admin/changePwd')
+			}
+			User.findAndUpdate(user._id, {pwd: req.body.pwd}, (err, newUser) => {
+				req.flash('success', '修改成功')
+				res.redirect('/admin/changePwd')
+			})
+		});
+	},function(errors){
+		req.flash('error', errors[0].msg)
+		res.redirect('/admin/changePwd')
+	});
+})
 
 router.post('/login',(req,res)=>{
     console.log(req.session,req.session.imgCode,req.body.verifyCode,"imgCode");
@@ -325,8 +350,8 @@ router.get('/orders/index/:status', (req, res, next) => {
 		case "all": break;
 		case "waitPay": queryParam = {orderStatus: 10};break;
 		case "pay": queryParam = {orderStatus: 20};break;
-		case "ship": queryParam = {orderStatus: 31};break; // 已发货
-		case "back": queryParam = {orderStatus: 12}; break;
+		case "ship": queryParam = {orderStatus: 30};break; // 已发货
+		case "finish": queryParam = {orderStatus: 40}; break;
 	}
 	Order.findAllByPage(queryParam,req.query.page, 10, (err, obj) => {
 		if (err) return next(err)
@@ -370,11 +395,10 @@ router.post('/order/changeAmt/:id', (req, res, next) => {
 })
  // 退款
 router.post('/order/backAmt/:id', (req, res, next) => {
-	Order.findById(req.params.id,(err,order) => {
+	Order.refunding(req.params.id,(err,order) => {
 		if(err) return next(err)
 		WxPay.refund(order.orderId,order.realPrice,order.realPrice).then(obj => {
-			Order.refunding(req.params.id, obj, (err, order) => {
-				if(err) return next(err)
+			if(obj.result_code === 'SUCCESS') {
 				res.json({
 					code:0,
 					message:'success',
@@ -382,14 +406,52 @@ router.post('/order/backAmt/:id', (req, res, next) => {
 						order:order
 					}
 				})
-			})
+			}
 		})
 	})
+	// Order.findById(req.params.id,(err,order) => {
+	// 	if(err) return next(err)
+	// 	WxPay.refund(order.orderId,order.realPrice,order.realPrice).then(obj => {
+	// 		Order.refunding(req.params.id, obj, (err, order) => {
+	// 			if(err) return next(err)
+	// 			res.json({
+	// 				code:0,
+	// 				message:'success',
+	// 				data: {
+	// 					order:order
+	// 				}
+	// 			})
+	// 		})
+	// 	})
+	// })
 })
 // 关联物流单号
 router.post('/order/linkTrain/:id', (req, res, next) => {
-
+	Order.realSend (req.params.id,req.body.postId || '', (err, order) => {
+		if (err) return next(err)
+		return res.json({
+			code: 0,
+			message: 'success',
+			data: {
+				order:order
+			}
+		})
+	})
 })
+// 设置订单已完成
+router.post('/order/finish/:id', (req, res, next) => {
+	Order.finish (req.params.id, (err, order) => {
+		if (err) return next(err)
+		return res.json({
+			code: 0,
+			message: 'success',
+			data: {
+				order:order
+			}
+		})
+	})
+})
+
 
 // 单页管理 -----------------------------------------------------------------
 router.get('/pages/index', (req, res, next) => {

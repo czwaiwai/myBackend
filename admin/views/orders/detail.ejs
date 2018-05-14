@@ -46,12 +46,18 @@
                         <a id="cancelOrder" class="btn btn-default btn-sm" data-url="/admin/order/cancel/<%=order._id %>" href="javascript:void(0)" >取消订单</a>
                         <a id="changeAmt"  class="btn btn-primary btn-sm" data-needprice="<%=order.needPrice %>" data-url="/admin/order/changeAmt/<%=order._id %>" href="javascript:void(0)" >改价</a>
                         <% } %>
-                        <% if(order.orderStatus >=20 ){ %>
-                        <a id="backAmt" class="btn btn-danger btn-sm" data-url="/admin/order/backAmt/<%=order._id %>"  href="javascript:void(0)" >退款</a>
+                        <% if(order.orderStatus >=20 && order.orderStatus < 30){ %>
+                            <a id="linkTrain" class="btn btn-info btn-sm" data-url="/admin/order/linkTrain/<%=order._id %>"   href="javascript:void(0)" >关联物流信息</a>
+                            <a id="changeOrder" class="btn btn-success btn-sm" data-url="/admin/order/linkTrain/<%=order._id %>" href="javascript:void(0)" >无物流直接修改已发货</a>
+                            <a id="backAmt" class="btn btn-danger btn-sm" data-url="/admin/order/backAmt/<%=order._id %>"  href="javascript:void(0)" >退款</a>
                         <% } %>
-                        <% if(order.orderStatus >=30) { %>
-                            <!--<a id="linkTrain" class="btn btn-info btn-sm" data-url="/order/linkTrain/<%=order._id %>"   href="javascript:void(0)" >关联物流信息</a>-->
+                        <% if(order.orderStatus >= 30 && order.orderStatus < 40) { %>
+                            <a id="finishBtn" class="btn btn-success btn-sm" data-url="/admin/order/finish/<%=order._id %>"  href="javascript:void(0)" >设置订单完成</a>
+                            <a id="backAmt" class="btn btn-danger btn-sm" data-url="/admin/order/backAmt/<%=order._id %>"  href="javascript:void(0)" >退款</a>
                         <% }%>
+                          <% if(order.orderStatus === 40) { %>
+                            <a id="backAmt" class="btn btn-danger btn-sm" data-url="/admin/order/backAmt/<%=order._id %>"  href="javascript:void(0)" >退款</a>
+                          <% }%>
                         <!--<a id="queryOrderPay" class="btn btn-info btn-sm" data-id="<%=order.id %>" data-orderid="<%=order.orderId %>" data-url="/order/linkTrain/<%=order._id %>"   href="javascript:void(0)" >查询订单支付状况</a>-->
                     </div>
                 </div>
@@ -137,9 +143,34 @@
       	 })
       })
     })
-    $('#linkTrain').on('click', function () {
-      $.prompt('请输入你要关联的物流单号','关联物流单号').then(function(res){
-      	console.log(res)
+    $('#linkTrain').on('click', function (e) {
+    	var $this = $(this)
+      $.prompt('请输入你要关联的物流单号','关联物流单号',{placeholder:'请输入订单的物流编号'}).then(function(res){
+      	 $.post($this.data('url'),{postId:res}).done(function(res){
+            $.alert('<p>物流单号关联成功</p>').then(function(){
+              location.reload()
+            })
+      	 })
+      })
+    })
+    $('#changeOrder').on('click', function () {
+      var $this = $(this)
+      $.confirm('你确定不关联物流单号直接修改订单状态么？','修改订单状态').then(function(res){
+         $.post($this.data('url'),{postId:''}).done(function(res){
+            $.alert('修改订单状态为已发货成功').then(function(){
+              location.reload()
+            })
+      	 })
+      })
+    })
+    $('#finishBtn').on('click', function () {
+      var $this = $(this)
+      $.confirm('你确定修改订单为已完成么？','提示').then(function(res){
+         $.post($this.data('url')).done(function(res){
+            $.alert('成功修改订单状态').then(function(){
+              location.reload()
+            })
+      	 })
       })
     })
     $('#queryOrderPay').on('click', function () {

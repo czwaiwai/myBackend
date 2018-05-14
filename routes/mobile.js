@@ -144,8 +144,8 @@ router.get('/address',loginValid, (req, res, next) => {
 router.get('/orders',loginValid, (req, res, next) => {
 	res.render('app/orders', {title: '我的订单'})
 })
-router.get('/orders/detail/:id', (req, res, next) => {
-	Order.findById(req.params.id, (err, order) => {
+router.get('/orderDetail', (req, res, next) => {
+	Order.findById(req.query.id, (err, order) => {
 		if(req.xhr) {
 			let orderObj = order.toObject();
 			orderObj.create_at_ago= order.create_at_ago()

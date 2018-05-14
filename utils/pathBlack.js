@@ -11,7 +11,7 @@ let list = [
 module.exports = function(req, res ,next) {
 	let pass = true
 	list.forEach(item => {
-		pass = pass && req.url.indexOf(item) === -1
+		pass = pass && req.url.toLocaleLowerCase().indexOf(item) === -1
 	})
 	if (/\.php.*\?/.test(req.url)) {
 		pass = false

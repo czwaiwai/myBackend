@@ -544,6 +544,19 @@ router.post('/order/refund_notify', (req, res, next) => {
 		// 进行数据解密
 		WxPay.refundDeCodeJson(WxPay.refundDecode(resData.req_info)).then(resCodeData => {
 			// 解密后更新数据订单状态
+			// { out_refund_no: '5200000008',
+			// 	out_trade_no: '5200000008',
+			// 	refund_account: 'REFUND_SOURCE_RECHARGE_FUNDS',
+			// 	refund_fee: '1',
+			// 	refund_id: '50000506492018051404617935239',
+			// 	refund_recv_accout: '支付用户零钱',
+			// 	refund_request_source: 'API',
+			// 	refund_status: 'SUCCESS',
+			// 	settlement_refund_fee: '1',
+			// 	settlement_total_fee: '1',
+			// 	success_time: '2018-05-14 15:17:05',
+			// 	total_fee: '1',
+			// 	transaction_id: '4200000132201805020809878493' }
 			console.log(resCodeData,'resCodeData----------------------')
 			Order.refunded(resCodeData.out_trade_no, resCodeData, (err, order) => {
 				if (err) return next(err)
