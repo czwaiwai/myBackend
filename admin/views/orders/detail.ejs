@@ -49,14 +49,14 @@
                         <% if(order.orderStatus >=20 && order.orderStatus < 30){ %>
                             <a id="linkTrain" class="btn btn-info btn-sm" data-url="/admin/order/linkTrain/<%=order._id %>"   href="javascript:void(0)" >关联物流信息</a>
                             <a id="changeOrder" class="btn btn-success btn-sm" data-url="/admin/order/linkTrain/<%=order._id %>" href="javascript:void(0)" >无物流直接修改已发货</a>
-                            <a id="backAmt" class="btn btn-danger btn-sm" data-url="/admin/order/backAmt/<%=order._id %>"  href="javascript:void(0)" >退款</a>
+                            <a id="backAmt" data-price="<%=order.needPrice%>" class="btn btn-danger btn-sm" data-url="/admin/order/backAmt/<%=order._id %>"  href="javascript:void(0)" >退款</a>
                         <% } %>
                         <% if(order.orderStatus >= 30 && order.orderStatus < 40) { %>
                             <a id="finishBtn" class="btn btn-success btn-sm" data-url="/admin/order/finish/<%=order._id %>"  href="javascript:void(0)" >设置订单完成</a>
-                            <a id="backAmt" class="btn btn-danger btn-sm" data-url="/admin/order/backAmt/<%=order._id %>"  href="javascript:void(0)" >退款</a>
+                            <a id="backAmt" data-price="<%=order.needPrice%>" class="btn btn-danger btn-sm" data-url="/admin/order/backAmt/<%=order._id %>"  href="javascript:void(0)" >退款</a>
                         <% }%>
                           <% if(order.orderStatus === 40) { %>
-                            <a id="backAmt" class="btn btn-danger btn-sm" data-url="/admin/order/backAmt/<%=order._id %>"  href="javascript:void(0)" >退款</a>
+                            <a id="backAmt" data-price="<%=order.needPrice%>" class="btn btn-danger btn-sm" data-url="/admin/order/backAmt/<%=order._id %>"  href="javascript:void(0)" >退款</a>
                           <% }%>
                         <!--<a id="queryOrderPay" class="btn btn-info btn-sm" data-id="<%=order.id %>" data-orderid="<%=order.orderId %>" data-url="/order/linkTrain/<%=order._id %>"   href="javascript:void(0)" >查询订单支付状况</a>-->
                     </div>
@@ -135,8 +135,7 @@
     $('#backAmt').on('click', function () {
        var $this = $(this)
        $.confirm('你确定操作退款么，已支付金额将会通过微信返还用户?','退款').then(function(res){
-      	console.log(res)
-      	 $.post($this.data('url')).done(function(res){
+      	 $.post($this.data('url'), {amt: $this.data('price')}).done(function(res){
             $.alert('<p>退款请求已提交!</p><p>退款结果可能会有延时</p><p>请告知用户1～3个工作日内到帐</p>').then(function(){
               location.reload()
             })

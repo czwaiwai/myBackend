@@ -50,6 +50,9 @@ exports.savePay = function (orderId, obj, callback) {
 exports.refunding = function (id, amt, callback) {
 	Order.findById(id, (err, order) => {
 		if(err) return callback(err)
+		if(isNaN(amt)) {
+			return callback(new Error('amt 不是数字'))
+		}
 		if(amt > order.needPrice) {
 			return callback(new Error('金额大于支付金额'))
 		}
