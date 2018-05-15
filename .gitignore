@@ -61,7 +61,7 @@ typings/
 # upload img
 public/upload/
 
-#wx.bak
+# wx_bak
 config.js
 wx.bak
 wx.json
