@@ -16,12 +16,12 @@ exports.findByIdAddView = function (id, callback) {
 	Goods.findByIdAndUpdate(id, {$inc:{viewCount:1}}, callback)
 }
 exports.getHotGoods = function (callback) {
-	var goods = Goods.find({}, {content:0}) // 填入条件
+	var goods = Goods.find({onSale:1}, {content:0}) // 填入条件
 	// goods.limit(12)
 	goods.exec(callback)
 }
 exports.getHotGoodsByType = function (hotNum, limit = 4, callback) {
-	var goods = Goods.find({isHot: hotNum})
+	var goods = Goods.find({isHot: hotNum, onSale:1})
 	goods.limit(limit)
 	goods.exec(callback)
 }

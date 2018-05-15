@@ -220,7 +220,7 @@ router.get('/goods/index' , (req, res, next) => {
 	// req.query.catalogsId
 	Catalog.getChildrenByName('goods', (err,catalogs) => {
 		if (err) return next(err)
-		let params = {}
+		let params = {onSale: 1}
 		if (req.query.catalog) {
 			let catalog = catalogs.find(item => item.name === req.query.catalog)
 			params.catalogPath  = new RegExp(`^${catalog.calPath},${catalog.name}`)

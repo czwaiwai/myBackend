@@ -395,7 +395,7 @@ router.post('/order/changeAmt/:id', (req, res, next) => {
 })
  // 退款
 router.post('/order/backAmt/:id', (req, res, next) => {
-	Order.refunding(req.params.id, req.body.price, (err,order) => {
+	Order.refunding(req.params.id, req.body.amt, (err,order) => {
 		if(err) return next(err)
 		WxPay.refund(order.orderId,order.realPrice,order.realPrice).then(obj => {
 			if(obj.result_code === 'SUCCESS') {
