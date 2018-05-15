@@ -1,9 +1,8 @@
 var config = require('../config'); //配置文件 appid 等信息
 var wxConfig = require('../wx.json')
 var fs = require('fs')
-
-// var pfx = fs.readFileSync('./apiclient_cert.p12')
-var pfx =''
+var pfx = fs.readFileSync('./apiclient_cert.p12')
+// var pfx =''
 // var Q = require("q");
 var request = require("request");
 var crypto = require('crypto');
