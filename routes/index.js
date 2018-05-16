@@ -239,9 +239,10 @@ router.get('/goods/index' , (req, res, next) => {
 			let catalog = catalogs.find(item => item.name === req.query.catalog)
 			params.catalogPath  = new RegExp(`^${catalog.calPath},${catalog.name}`)
 		} else {
-			if(res.locals.frontInfo && res.locals.frontInfo.notCatalogShow) {
-				let tmpArr = res.locals.frontInfo.notCatalogShow.split(',')
-				params.catalogId = {$nin: tmpArr}
+			let front =  res.locals.frontInfo
+			if(front && front.notCatalogShow && front.notCatalogShow.value) {
+				let tmpArr = front.notCatalogShow.value.split(',')
+				params.catalogId = {$nin: [...tmpArr]}
 			}
 		}
 		Goods.findAllByPage(params, req.query.page, 10, (err, obj) => {
