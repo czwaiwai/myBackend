@@ -356,25 +356,20 @@ router.post('/pay', loginValid, (req, res, next) => {
 			res.json({
 				code:0,
 				message:'success',
-				data:data
+				data: {
+					payObj: data,
+					order: newOrder
+				}
 			})
-			// if (data.return_code === 'SUCCESS') {
-			// 	res.render('order/pay', {title: '订单支付', order:newOrder, needPrice, prepay_id : data.prepay_id,
-			// 		code_url: data.code_url})
-			// } else {
-			// 	return next(new Error({
-			// 		name:data.return_msg,
-			// 		message: data.return_msg + '/n' + JSON.stringify(data)
-			// 	}))
-			// }
+		}).catch(err => {
+			next(err)
 		})
 	})
-	
 })
 router.get('/paySucc',loginValid, (req, res, next) => {
-	if(req.query.orderId) {
-		Order.findByOrderId (req.query.orderId ,function(err, order) {
-			WxPay.queryOrder(req.query.orderId).then(data => {
+	if(req.query.id) {
+		Order.findById (req.query.id ,function(err, order) {
+			WxPay.queryOrder(order.orderId).then(data => {
 				console.log(data, 'queryOrder --------------------------')
 				let {return_code, return_msg , result_code, out_trade_no, trade_state, trade_state_desc} = data
 				if (return_code === 'SUCCESS') {
@@ -388,6 +383,8 @@ router.get('/paySucc',loginValid, (req, res, next) => {
 				}
 			})
 		})
+	} else {
+		next(new Error('没有id'))
 	}
 })
 

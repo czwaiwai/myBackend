@@ -328,8 +328,9 @@ $orderSubmit.on('click',function(e) {
 	}
 	$orderSubmit.prop('disabled',true).text('支付中...')
     $.post('/app/pay',$orderForm.serialize()).done(function(res){
-        var obj = res.data
-
+        var resData = res.data
+        var obj = resData.payObj;
+        var order = resData.order;
         console.log(obj, '---------------------------')
         wxPayReady(function() {
                WeixinJSBridge.invoke('getBrandWCPayRequest', {
@@ -343,9 +344,10 @@ $orderSubmit.on('click',function(e) {
                function(res){
                  if(res.err_msg == "get_brand_wcpay_request:ok" ) {
                    $orderSubmit.prop('disabled',false).text('微信支付')
-                   location.href='/app/paySucc?orderId=' + obj.outTradeNo
+                   location.href='/app/paySucc?id=' + order._id
                  } else {
-                   location.href='/app/orderDetail?orderId=' + obj.outTradeNo
+                   $orderSubmit.prop('disabled',false).text('微信支付')
+                   location.href='/app/orderDetail?id=' + order._id
                    console.log('支付取消或支付失败')
                  }
                }
