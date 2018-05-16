@@ -15,8 +15,8 @@ exports.findById = function (id, callback) {
 exports.findByIdAddView = function (id, callback) {
 	Goods.findByIdAndUpdate(id, {$inc:{viewCount:1}}, callback)
 }
-exports.getHotGoods = function (callback) {
-	var goods = Goods.find({onSale:1, catalogId: {$nin: ['5af6c4464848c40b4c145c0c', '5abec10233f8941489491a60', '5abec07033f8941489491a5e']}}, {content:0}) // 填入条件
+exports.getHotGoods = function (query = {onSale:1}, callback) {
+	var goods = Goods.find(query, {content:0}) // 填入条件
 	// goods.limit(12)
 	goods.sort({sort:1,catalogId:1,create_at:-1})
 	goods.exec(callback)

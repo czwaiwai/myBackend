@@ -80,16 +80,28 @@ router.get('/index', (req,res,next) => {
 	Article.findTopArticle('news', ep.done('news'))
 	Article.findTopArticle('articles', ep.done('articles'))
 	Dict.findByGroup('home',ep.done('dicts'))
-	Goods.getHotGoods (ep.done('goods'))
+	let front =  res.locals.frontInfo
+	if(front && front.notCatalogShow && front.notCatalogShow.value) {
+		let tmpArr = front.notCatalogShow.value.split(',')
+		Goods.getHotGoods ({onSale:1,catalogId: {$nin: [...tmpArr]}}, ep.done('goods'))
+	} else {
+		Goods.getHotGoods ({onSale:1}, ep.done('goods'))
+	}
 })
 router.get('/type', (req, res)=> {
 	console.log(req.xhr, '-----------------')
 	Catalog.getChildrenByName('goods', (err,catalogs) => {
 		if (err) return next(err)
-		let params = {}
+		let params = {onSale: 1}
 		if (req.query.catalog) {
 			let catalog = catalogs.find(item => item.name === req.query.catalog)
 			params.catalogPath  = new RegExp(`^${catalog.calPath},${catalog.name}`)
+		} else {
+			let front =  res.locals.frontInfo
+			if(front && front.notCatalogShow && front.notCatalogShow.value) {
+				let tmpArr = front.notCatalogShow.value.split(',')
+				params.catalogId = {$nin: [...tmpArr]}
+			}
 		}
 		Goods.findAllByPage(params, req.query.page, 10, (err, obj) => {
 			if(req.xhr) {

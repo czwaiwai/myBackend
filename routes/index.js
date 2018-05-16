@@ -70,7 +70,13 @@ router.get('/', (req, res, next)=> {
 	Article.findTopArticle('news', ep.done('news'))
 	Article.findTopArticle('articles', ep.done('articles'))
 	Dict.findByGroup('home',ep.done('dicts'))
-	Goods.getHotGoods (ep.done('goods'))
+	let front =  res.locals.frontInfo
+	if(front && front.notCatalogShow && front.notCatalogShow.value) {
+		let tmpArr = front.notCatalogShow.value.split(',')
+		Goods.getHotGoods ({onSale:1,catalogId: {$nin: [...tmpArr]}}, ep.done('goods'))
+	} else {
+		Goods.getHotGoods ({onSale:1}, ep.done('goods'))
+	}
 });
 router.post('clearCache', (req, res, next) => {
 
