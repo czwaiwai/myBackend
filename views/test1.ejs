@@ -45,5 +45,25 @@
     function hideBtn(){
         window.parent.dialogClose();
     }
+    jQuery(function() {
+			$.ajaxSetup({
+				headers: {
+					'X-Requested-With': 'XMLHttpRequest'
+				},
+        error: function (res,body, err) {
+//					res.responseJSON
+          if(res.responseJSON) {
+          	console.log(res.responseJSON)
+          }
+					console.log(res)
+          console.log(body)
+          console.log(err)
+        }
+			});
+			$.get('/tool/test').done(function(res){
+				console.log(res)
+      })
+    })
+
 </script>
 </html>

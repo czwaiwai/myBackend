@@ -155,6 +155,11 @@ jQuery(function(){
 	$.ajaxSetup({
 		headers: {
 			'X-Requested-With': 'XMLHttpRequest'
+		},
+		error: function (res,body, err) {
+			if(res.responseJSON) {
+				$.Toast(res.responseJSON.data.message, 'error')
+			}
 		}
 	});
 });

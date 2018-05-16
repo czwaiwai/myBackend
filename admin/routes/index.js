@@ -6,6 +6,8 @@ let qs=require('qs');
 let EventProxy = require('eventproxy')
 let {succJson,errJson} =require('../../utils/sendJson');
 let {formatFloat} = require('../../utils/tools')
+let dictCache = require('../../utils/dictCache')
+let dictCa = dictCache.getInstance()
 // let User =require('../../models/user');
 // let Pages =require('../../models/pages');
 let {User, Page, Catalog, Article, Goods, Image, Order, Postage, Dict} = require('../../viewModels/')
@@ -13,6 +15,7 @@ let xss = require('xss')
 let xssConfig = require('../../utils/xssConfig')
 let WxPay = require('../../utils/wxPay')
 let imgCode="";
+
 function getPageNum(count,pageSize) {
 	if(count%pageSize==0){//转换成页数
 		return  parseInt(count/pageSize);
@@ -21,11 +24,8 @@ function getPageNum(count,pageSize) {
 }
 
 router.use((req, res, next) => {
-	console.log('进来了没，---------------')
 	if(req.body.content) {
-		console.log(req.body.content,'before--------')
 		req.body.content = xss(req.body.content,xssConfig)
-		console.log(req.body.content,'after ------------')
 	}
 	return next()
 })
@@ -394,21 +394,46 @@ router.post('/order/changeAmt/:id', (req, res, next) => {
 	}
 })
  // 退款
+
 router.post('/order/backAmt/:id', (req, res, next) => {
-	Order.refunding(req.params.id, req.body.amt, (err,order) => {
-		if(err) return next(err)
+	Order.findById(req.params.id,function (err, order) {
+		if(err) return  next(err)
 		WxPay.refund(order.orderId,order.realPrice,order.realPrice).then(obj => {
+			// 	<xml><return_code><![CDATA[SUCCESS]]></return_code>
+			// 	<return_msg><![CDATA[OK]]></return_msg>
+			// 	<appid><![CDATA[wx2b6b34e4a0735bc0]]></appid>
+			// 	<mch_id><![CDATA[1500403302]]></mch_id>
+			// 	<nonce_str><![CDATA[dJFagwhW072NsSPg]]></nonce_str>
+			// 	<sign><![CDATA[3D1E7922E65DB24BD57B7662A3001574]]></sign>
+			// <result_code><![CDATA[FAIL]]></result_code>
+			// <err_code><![CDATA[NOTENOUGH]]></err_code>
+			// <err_code_des><![CDATA[基本账户余额不足，请充值后重新发起]]></err_code_des>
+			// </xml>
 			if(obj.result_code === 'SUCCESS') {
-				res.json({
-					code:0,
-					message:'success',
+				Order.refunding(req.params.id, req.body.amt, (err,order) => {
+					if(err) return next(err)
+					res.json({
+						code:0,
+						message:'success',
+						data: {
+							order:order
+						}
+					})
+				})
+			} else {
+				res.status(403).json({
+					code:-1,
+					message: obj.err_code_des || '退款错误',
 					data: {
-						order:order
+						order: {},
+						backObj: obj
 					}
 				})
 			}
 		})
 	})
+
+
 	// Order.findById(req.params.id,(err,order) => {
 	// 	if(err) return next(err)
 	// 	WxPay.refund(order.orderId,order.realPrice,order.realPrice).then(obj => {

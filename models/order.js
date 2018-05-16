@@ -38,6 +38,7 @@ var OrderSchema = new Schema({
 	realPrice: {type: Number}, //实际支付
 	refundCurrPrice: {type: Number}, // 当次退款金额
 	refundPrice: {type: Number}, // 退款总金额
+	refunding: {type: Number}, // 表示申请退款状态 1:退款中... 0:无意义
 	pay_at:{type:Date}, // 支付时间
 	refund_at:{type:Date}, //退款申请时间
 	out_at:{type:Date} // 退款完成时间
@@ -66,6 +67,9 @@ OrderSchema.virtual('statusName').get(function() {
 		case 40: sTxt = '已完成';break;
 		// case 31: sTxt = '已发货';break;
 		default: sTxt ='未知状态'
+	}
+	if (this.orderStatus === 20 && this.refunding === 1) {
+		sTxt = '退款中'
 	}
 	return sTxt
 })

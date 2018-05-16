@@ -12,6 +12,12 @@ let {wechat} = require('../utils/wxValid')
 router.use('/wxVaild',(req,res) => {
     wechat(req,res)
 })
+router.get('/test', (req, res, next) => {
+  return res.status(400).json({
+    code: -1,
+    message: '测试403返回'
+  })
+})
 // router.get('/createUser',(req,res)=>{
 //     console.log(req.body);
 //     res.render('tool/createUser',{title:"添加用户"});

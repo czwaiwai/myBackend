@@ -22,6 +22,7 @@ app.use(sassMiddleware({
 	outputStyle: 'extended',
 	prefix:  '/css'
 }));
+
 app.use(express.static(path.join(__dirname, 'public')));
 // app.use(function(req,res,next){ res.locals.staticUrl ='/admin' });
 app.use(function(req,res,next){
@@ -38,8 +39,8 @@ function checkLogin(req,res,next){
     }
     next();
 }
-app.use('/',checkLogin);
-app.use('/',index);
+app.use('/', checkLogin);
+app.use('/', index);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
@@ -51,7 +52,12 @@ app.use(function(err, req, res, next) {
     // set locals, only providing error in development
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};
-
+		if(req.xhr) {
+			return res.status(err.status || 500).json({
+				code:-1,
+				message: err.message || err
+			})
+		}
     // render the error page
     res.status(err.status || 500);
     res.render('error',{title:"网站错误"});

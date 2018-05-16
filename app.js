@@ -21,6 +21,7 @@ var tool = require('./routes/tool');
 var admin = require('./admin/app');
 var pathBlack = require('./utils/pathBlack')
 var device = require('express-device');
+var moment = require('moment')
 
 var app = express();
 app.set('env', 'production');
@@ -51,6 +52,7 @@ if(app.get('env') !== 'production') {
 
 app.use(compression()); // gzip压缩
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'admin/public')));
 console.log(app.get('env'))
 if (app.get('env') === 'development') {
 	app.use(logger('dev', {stream: process.stdout}));
@@ -63,8 +65,9 @@ if (app.get('env') === 'development') {
 		verbose: false
 	})
 	logger.token('type', function (req, res) { return req.headers['content-type'] })
-	app.use(logger(':date[iso] :remote-addr :remote-user :method :url HTTP/:http-version :status :res[content-length] - :response-time ms', {stream: process.stdout}))
-	app.use(logger(':date[iso] :remote-addr :remote-user :method :url HTTP/:http-version :status :res[content-length] - :response-time ms', {stream: accessLogStream}))
+	logger.token('date-moment', function (req, res) { return moment(new Date()).format('YYYY-MM-DD HH:mm:ss') })
+	app.use(logger(':date-moment :remote-addr :remote-user :method :url HTTP/:http-version :status :res[content-length] - :response-time ms', {stream: process.stdout}))
+	app.use(logger(':date-moment :remote-addr :remote-user :method :url HTTP/:http-version :status :res[content-length] - :response-time ms', {stream: accessLogStream}))
 }
 app.use(pathBlack)
 app.use(bodyParser.xml({

@@ -3,7 +3,7 @@
  **/
 
 (function($){
-
+	
     function guidGenerator() {
         var S4 = function() {
             return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
@@ -35,7 +35,16 @@
 			    // return parseInt(f * m, 10) / m;
 		    }
     });
-
+	$.ajaxSetup({
+		headers: {
+			'X-Requested-With': 'XMLHttpRequest'
+		},
+		error: function(err) {
+			if(err.responseJSON) {
+				$.alert(res.responseJSON.data.message)
+			}
+		}
+	})
   if($('#content')[0] && $('#editor')[0]) {
 	  var E = window.wangEditor
 	  if (E) {

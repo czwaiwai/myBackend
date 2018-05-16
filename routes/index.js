@@ -11,12 +11,14 @@ let WxPay = require('../utils/wxPay')
 let Wechat = require('../utils/wechat')
 const wechat = Wechat.getInstance()
 let EventProxy = require('eventproxy')
+let dictCache = require('../utils/dictCache')
+let cache = require('../utils/cache')
 let {Page, User, Catalog, Goods, Article, Cart, Address, Order, Dict, Postage} = require('../viewModels')
-let dicts = []
 // 对常见字段格式进行校验
 // router.use((req,res,next) => {
 //
 // })
+let dictCa = dictCache.getInstance()
 router.use((req,res,next) => {
 	let ep = EventProxy.create('catalogs', 'dicts', (catalogs, dicts) => {
 		res.locals.catalogs = catalogs
@@ -27,8 +29,18 @@ router.use((req,res,next) => {
 		next()
 	})
 	ep.fail(next)
-	Catalog.getFrontCatalog(ep.done('catalogs'))
-	Dict.findByGroup('front',ep.done('dicts'))
+	if(cache.has('catalogs')) {
+		console.log('存在catalogs', '我在缓存中取', cache.get('catalogs'))
+		ep.emit('catalogs', cache.get('catalogs'))
+	} else {
+		Catalog.getFrontCatalog((err,catalogs)=>{
+			if (err) { return ep.emit('error', err) }
+			cache.set('catalogs', catalogs)
+			ep.emit('catalogs', catalogs);
+		})
+	}
+	// Dict.findByGroup('front',ep.done('dicts'))
+	dictCa.getDicts('front',ep.done('dicts'))
 })
 router.use((req, res, next) => {
 	var user = req.session.user
@@ -60,7 +72,9 @@ router.get('/', (req, res, next)=> {
 	Dict.findByGroup('home',ep.done('dicts'))
 	Goods.getHotGoods (ep.done('goods'))
 });
+router.post('clearCache', (req, res, next) => {
 
+})
 router.get('/authLogin', (req, res, next) => {
 	let code = req.query.code
 	let state = req.query.state
@@ -224,6 +238,11 @@ router.get('/goods/index' , (req, res, next) => {
 		if (req.query.catalog) {
 			let catalog = catalogs.find(item => item.name === req.query.catalog)
 			params.catalogPath  = new RegExp(`^${catalog.calPath},${catalog.name}`)
+		} else {
+			if(res.locals.frontInfo && res.locals.frontInfo.notCatalogShow) {
+				let tmpArr = res.locals.frontInfo.notCatalogShow.split(',')
+				params.catalogId = {$nin: tmpArr}
+			}
 		}
 		Goods.findAllByPage(params, req.query.page, 10, (err, obj) => {
 			res.render('goods/index', Object.assign({title: '商品展示', goodTypes: catalogs}, obj))
@@ -588,8 +607,8 @@ router.use('/order/isPay', (req, res, next) => {
 	// 	"data": {
 	// 	"return_code": "SUCCESS",
 	// 		"return_msg": "OK",
-	// 		"appid": "wx2b6b34e4a0735bc0",
-	// 		"mch_id": "1500403302",
+	// 		"appid": "",
+	// 		"mch_id": "",
 	// 		"nonce_str": "2QI0fLaDhnzupSWL",
 	// 		"sign": "88A086F2D6EE8AAE9C8CFF88B5FDBFD0",
 	// 		"result_code": "FAIL",
@@ -600,8 +619,8 @@ router.use('/order/isPay', (req, res, next) => {
 	// 订单未支付
 	// { return_code: 'SUCCESS',
 	// 	return_msg: 'OK',
-	// 	appid: 'wx2b6b34e4a0735bc0',
-	// 	mch_id: '1500403302',
+	// 	appid: '',
+	// 	mch_id: '',
 	// 	nonce_str: 'x9C3FVFngjH9BKPV',
 	// 	sign: 'DBBADEA7851B39323C7CADA2A408078D',
 	// 	result_code: 'SUCCESS',
@@ -615,8 +634,8 @@ router.use('/order/isPay', (req, res, next) => {
 	// 	"data": {
 	// 	"return_code": "SUCCESS",
 	// 		"return_msg": "OK",
-	// 		"appid": "wx2b6b34e4a0735bc0",
-	// 		"mch_id": "1500403302",
+	// 		"appid": "",
+	// 		"mch_id": "",
 	// 		"nonce_str": "oGhuTBn5iX5YT9l0",
 	// 		"sign": "344731F36894202102041BD99399E2CF",
 	// 		"result_code": "SUCCESS",

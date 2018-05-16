@@ -56,10 +56,14 @@ exports.refunding = function (id, amt, callback) {
 		if(amt > order.needPrice) {
 			return callback(new Error('金额大于支付金额'))
 		}
+		if(order.orderStatus === 13) {
+			return callback(new Error('退款已完成'))
+		}
+		if(order.refunding === 1) {
+			return callback(null, order)
+		}
+		order.refunding = 1
 		order.refund_at = new Date()
-		order.orderStatus = 12 // 退款中
-		order.refundCurrPrice =  formatFloat(amt) // 本次退款金额
-		order.refundPrice = formatFloat((order.refundPrice || 0 ) + order.refundCurrPrice) // 总退款金额
 		order.save(callback)
 	})
 }
@@ -68,11 +72,14 @@ exports.refunding = function (id, amt, callback) {
 exports.refunded = function (orderId, obj, callback) {
 	Order.findOne({orderId: orderId}, (err, order) => {
 		if(err) return callback(err)
-		order.out_at = new Date()
-		if(order.refundPrice === order.realPrice) {
-			order.orderStatus = 13 // 已全额退款
+		order.refunding = 0
+		order.refund_at = new Date()
+		order.refundCurrPrice =  formatFloat(obj.refund_fee/100) // 本次退款金额
+		order.refundPrice = formatFloat((order.refundPrice || 0 ) + order.refundCurrPrice)
+		if(parseInt(order.needPrice*100) === parseInt(obj.refund_fee)) {
+			order.orderStatus = 13
 		} else {
-			order.orderStatus = 21 // 部分退款
+			order.orderStatus = 21
 		}
 		order.save(callback)
 	})
