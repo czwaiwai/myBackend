@@ -8,7 +8,7 @@ let imgProcess =require('../utils/imgProcess');
 let User=require('../models/user');
 let {Image} = require('../models')
 let {wechat} = require('../utils/wxValid')
-
+var request = require('request')
 router.use('/wxVaild',(req,res) => {
     wechat(req,res)
 })
@@ -54,6 +54,24 @@ router.post('/test',(req,res,next) => {
           b:req.rawBody,
       }
     })
+})
+
+router.get('/getPostInfo',(req,res,next) => {
+  let EBusinessID = '1342482'
+  let AppKey = '88db8d13-9782-4ea3-8aa2-a881b665d8b6'
+  let reqUrl = 'http://api.kdniao.cc/Ebusiness/EbusinessOrderHandle.aspx'
+	request.post({
+    url: reqUrl,
+    form: {
+			EBusinessID: '',
+			RequestType: '1002',
+			RequestData: `"{'OrderCode':'','ShipperCode':'YTO','LogisticCode':'12345678'}"`,
+			DataSign: '',
+			DataType:2
+    }
+  }, function (error, response, body) {
+    console.log(body)
+  })
 })
 router.post('/upload',(req,res)=>{
     imgProcess(req,function(err,fields,files){

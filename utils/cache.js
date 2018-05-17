@@ -15,7 +15,9 @@ module.exports = {
 	},
 	clear(name) {
 		if (name) {
-			delete cache[name]
+			if(cache[name]) {
+				delete cache[name]
+			}
 		} else {
 			cache = {}
 		}

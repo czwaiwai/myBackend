@@ -7,6 +7,7 @@ var _ = require('lodash');
 /* GET home page. */
 let {formatFloat, bigImg} = require('../utils/tools')
 let {loginValid} = require('../utils/helper')
+var kdn = require('../utils/kdniao')
 let WxPay = require('../utils/wxPay')
 let Wechat = require('../utils/wechat')
 const wechat = Wechat.getInstance()
@@ -83,8 +84,26 @@ router.get('/', (req, res, next)=> {
 		Goods.getHotGoods ({onSale:1}, ep.done('goods'))
 	}
 });
-router.post('clearCache', (req, res, next) => {
+//清空缓存内容
+router.post('/clearCache', (req, res, next) => {
 
+})
+// 查询邮件
+router.post('/queryPostage/:id', (req, res, next) => {
+	kdn(req.params.id).then(data => {
+		res.json({
+			code:0,
+			message:'success',
+			data:{
+				postage:data,
+			}
+		})
+	}).catch(err => {
+		res.status(403).json({
+			code: -1,
+			message: err || '查询失败'
+		})
+	})
 })
 router.get('/authLogin', (req, res, next) => {
 	let code = req.query.code

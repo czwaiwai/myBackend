@@ -90,13 +90,41 @@
                             </tbody>
                         </table>
                     </div>
+
+                    <div class="border-top margin-top5 text-right padding-top">
+                        <button id="queryPostage" class="btn btn-primary">查看物流信息</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<% block('footer').append(`<script id="queryPostageTpl" type="text/template">
+<div>
+  <ul>
+  <@ Traces.forEach(function (item) { @>
+  <li><@=item.AcceptStation @></li>
+  <@ }) @>
+</ul>
+</div>
+</script>`) %>
 <% block('footer').append(`<script>
 jQuery(function(){
-
+	var tplComplie = _.template($('#queryPostageTpl')[0].innerHTML)
+  $('#queryPostage').on('click',function () {
+  	$.post('/queryPostage/493760162610').done(res=> {
+  		console.log(res)
+  		BootstrapDialog.show({
+      title:"物流详情",
+      message: $(tplComplie(res.data.postage)),
+      buttons: [{
+        label: '确定',
+        action: function(dialog) {
+          dialog.close();
+        }
+      }]
+    });
+  	})
+  })
 })
 </script>`) %>

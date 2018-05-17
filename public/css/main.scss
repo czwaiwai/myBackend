@@ -1,4 +1,5 @@
 @import './bootstrap/bootstrap';
+@import './non-responsive';
 @import './fonts/shop/iconfont';
 @import './font-awesome/font-awesome';
 @import './phone';
@@ -9,6 +10,9 @@
 @import './layout';
 @import './tool';
 //@import './login';
+.container {
+  width:970px !important;
+}
 body, button, code, input, select, textarea {
   color: #333;
   font-family: "Segoe UI","Lucida Grande",Helvetica,Arial,"Microsoft YaHei",FreeSans,Arimo,"Droid Sans","wenquanyi micro hei","Hiragino Sans GB","Hiragino Sans GB W3",Roboto,Arial,sans-serif;
