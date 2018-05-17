@@ -7,7 +7,7 @@ var _ = require('lodash');
 /* GET home page. */
 let {formatFloat, bigImg} = require('../utils/tools')
 let {loginValid} = require('../utils/helper')
-var kdn = require('../utils/kdniao')
+let {queryOnlyCode} = require('../utils/kdniao')
 let WxPay = require('../utils/wxPay')
 let Wechat = require('../utils/wechat')
 const wechat = Wechat.getInstance()
@@ -90,7 +90,7 @@ router.post('/clearCache', (req, res, next) => {
 })
 // 查询邮件
 router.post('/queryPostage/:id', (req, res, next) => {
-	kdn(req.params.id).then(data => {
+	queryOnlyCode(req.params.id).then(data => {
 		res.json({
 			code:0,
 			message:'success',

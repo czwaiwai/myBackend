@@ -64,7 +64,7 @@
     <li class="active"><%= title %></li>
   </ol>
   <div class="row">
-    <div  class="hidden-xs col-sm-3 col-md-3 sidebar ">
+    <div  class="col-xs-3 col-md-3 sidebar ">
       <div class="side-menu animate-dropdown outer-bottom-xs">
         <div class="head"><i class="icon fa fa-align-justify fa-fw"></i> 产品列表</div>
         <nav class="yamm megamenu-horizontal" role="navigation">
@@ -81,7 +81,7 @@
         </nav><!-- /.megamenu-horizontal -->
       </div>
     </div>
-    <div class="col-xs-12 col-sm-9 col-md-9">
+    <div class="col-xs-9 col-md-9">
       <div class="row">
         <% if(goods && goods.length === 0) { %>
         <div class="col-xs-12 text-muted text-center" style="padding-top:15%;">
@@ -90,7 +90,7 @@
         </div>
         <% } %>
         <% goods.forEach(function(item){  %>
-        <div  class="col-xs-6 col-sm-4 col-md-4 col-lg-4">
+        <div  class="col-xs-4  col-md-4 ">
             <a  href="/goods/detail/<%=item._id %>" class="thumbnail">
               <div style="">
                 <div class="img_bg" style="width:100%;height:222px;background-image:url(<%=item.imgTmb %>);background-size:cover;"></div>

@@ -24,7 +24,7 @@ var device = require('express-device');
 var moment = require('moment')
 
 var app = express();
-app.set('env', 'production');
+// app.set('env', 'production');
 app.engine('ejs',engine);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

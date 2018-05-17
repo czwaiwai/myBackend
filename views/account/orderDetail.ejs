@@ -11,6 +11,17 @@
   width: 80px;
   display: inline-block;
 }
+.traces_ul{
+    list-style: none;
+    padding:0;
+}
+.traces_ul li {
+    padding:5px;
+
+}
+.traces_ul li + li {
+    border-top:1px solid #f0f0f0;
+}
 </style>`) %>
 <div class="container">
     <ol class="breadcrumb">
@@ -20,10 +31,10 @@
         <li class="active"><%= title %></li>
     </ol>
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-3 col-xs-3">
             <% include ../navbar/accountLeftNav.ejs %>
         </div>
-        <div class="col-md-9">
+        <div class="col-md-9 col-xs-9">
             <div class="panel panel-default " >
                 <div class="panel-heading">订单号：<%=order.orderId %>
                     <span class="padding-left20">下单时间：<%=order.create_at_ago() %></span>
@@ -92,7 +103,13 @@
                     </div>
 
                     <div class="border-top margin-top5 text-right padding-top">
-                        <button id="queryPostage" class="btn btn-primary">查看物流信息</button>
+                        <% if(order.orderStatus === 20 ) { %>
+                        <button id="applyBackAmt"  class="btn btn-link btn-info">申请退款</button>
+                        <% } %>
+                        <% if(order.postageId) { %>
+                        <button id="queryPostage"  data-id="<%=order.postageId %>" class="btn btn-primary">查看物流信息</button>
+                        <% } %>
+
                     </div>
                 </div>
             </div>
@@ -101,7 +118,7 @@
 </div>
 <% block('footer').append(`<script id="queryPostageTpl" type="text/template">
 <div>
-  <ul>
+  <ul class="traces_ul">
   <@ Traces.forEach(function (item) { @>
   <li><@=item.AcceptStation @></li>
   <@ }) @>
@@ -110,20 +127,31 @@
 </script>`) %>
 <% block('footer').append(`<script>
 jQuery(function(){
-	var tplComplie = _.template($('#queryPostageTpl')[0].innerHTML)
+  var tplComplie = _.template($('#queryPostageTpl')[0].innerHTML)
+  $('#applyBackAmt').on('click', function () {
+  	var $this = $(this)
+    $.confirm('你确定要申请退款么？<p class="text-muted">退款到帐时间在退款申请提交后的1～3个工作日内完成，请耐心等待</p>','提示', function(res){
+      // $.post('/applyBackAmt/' + $this.data('id')).done(res => {
+      //
+      // })
+    })
+  })
   $('#queryPostage').on('click',function () {
-  	$.post('/queryPostage/493760162610').done(res=> {
+  	var $this = $(this)
+  	$.post('/queryPostage/' + $this.data('id')).done(res=> {
   		console.log(res)
-  		BootstrapDialog.show({
-      title:"物流详情",
-      message: $(tplComplie(res.data.postage)),
-      buttons: [{
-        label: '确定',
-        action: function(dialog) {
-          dialog.close();
-        }
-      }]
-    });
+        BootstrapDialog.show({
+          title:"物流详情",
+          message: $(tplComplie(res.data.postage)),
+          buttons: [{
+            label: '确定',
+            action: function(dialog) {
+              dialog.close();
+            }
+          }]
+        });
+  	}).fail(err => {
+  		console.log(err)
   	})
   })
 })

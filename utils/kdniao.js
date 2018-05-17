@@ -5,14 +5,7 @@
 
 var request = require('request')
 var crypto = require('crypto')
-// var {UrlEncode} = require('./urlEncodeFn')
-// var {UrlEncode,UrlDecode} = require('./urlEncodeFn')
-let config = {
-	id: '1342482',
-	AppKey: '88db8d13-9782-4ea3-8aa2-a881b665d8b6',
-  url: 'http://api.kdniao.cc/Ebusiness/EbusinessOrderHandle.aspx'
-	// url: 'http://sandboxapi.kdniao.cc:8080/kdniaosandbox/gateway/exterfaceInvoke.json' // 测试
-}
+const config = require('../kdn.json')
 function md5 (str) {
 	var md5sum = crypto.createHash('md5');
 	md5sum.update(str);
@@ -94,7 +87,15 @@ var kdn = {
 }
 // ShipperCode 快递公司的编码
 // LogisticCode 快递单号
-module.exports = function (code) {
+module.exports.queryShipper = function (code) {
+	return kdn.queryShipper(code)
+}
+// 通过快递公司编号和 快递单号 查询结果
+module.exports.queryCodeRes = function (shipperCode,code) {
+  return kdn.queryPostage(shipperCode, code)
+}
+// 通过code查询公司编号再查出快递结果
+module.exports.queryOnlyCode = function (code) {
 	return kdn.queryShipper(code).then((Shippers) =>{
 		console.log(Shippers[0].ShipperCode, code, '--------------')
 		return  kdn.queryPostage(Shippers[0].ShipperCode, code)

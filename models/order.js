@@ -29,6 +29,7 @@ var OrderSchema = new Schema({
 	payId: {type: String, default: ''}, // 支付端信息编码 payId
 	openId: {type: String, default: ''}, // 微信用户openid
 	postageId: {type: String, default: ''}, // 物流单号 -----
+	postageName: {type: String}, // 物流公司名称
 	totalNum: {type: Number}, // 总数量
 	totalPrice: {type: Number}, // 商品总价
 	feePrice: {type:Number, default: 0}, // 邮费

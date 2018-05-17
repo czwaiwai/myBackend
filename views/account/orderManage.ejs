@@ -39,10 +39,10 @@ max-width:100%;
         <li class="active"><%= title %></li>
     </ol>
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-3  col-xs-3">
             <% include ../navbar/accountLeftNav.ejs %>
         </div>
-        <div id="orderManageWrap" class="col-md-9">
+        <div id="orderManageWrap" class="col-md-9  col-xs-9">
 
             <div class="panel panel-default ">
                 <div class="panel-body no-padding" style="min-height:300px;">
@@ -51,7 +51,7 @@ max-width:100%;
                         <li role="presentation"><a href="#tab2" aria-controls="tab2" role="tab" data-type="waitPay" data-toggle="tab">待付款</a></li>
                         <li role="presentation"><a href="#tab3" aria-controls="tab3" role="tab" data-type="pay" data-toggle="tab">待发货</a></li>
                         <li role="presentation"><a href="#tab4" aria-controls="tab4" role="tab" data-type="ship" data-toggle="tab">已发货</a></li>
-                        <li role="presentation"><a href="#tab4" aria-controls="tab4" role="tab" data-type="back" data-toggle="tab">已退款</a></li>
+                        <li role="presentation"><a href="#tab4" aria-controls="tab4" role="tab" data-type="back" data-toggle="tab">已完成</a></li>
                     </ul>
                     <!-- Tab panes -->
                     <div class="tab-content" style="background:#FFF;min-height:300px;">
@@ -79,24 +79,24 @@ max-width:100%;
         </div>
         <div class="order_item_body">
             <div class="clearfix" >
-                <div class="col-md-6">
+                <div class="col-md-6  col-xs-6">
                   <ul class="good_sub_img_ul clearfix">
                     <@ _.each(item.goods, function(sub) { @>
                     <li class="good_sub_img_item" style="background:url('<@=sub.imgTmb @>') no-repeat;background-size:cover;"></li>
                     <@ })@>
                   <ul>
                 </div>
-                <div class="col-md-1 text-center no-padding">
+                <div class="col-md-1  col-xs-1 text-center no-padding">
                    <p class="fs12  text-muted" style="padding-top: 35px; line-height: 20px;">共<@=item.totalNum @>件商品</p>
                 </div>
-                <div class="col-md-1 text-center no-padding">
+                <div class="col-md-1  col-xs-1 text-center no-padding">
                    <p  class="status_txt <@=item.statusColor @>" style="padding-top:35px;"><@=item.statusName @><p>
                 </div>
-                <div class="col-md-2 text-center padding-top20" style="height:90px;border-left:1px solid #e3e3e3;border-right:1px solid #e3e3e3">
+                <div class="col-md-2  col-xs-2 text-center padding-top20" style="height:90px;border-left:1px solid #e3e3e3;border-right:1px solid #e3e3e3">
                   <p class="fs16 bold">￥<@= item.needPrice @></p>
                   <span class="fs12 text-muted"> (含运费：￥<@=item.feePrice @>)</span>
                 </div>
-                <div class="col-md-2 text-center ">
+                <div class="col-md-2  col-xs-2 text-center ">
                     <p style="padding-top:15px;">
                       <a class="btn btn-link" href="/account/orderDetail/<@=item._id @>">查看详情</a>
                       <@ if(item.orderStatus === 10) { @>

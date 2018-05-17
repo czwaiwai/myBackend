@@ -37,19 +37,19 @@ max-width:100%;
         <li class="active"><%= title %></li>
     </ol>
     <div id="accountIndex" class="row">
-        <div class="col-md-3">
+        <div class="col-md-3 col-xs-3">
             <% include ../navbar/accountLeftNav.ejs %>
         </div>
-        <div class="col-md-9">
+        <div class="col-md-9 col-xs-9" >
             <div class="section">
-                <div class="col-md-6 padding-top" >
+                <div class="col-md-6 col-xs-6 padding-top" >
                     <div class="head_img" style="<%=user.headImg?'background:url('+user.headImg+') no-repeat center;background-size:cover;':'' %>"></div>
                     <div style="display:inline-block;padding-left:10px;">
                         <p class="fs18"><%=user.nickname %></p>
                         <p class="text-muted">白石山农场欢迎您的到来</p>
                     </div>
                 </div>
-                <div class="col-md-6" style="border-left:1px dashed #e3e3e3;">
+                <div class="col-md-6  col-xs-6 " style="border-left:1px dashed #e3e3e3;">
                     <p class="text-muted padding-left">完成个人信息认证购物更方便哦～</p>
                     <ul style="list-style: none">
                         <li><a class="normal_link" href="/account/accountInfo">更新个人资料</a></li>
