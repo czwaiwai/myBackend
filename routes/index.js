@@ -29,16 +29,21 @@ router.use((req,res,next) => {
 		next()
 	})
 	ep.fail(next)
-	if(cache.has('catalogs')) {
-		console.log('存在catalogs', '我在缓存中取', cache.get('catalogs'))
-		ep.emit('catalogs', cache.get('catalogs'))
-	} else {
-		Catalog.getFrontCatalog((err,catalogs)=>{
-			if (err) { return ep.emit('error', err) }
-			cache.set('catalogs', catalogs)
-			ep.emit('catalogs', catalogs);
-		})
-	}
+	Catalog.getFrontCatalog((err,catalogs)=>{
+		if (err) { return ep.emit('error', err) }
+		// cache.set('catalogs', catalogs)
+		ep.emit('catalogs', catalogs);
+	})
+	// if(cache.has('catalogs')) {
+	// 	console.log('存在catalogs', '我在缓存中取', cache.get('catalogs'))
+	// 	ep.emit('catalogs', cache.get('catalogs'))
+	// } else {
+	// 	Catalog.getFrontCatalog((err,catalogs)=>{
+	// 		if (err) { return ep.emit('error', err) }
+	// 		cache.set('catalogs', catalogs)
+	// 		ep.emit('catalogs', catalogs);
+	// 	})
+	// }
 	// Dict.findByGroup('front',ep.done('dicts'))
 	dictCa.getDicts('front',ep.done('dicts'))
 })
