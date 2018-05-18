@@ -275,7 +275,7 @@ router.get('/goods/index' , (req, res, next) => {
 				params.catalogId = {$nin: [...tmpArr]}
 			}
 		}
-		Goods.findAllByPage(params, req.query.page, 10, (err, obj) => {
+		Goods.findAllByPage(params, req.query.page, 12, (err, obj) => {
 			res.render('goods/index', Object.assign({title: '商品展示', goodTypes: catalogs}, obj))
 		})
 	})
