@@ -5,7 +5,7 @@ var models = require('../models')
 var {formatFloat, getPageNum } =  require('../utils/tools')
 var Order = models.Order
 var Counters = models.Counters
-
+var moment = require('moment')
 
 exports.create = function (obj, callback) {
 	var order = new Order(obj)
@@ -16,6 +16,12 @@ exports.create = function (obj, callback) {
 		order.orderId = 5200000000 + counter.index
 		order.save(callback)
 	})
+}
+// 今日最新订单
+exports.todayNewOrder = function (callback) {
+	var before = moment().format('YYYY-MM-DD 00:00:00')
+	var after = moment().add(1, 'days').format('YYYY-MM-DD 00:00:00')
+	Order.count({create_at:{$gte:new Date(before),$lte:new Date(after)}},callback)
 }
 // 申请退单总数
 exports.refundCount = function (callback) {

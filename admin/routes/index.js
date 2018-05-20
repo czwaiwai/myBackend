@@ -29,9 +29,15 @@ router.use((req, res, next) => {
 	}
 	return next()
 })
-router.get('/', (req, res)=> {
-
-    res.render('index',{title:"首页"});
+router.get('/', (req, res, next)=> {
+	let ep = EventProxy.create('todayOrderCount', 'refundCount', 'userCount', 'todayUserCount', (todayOrderCount, refundCount, userCount, todayUserCount) => {
+		res.render('index',{title:"首页", todayOrderCount, refundCount, userCount, todayUserCount});
+	})
+	ep.fail(next)
+	Order.todayNewOrder(ep.done('todayOrderCount'))
+	Order.refundCount(ep.done('refundCount'))
+	User.userCount(ep.done('userCount'))
+	User.todayCount(ep.done('todayUserCount'))
 });
 router.get('/login',(req,res)=>{
     // req.flash('success',"靠靠靠");

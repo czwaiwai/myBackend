@@ -165,7 +165,7 @@ ul.traces_ul li {
     </div>
     <div class="wh_line">
       <p class="weui-cell_warn">应付：￥<@=order.needPrice @></p>
-      <@ if(order.orderStatus === 20) { @>
+      <@ if(order.orderStatus >= 20) { @>
       <p class="main-color">实付：￥<@=order.realPrice @></p>
       <@ } @>
     </div>
