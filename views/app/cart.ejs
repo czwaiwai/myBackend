@@ -18,6 +18,14 @@
     outline: none;
     font-size: 16px;
 }
+.del_link {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: #f0f0f0;
+    color: #656565;
+    font-size: 12px;
+}
 </style>`)%>
 <div class="page has_tab">
   <div class="page__bd">
@@ -49,10 +57,11 @@
             <p class="weui-media-box__desc">单价：￥<%=item.price %></p>
           </div>
           <div class="weui-media-box__ft" style="height:60px;">
-            <p class="text-right" style="height: 35px;color: #656565;" >￥<span class="sub_total"><%=item.subTotal %></span></p>
+            <p class="text-center" style="height: 35px;color: #656565;" >￥<span class="sub_total"><%=item.subTotal %></span></p>
             <div class="spinner" >
               <input name="num"  type="text" value="<%=item.goodsNum %>" >
             </div>
+            <a class="del_link" href="javascript:void(0)"><i class="iconfont icon-delete"></i></a>
           </div>
         </div>
         <% }) %>
@@ -101,6 +110,14 @@ jQuery(function(){
      renderAll()
     }
   });
+  $cartList.on('click', '.del_link', function () {
+  	var $this = $(this)
+  	var $item = $this.closest('.cart_item')
+  	$.post('/cart/removeOne/'+ $item.data('cartId')).done(function() {
+      $item.remove()
+      renderAll()
+  	})
+  })
   $cartList.on('change','input[type=checkbox]',function(){
   	var $this = $(this)
   	var $item = $this.closest('.cart_item')

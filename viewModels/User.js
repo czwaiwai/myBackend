@@ -16,6 +16,11 @@ exports.saveById = function (id, obj, callback) {
 		user.save(callback)
 	})
 }
+// 用户总数
+exports.userCount = function (callback) {
+	User.count({isAdmin:0},callback)
+}
+
 exports.findByOpenId = function(openId, callback) {
 	User.findOne({openId:openId},callback)
 }

@@ -22,6 +22,27 @@
     height: 41px;
     border-top: 1px solid #e3e3e3;
 }
+.weui-dialog.postage_detail {
+    width:94%;
+}
+.weui-dialog.postage_detail .weui-dialog__bd {
+        padding: 0 10px 10px;
+    height: 356px;
+    max-height: 356px;
+    overflow: hidden;
+}
+ul.traces_ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+ul.traces_ul li {
+    font-size: 12px;
+    text-align: left;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #f0f0f0;
+    padding-top: 5px;
+}
 </style>`)%>
 <div id="orderDetailWrap" class="page has_head has_tab">
   <div class="page__hd weui-flex">
@@ -76,7 +97,7 @@
         </div>
         <div class="wh_line">
           <p class="weui-cell_warn">应付：￥<%=order.needPrice %></p>
-          <% if(order.orderStatus === 20) { %>
+          <% if(order.orderStatus >= 20) { %>
           <p class="main-color">实付：￥<%=order.realPrice %></p>
           <% } %>
         </div>
@@ -93,20 +114,78 @@
         <span><a id="toPay"  data-id="<%=order._id %>" href="/account/orderCancel/<%=order._id %>"  class="weui-btn weui-btn_mini weui-btn_primary">立即付款</a></span>
       </div>
       <% } %>
-      <% if(order.orderStatus > 30) { %>
+      <% if(order.orderStatus === 20) { %>
+      <div class="no_pay_btn">
+        <span><a id="applyBackAmt"   data-id="<%=order._id %>" href="/account/orderCancel/<%=order._id %>"  class="weui-btn weui-btn_mini weui-btn_default">申请退款</a></span>
+      </div>
+      <% }%>
+      <% if(order.orderStatus >= 30) { %>
       <!---查看物流信息接口--->
-        <!--<div id="postageBtn">-->
-          <!--<span><a id="postageShow"  href="/account/orderCancel/<%=order._id %>" class="weui-btn weui-btn_mini weui-btn_default">物流信息</a></span>-->
-        <!--</div>-->
+        <% if(order.postageId) { %>
+          <div id="postageBtn">
+            <span><a id="queryPostage"  data-id="<%=order.postageId %>"  href="javascript:void(0);" class="weui-btn weui-btn_mini weui-btn_default">查询物流信息</a></span>
+          </div>
+        <% } %>
       <% } %>
     </div>
   </div>
 </div>
+<% block('footer').append(`<script id="queryPostageTpl" type="text/template">
+<div style="height:100%; overflow: auto;">
+  <ul class="traces_ul">
+  <@ Traces.forEach(function (item) { @>
+  <li><@=item.AcceptStation @></li>
+  <@ }) @>
+</ul>
+ <@ if(Traces.length === 0) { @>
+    <p class="text-muted">快递单号：<@= LogisticCode @></p>
+    <@= Reason @>
+ <@ } @>
+</div>
+</script>`) %>
 <% block('footer').append(`<script>
 jQuery(function(){
+	var tplComplie = _.template($('#queryPostageTpl')[0].innerHTML)
 	var $orderDetailWrap = $('#orderDetailWrap')
 	var $noPayBtn = $('#noPayBtn')
 	var $postageBtn = $('#postageBtn')
+
+  $('#queryPostage').on('click',function () {
+  	var $this = $(this)
+  	$.toast('正在查询中...', 'text')
+  	$.post('/queryPostage/' + $this.data('id')).done(res=> {
+  		console.log(res)
+  		$.modal({
+          title: "物流信息",
+          text: tplComplie(res.data.postage),
+          class: 'postage_detail',
+          buttons:[
+            {
+              text: "确定",
+              className: "default",
+              onClick: function(){
+                  $.closeModal()
+              }
+            },
+          ]
+        });
+  	}).fail(err => {
+  		console.log(err)
+  	})
+  })
+	// 退款申请
+  $('#applyBackAmt').on('click', function (e) {
+  	e.preventDefault()
+  	var $this = $(this)
+    $.confirm('<span class="weui-cell_warn">你确定要申请退款么？</span><p class="text-muted">退款到帐时间在退款申请提交后的1～3个工作日内完成，请耐心等待</p>','提示', function(res){
+      $.post('/account/applyBackAmt/' + $this.data('id')).done(res => {
+      	$this.prop('disabled',true)
+        $.alert('<p class="text-success status_txt">' + res.message + '</p>')
+      })
+    })
+    return false
+  })
+
   $('#cancel').on('click',function(e){
   	e.preventDefault()
   	var $this = $(this)

@@ -104,7 +104,9 @@
 
                     <div class="border-top margin-top5 text-right padding-top">
                         <% if(order.orderStatus === 20 ) { %>
-                        <button id="applyBackAmt"  class="btn btn-link btn-info">申请退款</button>
+                        <button id="applyBackAmt"  data-id="<%=order._id %>" <%=order.refunding===2?' disabled':''%> class="btn btn-link btn-info">
+                           <%= order.refunding === 2?'退款申请中':'申请退款' %>
+                        </button>
                         <% } %>
                         <% if(order.postageId) { %>
                         <button id="queryPostage"  data-id="<%=order.postageId %>" class="btn btn-primary">查看物流信息</button>
@@ -131,9 +133,12 @@ jQuery(function(){
   $('#applyBackAmt').on('click', function () {
   	var $this = $(this)
     $.confirm('你确定要申请退款么？<p class="text-muted">退款到帐时间在退款申请提交后的1～3个工作日内完成，请耐心等待</p>','提示', function(res){
-      // $.post('/applyBackAmt/' + $this.data('id')).done(res => {
-      //
-      // })
+      if(res) {
+      	$.post('/account/applyBackAmt/' + $this.data('id')).done(res => {
+      	    $this.prop('disabled',true)
+            $.alert('<p class="text-success">' + res.message + '</p>')
+        })
+      }
     })
   })
   $('#queryPostage').on('click',function () {

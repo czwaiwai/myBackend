@@ -286,22 +286,23 @@ desired effect
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="<%=assetsPath %>/goods/index">商品列表</a></li>
-            <li><a href="<%=assetsPath %>/postage/index">邮费管理</a></li>
+            <li  <% if(path=="/goods/index"){ %> class="active"<% } %> ><a href="<%=assetsPath %>/goods/index">商品列表</a></li>
+            <li  <% if(path=="/postage/index"){ %> class="active"<% } %> ><a href="<%=assetsPath %>/postage/index">邮费管理</a></li>
           </ul>
         </li>
-        <li class="treeview <% if(["/orders/index"].indexOf(path) > -1){ %>active<% } %> ">
+        <li class="treeview <% if(path.indexOf("/orders/index") > -1){ %> active<% } %> ">
           <a href="#"><i class="fa fa-wpforms"></i><span>订单管理</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="<%=assetsPath %>/orders/index/all">全部</a></li>
-            <li><a href="<%=assetsPath %>/orders/index/waitPay">待付款</a></li>
-            <li><a href="<%=assetsPath %>/orders/index/pay">已付款</a></li>
-            <li><a href="<%=assetsPath %>/orders/index/ship">已发货</a></li>
-            <li><a href="<%=assetsPath %>/orders/index/finish">已完成</a></li>
+            <li <% if(path=="/orders/index/all"){ %> class="active"<% } %> ><a  href="<%=assetsPath %>/orders/index/all">全部</a></li>
+            <li <% if(path=="/orders/index/waitPay"){ %> class="active"<% } %> ><a href="<%=assetsPath %>/orders/index/waitPay">待付款</a></li>
+            <li <% if(path=="/orders/index/pay"){ %> class="active"<% } %>><a href="<%=assetsPath %>/orders/index/pay">已付款</a></li>
+            <li <% if(path=="/orders/index/ship"){ %> class="active"<% } %> ><a href="<%=assetsPath %>/orders/index/ship">已发货</a></li>
+            <li <% if(path=="/orders/index/finish"){ %> class="active"<% } %>><a href="<%=assetsPath %>/orders/index/finish">已完成</a></li>
+            <li <% if(path=="/orders/index/refunding"){ %> class="active"<% } %>><a href="<%=assetsPath %>/orders/index/refunding">申请退款订单</a></li>
           </ul>
         </li>
         <li class="treeview  <% if(["/users/index"].indexOf(path) > -1){ %>active<% } %> ">

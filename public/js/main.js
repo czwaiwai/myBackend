@@ -158,7 +158,8 @@ jQuery(function(){
 		},
 		error: function (res,body, err) {
 			if(res.responseJSON) {
-				$.Toast(res.responseJSON.data.message, 'error')
+				console.log(res.responseJSON.message)
+				$.Toast(res.responseJSON.message, 'error')
 			}
 		}
 	});

@@ -38,7 +38,12 @@ margin-bottom:20px;
 .order_item + .order_item {
     border-top:1px dashed #e3e3e3;
 }
-
+.del_link {
+    position: absolute;
+    right: 0;
+    padding-right: 10px;
+    color: #656565;
+}
 </style>`) %>
 <div class="container">
     <div class="row">
@@ -95,7 +100,10 @@ margin-bottom:20px;
                         </div>
                     </div>
                     <div class="col-xs-2 col-md-2  text-center">￥<span class="sub_total"><%=item.subTotal %></span></div>
-                    <div class="col-xs-2 col-md-2  text-center">￥<span class="pay_total"><%=item.payTotal %></span></div>
+                    <div class="col-xs-2 col-md-2  text-center relative">
+                        ￥<span class="pay_total"><%=item.payTotal %></span>
+                        <a class="del_link" href="javascript:void(0)"><i class="iconfont icon-delete"></i></a>
+                    </div>
                 </div>
               <% }) %>
             </div>
@@ -160,12 +168,22 @@ jQuery(function(){
             that.renderOne($item)
           }
         });
+
         $cartWrap.on('change', '.check_item', function(){
           var $this = $(this)
           var $item = $this.closest('.order_item')
             $item.data('check',$this.prop('checked'))
             $.post('/cart/changeCartCheck', {id:$item.data('cartId'),check:$this.prop('checked')})
             that.renderAll(that.setAllData())
+        })
+        $cartWrap.on('click', '.del_link',function () {
+        	var $this = $(this)
+        	var $item = $this.closest('.order_item')
+        	$item.data('cartId')
+        	$.post('/cart/removeOne/'+ $item.data('cartId')).done(function() {
+                $item.remove();
+                that.renderAll(that.setAllData())
+        	})
         })
         $clearCart.on('click', function() {
            $.confirm('你确定要清空购物车么',function(res){

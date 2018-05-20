@@ -17,7 +17,10 @@ exports.create = function (obj, callback) {
 		order.save(callback)
 	})
 }
-
+// 申请退单总数
+exports.refundCount = function (callback) {
+	Order.count({refunding:2},callback)
+}
 // 查询支付订单
 exports.noPay = function (userId, callback) {
 	var orders = Order.find({userId: userId, orderStatus: 10})
@@ -45,7 +48,15 @@ exports.savePay = function (orderId, obj, callback) {
 		order.save(callback)
 	})
 }
-
+// 退款申请种
+exports.refundApply = function (id,callback) {
+	Order.findById(id, (err, order) => {
+		if(err || !order) return callback(err || new Error('没有找到订单'))
+		if(order.refunding === 2 || order.refunding === 1) return callback(new Error('你已经申请过了'))
+		order.refunding = 2
+		order.save(callback)
+	})
+}
 // 退款中...
 exports.refunding = function (id, amt, callback) {
 	Order.findById(id, (err, order) => {

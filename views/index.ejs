@@ -64,15 +64,19 @@
                 <!-- Indicators -->
                 <ol class="carousel-indicators">
                   <% homeBanner.forEach(function(item,index){ %>
+                    <% if(item.value) { %>
                     <li data-target="#carousel-example-generic" data-slide-to="<%=index %>" class="<%= index===0?' active':'' %>"></li>
+                    <% } %>
                   <% }) %>
                 </ol>
                 <!-- Wrapper for slides -->
                 <div class="carousel-inner" role="listbox">
                     <% homeBanner.forEach(function(item,index){ %>
-                        <div class="item <%= index===0?' active':'' %>">
+                        <% if(item.value) { %>
+                        <div style="width:100%;height:450px;background:#f0f0f0;" class="item <%= index===0?' active':'' %>">
                             <img src="<%=item.value %>" alt="">
                         </div>
+                        <% } %>
                     <% }) %>
                 </div>
                 <!-- Controls -->

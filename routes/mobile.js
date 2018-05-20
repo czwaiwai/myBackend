@@ -443,6 +443,10 @@ router.post('/login', (req, res, next) => {
 				req.flash("error","账户名或密码错误")
 				return res.redirect('/app/login')
 			}
+			if (user.isLock === 1) {
+				req.flash("error", "账户名已锁定")
+				return res.redirect('/login')
+			}
 			if(user.pwd!=req.body.password){
 				req.flash("error","账户名或密码错误");
 				return  res.redirect('/app/login');

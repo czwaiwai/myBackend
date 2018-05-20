@@ -56,7 +56,7 @@ exports.add2Update = function (userId, cart, callback) {
 }
 exports.removeOne = function (userId, cartId, callback) {
 	User.findByIdAndUpdate(userId,
-		{$pull:{ 'cart': {cartId:cartId}}},
+		{$pull:{ cart: {_id: cartId}}},
 		{new:true},
 		callback
 	)

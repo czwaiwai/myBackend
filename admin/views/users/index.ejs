@@ -25,7 +25,7 @@
             <th>用户名称</th>
             <th>昵称</th>
             <th>用户手机号</th>
-            <th></th>
+            <th>状态</th>
             <th>创建时间</th>
             <th>操作</th>
           </tr>
@@ -34,7 +34,7 @@
             <td><%=item.userName || ''%></td>
             <td><%=item.nickname  || '' %></td>
             <td><%=item.mobile   || '' %></td>
-            <td><%=item.is_vaild ?'有效':'无效'%></td>
+            <td><%=item.isLock===0 ?'有效':'无效'%></td>
             <td><%=item.create_at_ago()%></td>
             <td>
               <a class="btn  btn-sm btn-success" href="add?update=<%=item._id %>">修改</a>

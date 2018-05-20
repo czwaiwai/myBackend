@@ -3228,7 +3228,7 @@ if (typeof define === 'function' && define.amd) {
       return '<a href="javascript:;" class="weui-dialog__btn ' + (d.className || "") + '">' + d.text + '</a>';
     }).join("");
 
-    var tpl = '<div class="weui-dialog">' +
+    var tpl = '<div class="weui-dialog '+params.class+'">' +
                 '<div class="weui-dialog__hd"><strong class="weui-dialog__title">' + params.title + '</strong></div>' +
                 ( params.text ? '<div class="weui-dialog__bd">'+params.text+'</div>' : '')+
                 '<div class="weui-dialog__ft">' + buttonsHtml + '</div>' +

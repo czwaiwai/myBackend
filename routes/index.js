@@ -88,6 +88,7 @@ router.get('/', (req, res, next)=> {
 router.post('/clearCache', (req, res, next) => {
 
 })
+
 // 查询邮件
 router.post('/queryPostage/:id', (req, res, next) => {
 	queryOnlyCode(req.params.id).then(data => {
@@ -320,10 +321,12 @@ router.post('/cart/clear', loginValid, (req, res, next) => {
 	})
 })
 // 购物车删除单个商品
-router.post('/cart/removeOne', loginValid, (req, res, next) => {
+router.post('/cart/removeOne/:cartId', loginValid, (req, res, next) => {
 	let user = req.session.user
-	Cart.removeOne(user._id, req.body.cartId, (err, user) => {
+	console.log(req.body.cartId, '------cartId---------')
+	Cart.removeOne(user._id, req.params.cartId, (err, user) => {
 		if (err) return next(err)
+		console.log(user, '---removeOne-------')
 		req.session.user.cart = user.cart
 		res.json({
 			code: 0,
@@ -742,7 +745,17 @@ router.get('/account/address', loginValid, (req, res, next) => {
 		res.render('account/address', {title: '地址管理', address:address.address})
 	})
 })
-
+// 退款申请
+router.post('/account/applyBackAmt/:id', loginValid, (req, res, next) => {
+	let id = req.params.id
+	Order.refundApply(id, (err, order) => {
+		if (err) return next(err)
+		res.json({
+			code:0,
+			message: '申请成功，工作人员将在1～3个工作日退还,请耐心等待',
+		})
+	})
+})
 //个人信息
 router.get('/account/accountInfo', loginValid, (req, res, next) => {
 	res.render('account/accountInfo', {title: '个人信息'})
@@ -953,7 +966,11 @@ router.post('/login',(req,res, next)=>{
 		        req.flash("error","账户名或密码错误")
         		return res.redirect('/login')
 	        }
-          if(user.pwd!=req.body.password){
+	        if (user.isLock === 1) {
+        		req.flash("error", "账户名已锁定")
+		        return res.redirect('/login')
+	        }
+          if(user.pwd != req.body.password){
         		req.flash("error","账户名或密码错误");
         		return  res.redirect('/login');
           }

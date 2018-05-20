@@ -352,6 +352,7 @@ router.get('/orders/index/:status', (req, res, next) => {
 		case "pay": queryParam = {orderStatus: 20};break;
 		case "ship": queryParam = {orderStatus: 30};break; // 已发货
 		case "finish": queryParam = {orderStatus: 40}; break;
+		case "refunding": queryParam = {orderStatus: 20,refunding: 2};break;
 	}
 	Order.findAllByPage(queryParam,req.query.page, 10, (err, obj) => {
 		if (err) return next(err)
@@ -393,8 +394,9 @@ router.post('/order/changeAmt/:id', (req, res, next) => {
 		})
 	}
 })
- // 退款
 
+
+ // 退款
 router.post('/order/backAmt/:id', (req, res, next) => {
 	Order.findById(req.params.id,function (err, order) {
 		if(err) return  next(err)

@@ -42,7 +42,12 @@
               </div>
               <% }) %>
             </td>
-            <td class="<%=item.statusColor%>" ><%=item.statusName %></td>
+            <td class="<%=item.statusColor%>" >
+              <%=item.statusName %>
+              <% if(item.refunding === 2) { %>
+              <p class="text-danger fs12" style="font-size:12px;">用户退款申请</p>
+              <% }%>
+            </td>
             <td class="text-center">￥<%=item.totalPrice%></td>
             <td class="text-center">￥<%=item.feePrice %></td>
             <td class="text-center" style="font-weight:bold;" >￥<%=item.needPrice%></td>

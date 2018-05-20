@@ -39,7 +39,7 @@ var OrderSchema = new Schema({
 	realPrice: {type: Number}, //实际支付
 	refundCurrPrice: {type: Number}, // 当次退款金额
 	refundPrice: {type: Number}, // 退款总金额
-	refunding: {type: Number}, // 表示申请退款状态 1:退款中... 0:无意义
+	refunding: {type: Number}, // 表示申请退款状态 2:退款申请中... 1:退款中... 0:无意义
 	pay_at:{type:Date}, // 支付时间
 	refund_at:{type:Date}, //退款申请时间
 	out_at:{type:Date} // 退款完成时间
