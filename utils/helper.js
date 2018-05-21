@@ -29,9 +29,9 @@ module.exports.isWeixin = function (useragent) {
 }
 module.exports.submitGoodsValid = function (req, res, next) {
 	let goods = []
-	if(formatFloat(req.body.needPrice) <= 0) return next(new Error('支付金额不一致'))
-	if(formatFloat(req.body.fee) <= 0) return next(new Error('支付金额不一致'))
-	if(formatFloat(parseFloat(req.body.totalPrice) + parseFloat(req.body.fee)) !== formatFloat(req.body.needPrice)) return next(new Error('支付金额不一致'))
+	if(formatFloat(req.body.needPrice) <= 0) return next(new Error('支付金额不一致1'))
+	if(formatFloat(req.body.fee) <= 0) return next(new Error('支付金额不一致2'))
+	if(formatFloat(parseFloat(req.body.totalPrice) + parseFloat(req.body.fee)) !== formatFloat(req.body.needPrice)) return next(new Error('支付金额不一致3'))
 	try {
 		goods = JSON.parse(req.body.goods)
 	} catch (e) {
@@ -45,10 +45,10 @@ module.exports.submitGoodsValid = function (req, res, next) {
 		goodTotal += formatFloat(item.price * item.num)
 	})
 	goodTotal = formatFloat(goodTotal)
-	if(formatFloat(goodTotal) !== formatFloat(req.body.totalPrice)) return next(new Error('支付金额不一致'))
+	if(formatFloat(goodTotal) !== formatFloat(req.body.totalPrice)) return next(new Error('支付金额不一致4'))
 	Goods.findByIds(goodsIds, (err, realGoods) => {
 		if(err) return next(err)
-		if(realGoods.length !== goods.length) return next(new Error('商品数量不一致'))
+		if(realGoods.length !== goods.length) return next(new Error('商品数量不一致5'))
 		let vaild = true
 		let valTotal = 0
 		realGoods.forEach(item => {
@@ -57,11 +57,11 @@ module.exports.submitGoodsValid = function (req, res, next) {
 			valTotal += formatFloat(item.sellPrice * goodsOne.num)
 		})
 		valTotal = formatFloat(valTotal)
-		if(valTotal !== formatFloat(req.body.totalPrice)) return next(new Error('支付金额不一致'))
+		if(valTotal !== formatFloat(req.body.totalPrice)) return next(new Error('支付金额不一致6'))
 		if(vaild && valTotal === goodTotal) {
 			next()
 		} else {
-			return next(new Error('支付金额不一致'))
+			return next(new Error('支付金额不一致7'))
 		}
 	})
 }
