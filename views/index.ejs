@@ -131,8 +131,8 @@
                         <img src="<%=homeBlockImgs[0].value %>">
                     </div>
                 </div>
-                <div class="padding-v padding15-h">
-                    <%=homeCompany %>
+                <div class="padding-v padding15-h" style="padding-top:15px;">
+                   <%-homeCompany.split("\n").join("<br />") %>
                 </div>
             </div>
         </div>
@@ -144,8 +144,8 @@
                         <img src="<%=homeBlockImgs[1].value %>">
                     </div>
                 </div>
-                <div class="padding-v padding15-h">
-                  <%=info.sharefarm && info.sharefarm.value %>
+                <div class="padding-v padding15-h" style="padding-top:15px;">
+                  <%-info.sharefarm && info.sharefarm.value.split("\n").join("<br />") %>
                 </div>
             </div>
             <!--<div class="section  no-padding" style="height:386px;margin: 0 -10px;">-->
