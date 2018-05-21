@@ -66,8 +66,8 @@ if (app.get('env') === 'development') {
 	})
 	logger.token('type', function (req, res) { return req.headers['content-type'] })
 	logger.token('date-moment', function (req, res) { return moment(new Date()).format('YYYY-MM-DD HH:mm:ss') })
-	app.use(logger(':date-moment :remote-addr :remote-user :method :url HTTP/:http-version :status :res[content-length] - :response-time ms', {stream: process.stdout}))
-	app.use(logger(':date-moment :remote-addr :remote-user :method :url HTTP/:http-version :status :res[content-length] - :response-time ms', {stream: accessLogStream}))
+	app.use(logger(':date-moment :remote-addr :remote-user :method :url HTTP/:http-version :status :res[content-length] - :response-time ms :referrer :user-agent', {stream: process.stdout}))
+	app.use(logger(':date-moment :remote-addr :remote-user :method :url HTTP/:http-version :status :res[content-length] - :response-time ms :referrer :user-agent', {stream: accessLogStream}))
 }
 app.use(pathBlack)
 app.use(bodyParser.xml({
