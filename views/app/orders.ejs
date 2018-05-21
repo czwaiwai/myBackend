@@ -132,7 +132,11 @@ ul.traces_ul li {
     <div class="weui-panel weui-panel_access">
       <div class="weui-panel__hd">
         商品
-        <span class="float_right <@=order.statusColor @>"><@= order.statusName @></span>
+        <span class="float_right <@=order.statusColor @>"><@= order.statusName @>
+        <@ if(order.refunding===2){ @>
+        <span  class="fs12 text-muted">[申请退款中]</span>
+        <@ } @>
+        </span>
       </div>
       <div class="weui-panel__bd">
         <@ order.goods.forEach(function(item){ @>
@@ -182,7 +186,9 @@ ul.traces_ul li {
           <@ } @>
       <@ if(order.orderStatus === 20) { @>
           <div class="no_pay_btn">
-            <span><a id="applyBackAmt"   data-id="<@=order._id @>" href="javascript:void(0)"  class="weui-btn weui-btn_mini weui-btn_default">申请退款</a></span>
+            <span><a id="applyBackAmt"   data-id="<@=order._id @>" <@=order.refunding===2?'disabled':'' @> href="javascript:void(0)"  class="weui-btn weui-btn_mini weui-btn_default">
+            <@=order.refunding===2?'申请退款中':'申请退款' @>
+            </a></span>
           </div>
       <@ }@>
       <@ if(order.orderStatus >= 30) { @>
@@ -303,7 +309,6 @@ jQuery(function(){
     console.log(true, '------')
     console.log($curr.data('stop'))
     if($curr.data('stop') === true) {
-    	console.log('?????')
     	return loadingStop($curr)
     }
     console.log('我执行了没有？？')
@@ -325,6 +330,7 @@ jQuery(function(){
     $.confirm('<span class="weui-cell_warn">你确定要申请退款么？</span><p class="text-muted">退款到帐时间在退款申请提交后的1～3个工作日内完成，请耐心等待</p>','提示', function(res){
       $.post('/account/applyBackAmt/' + $this.data('id')).done(res => {
       	$this.prop('disabled',true)
+      	$this.text('申请退款中')
         $.alert('<p class="text-success status_txt">' + res.message + '</p>')
       })
     })

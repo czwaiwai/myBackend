@@ -34,10 +34,10 @@ router.get('/', (req, res, next)=> {
 		res.render('index',{title:"首页", todayOrderCount, refundCount, userCount, todayUserCount});
 	})
 	ep.fail(next)
-	Order.todayNewOrder(ep.done('todayOrderCount'))
-	Order.refundCount(ep.done('refundCount'))
-	User.userCount(ep.done('userCount'))
-	User.todayCount(ep.done('todayUserCount'))
+	Order.todayNewOrder(ep.done('todayOrderCount')) // 今日新订单
+	Order.refundCount(ep.done('refundCount')) // 申请退款订单
+	User.userCount(ep.done('userCount')) // 注册用户总数
+	User.todayCount(ep.done('todayUserCount')) // 今日新增用户
 });
 router.get('/login',(req,res)=>{
     // req.flash('success',"靠靠靠");

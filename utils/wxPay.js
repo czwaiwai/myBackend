@@ -256,8 +256,8 @@ var WxPay = {
 						let data = xml.xml
 						// { return_code: 'SUCCESS',
 						// 	return_msg: 'OK',
-						// 	appid: 'wx2b6b34e4a0735bc0',
-						// 	mch_id: '1500403302',
+						// 	appid: '',
+						// 	mch_id: '',
 						// 	nonce_str: 'rs7shsDP9wGwUYy4',
 						// 	sign: '7CF4AC0FE1483DA0A370B91E45CD16D5',
 						// 	result_code: 'SUCCESS',
@@ -338,8 +338,8 @@ var WxPay = {
 					// <xml>
 					// 	<return_code><![CDATA[SUCCESS]]></return_code>
 					// 	<return_msg><![CDATA[OK]]></return_msg>
-					// 	<appid><![CDATA[wx2421b1c4370ec43b]]></appid>
-					// 	<mch_id><![CDATA[10000100]]></mch_id>
+					// 	<appid><![CDATA[]]></appid>
+					// 	<mch_id><![CDATA[]]></mch_id>
 					// 	<nonce_str><![CDATA[NfsMFbUFpdbEhPXP]]></nonce_str>
 					// 	<sign><![CDATA[B7274EB9F8925EB93100DD2085FA56C0]]></sign>
 					// 	<result_code><![CDATA[SUCCESS]]></result_code>
