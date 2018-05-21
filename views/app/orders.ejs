@@ -221,7 +221,7 @@ ul.traces_ul li {
 <div class="weui-panel weui-panel_access">
   <div class="weui-panel__hd weui-flex">
     <div>订单：<@=item.orderId @></div>
-    <div class="weui-flex__item padding-left15"> 商品数量:<@=item.totalNum @></div>
+    <div class="weui-flex__item padding-left15"> 数量:<@=item.totalNum @></div>
     <div class="<@=item.statusColor @>"><@=item.statusName @></div>
   </div>
   <div class="weui-panel__bd">
@@ -257,6 +257,7 @@ jQuery(function(){
  	   currType = $(e.target).data('type')
  	   var $tabA = $(href)
  	   var $curr = $tabA.find('.tab-content')
+ 	   $curr.loading = false
  	   $curr.data('stop', false)
  	   // var page = $curr.data('page') || 1
  	   var page = 1
