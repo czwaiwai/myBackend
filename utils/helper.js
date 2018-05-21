@@ -30,7 +30,7 @@ module.exports.isWeixin = function (useragent) {
 module.exports.submitGoodsValid = function (req, res, next) {
 	let goods = []
 	if(formatFloat(req.body.needPrice) <= 0) return next(new Error('支付金额不一致1'))
-	if(formatFloat(req.body.fee) <= 0) return next(new Error('支付金额不一致2'))
+	if(formatFloat(req.body.fee) < 0) return next(new Error('支付金额不一致2'))
 	if(formatFloat(parseFloat(req.body.totalPrice) + parseFloat(req.body.fee)) !== formatFloat(req.body.needPrice)) return next(new Error('支付金额不一致3'))
 	try {
 		goods = JSON.parse(req.body.goods)
