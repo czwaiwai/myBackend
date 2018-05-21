@@ -6,7 +6,7 @@ var _ = require('lodash');
 // var User =require('../models/user');
 /* GET home page. */
 let {formatFloat, bigImg} = require('../utils/tools')
-let {loginValid} = require('../utils/helper')
+let {loginValid, submitGoodsValid} = require('../utils/helper')
 let {queryOnlyCode} = require('../utils/kdniao')
 let WxPay = require('../utils/wxPay')
 let Wechat = require('../utils/wechat')
@@ -483,9 +483,8 @@ router.get('/order/pay/:id', loginValid, (req, res, next) => {
 	})
 })
 // 订单支付
-router.post('/order/pay', loginValid, (req, res, next) => {
+router.post('/order/pay', loginValid, submitGoodsValid, (req, res, next) => {
 	// 验证req.body 数据真实性
-
 	let rb = req.body
 	var addrId = rb.addressId
 	let totalPrice = rb.totalPrice
@@ -498,9 +497,11 @@ router.post('/order/pay', loginValid, (req, res, next) => {
 	} catch (e) {
 		return next(e)
 	}
-	let totalNum = 0;
+	let totalNum = 0
+	let goodsIds = []
 	let orderGoods = goods.map(item => {
 		totalNum += item.num
+		goodsIds.push(item.id)
 		return {
 			goodsId:item.id,
 			name: item.goods.name,
@@ -530,19 +531,23 @@ router.post('/order/pay', loginValid, (req, res, next) => {
 		type: 'wx',
 		needPrice: needPrice,
 	}
-	// 请求微信接口返回二维码url
-	Order.create(order, (err, newOrder) => {
+	Cart.clearByGoodsId(user._id, goodsIds, (err, user) => {
 		if (err) return next(err)
-		WxPay.sacnOrder(newOrder.userId, '白石山商品购买',newOrder.orderId, newOrder._id, newOrder.needPrice).then((data) => {
-			if (data.return_code === 'SUCCESS') {
-				res.render('order/pay', {title: '订单支付', order:newOrder, needPrice, prepay_id : data.prepay_id,
-					code_url: data.code_url})
-			} else {
-				return next(new Error({
-					name:data.return_msg,
-					message: data.return_msg + '/n' + JSON.stringify(data)
-				}))
-			}
+		req.session.user.cart = [...user.cart]
+		// 请求微信接口返回二维码url
+		Order.create(order, (err, newOrder) => {
+			if (err) return next(err)
+			WxPay.sacnOrder(newOrder.userId, '白石山商品购买',newOrder.orderId, newOrder._id, newOrder.needPrice).then((data) => {
+				if (data.return_code === 'SUCCESS') {
+					res.render('order/pay', {title: '订单支付', order:newOrder, needPrice, prepay_id : data.prepay_id,
+						code_url: data.code_url})
+				} else {
+					return next(new Error({
+						name:data.return_msg,
+						message: data.return_msg + '/n' + JSON.stringify(data)
+					}))
+				}
+			})
 		})
 	})
 })

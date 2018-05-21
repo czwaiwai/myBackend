@@ -10,7 +10,7 @@ var _ = require('lodash');
 /* GET home page. */
 let WxPay = require('../utils/wxPay')
 const wechat = require('../utils/wechat').getInstance()
-let {loginValid, isWeixin} = require('../utils/helper')
+let {loginValid, isWeixin, submitGoodsValid} = require('../utils/helper')
 let EventProxy = require('eventproxy')
 let {Page, User, Catalog, Goods, Article, Cart, Dict, Address, Order} = require('../viewModels')
 let {formatFloat} = require('../utils/tools')
@@ -308,7 +308,7 @@ router.post('/orderPay',loginValid,(req, res, next) => {
 	// res.render('app/orderPay', {title: '订单确认'})
 })
 // 手机支付
-router.post('/pay', loginValid, (req, res, next) => {
+router.post('/pay', loginValid, submitGoodsValid,(req, res, next) => {
 	// 验证req.body 数据真实性
 	let openId = ''
 	if(req.session.user && req.session.user.openId) {
@@ -326,9 +326,11 @@ router.post('/pay', loginValid, (req, res, next) => {
 	} catch (e) {
 		return next(e)
 	}
-	let totalNum = 0;
+	let totalNum = 0
+	let goodsIds = []
 	let orderGoods = goods.map(item => {
 		totalNum += item.num
+		goodsIds.push(item.id)
 		return {
 			goodsId:item.id,
 			name: item.goods.name,
@@ -361,20 +363,24 @@ router.post('/pay', loginValid, (req, res, next) => {
 	console.log(order,'------新的order')
 	// return res.json({code:0,message:'success',data:{}})
 	// 请求微信接口返回二维码url
-	Order.create(order, (err, newOrder) => {
+	Cart.clearByGoodsId(user._id, goodsIds, (err, user) => {
 		if (err) return next(err)
-		console.log(newOrder, 'newOrder')
-		WxPay.order(newOrder.userId+ '_' +newOrder._id, '白石山商品购买', newOrder.orderId, newOrder.needPrice, openId).then((data) => {
-			res.json({
-				code:0,
-				message:'success',
-				data: {
-					payObj: data,
-					order: newOrder
-				}
+		req.session.user.cart = [...user.cart]
+		Order.create(order, (err, newOrder) => {
+			if (err) return next(err)
+			console.log(newOrder, 'newOrder')
+			WxPay.order(newOrder.userId+ '_' +newOrder._id, '白石山商品购买', newOrder.orderId, newOrder.needPrice, openId).then((data) => {
+				res.json({
+					code:0,
+					message:'success',
+					data: {
+						payObj: data,
+						order: newOrder
+					}
+				})
+			}).catch(err => {
+				next(err)
 			})
-		}).catch(err => {
-			next(err)
 		})
 	})
 })

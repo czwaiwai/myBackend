@@ -20,8 +20,15 @@ exports.checkAll = function (userId, bool, callback) {
 		user.save(callback)
 	})
 }
+exports.clearByGoodsId = function (userId, goodsIds, callback) {
+	User.findById(userId, (userId, user) => {
+		let newCart = user.cart.filter(item => goodsIds.indexOf(item.goodsId.toString()) === -1)
+		user.set({cart: newCart})
+		user.save(callback)
+	})
+}
 exports.clear = function (userId, callback) {
-	User.findById('5ab4618fb5ecf926b4b18827',(err, user) => {
+	User.findById(userId,(err, user) => {
 		if(err) callback(err)
 		user.set({cart:[]})
 		user.save(callback)
