@@ -10,10 +10,12 @@ exports.findById = function (id, callback) {
 	Article.findById(id, callback)
 }
 exports.findTopArticle =function (catalogName, limit = 5, callback) {
+	console.log(limit)
 	if(typeof limit === 'function') {
 		callback = limit
 		limit = 5
 	}
+	console.log(callback,limit)
 	var article = Article.find({catalogName:catalogName,isHot:1},{title:1,imgUrl:1})
 	article.sort({read_count:-1,create_at:-1})
 	article.limit(limit)

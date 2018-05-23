@@ -240,14 +240,14 @@ router.get('/article/list/:type', (req, res, next) => {
 	let ep = EventProxy.create('topArticles', 'obj', (topArticles, obj) => {
 		// res.render('index',{title:"首页", goodTypes, goods});
 		obj.topArticles = topArticles
-		// if (navPage) {
-		// 	obj.navPage = navPage
-		// } else {
-		// 	obj.navPage = {}
-		// }
-		if (!navPage) {
+		if (navPage) {
+			obj.navPage = navPage
+		} else {
 			obj.navPage = {}
 		}
+		// if (!navPage) {
+		// 	obj.navPage = {}
+		// }
 		if(navPage.imgUrl) {
 			obj.navPage.imgUrl = bigImg(navPage.imgUrl)
 		}
