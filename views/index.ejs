@@ -123,8 +123,8 @@
     </div>
     <div class="row margin-top20">
         <h3 class="section-title text-center" style="font-size:25px;">白石资讯</h3>
-        <div class="col-md-4  ">
-            <div class="section  no-padding" style="height:386px;margin: 0 -10px;">
+        <div class="col-md-4  col-xs-4">
+            <div class="section  no-padding" style="height: 324px;margin: 0 -10px;">
                 <h3 class="fs20 padding-h clearfix"><%=homeBlockImgs[0].name %><small class="float_right"><a  href="/page/company" >更多 >></a></small></h3>
                 <div class="padding-h">
                     <div class="spec_img">
@@ -132,12 +132,14 @@
                     </div>
                 </div>
                 <div class="padding-v padding15-h" style="padding-top:15px;">
-                   <%-homeCompany.split("\n").join("<br />") %>
+                    <div style="overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 5;-webkit-box-orient: vertical;height: 100px;">
+                        <%-homeCompany.split("\n").join("<br />") %>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="section  no-padding" style="height:386px;margin: 0 -10px;">
+        <div class="col-md-4  col-xs-4">
+            <div class="section  no-padding" style="height: 324px;margin: 0 -10px;">
                 <h3 class="fs20 padding-h clearfix"><%=homeBlockImgs[1].name %><small class="float_right"><a  href="/page/share" >更多 >></a></small></h3>
                 <div class="padding-h">
                     <div class="spec_img">
@@ -145,7 +147,9 @@
                     </div>
                 </div>
                 <div class="padding-v padding15-h" style="padding-top:15px;">
-                  <%-info.sharefarm && info.sharefarm.value.split("\n").join("<br />") %>
+                    <div style="overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 5;-webkit-box-orient: vertical;height: 100px;" >
+                        <%-info.sharefarm && info.sharefarm.value.split("\n").join("<br />") %>
+                    </div>
                 </div>
             </div>
             <!--<div class="section  no-padding" style="height:386px;margin: 0 -10px;">-->
@@ -162,8 +166,8 @@
             <!--</ul>-->
             <!--</div>-->
         </div>
-        <div class="col-md-4 ">
-            <div class="section  no-padding " style="height:386px;margin: 0 -10px;">
+        <div class="col-md-4  col-xs-4">
+            <div class="section  no-padding " style="height: 324px;margin: 0 -10px;">
                 <h2 class="fs20 padding-h clearfix"><%=homeBlockImgs[2].name %><small class="float_right"><a  href="/article/list/news" >更多 >></a></small></h2>
                 <div class="padding-h">
                     <div class="spec_img">
@@ -181,8 +185,8 @@
     <% if(info.homeOtherRemark && info.homeOtherRemark.isValid === 1){ %>
     <div class="row margin-top20">
         <h3 class="section-title text-center" style="font-size:25px;">项目介绍</h3>
-        <div class="col-md-4  ">
-            <div class="section  no-padding" style="height:386px;margin: 0 -10px;">
+        <div class="col-md-4 col-xs-4 ">
+            <div class="section  no-padding" style="height: 324px;margin: 0 -10px;">
                 <h3 class="fs20 padding-h clearfix"><%=info.homeOtherRemark.value[0].name %><small class="float_right"><a  href="<%=info.homeOtherLinks.value[0].value %>" >更多 >></a></small></h3>
                 <div class="padding-h">
                     <div class="spec_img">
@@ -194,8 +198,8 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4 ">
-            <div  class="section  no-padding " style="height:386px;margin: 0 -10px;">
+        <div class="col-md-4  col-xs-4">
+            <div  class="section  no-padding " style="    height: 324px;margin: 0 -10px;">
                 <h2 class="fs20 padding-h clearfix"><%=info.homeOtherRemark.value[1].name %><small class="float_right"><a  href="<%=info.homeOtherLinks.value[1].value %>" >更多 >></a></small></h2>
                 <div class="padding-h">
                     <div class="spec_img">
@@ -203,12 +207,14 @@
                     </div>
                 </div>
                 <div class="padding-v padding15-h">
-                    <%=info.homeOtherRemark.value[1].value%>
+                    <div>
+                      <%=info.homeOtherRemark.value[1].value%>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="section  no-padding" style="height:386px;margin: 0 -10px;">
+        <div class="col-md-4  col-xs-4">
+            <div class="section  no-padding" style="height:240px;margin: 0 -10px;">
                 <h2 class="fs20 padding-h clearfix"><%=info.homeOtherRemark.value[2].name %><small class="float_right"><a href="<%=info.homeOtherLinks.value[2].value %>" >更多 >></a></small></h2>
                 <div class="padding-h">
                     <div class="spec_img">

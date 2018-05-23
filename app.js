@@ -123,7 +123,6 @@ app.use(function(req, res, next) {
   // next(err);
 	res.render('error404', {title:'页面未找到'})
 });
-
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
