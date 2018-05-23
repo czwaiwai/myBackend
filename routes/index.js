@@ -73,8 +73,8 @@ router.get('/', (req, res, next)=> {
 	})
 	ep.fail(next)
 	Catalog.getChildrenByName('goods',ep.done('goodTypes'))
-	Article.findTopArticle('news', ep.done('news'))
-	Article.findTopArticle('articles', ep.done('articles'))
+	Article.findTopArticle('news', 3, ep.done('news'))
+	Article.findTopArticle('articles', 3, ep.done('articles'))
 	Dict.findByGroup('home',ep.done('dicts'))
 	let front =  res.locals.frontInfo
 	if(front && front.notCatalogShow && front.notCatalogShow.value) {
