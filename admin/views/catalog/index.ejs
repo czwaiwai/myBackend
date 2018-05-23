@@ -24,7 +24,7 @@
                     <tr>
                         <th>导航名称</th>
                         <th>导航路径</th>
-                        <th>是否启用</th>
+                        <th>是否显示</th>
                         <th>操作</th>
                     </tr>
                     <% catalogs.forEach(function(item) { %>
@@ -32,7 +32,7 @@
                         <tr >
                             <td><%= item.deepStr %><%= item.nameCn %></td>
                             <td><%= item.name %></td>
-                            <td><%= item.isValid?'启动':'关闭' %></td>
+                            <td><%= item.isValid?'显示':'隐藏' %></td>
                             <td>
                                 <a class="btn  btn-sm btn-success" href="add?update=<%=item._id %>">修改</a>
                                 <a class="btn btn-delete  btn-sm btn-danger" data-id="<%=item._id%>" href="javascript:void(0)">删除</a>

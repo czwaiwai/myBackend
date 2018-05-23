@@ -17,12 +17,11 @@
 </style>`)%>
 <div class="container">
     <% var indexCata =  catalogs.find(item => item.name === article.catalogName)%>
-    <div style="height: 200px;background: url(<%=indexCata.imgUrl || '/upload/banner_other.jpg' %>) no-repeat center;background-size: cover;" >
+    <div style="height: 200px;background: url(<%=indexCata.imgUrl.replace(/_\$sma[^.]+/,'') || '/upload/banner_other.jpg' %>) no-repeat center;background-size: cover;" >
     </div>
     <div >
         <ol class="breadcrumb">
             <li><a href="/">首页</a></li>
-
             <% if(indexCata) {%>
             <li ><a href="<%=indexCata.relativeUrl %>"><%=indexCata.nameCn %></a></li>
             <% } %>

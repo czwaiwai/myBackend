@@ -115,7 +115,7 @@
         </div>
         <div class="weui-media-box__bd">
           <h4 class="weui-media-box__title"><%=webInfo.webName.value %></h4>
-          <p class="weui-media-box__desc" style="-webkit-line-clamp: 4;"><%=homeCompany %></p>
+          <p class="weui-media-box__desc" style="-webkit-line-clamp: 5;"><%- homeCompany.split("\n").join("<br />") %></p>
         </div>
       </a>
     </div>

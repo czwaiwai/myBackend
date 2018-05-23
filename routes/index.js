@@ -236,10 +236,21 @@ router.get('/page/:pageName', (req, res, next) => {
 // 文章管理
 router.get('/article/list/:type', (req, res, next) => {
 	let navPage = res.locals.catalogs.find(item => item.relativeUrl === '/article/list/' + req.params.type)
+	console.log(navPage)
 	let ep = EventProxy.create('topArticles', 'obj', (topArticles, obj) => {
 		// res.render('index',{title:"首页", goodTypes, goods});
 		obj.topArticles = topArticles
-		obj.navPage = navPage
+		// if (navPage) {
+		// 	obj.navPage = navPage
+		// } else {
+		// 	obj.navPage = {}
+		// }
+		if (!navPage) {
+			obj.navPage = {}
+		}
+		if(navPage.imgUrl) {
+			obj.navPage.imgUrl = bigImg(navPage.imgUrl)
+		}
 		res.render('article/list', obj)
 	})
 	ep.fail(next)

@@ -645,8 +645,10 @@ router.post('/catalog/add', (req, res, next) => {
 	param.shopName = 'mShop'
 	param.calPath = param.parent
   param.deep = param.parent.split(',').length -1
+	console.log(req.body.isVaild, 'catalog/add===============================')
+	param.isValid = req.body.isValid?1:0
   if (req.body._id) { //更新
-    Catalog.findAndUpdate(req.body._id, req.body, (err, catalog) => {
+    Catalog.findAndUpdate(req.body._id, param, (err, catalog) => {
       if (err) {
         req.flash('error', err.message)
         return res.redirect('/admin/catalog/add?update='+req.body._id)
@@ -656,7 +658,7 @@ router.post('/catalog/add', (req, res, next) => {
       res.redirect('/admin/catalog/add?update='+catalog._id)
     })
   } else { //创建
-	  Catalog.create(req.body, (err, catalog) => {
+	  Catalog.create(param, (err, catalog) => {
 		  console.log(catalog, 'catalog')
 		  if (err) {
 			  req.flash('error', err.message)
