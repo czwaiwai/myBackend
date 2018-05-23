@@ -13,7 +13,10 @@
   </ol>
   <div class="order_success section">
     <p class="fs20"><i class="iconfont icon-success vertical-middle text-primary padding-right20" style="font-size: 50px;"></i>
-      <span class="vertical-middle">你已成功付款 <span class="bold  text-primary"><%=order.realPrice %></span>元</span></p>
+      <span class="vertical-middle">你已成功付款 <span class="bold  text-primary"><%=order.realPrice || order.needPrice %></span>元</span></p>
+    <% if(!order.realPrice) { %>
+    <p class="text-muted fs12" >当前支付结果暂未收到，请点击查看订单详情确认结果</p>
+    <% } %>
     <p class="text-muted">货物寄送至：<%=order.address.place %></p>
     <a href="/goods/index" class="btn btn-primary">再去逛逛</a>
     <a href="/account/orderDetail/<%=order._id %>" class="btn btn-default" >查看订单详情</a>

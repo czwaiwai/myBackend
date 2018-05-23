@@ -159,7 +159,7 @@ jQuery(function(){
 		error: function (res,body, err) {
 			if(res.responseJSON) {
 				console.log(res.responseJSON.message)
-				$.Toast(res.responseJSON.message, 'error')
+				$.Toast(res.responseJSON.message, 'warning')
 			}
 		}
 	});

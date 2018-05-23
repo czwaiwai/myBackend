@@ -3,7 +3,11 @@
  **/
 
 (function($){
-	
+	_.templateSettings = {
+		evaluate    : /<@([\s\S]+?)@>/g,
+		interpolate : /<@=([\s\S]+?)@>/g,
+		escape      : /<@-([\s\S]+?)@>/g
+	};
     function guidGenerator() {
         var S4 = function() {
             return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
@@ -40,8 +44,9 @@
 			'X-Requested-With': 'XMLHttpRequest'
 		},
 		error: function(err) {
+			console.log(err, '-----------------')
 			if(err.responseJSON) {
-				$.alert(res.responseJSON.data.message)
+				$.alert(err.responseJSON.message)
 			}
 		}
 	})

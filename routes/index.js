@@ -92,6 +92,7 @@ router.post('/clearCache', (req, res, next) => {
 // 查询邮件
 router.post('/queryPostage/:id', (req, res, next) => {
 	queryOnlyCode(req.params.id).then(data => {
+		console.log('data:', data)
 		res.json({
 			code:0,
 			message:'success',
@@ -100,6 +101,7 @@ router.post('/queryPostage/:id', (req, res, next) => {
 			}
 		})
 	}).catch(err => {
+		console.log(err, '--------------------err-----------------------')
 		res.status(403).json({
 			code: -1,
 			message: err || '查询失败'

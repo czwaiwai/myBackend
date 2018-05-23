@@ -21,7 +21,12 @@
         </div>
         <div class="box box-info">
             <div class="box-header with-border">
-                <h3 class="box-title">订单状态： <span class="padding-left20 <%=order.statusColor %>"><%=order.statusName%></span></h3>
+                <h3 class="box-title">
+                    订单状态： <span class="padding-left20 <%=order.statusColor %>"><%=order.statusName%></span>
+                    <% if(order.postageId) { %>
+                    <span class="text-muted fs12">[关联的物流编号：<%=order.postageId %>]</span>
+                    <% } %>
+                </h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -52,6 +57,9 @@
                             <a id="backAmt" data-price="<%=order.needPrice%>" class="btn btn-danger btn-sm" data-url="/admin/order/backAmt/<%=order._id %>"  href="javascript:void(0)" >退款</a>
                         <% } %>
                         <% if(order.orderStatus >= 30 && order.orderStatus < 40) { %>
+                            <% if (order.postageId) { %>
+                              <a id="queryPostage" class="btn btn-success btn-sm"  data-id="<%=order.postageId %>"   href="javascript:void(0)" >查看物流详情</a>
+                            <% } %>
                             <a id="finishBtn" class="btn btn-success btn-sm" data-url="/admin/order/finish/<%=order._id %>"  href="javascript:void(0)" >设置订单完成</a>
                             <a id="backAmt" data-price="<%=order.needPrice%>" class="btn btn-danger btn-sm" data-url="/admin/order/backAmt/<%=order._id %>"  href="javascript:void(0)" >退款</a>
                         <% }%>
@@ -107,8 +115,18 @@
         </div>
     </div>
 </div>
+<% block('footer').append(`<script id="queryPostageTpl" type="text/template">
+<div>
+  <ul class="traces_ul">
+  <@ Traces.forEach(function (item) { @>
+  <li><@=item.AcceptStation @></li>
+  <@ }) @>
+</ul>
+</div>
+</script>`) %>
 <% block('footer').append(`<script>
   jQuery(function() {
+  	var tplComplie = _.template($('#queryPostageTpl')[0].innerHTML)
   	var needPrice = '${order.needPrice}'
     $('#cancelOrder').on('click',function() {
       var $this = $(this)
@@ -172,11 +190,33 @@
       	 })
       })
     })
-    $('#queryOrderPay').on('click', function () {
-    	var $this = $(this)
-    	$.post('/order/isPay',{id: $this.data('id'),orderId: $this.data('orderid')}).done(function(res){
-        console.log(res)
-    	})
+
+  $('#queryPostage').on('click',function () {
+    var $this = $(this)
+    $this.prop('disabled',true).text('正在查询...')
+    $.post('/queryPostage/' + $this.data('id')).done(res=> {
+      console.log(res)
+      $this.prop('disabled',false).text('查询物流详情')
+        BootstrapDialog.show({
+          title:"物流详情",
+          message: $(tplComplie(res.data.postage)),
+          buttons: [{
+            label: '确定',
+            action: function(dialog) {
+              dialog.close();
+            }
+          }]
+        });
+    }).fail(err => {
+    	$this.prop('disabled',false).text('查询物流详情')
+      console.log(err)
     })
+  })
+//    $('#queryOrderPay').on('click', function () {
+//    	var $this = $(this)
+//    	$.post('/order/isPay',{id: $this.data('id'),orderId: $this.data('orderid')}).done(function(res){
+//        console.log(res)
+//    	})
+//    })
   })
 </script>`) %>

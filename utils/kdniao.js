@@ -29,7 +29,7 @@ var kdn = {
 			}, (error, response, body) => {
 				// console.log(response)
 				if (error){
-				 return resolve('请求无响应')
+				 return reject(error)
 				}
 				let json
 				try {
@@ -37,10 +37,10 @@ var kdn = {
 				} catch (e) {
 					json = {}
 				}
-				if (json.Success) {
+				if (json.Success && json.Shippers.length > 0) {
 					resolve(json.Shippers)
 				} else {
-					reject(json.Reason || '查询失败')
+					reject(json.Reason || '抱歉，没有查询到物流结果')
 				}
 			})
 		})
@@ -68,7 +68,7 @@ var kdn = {
 			}, function (error, response, body) {
 				console.log(body, '------------------')
 				if (error) {
-					return resolve('请求无响应')
+					return reject(error)
 				}
 				let json
 				try {
@@ -76,7 +76,7 @@ var kdn = {
 				} catch (e) {
 					json = {}
 				}
-				if (json.Success) {
+				if (json.Success && json.Traces.length > 0) {
 					resolve(json)
 				} else {
 					reject(json.Reason || '查询失败')
@@ -97,6 +97,10 @@ module.exports.queryCodeRes = function (shipperCode,code) {
 // 通过code查询公司编号再查出快递结果
 module.exports.queryOnlyCode = function (code) {
 	return kdn.queryShipper(code).then((Shippers) =>{
+		// console.log(Shippers, '--------Shippers------------')
+		// if (Shippers.length === 0) {
+		// 	return new Error('抱歉，没有查询到物流结果')
+		// }
 		console.log(Shippers[0].ShipperCode, code, '--------------')
 		return  kdn.queryPostage(Shippers[0].ShipperCode, code)
 	})

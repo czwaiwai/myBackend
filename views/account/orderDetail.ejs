@@ -143,8 +143,9 @@ jQuery(function(){
   })
   $('#queryPostage').on('click',function () {
   	var $this = $(this)
+  	$this.prop('disabled',true).text('正在查询...')
   	$.post('/queryPostage/' + $this.data('id')).done(res=> {
-  		console.log(res)
+  		$this.prop('disabled',false).text('查看物流信息')
         BootstrapDialog.show({
           title:"物流详情",
           message: $(tplComplie(res.data.postage)),
@@ -156,6 +157,7 @@ jQuery(function(){
           }]
         });
   	}).fail(err => {
+  		$this.prop('disabled',false).text('查看物流信息')
   		console.log(err)
   	})
   })

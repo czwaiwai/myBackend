@@ -7,7 +7,9 @@ let list = [
 	'/dbadmin',
 	'/phpadmin',
 	'/rpc2',
-	'.php'
+	'.php',
+	'/stssys.htm',
+	'/common.cgi'
 ]
 module.exports = function(req, res ,next) {
 	let pass = true
