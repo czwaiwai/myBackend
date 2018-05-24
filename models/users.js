@@ -36,6 +36,7 @@ var UserSchema = new Schema({
 	isAdmin: {type: Number, default: 0},
 	isLock: {type: Number, default: 0},
 	email: {type: String}, // 邮件
+	emailCode: {type: String}, // 邮件激活码 随机数字 + 时间戳
 	sex: {type:Number}, // 0 女 1男
 	headImg: {type: String, default: '' }, // 图片url
 	nickname: {type: String, default:''}, // 昵称
@@ -59,6 +60,7 @@ UserSchema.plugin(function(schema){
 })
 UserSchema.index({userName: 1}, {unique: true, sparse: true})
 UserSchema.index({mobile: 1}, {unique: true, sparse: true})
+UserSchema.index({email: 1}, {unique: true, sparse: true})
 UserSchema.index({openId:1}, {unique: true, sparse: true})
 UserSchema.pre('save', function (next) {
 	this.update_at = Date.now

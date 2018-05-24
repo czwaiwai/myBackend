@@ -52,7 +52,7 @@ if(app.get('env') !== 'production') {
 
 app.use(compression()); // gzip压缩
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'admin/public')));
+// app.use(express.static(path.join(__dirname, 'admin/public')));
 console.log(app.get('env'))
 if (app.get('env') === 'development') {
 	app.use(logger('dev', {stream: process.stdout}));

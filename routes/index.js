@@ -1005,6 +1005,10 @@ router.post('/login',(req,res, next)=>{
 router.get('/register',(req,res)=>{
     res.render('register',{title:"用户注册"});
 })
+router.get('/registerSucc/id', (req, res) => {
+	// mail.send('register')
+
+})
 router.post('/register', (req, res, next) => {
 	req.checkBody('userName',"用户名不能为空").notEmpty()
 		.isTooShort(6).withMessage("用户名太短");
@@ -1016,12 +1020,16 @@ router.post('/register', (req, res, next) => {
 	req.checkBody('verifyCode',"验证码不能为空").notEmpty()
 		.isEqual(req.session.imgCode).withMessage("验证码不正确");
 	req.asyncValidationErrors().then(function(){
+			let params = req.body
+			params.emailCode = '' // 生成随机码
 		  User.create(req.body, (err, user) => {
 			if (err) {
 				console.error(err)
 				req.flash("error",err.message)
 				return res.redirect('/register')
 			}
+			// 这里发送邮件给注册的用户
+			// Mail.send(user.email, [tplName], user.emailCode)
 			req.flash('success', '注册成功')
 			return res.redirect('/login')
 		})
