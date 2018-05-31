@@ -7,17 +7,17 @@ function md5(string){
 }
 
 let url = "https://api.mch.weixin.qq.com/pay/unifiedorder",// 下单请求地址
-	appid = 'wx2b6b34e4a0735bc0',
+	appid = '',
 	body = '白石山商品购买',
-	attach = '5ab4618fb5ecf926b4b18827',
-	mch_id = '1500403302',
-	key = 'BGR8etsLQMCkH7bi9LhJjS3Xl4zCh1E8',
+	attach = '',
+	mch_id = '',
+	key = '',
 	notify_url = 'http://www.bssfood.com/order/notify',
 	out_trade_no = '5200000010',// 微信会有自己订单号、我们自己的系统需要设置自己的订单号
 	product_id = '5ae428c8bd8ba426a4b45d79',
 	total_fee = 1420,// 注意，单位为分
 	trade_type = 'NATIVE',// 交易类型，JSAPI--公众号支付、NATIVE--原生扫码支付、APP--app支付
-	nonce_str = '6bx5ns2p2hwofr6',// 随机字符串32位以下
+	nonce_str = '',// 随机字符串32位以下
 	stringA = `appid=${appid}&attach=${attach}&body=${body}&mch_id=${mch_id}&nonce_str=${nonce_str}&notify_url=${notify_url}&out_trade_no=${out_trade_no}&product_id=${product_id}&total_fee=${total_fee}&trade_type=${trade_type}`,
 	stringSignTemp = stringA + "&key="+key, //注：key为商户平台设置的密钥key
 	sign = md5(stringSignTemp).toUpperCase();  //注：MD5签名方式
