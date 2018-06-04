@@ -22,6 +22,7 @@
         <table class="table table-bordered table-hover">
           <tbody>
           <tr>
+            <th>头像</th>
             <th>用户名称</th>
             <th>昵称</th>
             <th>用户手机号</th>
@@ -31,6 +32,11 @@
           </tr>
           <% users.forEach(function(item){%>
           <tr>
+            <td>
+              <%if (item.headImg){%>
+              <img src="<%=item.headImg %>" style="width:48px;" >
+              <% } %>
+            </td>
             <td><%=item.userName || ''%></td>
             <td><%=item.nickname  || '' %></td>
             <td><%=item.mobile   || '' %></td>
