@@ -83,6 +83,20 @@
     </div>
     <div class="col-xs-9 col-md-9">
       <div class="row">
+        <div class="text-right padding-right">
+          <!--<form id="searchForm" class="form-inline">-->
+            <!--&lt;!&ndash;<div class="form-group">&ndash;&gt;-->
+              <!--&lt;!&ndash;<label class="sr-only">Email</label>&ndash;&gt;-->
+              <!--&lt;!&ndash;<p class="form-control-static">email@example.com</p>&ndash;&gt;-->
+            <!--&lt;!&ndash;</div>&ndash;&gt;-->
+            <!--<div class="input-group">-->
+              <!--<input type="text" name="search" style="height: 36px;" class="form-control" placeholder="搜索...">-->
+              <!--<span class="input-group-btn">-->
+                <!--<button class="btn btn-default" ><i class="iconfont icon-search"></i></button>-->
+              <!--</span>-->
+            <!--</div>-->
+          <!--</form>-->
+        </div>
         <% if(goods && goods.length === 0) { %>
         <div class="col-xs-12 text-muted text-center" style="padding-top:15%;">
           <i class="iconfont icon-box text-muted" style="font-size: 45px;"></i>
@@ -100,7 +114,11 @@
                 <h5 class="dot text-center fs16"><%=item.name%></h5>
                 <p class="no-margin clearfix">
                   <span class="price pull-left fs20 text-primary">￥<%=item.sellPrice %></span>
+                  <% if (item.stock && item.stock > 0) { %>
                   <button  data-id="<%=item._id %>" class="add_cart btn btn-primary pull-right" type="button">加入购物车</button>
+                  <% } else { %>
+                  <button  class="add_cart btn btn-warning pull-right" type="button" disabled>已售罄</button>
+                  <% } %>
                 </p>
               </div>
             </a>
@@ -119,7 +137,15 @@
 <% block('footer').append(`<script>
 jQuery(function () {
 	$('.j_pager').pager()
-
+    $('#searchForm').on('submit', function (e) {
+        e.preventDefault()
+        if (location.href.indexOf('?') > -1) {
+            location.href += '&' + $('#searchForm').serialize()
+        } else {
+            location.href += '?' + $('#searchForm').serialize()
+        }
+        return false;
+    })
 	$('.add_cart').on('click',function(e){
 		e.preventDefault()
 		e.stopPropagation()

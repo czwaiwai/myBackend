@@ -65,9 +65,14 @@
                         </form>
                     </div>
                     <div class="product_btn margin-top20">
-                        <button id="buy" class="btn btn-plain btn-lg btn-default" >立即购买</button>
-                        <button id="addCart" class="btn btn-plain btn-lg btn-primary margin-left" >
-                            <i class="iconfont icon-cart fs16"></i> 加入购物车</button>
+                        <% if (goods.stock && goods.stock > 0){  %>
+                            <button id="buy" class="btn btn-plain btn-lg btn-default" >立即购买</button>
+                            <button id="addCart" class="btn btn-plain btn-lg btn-primary margin-left" >
+                                <i class="iconfont icon-cart fs16"></i> 加入购物车</button>
+                        <% } else { %>
+                            <button disabled class="btn btn-plain btn-lg btn-warning margin-left" >
+                                <i class="iconfont icon-info cfs16"></i>已售罄</button>
+                        <% } %>
                     </div>
                 </div>
             </div>

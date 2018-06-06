@@ -84,7 +84,11 @@
           </div>
           <div class="pro_name">
             <p class="fs14"><%=item.name%></p>
-            <p class="text-danger">￥<%=item.sellPrice %></p>
+            <p class="text-danger">￥<%=item.sellPrice %>
+              <% if (!item.stock) { %>
+                <span class="text-muted" disabled>[已售罄]</span>
+              <% }%>
+            </p>
           </div>
         </a>
       </li>

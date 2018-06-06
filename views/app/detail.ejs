@@ -30,6 +30,18 @@
   border-left:1px solid #e3e3e3;
   border-right:1px solid #e3e3e3;
 }
+.goods_btn_warning {
+  display:inline-block;
+  padding:0 20px;
+  text-align:center;
+    color: #fff;
+  background-color: #f0ad4e;
+  border-color: #eea236;
+
+}
+.disabled {
+  opacity:0.85;
+}
 .goods_btn_default {
   width:120px;
   color:#656565;
@@ -91,12 +103,16 @@
         <span  id="cartBadge"  class="weui-badge <%=cartNum===0?' hide':'' %>" style="position: absolute;top: 0px;right: 2em;"><%=cartNum %></span>
         <i class="iconfont icon-cart fs22"></i></a>
     </div>
-    <div style="margin-right:-2px;">
-      <a id="quickBuy" class="goods_btn goods_btn_default">立即购买</a>
-    </div>
-    <div >
-      <a id="addCart" class="goods_btn goods_btn_primary">加入购物车</a>
-    </div>
+    <% if (goods.stock && goods.stock > 0) { %>
+      <div style="margin-right:-2px;">
+        <a id="quickBuy" class="goods_btn goods_btn_default">立即购买</a>
+      </div>
+      <div >
+        <a id="addCart" class="goods_btn goods_btn_primary">加入购物车</a>
+      </div>
+    <% } else { %>
+      <a href="javascript:void(0)" class="goods_btn goods_btn_warning disabled">已售罄</a>
+    <% } %>
   </div>
 </div>
 <div id="numPopup" class="weui-popup__container popup-bottom " style="z-index:110;">

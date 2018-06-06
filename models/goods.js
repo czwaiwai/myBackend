@@ -38,4 +38,5 @@ GoodSchema.pre('save', function (next) {
 	this.update_at =  new Date()
 	next()
 })
+// GoodSchema.index({name: 'text'})
 mongoose.model('Goods', GoodSchema)
