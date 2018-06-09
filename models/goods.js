@@ -3,6 +3,7 @@
  */
 var mongoose = require('mongoose')
 var BaseModel = require("./baseModel");
+var {moneyFloat} = require("../utils/tools")
 var Schema = mongoose.Schema
 var GoodSchema = new Schema({
 	name: {type:String},
@@ -34,6 +35,9 @@ var GoodSchema = new Schema({
 },{collection:'goods'})
 
 GoodSchema.plugin(BaseModel)
+GoodSchema.virtual('sellPriceStr').get(function() {
+    return moneyFloat(this.sellPrice)
+})
 GoodSchema.pre('save', function (next) {
 	this.update_at =  new Date()
 	next()

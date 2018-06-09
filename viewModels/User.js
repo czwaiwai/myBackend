@@ -17,6 +17,13 @@ exports.saveById = function (id, obj, callback) {
 		user.save(callback)
 	})
 }
+exports.updateById = function (id, obj, callback) {
+	User.updateById(id, obj, {new: true}, callback)
+}
+exports.findByEmail = function (email, callback) {
+	User.findOne({email:email}, callback)
+}
+
 // 用户总数
 exports.userCount = function (callback) {
 	User.count({isAdmin:0},callback)

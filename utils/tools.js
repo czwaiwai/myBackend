@@ -27,3 +27,7 @@ exports.formatFloat = function(f, digit = 2) {
 	// var m = Math.pow(10, digit);
 	// return parseInt(f * m, 10) / m;
 }
+exports.moneyFloat = function (f, digit = 2) {
+	let ten = Math.pow(10,digit)
+	return (Math.round(f*ten)/ten).toFixed(digit)
+}
