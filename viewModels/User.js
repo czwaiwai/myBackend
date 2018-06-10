@@ -18,7 +18,7 @@ exports.saveById = function (id, obj, callback) {
 	})
 }
 exports.updateById = function (id, obj, callback) {
-	User.updateById(id, obj, {new: true}, callback)
+	User.findByIdAndUpdate(id, obj, {new: true}, callback)
 }
 exports.findByEmail = function (email, callback) {
 	User.findOne({email:email}, callback)

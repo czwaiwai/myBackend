@@ -4,8 +4,8 @@
 let {formatFloat} = require('./tools')
 let crypto = require('crypto');
 let {Goods} = require('../viewModels')
-function md5 (){
-    return crypto.createHash('md5').update(string, 'utf8').digest('hex')
+function md5 (str){
+    return crypto.createHash('md5').update(str, 'utf8').digest('hex')
 }
 exports.emailCode = function (email) {
 	let time = (new Date()).getTime()
@@ -17,14 +17,20 @@ exports.emailCode = function (email) {
 	}
 }
 exports.md5 = md5
-exports.validEmailCode = function (receiveCode, userCode) {
+exports.validEmailCode = function (email, receiveCode, userCode) {
+	if (!userCode) return false
+	if (!email) return false
 	if(userCode && receiveCode === md5(userCode)) {
 	  let arr = userCode.split(',')
-	  let time = arr[1]
+		if (arr.length !== 3) return false
+		let em = arr[2]
+		if (em !== arr[2]) return false
+		let time = arr[1]
 	  let now = (new Date()).getTime()
 	  if ((now - time) < 60*60*3*1000 ) {  // 小于3个小时才能通过
 	  	return true
 	  } else {
+	  	console.log('过了3个小时,验证失效了')
 	  	return false
 	  }
 	  //大于3个小时记为失效

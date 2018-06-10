@@ -42,5 +42,5 @@ GoodSchema.pre('save', function (next) {
 	this.update_at =  new Date()
 	next()
 })
-// GoodSchema.index({name: 'text'})
+// GoodSchema.index({name: 'text'},, {default_language: "zhs"})
 mongoose.model('Goods', GoodSchema)

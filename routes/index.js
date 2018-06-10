@@ -5,6 +5,7 @@ var _ = require('lodash');
 // var schema=require('async-validator');
 // var User =require('../models/user');
 /* GET home page. */
+let qs = require('qs')
 let {formatFloat, bigImg} = require('../utils/tools')
 let mail = require('../utils/email')
 let {emailCode, validEmailCode, loginValid, submitGoodsValid} = require('../utils/helper')
@@ -163,7 +164,12 @@ router.get('/authLogin', (req, res, next) => {
 						token: json.access_token
 					}
 					User.create(newUser, (err, user) => {
-						if (err) return next(err)
+						if (err) {
+							if (err.message.indexOf('E11000 duplicate key error collection') >-1) {
+								return next(new Error('用户已注册'))
+							}
+							return next(err)
+						}
 						req.session.user = user
 						if (url.indexOf('/app') > -1) {
 							var link = "?"
@@ -292,10 +298,11 @@ router.get('/goods/index' , (req, res, next) => {
 			}
 		}
 		if (req.query.search) {
-			params.$text = {$search: req.query.search}
+			params.name = new RegExp(req.query.search)
 		}
 		Goods.findAllByPage(params, req.query.page, 12, (err, obj) => {
-			res.render('goods/index', Object.assign({title: '商品展示', goodTypes: catalogs}, obj))
+			let queryStr = qs.stringify(req.query)
+			res.render('goods/index', Object.assign({title: '商品展示', goodTypes: catalogs, queryStr}, obj))
 		})
 	})
 })
@@ -1011,9 +1018,36 @@ router.post('/login',(req,res, next)=>{
 router.get('/register',(req,res)=>{
     res.render('register',{title:"用户注册"});
 })
-router.get('/registerSucc/id', (req, res) => {
-	// mail.send('register')
-
+router.get('/activateUser/:code', (req, res, next) => {
+	console.log(req.query.email)
+	console.log(req.params.code)
+	User.findByEmail(req.query.email, (err, user) => {
+		if (!user) {
+			return  next(new Error('无效的用户'))
+		}
+		if (user.isLock === 0) {
+			req.flash('success', '用户已激活')
+			res.render('activateUser', {title: '用户激活'})
+		}
+		if (!user.emailCode) {
+			return  next(new Error('无效数据'))
+		}
+		if (validEmailCode(req.query.email, req.params.code, user.emailCode)) {
+			User.updateById(user._id, {
+				isLock: 0,
+				emailCode: ''
+			}, (err, newUser) => {
+				console.log(err, newUser)
+				if (err) return next(err)
+				req.session.user = newUser
+				req.flash('success', '用户验证成功')
+				res.render('activateUser', {title: '用户激活'})
+			})
+		} else {
+			req.flash('error', '用户验证失败')
+			res.render('activateUser', {title: '用户激活'})
+		}
+	})
 })
 router.post('/register', (req, res, next) => {
 	req.checkBody('userName',"用户名不能为空").notEmpty()
@@ -1033,20 +1067,23 @@ router.post('/register', (req, res, next) => {
 			params.emailCode = codeObj.code // 生成随机码
 		  User.create(req.body, (err, user) => {
 			if (err) {
+				if (err.message.indexOf('E11000 duplicate key error collection') >-1) {
+					req.flash("error",'用户已注册')
+					return res.redirect('/register')
+				}
 				console.error(err)
 				req.flash("error",err.message)
 				return res.redirect('/register')
 			}
 			let tpl = `<h4>欢迎你注册白石山农场</h4>
 <p>请点击下面的连接完成注册</p>
-<p><a href="http://www.bssfood.com/">激活用户</a>
+<p><a href="http://www.bssfood.com/activateUser/${codeObj.md5Code}?email=${params.email}">激活用户</a>
 <p>3个小时有效</p>
 </p>`
-            // mail.send(to, content, title)
 			// 这里发送邮件给注册的用户
-			// Mail.send(user.email, [tplName], user.emailCode)
-			req.flash('success', '注册成功')
-			return res.redirect('/login')
+      mail.send(user.email, tpl, '白石山农场帐号注册')
+			req.flash('success', '注册成功，注册邮件已经发送到你的邮箱，请查收并激活')
+			return res.redirect('/register?success=true')
 		})
 	},function(errors){
 		req.flash("error",errors[0].msg);
@@ -1054,41 +1091,61 @@ router.post('/register', (req, res, next) => {
 	});
 })
 router.get('/emailPwd/:code', (req, res, next) => {
-	req.params.code
-	// if()
+	if (req.query.isChangPwd || req.query.success) {
+		return res.render('emailPwd', {title: '重置密码'})
+	}
+	if(!req.query.email) {
+		return next(new Error('无效修改'))
+	}
 	User.findByEmail(req.query.email, (err, user) => {
 		if (!user) {
 			return  next(new Error('无效的用户'))
 		}
-        if (validEmailCode(req.params.code, user.emailCode)) {
+		if (!user.emailCode) {
+			return next(new Error('密码已重置'))
+		}
+		console.log(req.query.email, req.params.code,'???', user.emailCode, '-------')
+		if (validEmailCode(req.query.email, req.params.code, user.emailCode)) {
 			req.session.changePwd = true
 			req.session.userId = user._id
-			res.render('emailPwd', {title: '重置密码'})
+			req.session.code = req.params.code
+			res.render('emailPwd', {title: '重置密码', isChangePwd: false })
+		} else {
+			return next(new Error('超时,验证失败'))
 		}
 	})
 })
+// 密码修改
 router.post('/emailPwd', (req, res, next) => {
-	if(!req.session.changePwd) {
+	if (req.session.isChangPwd === 1) {
+		return res.redirect('/emailPwd/'+ code +'?isChangPwd=true')
+	}
+	if(!req.session.changePwd || !req.session.userId) {
 		return next(new Error('无效操作'))
 	}
-    req.checkBody('pwd',"密码不能为空").notEmpty()
-        .isTooShort(6).withMessage("密码太短");
-    req.checkBody('pwdRepeat').notEmpty()
-        .isSame(req.body.pwd).withMessage('密码不一致')
-    req.checkBody('verifyCode',"验证码不能为空").notEmpty()
-        .isEqual(req.session.imgCode).withMessage("验证码不正确");
-    req.asyncValidationErrors().then(function(){
-        let params = req.body
-		User.updateById(user._id, {
-            pwd:req.body.pwd
+  req.checkBody('pwd',"密码不能为空").notEmpty()
+      .isTooShort(6).withMessage("密码太短");
+  req.checkBody('pwdRepeat').notEmpty()
+      .isSame(req.body.pwd).withMessage('密码不一致')
+  req.checkBody('verifyCode',"验证码不能为空").notEmpty()
+      .isEqual(req.session.imgCode).withMessage("验证码不正确");
+  req.asyncValidationErrors().then(function(){
+  	let params = req.body
+		User.updateById(req.session.userId, {
+	    pwd:req.body.pwd,
+			emailCode: ''
 		}, (err, user) => {
 			if (err) return next(err)
-            return res.redirect('/emailPwd?success=true')
+			req.session.isChangPwd = 1
+			req.session.changePwd = ''
+			req.session.userId = ''
+			let code = req.session.code
+			return res.redirect('/emailPwd/'+ code +'?success=true')
 		})
-    },function(errors){
-        req.flash("error",errors[0].msg);
-        return res.redirect('/forget');
-    });
+  },function(errors){
+    req.flash("error",errors[0].msg);
+    return res.redirect('/forget');
+  });
 })
 router.get('/forget', (req, res) => {
 	return res.render('forget', {title: '忘记密码'})
@@ -1100,22 +1157,21 @@ router.post('/forget', (req, res, next) => {
     req.asyncValidationErrors().then(function(){
         let params = req.body
 		User.findByEmail(params.email, (err, user) => {
-			if (!user) {
-                req.flash("error", '邮箱不存在');
-                return res.redirect('/forget');
-			}
-            let codeObj = emailCode(user.email)
-			User.updateById(user._id, {
-				emailCode:codeObj.code
-			}, (err, user) => {
-				// 发送邮件给用户
-               let tpl = `<h4>白石山农场重置密码</h4>
+				if (!user) {
+	        req.flash("error", '邮箱不存在');
+	        return res.redirect('/forget');
+				}
+	      let codeObj = emailCode(user.email)
+				User.updateById(user._id, {
+					emailCode:codeObj.code
+				}, (err, user) => {
+					// 发送邮件给用户
+	      let tpl = `<h4>白石山农场重置密码</h4>
 <p>点击下方连接重新修改你的密码</p>
 <p><a href="http://www.bssfood.com/emailPwd/${codeObj.md5Code}?email=${user.email}">重置密码</a></p><p>重置密码仅3小时有效，请尽快操作</p>`
-                 mail.send(user.email, tpl, '白石山农场---密码重置').then(()=> {
-                     return res.redirect('/forget?success=true')
-				 })
-
+	      mail.send(user.email, tpl, '白石山农场---密码重置').then(()=> {
+	         return res.redirect('/forget?success=true')
+			  })
 			})
 		})
     },function(errors){

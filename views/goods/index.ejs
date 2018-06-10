@@ -84,18 +84,19 @@
     <div class="col-xs-9 col-md-9">
       <div class="row">
         <div class="text-right padding-right">
-          <!--<form id="searchForm" class="form-inline">-->
-            <!--&lt;!&ndash;<div class="form-group">&ndash;&gt;-->
-              <!--&lt;!&ndash;<label class="sr-only">Email</label>&ndash;&gt;-->
-              <!--&lt;!&ndash;<p class="form-control-static">email@example.com</p>&ndash;&gt;-->
-            <!--&lt;!&ndash;</div>&ndash;&gt;-->
-            <!--<div class="input-group">-->
-              <!--<input type="text" name="search" style="height: 36px;" class="form-control" placeholder="搜索...">-->
-              <!--<span class="input-group-btn">-->
-                <!--<button class="btn btn-default" ><i class="iconfont icon-search"></i></button>-->
-              <!--</span>-->
+          <form id="searchForm" class="form-inline">
+            <!--<div class="form-group">-->
+              <!--<label class="sr-only">Email</label>-->
+              <!--<p class="form-control-static">email@example.com</p>-->
             <!--</div>-->
-          <!--</form>-->
+            <div class="input-group">
+              <input type="text" name="search" style="height: 36px;" class="form-control" value="<%=query.search || '' %>" placeholder="搜索...">
+              <input name="page" type="hidden" value="<%=page %>">
+              <span class="input-group-btn">
+                <button class="btn btn-default" ><i class="iconfont icon-search"></i></button>
+              </span>
+            </div>
+          </form>
         </div>
         <% if(goods && goods.length === 0) { %>
         <div class="col-xs-12 text-muted text-center" style="padding-top:15%;">
@@ -127,7 +128,7 @@
       </div>
       <% if(goods && goods.length !== 0) { %>
       <div class="row">
-        <div class="j_pager" data-page="<%=page %>"  data-param="<%=query.catalog?'catalog='+query.catalog:'' %>"   data-count="<%=count %>"></div>
+        <div class="j_pager" data-page="<%=page %>"  data-param="<%=queryStr %>"   data-count="<%=count %>"></div>
       </div>
       <% } %>
     </div>
@@ -138,13 +139,9 @@
 jQuery(function () {
 	$('.j_pager').pager()
     $('#searchForm').on('submit', function (e) {
-        e.preventDefault()
-        if (location.href.indexOf('?') > -1) {
-            location.href += '&' + $('#searchForm').serialize()
-        } else {
-            location.href += '?' + $('#searchForm').serialize()
-        }
-        return false;
+        // e.preventDefault()
+        // location.href += '?' + $('#searchForm').serialize()
+        // return false;
     })
 	$('.add_cart').on('click',function(e){
 		e.preventDefault()
