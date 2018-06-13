@@ -52,7 +52,23 @@
 }
 </style>`)%>
 <div class="page has_tab ">
-  <div class="navside">
+  <div class="page__hd weui-flex">
+    <div class="weui-search-bar <%=query.search?'weui-search-bar_focusing':'' %>" id="searchBar" style="width: 100%;    line-height: 22px;">
+      <form id="formSearch" class="weui-search-bar__form">
+        <div class="weui-search-bar__box">
+          <i class="weui-icon-search"></i>
+          <input type="search" name="search" class="weui-search-bar__input" id="searchInput" value="<%=query.search || '' %>" placeholder="搜索" required="">
+          <a href="javascript:" class="weui-icon-clear" id="searchClear"></a>
+        </div>
+        <label class="weui-search-bar__label" id="searchText" style="transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);">
+          <i class="weui-icon-search"></i>
+          <span>搜索</span>
+        </label>
+      </form>
+      <a id="toSearch" href="javascript:" class="weui-search-bar__cancel-btn" >搜索</a>
+    </div>
+  </div>
+  <div class="navside has_head" style="padding-top: 44px;">
     <ul class="navside_ul">
       <li class="navside_item <%=!query.catalog?' active':''%>"  >
         <a href="/app/type" >全部商品</a>
@@ -64,7 +80,7 @@
       <% }) %>
     </ul>
   </div>
-  <div class="page__bd">
+  <div class="page__bd has_head">
     <div style="padding-left:81px;padding-top:10px;padding-right:5px;">
       <% if(goods && goods.length === 0) { %>
       	<div class="text-center text-muted" style="padding-top:40%;">
@@ -104,7 +120,9 @@
 <% block('footer').append(`<script>
 jQuery(function(){
 	var catalog = '${query.catalog || ''}'
+	var search = '${query.search || ''}'
 	var len = ${goods.length}
+
 	var $body = $(document.body)
 	var $curr = $('#goodsList')
   var goodsItemCompile = _.template($('#goodsItem')[0].innerHTML)
@@ -131,7 +149,7 @@ jQuery(function(){
   		loading($curr)
   	}
   	$curr.data('page',page)
-    $.get('/app/type', {page:page, catalog: catalog}).done(function(res) {
+    $.get('/app/type', {page:page, catalog: catalog, search: search}).done(function(res) {
       var resData = res.data
       if (resData.goods.length < 10){
       	loadingStop($curr)
@@ -154,5 +172,9 @@ jQuery(function(){
         self.loading = false
     })
   });
+
+  $('#toSearch').on('click',function () {
+     $('#formSearch').submit()
+  })
 })
 </script>`)%>

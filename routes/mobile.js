@@ -103,6 +103,10 @@ router.get('/type', (req, res)=> {
 				params.catalogId = {$nin: [...tmpArr]}
 			}
 		}
+        if (req.query.search) {
+            params.name = new RegExp(req.query.search)
+        }
+        console.log('params:', params)
 		Goods.findAllByPage(params, req.query.page, 10, (err, obj) => {
 			if(req.xhr) {
 				res.json({
