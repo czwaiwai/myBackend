@@ -64,10 +64,13 @@ if (app.get('env') === 'development') {
 		frequency: 'daily',
 		verbose: false
 	})
+	logger.token('real-ip', function (req, res) {
+		return req.get('X-Real-IP') || req.get('X-Forwarded-For') || req.ip;
+	})
 	logger.token('type', function (req, res) { return req.headers['content-type'] })
 	logger.token('date-moment', function (req, res) { return moment(new Date()).format('YYYY-MM-DD HH:mm:ss') })
-	app.use(logger(':date-moment :remote-addr :remote-user :method :url HTTP/:http-version :status :res[content-length] - :response-time ms :referrer :user-agent', {stream: process.stdout}))
-	app.use(logger(':date-moment :remote-addr :remote-user :method :url HTTP/:http-version :status :res[content-length] - :response-time ms :referrer :user-agent', {stream: accessLogStream}))
+	app.use(logger(':date-moment :real-ip :remote-user :method :url HTTP/:http-version :status :res[content-length] - :response-time ms :referrer :user-agent', {stream: process.stdout}))
+	app.use(logger(':date-moment :real-ip :remote-user :method :url HTTP/:http-version :status :res[content-length] - :response-time ms :referrer :user-agent', {stream: accessLogStream}))
 }
 app.use(pathBlack)
 app.use(bodyParser.xml({
