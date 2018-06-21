@@ -1,7 +1,7 @@
 var models = require('../models')
 var getPageNum =  require('../utils/tools').getPageNum
 var Goods = models.Goods
-
+var {parallel} = require('async')
 exports.create = function (obj, callback) {
 	let goods = new Goods(obj)
 	goods.save(callback)
@@ -15,6 +15,18 @@ exports.findById = function (id, callback) {
 exports.findByIdAddView = function (id, callback) {
 	Goods.findByIdAndUpdate(id, {$inc:{viewCount:1}}, callback)
 }
+exports.updateMoreByArr = function (goods, callback) {
+	let arr = []
+	goods.forEach(item => {
+		// console.log(item)
+		arr.push(function (callback) {
+			// console.log(callback, 'callback ------------')
+			Goods.findByIdAndUpdate(item.goodsId, {$inc: {stock: -item.num}}, {new: true}, callback)
+		})
+	})
+	parallel(arr, callback)
+}
+
 exports.getHotGoods = function (query = {onSale:1}, callback) {
 	var goods = Goods.find(query, {content:0}) // 填入条件
 	// goods.limit(12)

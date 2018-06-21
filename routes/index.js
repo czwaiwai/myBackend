@@ -609,6 +609,10 @@ router.post('/order/notify', (req, res, next) => {
 		Order.savePay(resData.out_trade_no, resData, (err, order) => {
 			if (err) return next(err)
 			let tpl = WxPay.notify(resData)
+			Goods.updateMoreByArr(order.goods, function (err, updateGoods) {
+				console.log('错误--', err)
+				console.log('更新的值', updateGoods)
+			})
 			res.send(tpl)
 		})
 	}

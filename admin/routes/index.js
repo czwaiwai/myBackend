@@ -48,6 +48,13 @@ router.get('/login',(req,res)=>{
 router.get('/welcome',(req, res) => {
     res.render('welcome', {title: "首页"})
 })
+router.post('/clearCache', (req, res) => {
+	dictCa.resetAll()
+	res.json({
+		code: 0,
+		message: '成功'
+	})
+})
 router.get('/changePwd', (req, res) => {
 	res.render('pwd', {title:'修改密码'})
 })

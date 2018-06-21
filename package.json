@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "admin-lte": "^2.4.3",
+    "async": "^2.6.1",
     "async-validator": "^1.7.1",
     "body-parser": "~1.17.1",
     "body-parser-xml": "^1.1.0",
