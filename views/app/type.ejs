@@ -92,7 +92,7 @@
         <% goods.forEach(function(item){  %>
         <li class="goods_item">
           <a href="/app/goods/detail/<%=item._id %>" class="thumbnail">
-            <div class="goods_img" style="background:url(<%=item.imgTmb %>) no-repeat center;background-size:cover;"></div>
+            <div class="goods_img lazy"  data-original="<%=item.imgTmb %>"  style="background:#f0f0f0 no-repeat center;background-size:cover;"></div>
             <p class="padding-left5 fs14 dot"><%=item.name%></p>
             <p class="padding-left5 fs16 weui-cell_warn">￥<%=item.sellPrice%></p>
           </a>
@@ -117,8 +117,11 @@
 </li>
 <@ }) @>
 </script>`) %>
+<% block('footer').append(`<script src='/js/jquery.lazyload.min.js'></script>`)%>
 <% block('footer').append(`<script>
 jQuery(function(){
+
+	$("div.lazy,li.lazy").lazyload({effect: "fadeIn"});
 	var catalog = '${query.catalog || ''}'
 	var search = '${query.search || ''}'
 	var len = ${goods.length}

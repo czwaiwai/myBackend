@@ -66,7 +66,7 @@
     <ul class="index_goods_list clearfix ">
       <% goodTypes.forEach(function(item) { %>
       <li class="item" >
-        <a style="background:url(<%=item.imgUrl %>) no-repeat center;background-size:cover;" href="/app/type?catalog=<%=item.name %>" >
+        <a class="lazy"  data-original="<%=item.imgUrl %>"  style="background:#f0f0f0 no-repeat center;background-size:cover;" href="/app/type?catalog=<%=item.name %>" >
            <div style="background:rgba(16, 16, 16, 0.50);"><%=item.nameCn %></div>
         </a>
       </li>
@@ -80,7 +80,7 @@
       <% goods.forEach(function(item){  %>
       <li class="pro_item">
         <a href="/app/goods/detail/<%=item._id %>">
-          <div class="pro_img" style="padding-top:100%;background-image:url(<%=item.imgTmb %>);background-size:cover;">
+          <div class="pro_img lazy"  data-original="<%=item.imgTmb %>"  style="padding-top:100%;background-size:cover;">
           </div>
           <div class="pro_name">
             <p class="fs14"><%=item.name%></p>
@@ -133,9 +133,11 @@
     <p class="weui-footer__text"><%=webInfo.record.value %></p>
   </div>
 </div>
+<% block('footer').append(`<script src='/js/jquery.lazyload.min.js'></script>`)%>
 <% block('footer').append(`<script src='/app/js/swiper.js'></script>`)%>
 <% block('footer').append(`<script>
 jQuery(function(){
+    $("div.lazy,a.lazy").lazyload({effect: "fadeIn"});
     $(".swiper-container").swiper({})
 })
 </script>`)%>

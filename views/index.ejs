@@ -95,7 +95,7 @@
         <!--catalogs, goods-->
       <ul class="good_type_wrap">
       <% goodTypes.forEach(function(item) { %>
-        <li class="good_type_item" style="background:url(<%=item.imgUrl %>) no-repeat center;background-size:cover;">
+        <li class="good_type_item lazy"  data-original="<%=item.imgUrl %>"   style="background-repeat: no-repeat;background-position:center;background-size:cover;">
             <a href="/goods/index?catalog=<%=item.name %>" ><%=item.nameCn %></a>
         </li>
       <% }) %>
@@ -107,7 +107,7 @@
         <div class="col-xs-3 col-md-3">
             <a  href="/goods/detail/<%=item._id %>" class="thumbnail">
                 <div style="">
-                    <div class="img_bg" style="width:100%;height:222px;background-image:url(<%=item.imgTmb %>);background-size:cover;"></div>
+                    <div class="img_bg lazy" data-original="<%=item.imgTmb %>"  style="width:100%;height:222px;background-size:cover;"></div>
                     <!--<img data-src="holder.js/100%x200" src="<%=item.imgTmb %>" alt="100%x200" style="width: 100%; display: block;" >-->
                 </div>
                 <div class="caption">
@@ -234,11 +234,12 @@
     </div>
     <% } %>
 </div><!-- /.container -->
-<% block('footer').append(`<script src='js/pager.js'></script>`)%>
-<% block('footer').append(`<script src='js/iframeDialog.js'></script>`)%>
+<% block('footer').append(`<script src='/js/jquery.lazyload.min.js'></script>`)%>
+<% //block('footer').append(`<script src='js/iframeDialog.js'></script>`)%>
 <% block('footer').append(`<script>
     jQuery(function(){
-      var isLogin =${user?true:false}
+      var isLogin =${user?true:false};
+      $("div.lazy,li.lazy").lazyload({effect: "fadeIn"});
       $('.add_cart').on('click',function(e){
         e.preventDefault()
         e.stopPropagation()
