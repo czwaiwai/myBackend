@@ -3,6 +3,7 @@
  */
 
 (function($) {
+	FastClick.attach(document.body);
 	_.templateSettings = {
 		evaluate    : /<@([\s\S]+?)@>/g,
 		interpolate : /<@=([\s\S]+?)@>/g,

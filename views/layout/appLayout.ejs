@@ -44,21 +44,15 @@
   </div>
   <% } %>
 </div>
-<script src="/app/js/lib/jquery-2.1.4.js"></script>
+<script src="/app/js/lib/jquery.min.js"></script>
 <script src="/app/js/lib/underscore-min.js"></script>
 <script src="/app/js/lib/fastclick.js"></script>
 <!--<script src="//res.wx.qq.com/open/js/jweixin-1.0.0.js" ></script>-->
 <script src="/app/js/lib/jquery-weui.js"></script>
 <script src="/app/js/app.js"></script>
 <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
-<script>
-	jQuery(function(){
-		FastClick.attach(document.body);
-	})
-</script>
 <%- block('footer') %>
 <% if(isWeixin) { %>
-
 <script>
 	var signJson=<%-JSON.stringify(signJson) %>
 	var dfShare=<%-JSON.stringify(dfShare) %>
@@ -113,9 +107,10 @@
 			}
 		})
     if(dfShare.link != location.href) {
-			alert(dfShare.link  + '|' + location.href)
+      alert(dfShare.link  + '|' + location.href)
     }
     wx.error(function (err) {
+      alert(JSON.stringify(err))
       console.log("微信签名出错了");
     })
 </script>
