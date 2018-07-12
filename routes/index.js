@@ -633,7 +633,7 @@ router.post('/order/notify', (req, res, next) => {
 `
 				// 这里发送邮件给注册的用户
 
-				mail.send('278178596@qq.com', tpl, `白石山农场用户下单支付提醒，订单号：${order.orderId}`)
+				mail.send('278178596@qq.com,921317112@qq.com', tpl, `白石山农场用户下单支付提醒，订单号：${order.orderId}`)
 			})
 			res.send(tpl)
 		})
