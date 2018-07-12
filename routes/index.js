@@ -610,8 +610,30 @@ router.post('/order/notify', (req, res, next) => {
 			if (err) return next(err)
 			let tpl = WxPay.notify(resData)
 			Goods.updateMoreByArr(order.goods, function (err, updateGoods) {
+				if (err) {
+					console.error(err)
+				}
+				// 发送收钱通知
 				console.log('错误--', err)
 				console.log('更新的值', updateGoods)
+				let tpl = `<h4>白石山生态农场用户下单</h4>
+<p>订单号：${order.orderId}</p>
+<p>用户：${order.userId}</p>
+<p></p>
+<p>购买的商品：</p>`
+				order.goods.forEach(item => {
+					tpl += `<p>${item.name} <span>单价：${item.sellPrice}</span> <span>数量：${item.num}</span></p>`
+				})
+				tpl += `<p>订单总金额：${order.needPrice}</p>
+<p>支付总金额：${order.realPrice}</p>
+<p>支付时间：${order.pay_at_ago(false)}</p>
+ <p></p>
+ <p>收件人：${order.address.name}  <span>电话：${order.address.mobile} </span></p>
+ <p>发往的地址：${order.address.place}</p>
+`
+				// 这里发送邮件给注册的用户
+
+				mail.send('278178596@qq.com', tpl, `白石山农场用户下单支付提醒，订单号：${order.orderId}`)
 			})
 			res.send(tpl)
 		})
@@ -657,7 +679,7 @@ router.post('/order/refund_notify', (req, res, next) => {
 
 // 查询数据库，查看订单支付状态值是否更改
 router.use('/order/isPay', (req, res, next) => {
-	// let resData = req.body.xml
+	// 	// let resData = req.body.xml
 	let id = req.body.id
 	let orderId = req.body.orderId
 	WxPay.queryOrder(orderId).then(data => {

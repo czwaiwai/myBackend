@@ -46,9 +46,9 @@ var OrderSchema = new Schema({
 })
 OrderSchema.plugin(BaseModel)
 OrderSchema.plugin(function (schema) {
-	schema.methods.pay_at_ago = function () {
+	schema.methods.pay_at_ago = function (bool = true) {
 		if(this.pay_at) {
-			return tools.formatDate(this.pay_at, true);
+			return tools.formatDate(this.pay_at, bool);
 		} else {
 			return ''
 		}

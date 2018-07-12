@@ -21,7 +21,7 @@ exports.updateMoreByArr = function (goods, callback) {
 		// console.log(item)
 		arr.push(function (callback) {
 			// console.log(callback, 'callback ------------')
-			Goods.findByIdAndUpdate(item.goodsId, {$inc: {stock: -item.num}}, {new: true}, callback)
+			Goods.findByIdAndUpdate(item.goodsId, {$inc: {stock: -item.num, sellCount: item.num}}, {new: true}, callback)
 		})
 	})
 	parallel(arr, callback)
