@@ -1,5 +1,6 @@
 var express = require('express');
 var session=require('express-session');
+const MongoStore = require('connect-mongo')(session)
 var FileStreamRotator = require('file-stream-rotator') // 日志分割
 var compression = require('compression'); // 用户开启Gzip
 var flash=require('connect-flash'); // 用于session提醒
@@ -22,7 +23,7 @@ var admin = require('./admin/app');
 var pathBlack = require('./utils/pathBlack')
 var device = require('express-device');
 var moment = require('moment')
-
+var config = require('./config')
 var app = express();
 app.set('env', 'production');
 app.engine('ejs',engine);
@@ -104,8 +105,10 @@ app.use(expressValidator(validatorMethods));
 app.use(cookieParser());
 app.use(session({
     resave: false,  // 新增
-    saveUninitialized: false,  // 新增
-    secret:'czwaiwai'}));
+    saveUninitialized: true,  // 新增
+    secret:'czwaiwai.bssfood.com',
+		store: new MongoStore({url: config.db})
+}));
 app.use(flash());
 app.use(function(req,res,next){
     res.locals = Object.assign(res.locals, {

@@ -16,6 +16,7 @@
     "bootstrap-sass": "^3.3.7",
     "ccap": "^0.6.10",
     "compression": "^1.7.2",
+    "connect-mongo": "^2.0.1",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.3",
     "ejs": "~2.5.6",
