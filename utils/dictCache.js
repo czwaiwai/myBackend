@@ -3,13 +3,14 @@
  */
 
 let {Dict} = require('../viewModels')
-var fs = require('fs')
+const fs = require('fs')
+const path = require('path')
 function dictCache () {
 	let cache = {}
 	let time = 0
 	return {
 		getFile(cb) {
-			fs.readFile('./cache', (err, res) => {
+			fs.readFile(path.resolve(__dirname, '../runtime/cache'), (err, res) => {
 				if(err) {
 					return cb (false)
 				}
@@ -23,7 +24,7 @@ function dictCache () {
 		},
 		setFile(cb) {
 			let timeNum = (new Date()).valueOf()
-			fs.writeFile('./cache', timeNum, (err) => {
+			fs.writeFile(path.resolve(__dirname, '../runtime/cache'), timeNum, (err) => {
 				if(err) {
 					return cb(false, timeNum)
 				}

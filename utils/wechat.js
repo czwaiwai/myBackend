@@ -4,6 +4,7 @@
 const crypto = require('crypto');
 const request = require('request')
 const qs = require('qs')
+const path = require('path')
 const util = require('util')
 const xml2js = require('xml2js')
 let {txtMsg, imgMsg, graphicMsg} = require('./wxMsgTpl') //回复的消息模板
@@ -128,23 +129,36 @@ Wechat.prototype.getAccessToken = function () {
 			 this.config.appID,
 			 this.config.appScrect
 		 )
-		if (accessToken.accessToken === "" || accessToken.expiresTime < currentTime) {
-		 	request.get(url, (err, response, body) => {
-		 		if (err) {
-		 			return reject(err)
-				}
-				if (typeof body && typeof body === 'string') {
-		 			let data = JSON.parse(body)
-					accessToken.accessToken = data.access_token
-					accessToken.expiresTime = new Date().getTime() + (parseInt(data.expires_in) - 200) * 10
-					resolve(accessToken.accessToken)
+		let accessToken = {}
+		fs.readFile(path.resolve(__dirname,'../runTime/accessToken.json'), 'utf-8', (err, data) => {
+			if (err) {
+				accessToken = { accessToken: '' , expiresTime: 0}
+			}
+			try {
+				accessToken = JSON.parse(data)
+			} catch (err) {
+				accessToken = { accessToken: '' , expiresTime: 0}
+			} finally {
+				if (accessToken.accessToken === "" || accessToken.expiresTime < currentTime) {
+					request.get(url, (err, response, body) => {
+						if (err) {
+							return reject(err)
+						}
+						if (typeof body && typeof body === 'string') {
+							let data = JSON.parse(body)
+							accessToken.accessToken = data.access_token
+							accessToken.expiresTime = new Date().getTime() + (parseInt(data.expires_in) - 200) * 10
+							fs.writeFileSync(path.resolve(__dirname,'../runtime/accessToken.json'), JSON.stringify(accessToken), 'utf-8')
+							resolve(accessToken.accessToken)
+						} else {
+							return reject(new Error('body为空'))
+						}
+					})
 				} else {
-		 			return reject(new Error('body为空'))
+					resolve(accessToken.accessToken)
 				}
-		 	})
-		} else {
-		 	resolve(accessToken.accessToken)
-		}
+			}
+		})
 	})
 }
 // 获取jsapi_ticket
@@ -152,33 +166,47 @@ Wechat.prototype.getJsApiTicket = function (accessToken) {
 	return  new Promise((resolve,reject) => {
 		let currentTime = new Date().getTime()
 		let url =`https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=${accessToken}&type=jsapi`
-		request.get(url, (err, response, body) => {
+
+		let apiTicket = {}
+		fs.readFile(path.resolve(__dirname,'../runTime/accessToken.json'), 'utf-8', (err, data) => {
 			if (err) {
-				return reject(err)
+				apiTicket = { accessToken: '' , expiresTime: 0}
 			}
-			if (apiTicket.ticket === "" || apiTicket.expiresTime < currentTime) {
+			try {
+				apiTicket = JSON.parse(data)
+			} catch (err) {
+				apiTicket = { accessToken: '' , expiresTime: 0}
+			} finally {
 				request.get(url, (err, response, body) => {
 					if (err) {
 						return reject(err)
 					}
-					if (typeof body && typeof body === 'string') {
-						let data = JSON.parse(body)
-						apiTicket.ticket = data.ticket
-						apiTicket.expiresTime = new Date().getTime() + (parseInt(data.expires_in) - 200) * 10
-						resolve(apiTicket.ticket)
+					if (apiTicket.ticket === "" || apiTicket.expiresTime < currentTime) {
+						request.get(url, (err, response, body) => {
+							if (err) {
+								return reject(err)
+							}
+							if (typeof body && typeof body === 'string') {
+								let data = JSON.parse(body)
+								apiTicket.ticket = data.ticket
+								apiTicket.expiresTime = new Date().getTime() + (parseInt(data.expires_in) - 200) * 10
+								fs.writeFileSync(path.resolve(__dirname,'../runtime/apiTicket.json'), JSON.stringify(apiTicket), 'utf-8')
+								resolve(apiTicket.ticket)
+							} else {
+								return reject(new Error('body为空'))
+							}
+						})
 					} else {
-						return reject(new Error('body为空'))
+						resolve(apiTicket.ticket)
 					}
+					// {
+					// 	"errcode":0,
+					// 	"errmsg":"ok",
+					// 	"ticket":"bxLdikRXVbTPdHSM05e5u5sUoXNKd8-41ZO3MhKoyN5OfkWITDGgnr2fwJ0m9E8NYzWKVZvdVtaUgWvsdshFKA",
+					// 	"expires_in":7200
+					// }
 				})
-			} else {
-				resolve(apiTicket.ticket)
 			}
-			// {
-			// 	"errcode":0,
-			// 	"errmsg":"ok",
-			// 	"ticket":"bxLdikRXVbTPdHSM05e5u5sUoXNKd8-41ZO3MhKoyN5OfkWITDGgnr2fwJ0m9E8NYzWKVZvdVtaUgWvsdshFKA",
-			// 	"expires_in":7200
-			// }
 		})
 	})
 }
