@@ -47,6 +47,13 @@
 <script src="/app/js/lib/jquery.min.js"></script>
 <script src="/app/js/lib/underscore-min.js"></script>
 <script src="/app/js/lib/fastclick.js"></script>
+<% if(query.debug){ %>
+<script src="/js/vconsole.min.js"></script>
+<script>
+  var vConsole = new VConsole()
+  console.log('hello world')
+</script>
+<% } %>
 <!--<script src="//res.wx.qq.com/open/js/jweixin-1.0.0.js" ></script>-->
 <script src="/app/js/lib/jquery-weui.js"></script>
 <script src="/app/js/app.js"></script>
@@ -54,8 +61,8 @@
 <%- block('footer') %>
 <% if(isWeixin) { %>
 <script>
-	var signJson=<%-JSON.stringify(signJson) %>
-	var dfShare=<%-JSON.stringify(dfShare) %>
+	var signJson= <%-JSON.stringify(signJson) %>
+	var dfShare= <%-JSON.stringify(dfShare) %>
 		wx.config({
 			debug: false,
 			appId: signJson.appid,
@@ -88,7 +95,7 @@
 		wx.ready(function() {
 			var onMenuArr=['onMenuShareTimeline','onMenuShareAppMessage','onMenuShareQQ']
 //			var	sendArr=['pengyouquan','haoyou','qqhaoyou']
-      console.log(dfShare.link, location.href, '-----------------')
+            console.log(dfShare.link, location.href, '-----------------')
 			var len=onMenuArr.length;
 			for(var i=0;i<len;i++){
 				var onMenuOption= {
@@ -110,7 +117,9 @@
       alert(dfShare.link  + '|' + location.href)
     }
     wx.error(function (err) {
-      alert(JSON.stringify(err))
+      console.log(err)
+      console.log(signJson)
+      console.log(dfShare)
       console.log("微信签名出错了");
     })
 </script>
