@@ -165,7 +165,7 @@ Wechat.prototype.getJsApiTicket = function (accessToken) {
 						let data = JSON.parse(body)
 						apiTicket.ticket = data.ticket
 						apiTicket.expiresTime = new Date().getTime() + (parseInt(data.expires_in) - 200) * 10
-						resolve(apiTicket.accessToken)
+						resolve(apiTicket.ticket)
 					} else {
 						return reject(new Error('body为空'))
 					}
