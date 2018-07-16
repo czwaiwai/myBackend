@@ -169,7 +169,7 @@ Wechat.prototype.getJsApiTicket = function (accessToken) {
 		let url =`https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=${accessToken}&type=jsapi`
 
 		let apiTicket = {}
-		fs.readFile(path.resolve(__dirname,'../runTime/accessToken.json'), 'utf-8', (err, data) => {
+		fs.readFile(path.resolve(__dirname,'../runTime/apiTicket.json'), 'utf-8', (err, data) => {
 			if (err) {
 				apiTicket = { accessToken: '' , expiresTime: 0}
 			}
