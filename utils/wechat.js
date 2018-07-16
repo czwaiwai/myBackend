@@ -3,6 +3,7 @@
  */
 const crypto = require('crypto');
 const request = require('request')
+const fs = require('fs')
 const qs = require('qs')
 const path = require('path')
 const util = require('util')
