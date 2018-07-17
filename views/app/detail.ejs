@@ -69,7 +69,7 @@
       <div class="swiper-container" data-space-between='10' data-pagination='.swiper-pagination' data-autoplay="1000">
         <div class="swiper-wrapper">
           <% goods.imgs.forEach(function(item ){ %>
-            <div class="swiper-slide"><img src="<%=item %>" alt=""></div>
+            <div class="swiper-slide"><img src="<%=item.replace(/_\$sma[^.]+/,'') %>" alt=""></div>
           <% })%>
         </div>
       </div>
