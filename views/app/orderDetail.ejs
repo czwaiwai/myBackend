@@ -111,7 +111,7 @@ ul.traces_ul li {
       <% if(order.orderStatus === 10 ){ %>
       <div id="noPayBtn" class="no_pay_btn">
         <span><a id="cancel"  href="/account/orderCancel/<%=order._id %>" class="weui-btn weui-btn_mini weui-btn_default">取消订单</a></span>
-        <span><a id="toPay"  data-id="<%=order._id %>" href="/account/orderCancel/<%=order._id %>"  class="weui-btn weui-btn_mini weui-btn_primary">立即付款</a></span>
+        <span><a id="toPay"  data-id="<%=order._id %>" href="javascript:void(0)"  class="weui-btn weui-btn_mini weui-btn_primary">立即付款</a></span>
       </div>
       <% } %>
       <% if(order.orderStatus === 20) { %>
@@ -208,10 +208,14 @@ jQuery(function(){
 
   	return false;
   })
+  var isPay = false
   $('#toPay').on('click',function(e){
   	e.preventDefault()
+  	if(isPay) return false
   	var $this = $(this)
   	var id = $this.data('id')
+    $this.text('支付中...')
+  	isPay = true
     $.post('/app/orderPayById',{id: id}).done(function(res){
       var obj = res.data
       wxPayReady(function() {
@@ -224,6 +228,8 @@ jQuery(function(){
           "paySign": obj.paySign
         },
         function(res){
+          isPay = false
+          $this.text('立即付款')
           if(res.err_msg == "get_brand_wcpay_request:ok" ) {
             location.href='/app/paySucc?id=' + id
           } else {

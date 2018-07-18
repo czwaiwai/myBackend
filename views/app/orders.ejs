@@ -181,7 +181,7 @@ ul.traces_ul li {
           <@ if(order.orderStatus === 10 ){ @>
           <div id="noPayBtn" class="no_pay_btn">
             <span><a id="cancel"  href="/account/orderCancel/<@=order._id @>" class="weui-btn weui-btn_mini weui-btn_default">取消订单</a></span>
-            <span><a id="toPay"  data-id="<@=order._id @>" href="/account/orderCancel/<@=order._id @>"  class="weui-btn weui-btn_mini weui-btn_primary">立即付款</a></span>
+            <span><a id="toPay"  data-id="<@=order._id @>" href="javascript:void(0)"  class="weui-btn weui-btn_mini weui-btn_primary">立即付款</a></span>
           </div>
           <@ } @>
       <@ if(order.orderStatus === 20) { @>
@@ -292,13 +292,13 @@ jQuery(function(){
     })
   }
   function initPage() {
-     var href =  $('.weui-bar__item--on').attr('href')
-     currType= $('.weui-bar__item--on').data('type')
-     var $tabA = $(href)
- 	   var $curr = $tabA.find('.tab-content')
- 	   var page = $curr.data('page') || 1
- 	   console.log($curr,page)
- 	   getData($curr,page)
+    var href =  $('.weui-bar__item--on').attr('href')
+    currType= $('.weui-bar__item--on').data('type')
+    var $tabA = $(href)
+    var $curr = $tabA.find('.tab-content')
+    var page = $curr.data('page') || 1
+    console.log($curr,page)
+    getData($curr,page)
   }
   initPage()
   $(".infinite").infinite().on("infinite", function() {
@@ -310,21 +310,70 @@ jQuery(function(){
     console.log(true, '------')
     console.log($curr.data('stop'))
     if($curr.data('stop') === true) {
-    	return loadingStop($curr)
+      return loadingStop($curr)
     }
     console.log('我执行了没有？？')
     loading($curr)
     getData($curr,parseInt($curr.data('page'))+1, function() {
-        self.loading = false
+      self.loading = false
     })
-
-    // setTimeout(function() {
-    //   $(self).find(".tab-content").append("<p>我是加载的新内容。我是加载的新内容。。。我是加载的新内容。。。我是加载的新内容。。。我是加载的新内容。。。我是加载的新内容。。。我是加载的新内容。。。我是加载的新内容。。。我是加载的新内容。。。。。</p>");
-    //   self.loading = false;
-    // }, 2000)   //模拟延迟
   });
 
+  $orderDetail.on('click','#cancel', function(e){
+  	e.preventDefault()
+  	var $this = $(this)
+  	var $noPayBtn = $('#noPayBtn')
+  	var $orderDetailWrap = $('#orderDetailWrap')
+  	$.confirm('你确定要取消订单么','提示', function(){
+      $.post($this.attr('href')).done(function(res){
+      	$noPayBtn.hide()
+        $orderDetailWrap.find('.status_txt').text('已取消')
+      })
+  	})
+  	return false
+  })
+  var isPay = false
+  $orderDetail.on('click', '#toPay', function(e){
+  	e.preventDefault()
+  	if(isPay) return false
+  	var $this = $(this)
+  	var id = $this.data('id')
+  	$this.text('支付中...')
+  	isPay = true
+    $.post('/app/orderPayById',{id: id}).done(function(res){
+      var obj = res.data
+      console.log(obj)
+      wxPayReady(function() {
+        WeixinJSBridge.invoke('getBrandWCPayRequest', {
+          "appId":obj.appId,
+          "timeStamp":obj.timeStamp,
+          "nonceStr":obj.nonceStr,
+          "package":obj.package,
+          "signType": obj.signType,
+          "paySign": obj.paySign
+        },
+        function(res){
+          isPay = false
+          $this.text('立即付款')
+          if(res.err_msg == "get_brand_wcpay_request:ok" ) {
+            location.href='/app/paySucc?id=' + id
+          } else {
+            $.toast('支付已取消', 'cancel')
+          }
+        })
+      })
+      return false
+    })
+  })
+  function wxPayReady (cb) {
+    if (typeof WeixinJSBridge == 'undefined') {
+      document.addEventListener('WeixinJSBridgeReady', cb, false)
+    } else {
+      cb()
+    }
+  }
 
+  // 申请退款
   $orderDetail.on('click', '#applyBackAmt', function (e) {
   	e.preventDefault()
   	var $this = $(this)
@@ -337,6 +386,8 @@ jQuery(function(){
     })
     return false
   })
+
+  // 物流信息
   var tplComplie = _.template($('#queryPostageTpl')[0].innerHTML)
   $orderDetail.on('click', '#queryPostage', function () {
   	var $this = $(this)
@@ -358,7 +409,7 @@ jQuery(function(){
           ]
         });
   	}).fail(err => {
-  		console.log(err)
+  	  console.log(err)
   	})
   })
 })
