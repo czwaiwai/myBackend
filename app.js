@@ -69,7 +69,7 @@ if (app.get('env') === 'development') {
 		return req.get('X-Real-IP') || req.get('X-Forwarded-For') || req.ip;
 	})
 	logger.token('user-id', function (req, res) {
-		if (req.session.user) {
+		if (req.session && req.session.user) {
 			return '['+(req.session.user.nickname || '')+ ',' + (req.session.user.email || '') + ']'
 		} else {
 			return '[no_login]'
