@@ -179,7 +179,12 @@ li.addr_card.active:after {
         <p class="text-muted">商品合计：￥<%=totalPrice %></p>
         <p>运费：￥<span id="showFee"><%=feeDf %></span></p>
         <p>应付总额：<span id="showNeedPrice" class="fs20 text-danger">￥<%=needPrice %></span></p>
-        <p><button class="btn btn-lg btn-primary">去付款</button></p>
+        <% if(frontInfo.canPay && frontInfo.canPay.isValid) { %>
+          <p><button class="btn btn-lg btn-primary">去付款</button></p>
+        <% }else{ %>
+          <p><button disabled class="btn btn-lg disabled btn-primary">去付款</button></p>
+          <p class="text-danger fs12"><%= frontInfo.canPay && frontInfo.canPay.value %></p>
+        <% } %>
       </form>
     </div>
 </div>

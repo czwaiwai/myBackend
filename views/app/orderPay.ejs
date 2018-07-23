@@ -113,6 +113,11 @@
         <div class="weui-flex__item padding-left15">
            应付：<span class="main-color fs18">￥<span id="showNeedPrice"><%=needPrice %></span></span>
         </div>
+        <% if(frontInfo.canPay && frontInfo.canPay.isValid === 0){ %>
+        <div style="padding: 6px; line-height:1.4;width: 140px;overflow: hidden;">
+          <p class="text-danger fs12 line-height"><%= frontInfo.canPay && frontInfo.canPay.value %></p>
+        </div>
+        <% } %>
         <div >
         <form id="orderForm">
             <input name="goods" type="hidden"  value="<%=JSON.stringify(goods) %>" >
@@ -121,7 +126,11 @@
             <input name="addressId" type="hidden" value="<%=address && address._id %>" >
             <input name="needPrice" type="hidden" value="<%=needPrice %>">
         </form>
+        <% if(frontInfo.canPay && frontInfo.canPay.isValid) { %>
           <button id="orderSubmit" class="goods_btn goods_btn_primary">微信支付</button>
+        <% }else{ %>
+          <button  class="goods_btn disabled goods_btn_primary" style="opacity: 0.7;">微信支付</button>
+        <% } %>
         </div>
     </div>
 </div>
