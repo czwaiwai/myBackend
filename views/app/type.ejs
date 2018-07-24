@@ -81,6 +81,11 @@
     </ul>
   </div>
   <div class="page__bd has_head">
+    <% if(frontInfo.notice && frontInfo.notice.isValid ===1) { %>
+      <div class="light-bg fs14 padding alert alert-warning alert-dismissible" style=" padding-left: 90px;background-color: #fcf8e3;border-color: #faebcc;color: #8a6d3b;" role="alert">
+        <%= frontInfo.notice && frontInfo.notice.value %>
+      </div>
+    <% } %>
     <div style="padding-left:81px;padding-top:10px;padding-right:5px;">
       <% if(goods && goods.length === 0) { %>
       	<div class="text-center text-muted" style="padding-top:40%;">

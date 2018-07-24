@@ -62,6 +62,7 @@
     </div>
     <!--<div class="fs13"></div>-->
   </div>
+
   <div class="index_goods_wrap margin-top light-bg">
     <ul class="index_goods_list clearfix ">
       <% goodTypes.forEach(function(item) { %>
@@ -73,7 +74,11 @@
       <% }) %>
     </ul>
   </div>
-
+  <% if(frontInfo.notice && frontInfo.notice.isValid ===1) { %>
+  <div class="light-bg fs14 padding margin-top alert alert-warning alert-dismissible" style="  background-color: #fcf8e3;border-color: #faebcc;color: #8a6d3b;" role="alert">
+    <%= frontInfo.notice && frontInfo.notice.value %>
+  </div>
+  <% } %>
   <div class="product_list_wrap light-bg margin-top">
     <h3 class="title main-color text-center padding-bottom5">产品展示</h3>
     <ul class="product_list clearfix">
