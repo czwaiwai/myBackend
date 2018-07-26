@@ -310,7 +310,7 @@ router.get('/goods/index' , (req, res, next) => {
 router.get('/goods/detail/:id' , (req, res, next) => {
 	let ep = EventProxy.create('goods', 'topGoods', 'newGoods', (goods, topGoods, newGoods) => {
 		if(!goods) return next()
-		res.render('goods/detail', {title: '商品详情', goods, topGoods, newGoods})
+		res.render('goods/detail', {title: goods.name, goods, topGoods, newGoods})
 	})
 	ep.fail(next)
 	Goods.getHotGoodsByType(1, 4, ep.done('topGoods')) // 推荐产品

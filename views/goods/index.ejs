@@ -56,7 +56,9 @@
     width: 10px;
     font-family: "iconfont";
 }
-
+.side-menu nav .nav > li.menu-item .active {
+  color:#59b210;
+}
 </style>`) %>
 <div class=" container">
   <ol class="breadcrumb">
@@ -69,12 +71,12 @@
         <div class="head"><i class="icon fa fa-align-justify fa-fw"></i> 产品列表</div>
         <nav class="yamm megamenu-horizontal" role="navigation">
           <ul class="nav">
-            <li class="menu-item active">
-              <a href="./index" >全部产品</a>
+            <li class="menu-item ">
+              <a class="<%=!query.catalog? 'active':''%>"  href="./index" >全部产品</a>
             </li>
             <% goodTypes.forEach(function(item) { %>
             <li class="menu-item">
-              <a href="?catalog=<%=item.name %>" ><%=item.nameCn %></a>
+              <a class="<%=query.catalog === item.name? 'active':''%>" href="?catalog=<%=item.name %>" ><%=item.nameCn %></a>
             </li>
             <% }) %>
           </ul><!-- /.nav -->

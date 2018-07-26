@@ -8,10 +8,11 @@
   <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
   <meta name="description" content="白石山农庄专注打造绿色餐饮为己任，所有食材均自产自销，喂养过程不添加任何工业饲料和抗生素。白石山专注做好有机农产品，为赤壁人民的菜篮子安全保驾护航，用山泉水灌溉水田和养殖水产品，用有机肥料培植农作物，100%保证农产品有机化生产，如有虚假，假一赔十。">
   <meta name="author" content="czwaiwai">
-  <meta name="keywords" content="白石山生态农场,白石山，白石山生态,生态农场">
+  <meta name="keywords" content="白石山生态农场,官方网站，白石山，白石山生态,生态农场">
   <meta name="copyright" content="白石山生态农场版权所有">
   <link rel="icon" href="/favicon.ico">
-  <title><%=title %>-白石山生态农场</title>
+  <title><%=title %>-官方网站-白石山生态农场</title>
+
   <link href="/css/main.css" rel="stylesheet">
   <!--<link href="js/bootstrap/css/non-responsive.css" rel="stylesheet">-->
   <%- block('header') %>
@@ -73,7 +74,9 @@
             <ul class="nav navbar-nav">
               <% catalogs.forEach(function(item){ %>
                 <% if(item.isValid){ %>
-                 <li  <% if(basePath==item.relativeUrl){ %>class="active"<% } %>><a href="<%=item.relativeUrl %>"><%= item.nameCn %></a></li>
+                 <li  <% if(basePath==item.relativeUrl || (item.relativeUrl === '/goods/index' && basePath.indexOf('goods/detail')> -1)){ %>class="active"<% } %>>
+                   <a href="<%=item.relativeUrl %>"><%= item.nameCn %></a>
+                 </li>
                 <% } %>
               <% }) %>
             </ul>
