@@ -275,6 +275,9 @@ $addrForm.on('submit',function (e) {
     addrObj.city = codeArr[1] + ',' + nameArr[1]
     addrObj.area = codeArr[2] + ',' + nameArr[2]
   }
+  if(!addrObj.province || !addrObj.city) {
+  	return $.toast('请填写收获地址','text')
+  }
   $.post('/account/address',addrObj).done(function(res){
     console.log(res)
     var address = res.data.address

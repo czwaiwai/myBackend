@@ -69,7 +69,7 @@
 	$.fn.Spinner  = function (options) {
 		var defaultOptions = {
 			min:1,
-			max:99,
+			max:999,
 			default:1,
 			callback:function (num) {}
 		}
