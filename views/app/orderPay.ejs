@@ -247,7 +247,15 @@ var $showFee = $('#showFee')
 var $showNeedPrice =  $('#showNeedPrice')
 var addrChooseTplCompile = _.template($('#addrChooseTpl')[0].innerHTML)
 var showAddrTplCompile = _.template($('#showAddrTpl')[0].innerHTML)
-
+var defaultAddr = ${JSON.stringify(address)}
+if(defaultAddr) {
+  var defAddr = defaultAddr
+  getRemotePostage({
+      area: defAddr.areaId + ',' + defAddr.area,
+      city: defAddr.cityId + ',' + defAddr.city,
+      province: defAddr.provinceId + ',' + defAddr.province
+  })
+}
 $cityPicker.cityPicker({
   title: "请选择地区",
   onClose:function (picker,codes) {
