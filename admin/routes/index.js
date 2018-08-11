@@ -201,6 +201,23 @@ router.post('/goods/add', (req, res, next) => {
 		})
 	}
 })
+router.post('/goods/delete',(req, res, next) => {
+	let removeId = req.body.id
+	Goods.removeById(removeId, function(err,page) {
+		if(err) {
+			console.log(err)
+			return res.sendStatus(403)
+		}
+		if (page) {
+			return res.json({
+				code:0,
+				message:'操作成功'
+			})
+		} else {
+			return res.sendStatus(403)
+		}
+	})
+})
 // 字典管理
 router.get('/dict/index', (req, res, next) => {
 	Dict.findAllByPage(req.query.page,10,(err, obj) => {

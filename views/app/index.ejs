@@ -88,7 +88,7 @@
           <div class="pro_img lazy"  data-original="<%=item.imgTmb %>"  style="padding-top:100%;background-size:cover;">
           </div>
           <div class="pro_name">
-            <p class="fs14"><%=item.name%></p>
+            <p class="fs14" style="height: 42px;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;"><%=item.name%></p>
             <p class="text-danger">￥<%=item.sellPrice %>
               <% if (!item.stock) { %>
                 <span class="text-muted" disabled>[已售罄]</span>

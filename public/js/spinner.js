@@ -19,6 +19,12 @@
 		this.beforeVal = this.options.default || 1
 		this.render(options.default)
 		var self = this
+		$el.on('focus', 'input', function () {
+			var self = this
+			setTimeout(function () {
+				self.select()
+			},50)
+		})
 		$el.on('change keyup', 'input', (function(that){
 			var timer
 			return function() {

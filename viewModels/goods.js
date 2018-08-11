@@ -26,7 +26,9 @@ exports.updateMoreByArr = function (goods, callback) {
 	})
 	parallel(arr, callback)
 }
-
+exports.removeById = function (id, callback) {
+	Goods.findByIdAndRemove(id,callback)
+}
 exports.getHotGoods = function (query = {onSale:1}, callback) {
 	var goods = Goods.find(query, {content:0}) // 填入条件
 	// goods.limit(12)
