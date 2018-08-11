@@ -342,7 +342,7 @@ $addrList.on('click','.edit_btn',function(e) {
 })
 // 下单并微信支付
 $orderSubmit.on('click',function(e) {
-	let addr = $orderForm.find('input[name=addressId]').val()
+	var addr = $orderForm.find('input[name=addressId]').val()
 	if(!addr) {
 	  return $.toast('请填写收获地址','text')
 	}

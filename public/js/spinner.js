@@ -8,16 +8,18 @@
 		$el.addClass('spinner')
 		this.$input = $el.find('input')
 		if(!this.$input.val()){
-			options.default && this.$input.val(options.default)
+			if(options.defaults) {
+				this.$input.val(options.defaults)
+			}
 		} else {
-			this.options.default = this.$input.val()
+			this.options.defaults = this.$input.val()
 		}
 		this.$prev = $('<a class="prev" href="javascript:void(0)" >-</a>')
 		this.$next = $('<a class="next" href="javascript:void(0)" >+</a>')
 		$el.prepend(this.$prev)
 		$el.append(this.$next)
-		this.beforeVal = this.options.default || 1
-		this.render(options.default)
+		this.beforeVal = this.options.defaults || 1
+		this.render(options.defaults)
 		var self = this
 		$el.on('focus', 'input', function () {
 			var self = this
@@ -76,7 +78,7 @@
 		var defaultOptions = {
 			min:1,
 			max:999,
-			default:1,
+			defaults:1,
 			callback:function (num) {}
 		}
 		return this.each(function (){

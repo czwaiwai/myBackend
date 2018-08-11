@@ -198,10 +198,10 @@ jQuery(function() {
       onshown: function(dialogRef){
         var $body = dialogRef.getModalBody()
         var $addressChoose = $body.find('#addressChoose')
-        let chooseOption = {
+        var chooseOption = {
           provinceUrl: '/cityAndArea',
           cityUrl: '/cityAndArea?name=city',
-          areaUrl: '/cityAndArea?name=area',
+          areaUrl: '/cityAndArea?name=area'
         }
         if (address.isUpdate) {
           chooseOption.provinceId = address.provinceId

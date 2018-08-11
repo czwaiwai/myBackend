@@ -6,6 +6,26 @@ _.templateSettings = {
 	interpolate : /<@=([\s\S]+?)@>/g,
 	escape      : /<@-([\s\S]+?)@>/g
 };
+BootstrapDialog.DEFAULT_TEXTS[BootstrapDialog.TYPE_PRIMARY] = '提示';
+BootstrapDialog.DEFAULT_TEXTS['OK'] = '确定'
+BootstrapDialog.DEFAULT_TEXTS['CANCEL'] = '取消'
+BootstrapDialog.defaultOptions = {
+	type: BootstrapDialog.TYPE_PRIMARY,
+	size: BootstrapDialog.SIZE_NORMAL,
+	cssClass: '',
+	title: "提示",
+	message: null,
+	nl2br: true,
+	closable: true,
+	closeByBackdrop: true,
+	closeByKeyboard: true,
+	spinicon: BootstrapDialog.ICON_SPINNER,
+	autodestroy: true,
+	draggable: false,
+	animate: false,
+	description: '',
+	tabindex: -1
+};
 jQuery(function(){
 
     function guidGenerator() {
@@ -16,28 +36,13 @@ jQuery(function(){
     }
 
     $.extend({
-        guidGenerator:guidGenerator,
+        guidGenerator:guidGenerator
     });
-	  BootstrapDialog.DEFAULT_TEXTS[BootstrapDialog.TYPE_PRIMARY] = '提示';
-    BootstrapDialog.DEFAULT_TEXTS['OK'] = '确定'
-    BootstrapDialog.DEFAULT_TEXTS['CANCEL'] = '取消'
-		BootstrapDialog.defaultOptions = {
-			type: BootstrapDialog.TYPE_PRIMARY,
-			size: BootstrapDialog.SIZE_NORMAL,
-			cssClass: '',
-			title: "提示",
-			message: null,
-			nl2br: true,
-			closable: true,
-			closeByBackdrop: true,
-			closeByKeyboard: true,
-			spinicon: BootstrapDialog.ICON_SPINNER,
-			autodestroy: true,
-			draggable: false,
-			animate: false,
-			description: '',
-			tabindex: -1
-		};
+    // if(!BootstrapDialog) {
+    // 	var BootstrapDialog = {}
+    // }
+    // console.log(BootstrapDialog, 'BootstrapDialog')
+
 
 	// BootstrapDialog.DEFAULT_TEXTS['CONFIRM'] = '提示'
     $.extend({

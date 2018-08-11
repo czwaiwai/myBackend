@@ -232,62 +232,62 @@ jQuery(function(){
                 isAllCheck:false,
                 totalPrice:0,
             }
-        var $orderItem = $cartWrap.find('.order_item')
-        var len = $orderItem.length
-        var checkNum = 0
-        var totalPrice = 0
-        var cartNum = 0
-        var checkCarts = []
-				$orderItem.each(function(index,item){
-            var $this = $(this)
-            console.log($this)
-            var id = $this.data('id')
-            var num = $this.data('num')
-            var price = $this.data('price')
-            var isCheck = $this.data('check')
-            cartNum += parseInt(num)
-            if(isCheck) {
-                checkNum++
-                checkCarts.push({
-                    id:id,
-                    num:num,
-                    price:price,
-                    subTotal:$.formatFloat(parseInt(num) * parseFloat(price)),
-                    payTotal:$.formatFloat(parseInt(num) * parseFloat(price))
-                })
-                totalPrice += parseInt(num) * parseFloat(price)
+            var $orderItem = $cartWrap.find('.order_item')
+            var len = $orderItem.length
+            var checkNum = 0
+            var totalPrice = 0
+            var cartNum = 0
+            var checkCarts = []
+                    $orderItem.each(function(index,item){
+                var $this = $(this)
+                console.log($this)
+                var id = $this.data('id')
+                var num = $this.data('num')
+                var price = $this.data('price')
+                var isCheck = $this.data('check')
+                cartNum += parseInt(num)
+                if(isCheck) {
+                    checkNum++
+                    checkCarts.push({
+                        id:id,
+                        num:num,
+                        price:price,
+                        subTotal:$.formatFloat(parseInt(num) * parseFloat(price)),
+                        payTotal:$.formatFloat(parseInt(num) * parseFloat(price))
+                    })
+                    totalPrice += parseInt(num) * parseFloat(price)
+                }
+            })
+            obj.carts = checkCarts // 选中的商品信息
+            obj.len = len // 商品的种类数量
+            obj.allNum = cartNum // 商品的总数量
+            obj.checkNum = checkNum //选中商品的总数
+            obj.totalPrice = $.formatFloat(totalPrice) // 商品总价格
+            if(len === checkNum) {
+              obj.isAllCheck = true
+            } else {
+              obj.isAllCheck = false
             }
-        })
-        obj.carts = checkCarts // 选中的商品信息
-        obj.len = len // 商品的种类数量
-        obj.allNum = cartNum // 商品的总数量
-        obj.checkNum = checkNum //选中商品的总数
-        obj.totalPrice = $.formatFloat(totalPrice) // 商品总价格
-        if(len === checkNum) {
-          obj.isAllCheck = true
-        } else {
-          obj.isAllCheck = false
+            return obj
+        },
+        renderAll:function (data) {
+            if(data.len) {
+                $emptyCart.hide()
+                $fullCart.show()
+            }else {
+                $emptyCart.show()
+                $fullCart.hide()
+            }
+            if(data.isAllCheck){
+                $checkAll.prop('checked',true)
+            }else {
+                $checkAll.prop('checked',false)
+            }
+            $('#cartBadge').triggerHandler('change.cartBadge',[data.allNum])
+            $needTotal.text(data.totalPrice)
+            $goodsTotal.text(data.totalPrice)
         }
-        return obj
-			},
-			renderAll(data) {
-				if(data.len) {
-					$emptyCart.hide()
-					$fullCart.show()
-				}else {
-					$emptyCart.show()
-					$fullCart.hide()
-				}
-				if(data.isAllCheck){
-					$checkAll.prop('checked',true)
-				}else {
-					$checkAll.prop('checked',false)
-				}
-				$('#cartBadge').triggerHandler('change.cartBadge',[data.allNum])
-				$needTotal.text(data.totalPrice)
-                $goodsTotal.text(data.totalPrice)
-			}
-		}
+	  }
     })()
     page.init()
 })

@@ -334,7 +334,7 @@ jQuery(function(){
                   if(!choose) {
                   	$.Toast('请选择你的地址','warning')
                   } else {
-                  	var newChoose = addrList.find(function(item) {
+                  	var newChoose = _.find(addrList,function(item) {
                   	    return 	item._id === choose
                   	})
                   	address = newChoose
