@@ -142,7 +142,7 @@ jQuery(function () {
           }
           var $li = $('<li class="mall_img" data-url="'+item+'" ></li>')
           $li.css({'background':'url('+item+') no-repeat center','background-size': 'cover'})
-          doc.append($li[0])
+          doc.appendChild($li[0])
         })
         $imgMain.css({'background':'url('+firstUrl+') no-repeat center','background-size': 'cover'})
         $ulImgList.append(doc)
