@@ -124,7 +124,7 @@ router.get('/type', (req, res)=> {
 router.get('/goods/detail/:id', (req, res, next) => {
 	let ep = EventProxy.create('goods', 'topGoods', 'newGoods', (goods, topGoods, newGoods) => {
 		let local = req.protocol + '://' + req.get('host')
-		res.locals.dfShare.title = goods.name
+		res.locals.dfShare.title = goods.name + '【白石山生态农场】'
 		res.locals.dfShare.imgUrl = local + goods.imgTmb
 		res.locals.dfShare.desc = goods.subName
 		res.render('app/detail', {title: '商品详情', goods, topGoods, newGoods})
