@@ -39,4 +39,12 @@
 			}
 		})
 	}
+	var $backBtn = $('.back_btn')
+	if ($backBtn && $backBtn[0]) {
+		$backBtn.on('click', function () {
+			setTimeout(function () {
+				location.href = '/app/index'
+			}, 250)
+		})
+	}
 })(jQuery)
