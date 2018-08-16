@@ -245,6 +245,7 @@ jQuery(function(){
    	})
    }
    function getRemotePostage (data) {
+   	 data.totalPrice = totalPrice
      $.post('/order/postage',data).done(function(res) {
         if(res.code === 0) {
             var payPrice = $.formatFloat(parseFloat(totalPrice) + parseFloat(res.data.feePrice))

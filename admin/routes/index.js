@@ -339,7 +339,12 @@ router.post('/postage/add', (req, res, next) => {
 		param.cityId = cityArr[0]
 		param.city = cityArr[1]
 	}
+	param.isFreeRule = Boolean(req.body.isFreeRule)
 	param.isValid = Boolean(req.body.isValid)
+	if (param.isFreeRule &&  (param.feeRule == '' || param.feeAmt == '')) {
+		req.flash('error', '条件金额和结果金额不能为空')
+		return res.redirect('/admin/postage/add')
+	}
 	if(req.body._id) { //更新
 		Postage.update(req.body._id, param, (err, postage) => {
 			if (err) return  next(err)

@@ -385,9 +385,10 @@ function setNewAddr (address) {
 }
 // 计算新邮费并设置
 function getRemotePostage (data) {
+ var totalPrice = $orderForm.find('input[name=totalPrice]').val()
+ data.totalPrice = totalPrice
  $.post('/order/postage',data).done(function(res) {
     if(res.code === 0) {
-      var totalPrice = $orderForm.find('input[name=totalPrice]').val()
       var payPrice = $.formatFloat(parseFloat(totalPrice) + parseFloat(res.data.feePrice))
       console.log(parseFloat(totalPrice) + parseFloat(res.data.feePrice), '-----------')
       console.log($.formatFloat(parseFloat(totalPrice) + parseFloat(res.data.feePrice)))

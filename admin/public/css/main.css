@@ -16041,3 +16041,6 @@ table.text-center th {
   cursor: pointer;
   pointer-events: inherit;
   line-height: 0; }
+
+.hide_div {
+  display: none; }

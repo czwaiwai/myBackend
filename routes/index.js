@@ -468,10 +468,14 @@ router.post('/order/postage', (req, res, next) => {
 	}
 	Postage.findEqual(addr, (err, postage) => {
 		if(err) return next(err)
-		console.log(postage, 'postage')
 		let fee = feeDf
 		if(postage) {
 			fee = postage.fee
+			if (postage.isFreeRule && data.totalPrice) {
+				if((data.totalPrice - 0) >= postage.feeRule) {
+					fee = postage.feeAmt
+				}
+			}
 		}
 		res.json({
 			code: 0,
