@@ -25,6 +25,48 @@
 <!--[if lte IE 8]>
 <script src="/js/ieBetter.min.js"></script>
 <![endif]-->
+<script src="dist/require.js"></script>
+<script >
+  require.config({
+    baseUrl: 'js',
+    paths: {
+      'jquery': 'lib/jquery-1.12.0.min',
+      'jquery.qrcode': 'lib/jquery.qrcode.min',
+      'jquery.lazyload': 'lib/jquery.lazyload.min',
+      'underscore': 'lib/underscore.min',
+      'bootstrap': 'lib/bootstrap.min',
+      'bootstrapDialog': 'lib/bootstrap-dialog.min',
+      'bootoast': 'bootoast',
+      'main': 'lib/main'
+    },
+    shim: {
+       'jquery': {
+       	  exports: '$'
+       },
+       'underscore': {
+       	  exports: '_'
+       },
+       'jquery.qrcode': {
+       	  deps: ['jquery'],
+          exports: 'jQuery.fn.qrcode'
+       },
+       'jquery.lazyload': {
+          deps: ['jquery'],
+          exports: 'jQuery.fn.lazyload'
+       },
+       'bootstrap': {
+          deps: ['jquery']
+       },
+       'bootoast': {
+       	  deps: ['jquery'],
+          exports: 'bootoast'
+       }
+    }
+  })
+  // require(['$', '_', 'main'], function ($, _ , main) {
+  // 	console.log($, _ , main)
+  // })
+</script>
 </head>
 <body <% if (is_phone){ %>ontouchstart=""<% } %> class="">
 <!--[if lte IE 8]>
@@ -132,15 +174,14 @@
       </div>
     </div>
   </div>
-<script src="/js/ieWarn.js"></script>
-<script src="/js/jquery-1.12.0.min.js"></script>
-<script src="/js/jquery.validate.js"></script>
-<!--<script src="/js/foundation.min.js"></script>-->
-<script src="/js/bootstrap/js/bootstrap.min.js"></script>
-<script src="/js/bootstrap-dialog.min.js"></script>
-<script src="/js/bootoast.js"></script>
-<script src="/js/underscore-min.js"></script>
-<script src="/js/main.js"></script>
+<!--<script src="/js/ieWarn.js"></script>-->
+<!--<script src="/js/jquery-1.12.0.min.js"></script>-->
+<!--<script src="/js/bootstrap/js/bootstrap.min.js"></script>-->
+<!--<script src="/js/bootstrap-dialog.min.js"></script>-->
+<!--<script src="/js/underscore-min.js"></script>-->
+<!--<script src="/js/jquery.validate.js"></script>-->
+<!--<script src="/js/bootoast.js"></script>-->
+<!--<script src="/js/main.js"></script>-->
 <%- block('footer') %>
 </body>
 </html>

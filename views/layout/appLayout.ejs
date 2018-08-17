@@ -47,18 +47,18 @@
 <script src="/app/js/lib/jquery.min.js"></script>
 <script src="/app/js/lib/underscore-min.js"></script>
 <script src="/app/js/lib/fastclick.js"></script>
+<script src="/app/js/lib/jquery-weui.js"></script>
+<script src="/app/js/app.js?v=09815"></script>
 <% if(query.debug){ %>
 <script src="/js/vconsole.min.js"></script>
 <script>
-  var vConsole = new VConsole()
-  console.log('hello world')
+	var vConsole = new VConsole()
+	console.log('hello world')
 </script>
 <% } %>
-<script src="/app/js/lib/jquery-weui.js"></script>
-<script src="/app/js/app.js?v=09815"></script>
-<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 <%- block('footer') %>
 <% if(isWeixin) { %>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 <script>
 	var signJson= <%-JSON.stringify(signJson) %>
 	var dfShare= <%-JSON.stringify(dfShare) %>

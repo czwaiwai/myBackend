@@ -240,10 +240,9 @@
     </div>
     <% } %>
 </div><!-- /.container -->
-<% block('footer').append(`<script src='/js/jquery.lazyload.min.js'></script>`)%>
-<% //block('footer').append(`<script src='js/iframeDialog.js'></script>`)%>
 <% block('footer').append(`<script>
-    jQuery(function(){
+require(['main', 'jquery.lazyload'], function() {
+  jQuery(function(){
       var isLogin =${user?true:false};
       $("div.lazy,li.lazy").lazyload({effect: "fadeIn"});
       $('.add_cart').on('click',function(e){
@@ -263,5 +262,6 @@
           }
         })
       })
-    });
+    })
+ })
 </script>`)%>
