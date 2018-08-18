@@ -31,9 +31,6 @@ define(['jquery','underscore','bootstrap-dialog','bootoast'], function ($,_,Boot
 		return (S4() + S4() + S4() + S4() + S4() + S4() + S4() + S4());
 	}
 
-	$.extend({
-		guidGenerator:guidGenerator
-	});
 	// if(!BootstrapDialog) {
 	// 	var BootstrapDialog = {}
 	// }
@@ -42,6 +39,7 @@ define(['jquery','underscore','bootstrap-dialog','bootoast'], function ($,_,Boot
 
 	// BootstrapDialog.DEFAULT_TEXTS['CONFIRM'] = '提示'
 	$.extend({
+		guidGenerator:guidGenerator,
 		confirmSubmit:function(message,callback,options){
 			var option=options || {};
 			BootstrapDialog.show({

@@ -143,33 +143,29 @@
     </div>
   </div>
 </div>
-<% block('footer').append(`<script src='/js/jquery.lazyload.min.js'></script>`)%>
-<% block('footer').append(`<script src="/js/jPager.js" ></script>`); %>
+
 <% block('footer').append(`<script>
-jQuery(function () {
-	$('.j_pager').pager()
-    $('#searchForm').on('submit', function (e) {
-        // e.preventDefault()
-        // location.href += '?' + $('#searchForm').serialize()
-        // return false;
-    })
+require(['main','jquery.lazyload','jPager'],function () {
+  jQuery(function () {
+    $('.j_pager').pager()
+    $('#searchForm').on('submit', function (e) {})
     $("div.lazy,li.lazy").lazyload({effect: "fadeIn"});
-	$('.add_cart').on('click',function(e){
-		e.preventDefault()
-		e.stopPropagation()
-		var $this = $(this)
-		$.post('/add2Cart',{_id:$this.data('id'),num:1}).done(function(res){
-      console.log(res)
-      if (res.code === 0) {
-      	var num = res.data.cart.reduce(function(before,item){
-      		return before + item.goodsNum
-      	}, 0)
-      	$('#cartBadge').triggerHandler('change.cartBadge',[num])
-      	$.Toast('添加成功','success')
-      } else {
-      	$.Toast(res.message,'warning')
-      }
-		})
-	})
+    $('.add_cart').on('click',function(e){
+      e.preventDefault()
+      e.stopPropagation()
+      var $this = $(this)
+      $.post('/add2Cart',{_id:$this.data('id'),num:1}).done(function(res){
+        if (res.code === 0) {
+          var num = res.data.cart.reduce(function(before,item){
+              return before + item.goodsNum
+          }, 0)
+          $('#cartBadge').triggerHandler('change.cartBadge',[num])
+          $.Toast('添加成功','success')
+        } else {
+          $.Toast(res.message,'warning')
+        }
+      })
+    })
+  })
 })
 </script>`) %>

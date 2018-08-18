@@ -133,24 +133,21 @@ margin-bottom:20px;
         <% } %>
     </div>
 </div>
-<% block('footer').append(`<script src="/js/spinner.js?v=0811" ></script>`); %>
-<% block('footer').append(`<script id="tpl">
-
-</script>`) %>
 <% block('footer').append(`<script>
-jQuery(function(){
+require(['main', 'spinner'], function () {
+  jQuery(function(){
     var page =(function () {
-		var carts = ${JSON.stringify(carts)}
-		var $cartWrap = $('#cartWrap')
-		var $spinner = $(".spinner")
-		var $checkAll = $('#checkAll')
-		var $goodsTotal = $('#goodsTotal')
-		var $needTotal = $('#needTotal')
-		var $clearCart = $('#clearCart')
-		var $emptyCart = $('#emptyCart')
-		var $fullCart = $('#fullCart')
-		var $confirmCart = $('#confirmCart')
-		var $form = $('#form')
+      var carts = ${JSON.stringify(carts)}
+      var $cartWrap = $('#cartWrap')
+      var $spinner = $(".spinner")
+      var $checkAll = $('#checkAll')
+      var $goodsTotal = $('#goodsTotal')
+      var $needTotal = $('#needTotal')
+      var $clearCart = $('#clearCart')
+      var $emptyCart = $('#emptyCart')
+      var $fullCart = $('#fullCart')
+      var $confirmCart = $('#confirmCart')
+      var $form = $('#form')
 		return {
 			init:function () {
 				this.bind()
@@ -158,68 +155,67 @@ jQuery(function(){
 			},
 			bind:function () {
 				var that = this
-        $spinner.Spinner({
-          callback:function(num) {
-            var $item = this.closest('.order_item')
-            $item.data('num',num)
-            console.log('set', num)
-            $.post('/cart/changeCartNum',{id:$item.data('cartId'),num:num})
-            that.renderAll(that.setAllData())
-            that.renderOne($item)
-          }
-        });
+                $spinner.Spinner({
+                  callback:function(num) {
+                    var $item = this.closest('.order_item')
+                    $item.data('num',num)
+                    console.log('set', num)
+                    $.post('/cart/changeCartNum',{id:$item.data('cartId'),num:num})
+                    that.renderAll(that.setAllData())
+                    that.renderOne($item)
+                  }
+                });
+                $cartWrap.on('change', '.check_item', function(){
+                  var $this = $(this)
+                  var $item = $this.closest('.order_item')
+                    $item.data('check',$this.prop('checked'))
+                    $.post('/cart/changeCartCheck', {id:$item.data('cartId'),check:$this.prop('checked')})
+                    that.renderAll(that.setAllData())
+                })
+                $cartWrap.on('click', '.del_link',function () {
+                    var $this = $(this)
+                    var $item = $this.closest('.order_item')
+                    $item.data('cartId')
+                    $.post('/cart/removeOne/'+ $item.data('cartId')).done(function() {
+                        $item.remove();
+                        that.renderAll(that.setAllData())
+                    })
+                })
+                $clearCart.on('click', function() {
+                   $.confirm('你确定要清空购物车么',function(res){
+                      if (res) {
+                        $.post('/cart/clear').done(function(){
+                          $cartWrap.empty()
+                          that.renderAll(that.setAllData())
+                        })
+                      }
+                   })
+                })
+                $checkAll.on('change', function () {
+                  var $this = $(this)
+                  console.log($this)
+                  if ($this.prop('checked')) {
+                    console.log('toCheck')
+                    $cartWrap.find('.check_item').prop('checked',true)
+                    $cartWrap.find('.order_item').data('check',true)
 
-        $cartWrap.on('change', '.check_item', function(){
-          var $this = $(this)
-          var $item = $this.closest('.order_item')
-            $item.data('check',$this.prop('checked'))
-            $.post('/cart/changeCartCheck', {id:$item.data('cartId'),check:$this.prop('checked')})
-            that.renderAll(that.setAllData())
-        })
-        $cartWrap.on('click', '.del_link',function () {
-        	var $this = $(this)
-        	var $item = $this.closest('.order_item')
-        	$item.data('cartId')
-        	$.post('/cart/removeOne/'+ $item.data('cartId')).done(function() {
-                $item.remove();
-                that.renderAll(that.setAllData())
-        	})
-        })
-        $clearCart.on('click', function() {
-           $.confirm('你确定要清空购物车么',function(res){
-              if (res) {
-                $.post('/cart/clear').done(function(){
-                  $cartWrap.empty()
+                  } else {
+                    $cartWrap.find('.check_item').prop('checked', false)
+                    $cartWrap.find('.order_item').data('check', false)
+                  }
+                  $.post('/cart/checkAll',{check:$this.prop('checked')})
                   that.renderAll(that.setAllData())
                 })
-              }
-           })
-        })
-        $checkAll.on('change', function () {
-          var $this = $(this)
-          console.log($this)
-          if ($this.prop('checked')) {
-            console.log('toCheck')
-            $cartWrap.find('.check_item').prop('checked',true)
-            $cartWrap.find('.order_item').data('check',true)
-
-          } else {
-            $cartWrap.find('.check_item').prop('checked', false)
-            $cartWrap.find('.order_item').data('check', false)
-          }
-          $.post('/cart/checkAll',{check:$this.prop('checked')})
-          that.renderAll(that.setAllData())
-        })
-        $confirmCart.on('click',function () {
-          var obj = that.setAllData()
-          if (obj.checkNum === 0 ) {
-          	return $.Toast('你还没有选择要购买的商品', 'warning')
-          }
-          $form.find('input[name=carts]').val(JSON.stringify(obj.carts))
-          $form.find('input[name=totalPrice]').val(obj.totalPrice)
-          console.log(JSON.stringify(obj.carts),'------------------------')
-          $form.submit()
-        })
+                $confirmCart.on('click',function () {
+                  var obj = that.setAllData()
+                  if (obj.checkNum === 0 ) {
+                    return $.Toast('你还没有选择要购买的商品', 'warning')
+                  }
+                  $form.find('input[name=carts]').val(JSON.stringify(obj.carts))
+                  $form.find('input[name=totalPrice]').val(obj.totalPrice)
+                  console.log(JSON.stringify(obj.carts),'------------------------')
+                  $form.submit()
+                })
         },
         renderOne: function ($item) {
             var num = $item.data('num')
@@ -290,5 +286,7 @@ jQuery(function(){
 	  }
     })()
     page.init()
+  })
 })
+
 </script>`) %>

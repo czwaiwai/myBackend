@@ -25,10 +25,10 @@
 <!--[if lte IE 8]>
 <script src="/js/ieBetter.min.js"></script>
 <![endif]-->
-<script src="dist/require.js"></script>
+<script src="/dist/require.min.js"></script>
 <script >
   require.config({
-    baseUrl: 'js',
+    baseUrl: '/js',
     paths: {
       'jquery': 'lib/jquery-1.12.0.min',
       'jquery.qrcode': 'lib/jquery.qrcode.min',
@@ -37,6 +37,9 @@
       'bootstrap': 'lib/bootstrap.min',
       'bootstrapDialog': 'lib/bootstrap-dialog.min',
       'bootoast': 'bootoast',
+      'jPager': 'jPager',
+      'spinner': 'spinner',
+      'uploadImg': 'uploadImg',
       'main': 'lib/main'
     },
     shim: {
@@ -56,6 +59,22 @@
        },
        'bootstrap': {
           deps: ['jquery']
+       },
+       'jPager': {
+         deps: ['jquery'],
+         exports: 'jQuery.fn.pager'
+       },
+       'spinner': {
+         deps: ['jquery'],
+         exports: 'jQuery.fn.Spinner'
+       },
+       'uploadImg': {
+       	 deps: ['jquery'],
+         exports: 'jQuery.fn.uploadImg'
+       },
+       'adChoose': {
+       	 deps: ['jquery'],
+         exports: 'jQuery.fn.adChoose'
        },
        'bootoast': {
        	  deps: ['jquery'],

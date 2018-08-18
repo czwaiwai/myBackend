@@ -105,17 +105,18 @@
         </div>
     </div>
 </div>
-<% block('footer').append(`<script src="/js/spinner.js?v=0811" ></script>`); %>
+
 <% block('footer').append(`<script>
-jQuery(function () {
-	var isLogin = ${user?true:false}
-	$("#spinner").Spinner()
-	$('#buy').on('click', function() {
+require(['main', 'spinner'], function () {
+  jQuery(function () {
+    var isLogin = ${user ? true : false}
+    $("#spinner").Spinner()
+    $('#buy').on('click', function() {
       if(!isLogin) return $.Toast('您还没有登录','warning')
       $('#form').submit()
-	})
-	$('#addCart').on('click', function() {
-		if(!isLogin) return $.Toast('您还没有登录','warning')
+    })
+    $('#addCart').on('click', function() {
+        if(!isLogin) return $.Toast('您还没有登录','warning')
         $.post('/add2Cart', $('#form').serialize()).done(function(res){
           console.log(res)
           if (res.code === 0) {
@@ -128,7 +129,7 @@ jQuery(function () {
             $.Toast(res.message || '','warning')
           }
         })
-	})
+    })
 
     var $imgShowWrap = $('#imgShowWrap')
     var $imgMain = $('.img_main', $imgShowWrap)
@@ -138,7 +139,7 @@ jQuery(function () {
         var firstUrl
         arr.forEach(function(item, index){
           if(index === 0) {
-            firstUrl = item.replace(/_\\$sma_[^\\.]+/,'')
+            firstUrl = item.replace(/_\\\\$sma_[^\\\\.]+/,'')
           }
           var $li = $('<li class="mall_img" data-url="'+item+'" ></li>')
           $li.css({'background':'url('+item+') no-repeat center','background-size': 'cover'})
@@ -153,7 +154,7 @@ jQuery(function () {
             clearTimeout(time)
             time = setTimeout(function() {
                     var url = $this.data('url')
-                    url = url.replace(/_\\$sma_[^\\.]+/,'')
+                    url = url.replace(/_\\\\$sma_[^\\\\.]+/,'')
                     console.log(url,'img')
                     $this.addClass('current').siblings().removeClass('current')
                     $imgMain.css({'background':'url('+url+') no-repeat center','background-size': 'cover'})
@@ -162,5 +163,6 @@ jQuery(function () {
         })())
     }
     init($imgShowWrap.data('imgs').split(','))
+  })
 })
 </script>`) %>

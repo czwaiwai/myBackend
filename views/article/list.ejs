@@ -42,9 +42,11 @@
 
     </div>
 </div>
-<% block('footer').append(`<script src="/js/jPager.js" ></script>`); %>
+
 <% block('footer').append(`<script>
-jQuery(function () {
-	$('.j_pager').pager()
+require(['jPager'], function () {
+  // jQuery(function () {
+  $('.j_pager').pager()
+  // })
 })
 </script>`) %>

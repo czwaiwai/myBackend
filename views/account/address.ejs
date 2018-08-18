@@ -135,104 +135,104 @@
         <input name="isUpdate" type="hidden" value="<@= address.isUpdate @>" >
      </form>
 </script>`) %>
-<% block('footer').append('<script src="/js/adChoose.js"></script>') %>
 <% block('footer').append(`<script>
-jQuery(function() {
-  var $addressWrap = $('#addressWrap')
-  var addrTpl = _.template($('#addrTpl').html())
-  var addrItemComplie = _.template($('#addrItemTpl')[0].innerHTML)
-  var $tableAddress = $('#tableAddress')
-
-  var addrList = ${JSON.stringify(address)}
-  initList(addrList)
-  $('.new_address').on('click', function () {
-     showAddressDialog({isUpdate:''}, function(address) {
-        if(addrList.length === 0) {
-           $addressWrap.find('.panel_empty').addClass('hide_div').siblings().removeClass('hide_div')
-        }
-     	addrList.push(address)
-        initList(addrList)
-     })
-  })
-  $tableAddress.on('click', '.btn_update', function () {
-    var $this = $(this)
-    var id = $this.data('id')
-    var item = _.find(addrList,function(item){
-    	return item._id === id
-    })
-    item.isUpdate = item._id
-    showAddressDialog(item, function(address) {
-       var addrItemTpl =  addrItemComplie({item:address})
-       $this.closest('tr').empty().append(addrItemTpl)
-    })
-  })
-  $tableAddress.on('click', '.btn_del', function () {
-  	var $this = $(this)
-  	$.confirm('你确定要删除这个收货地址么？',function(res){
-        if (res) {
-           $.post('/account/addressRemove',{_id:$this.data('id')},function(res){
-               $this.closest('tr').remove();
-               var index =  _.findIndex(addrList,function (item) {
-               	return item._id === $this.data('id')
+require(['bootstrap-dialog', 'main', 'adChoose'], function (BootstrapDialog) {
+	jQuery(function() {
+      var $addressWrap = $('#addressWrap')
+      var addrTpl = _.template($('#addrTpl').html())
+      var addrItemComplie = _.template($('#addrItemTpl')[0].innerHTML)
+      var $tableAddress = $('#tableAddress')
+      var addrList = ${JSON.stringify(address)}
+      initList(addrList)
+      $('.new_address').on('click', function () {
+         showAddressDialog({isUpdate:''}, function(address) {
+            if(addrList.length === 0) {
+               $addressWrap.find('.panel_empty').addClass('hide_div').siblings().removeClass('hide_div')
+            }
+            addrList.push(address)
+            initList(addrList)
+         })
+      })
+      $tableAddress.on('click', '.btn_update', function () {
+        var $this = $(this)
+        var id = $this.data('id')
+        var item = _.find(addrList,function(item){
+            return item._id === id
+        })
+        item.isUpdate = item._id
+        showAddressDialog(item, function(address) {
+           var addrItemTpl =  addrItemComplie({item:address})
+           $this.closest('tr').empty().append(addrItemTpl)
+        })
+      })
+      $tableAddress.on('click', '.btn_del', function () {
+        var $this = $(this)
+        $.confirm('你确定要删除这个收货地址么？',function(res){
+            if (res) {
+               $.post('/account/addressRemove',{_id:$this.data('id')},function(res){
+                   $this.closest('tr').remove();
+                   var index =  _.findIndex(addrList,function (item) {
+                    return item._id === $this.data('id')
+                   })
+                   addrList.splice(index,1)
+                   if(addrList.length===0) {
+                    $addressWrap.find('.panel_full').addClass('hide_div').siblings().removeClass('hide_div')
+                   }
                })
-               addrList.splice(index,1)
-               if(addrList.length===0) {
-               	$addressWrap.find('.panel_full').addClass('hide_div').siblings().removeClass('hide_div')
-               }
-           })
-        }
-  	})
-  })
-  function initList(addrList) {
-    var tplCompile = _.template($('#addrListTpl')[0].innerHTML)
-    var tpl = tplCompile({list:addrList})
-    $tableAddress.empty().append(tpl)
-  }
-  function showAddressDialog(address ,cb) {
-    var tmp =  addrTpl({address:address})
-    var div = document.createElement('div')
-    div.innerHTML = tmp
-    BootstrapDialog.show({
-      title:"修改地址",
-      message: div,
-      onshown: function(dialogRef){
-        var $body = dialogRef.getModalBody()
-        var $addressChoose = $body.find('#addressChoose')
-        var chooseOption = {
-          provinceUrl: '/cityAndArea',
-          cityUrl: '/cityAndArea?name=city',
-          areaUrl: '/cityAndArea?name=area'
-        }
-        if (address.isUpdate) {
-          chooseOption.provinceId = address.provinceId
-          chooseOption.cityId = address.cityId
-          chooseOption.areaId = address.areaId
-        }
-        $addressChoose.adChoose(chooseOption)
-      },
-      onhide:function(dialogRef) {
-      	var $body = dialogRef.getModalBody()
-        var $addressChoose = $body.find('#addressChoose')
-        $addressChoose.adChoose('unbind')
-      },
-      buttons: [{
-        label: '取消',
-        action: function(dialog) {
-          dialog.close();
-        }
-      }, {
-        label: '确定',
-        cssClass:"btn-primary",
-        action: function(dialog) {
-          var $body = dialog.getModalBody()
-          var $form = $body.find('form')
-          $.post('/account/address',$form.serialize(),function(res) {
-            cb(res.data.address)
-          })
-          dialog.close()
-        }
-      }]
-    });
-  }
+            }
+        })
+      })
+      function initList(addrList) {
+        var tplCompile = _.template($('#addrListTpl')[0].innerHTML)
+        var tpl = tplCompile({list:addrList})
+        $tableAddress.empty().append(tpl)
+      }
+      function showAddressDialog(address ,cb) {
+        var tmp =  addrTpl({address:address})
+        var div = document.createElement('div')
+        div.innerHTML = tmp
+        BootstrapDialog.show({
+          title:"修改地址",
+          message: div,
+          onshown: function(dialogRef){
+            var $body = dialogRef.getModalBody()
+            var $addressChoose = $body.find('#addressChoose')
+            var chooseOption = {
+              provinceUrl: '/cityAndArea',
+              cityUrl: '/cityAndArea?name=city',
+              areaUrl: '/cityAndArea?name=area'
+            }
+            if (address.isUpdate) {
+              chooseOption.provinceId = address.provinceId
+              chooseOption.cityId = address.cityId
+              chooseOption.areaId = address.areaId
+            }
+            $addressChoose.adChoose(chooseOption)
+          },
+          onhide:function(dialogRef) {
+            var $body = dialogRef.getModalBody()
+            var $addressChoose = $body.find('#addressChoose')
+            $addressChoose.adChoose('unbind')
+          },
+          buttons: [{
+            label: '取消',
+            action: function(dialog) {
+              dialog.close();
+            }
+          }, {
+            label: '确定',
+            cssClass:"btn-primary",
+            action: function(dialog) {
+              var $body = dialog.getModalBody()
+              var $form = $body.find('form')
+              $.post('/account/address',$form.serialize(),function(res) {
+                cb(res.data.address)
+              })
+              dialog.close()
+            }
+          }]
+        });
+      }
+    })
 })
 </script>`) %>

@@ -68,7 +68,6 @@ max-width:100%;
         </div>
     </div>
 </div>
-<% block('footer').append(`<script src="/js/jPager.js" ></script>`); %>
 <% block('footer').append(`<script id="itemTpl" type="text/template" >
 <ul>
 <@ _.each(orders,function(item) { @>
@@ -111,12 +110,13 @@ max-width:100%;
 </ul>
 </script>`); %>
 <% block('footer').append(`<script>
-jQuery(function () {
-	var itemTplCompile= _.template($("#itemTpl").html())
-	var $curr = $('#tab1')
-	var currType = 'all'
+require(['main', 'jPager'], function () {
+  jQuery(function () {
+    var itemTplCompile= _.template($("#itemTpl").html())
+    var $curr = $('#tab1')
+    var currType = 'all'
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-    	var $this = $(e.target)
+      var $this = $(e.target)
       var tab = $this.attr('href')
       currType =$this.data('type')
       $curr= $(tab)
@@ -132,23 +132,20 @@ jQuery(function () {
     }
     $('.j_pager').pager({
       callback:function (p) {
-        console.log($curr)
         getData($curr, p)
-        console.log('页面变化', p)
       }
     })
     $('#orderManageWrap').on('click','.btn_cancel',function(e){
       e.preventDefault()
       var $this = $(this)
       $.confirm('你确定要取消这个订单么','提示',function(res) {
-      	if(res) {
+        if(res) {
           $.post($this.attr('href')).done(function(res){
-          	console.log(res)
-          	$this.closest('.order_item_body').find('.status_txt').text('已取消')
+            $this.closest('.order_item_body').find('.status_txt').text('已取消')
           })
-      	}
+        }
       })
     })
-
+  })
 })
 </script>`) %>

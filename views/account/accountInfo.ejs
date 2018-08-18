@@ -62,19 +62,20 @@
         </div>
     </div>
 </div>
-<% block('footer').append(`<script src="/js/uploadImg.js"></script>`)%>
 <% block('footer').append(`<script>
-    var $imgUpload = $('#imgUpload')
-    var $form = $('#form')
-    $imgUpload.uploadImg(function(imgs){
-     $(this).css({"background":"url("+imgs[0].thumb.url+") no-repeat center","background-size":"cover"});
-    })
-   var $formErr= $('#form-error');
-   $form.validate({
-      rules:{},
-      messages:{},
-      submitHandler:function(form){
-           form.submit();
-      }
-    });
+require(['main', 'uploadImg'], function () {
+  var $imgUpload = $('#imgUpload')
+  var $form = $('#form')
+  $imgUpload.uploadImg(function(imgs){
+    $(this).css({"background":"url("+imgs[0].thumb.url+") no-repeat center","background-size":"cover"});
+  })
+  var $formErr= $('#form-error');
+  $form.validate({
+    rules:{},
+    messages:{},
+    submitHandler:function(form){
+      form.submit();
+    }
+  });
+})
 </script>`) %>
