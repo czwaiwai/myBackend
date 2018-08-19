@@ -128,38 +128,40 @@
 </div>
 </script>`) %>
 <% block('footer').append(`<script>
-jQuery(function(){
-  var tplComplie = _.template($('#queryPostageTpl')[0].innerHTML)
-  $('#applyBackAmt').on('click', function () {
-  	var $this = $(this)
-    $.confirm('你确定要申请退款么？<p class="text-muted">退款到帐时间在退款申请提交后的1～3个工作日内完成，请耐心等待</p>','提示', function(res){
-      if(res) {
-      	$.post('/account/applyBackAmt/' + $this.data('id')).done(res => {
-      	    $this.prop('disabled',true)
-            $.alert('<p class="text-success">' + res.message + '</p>')
+require(['main', 'bootstrap-dialog'], function (noone, BootstrapDialog) {
+  jQuery(function(){
+      var tplComplie = _.template($('#queryPostageTpl')[0].innerHTML)
+      $('#applyBackAmt').on('click', function () {
+        var $this = $(this)
+        $.confirm('你确定要申请退款么？<p class="text-muted">退款到帐时间在退款申请提交后的1～3个工作日内完成，请耐心等待</p>','提示', function(res){
+          if(res) {
+            $.post('/account/applyBackAmt/' + $this.data('id')).done(res => {
+                $this.prop('disabled',true)
+                $.alert('<p class="text-success">' + res.message + '</p>')
+            })
+          }
         })
-      }
-    })
-  })
-  $('#queryPostage').on('click',function () {
-  	var $this = $(this)
-  	$this.prop('disabled',true).text('正在查询...')
-  	$.post('/queryPostage/' + $this.data('id')).done(res=> {
-  		$this.prop('disabled',false).text('查看物流信息')
-        BootstrapDialog.show({
-          title:"物流详情",
-          message: $(tplComplie(res.data.postage)),
-          buttons: [{
-            label: '确定',
-            action: function(dialog) {
-              dialog.close();
-            }
-          }]
-        });
-  	}).fail(err => {
-  		$this.prop('disabled',false).text('查看物流信息')
-  		console.log(err)
-  	})
+      })
+      $('#queryPostage').on('click',function () {
+        var $this = $(this)
+        $this.prop('disabled',true).text('正在查询...')
+        $.post('/queryPostage/' + $this.data('id')).done(res=> {
+            $this.prop('disabled',false).text('查看物流信息')
+            BootstrapDialog.show({
+              title:"物流详情",
+              message: $(tplComplie(res.data.postage)),
+              buttons: [{
+                label: '确定',
+                action: function(dialog) {
+                  dialog.close();
+                }
+              }]
+            });
+        }).fail(err => {
+            $this.prop('disabled',false).text('查看物流信息')
+            console.log(err)
+        })
+      })
   })
 })
 </script>`) %>

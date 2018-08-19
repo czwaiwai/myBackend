@@ -97,4 +97,5 @@ input,input::-webkit-input-placeholder {
     </div>
 </div>
 <% block('footer').append(`<script>
-</script>`)%>
+require(['jquery.validate.defaults'],function () {})
+</script>`) %>

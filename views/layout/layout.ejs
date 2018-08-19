@@ -31,6 +31,9 @@
     baseUrl: '/js',
     paths: {
       'jquery': 'lib/jquery-1.12.0.min',
+      'jquery.validate': 'lib/jquery.validate',
+      'jquery.validate.methods': 'lib/jquery.validate.methods',
+      'jquery.validate.defaults': 'lib/jquery.validate.defaults',
       'jquery.qrcode': 'lib/jquery.qrcode.min',
       'jquery.lazyload': 'lib/jquery.lazyload.min',
       'underscore': 'lib/underscore.min',
@@ -48,6 +51,16 @@
        },
        'underscore': {
        	  exports: '_'
+       },
+       'jquery.validate': {
+       	  deps: ['jquery'],
+          exports: 'jQuery.fn.validate'
+       },
+       'jquery.validate.methods': {
+       	  deps: ['jquery', 'jquery.validate'],
+       },
+       'jquery.validate.defaults': {
+       	  deps: ['jquery', 'jquery.validate', 'jquery.validate.methods'],
        },
        'jquery.qrcode': {
        	  deps: ['jquery'],

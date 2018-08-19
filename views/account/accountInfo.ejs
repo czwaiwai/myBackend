@@ -63,7 +63,7 @@
     </div>
 </div>
 <% block('footer').append(`<script>
-require(['main', 'uploadImg'], function () {
+require(['main','jquery.validate.defaults', 'uploadImg'], function () {
   var $imgUpload = $('#imgUpload')
   var $form = $('#form')
   $imgUpload.uploadImg(function(imgs){

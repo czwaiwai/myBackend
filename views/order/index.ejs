@@ -53,7 +53,7 @@ li.addr_card.active:after {
         <div class="section_body">
             <div id="addrShow" class="addr_show <%=address?'':'addr_hide'%>">
                 <div >
-                    <div class="col-md-8">
+                    <div class="col-xs-8 col-md-8">
                         <p><i class="iconfont icon-map padding-right5" style="font-size: 34px;vertical-align: middle;"></i><button class="addr_update btn btn-sm btn-info">修改</button></p>
                         <div id="addrShowDetail">
                             <p><label>收货人：</label><span><%=address && address.name %></span></p>
@@ -61,7 +61,7 @@ li.addr_card.active:after {
                             <p><label>收货地址：</label><span><%=address && address.province %><%=address && address.city %><%=address && address.area %><%=address && address.address%></span></p>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-xs-4 col-md-4">
                         <div class="text-center margin20-h margin-v padding-top20 padding-left20 border-left" style="height: 140px;">
                             <p><a class="btn btn-link addr_change">切换地址</a></p>
                             <p><button class="btn btn-default btn-sm addr_add">新建地址</button></p>
@@ -72,7 +72,7 @@ li.addr_card.active:after {
             <div id="addrForm" class=" <%=address?'addr_hide':''%> addr_form">
                 <form id="addressForm" class=" form-horizontal margin-top20">
                     <div class="row">
-                        <div class="col-md-8">
+                        <div class="col-xs-8 col-md-8">
                             <div id="addressChoose" class="form-group">
                                 <label for="inputEmail3" class="col-sm-2 control-label">所在地区</label>
                                 <div class="col-sm-3">
@@ -108,7 +108,7 @@ li.addr_card.active:after {
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-xs-4 col-md-4">
                             <div class="margin20-h padding-top20 padding-left20 border-left" style="height: 170px;">
                                 <input type="hidden" name="isUpdate" value="" >
                                 <button type="submit" class="btn btn-info">保存地址</button>
@@ -122,21 +122,21 @@ li.addr_card.active:after {
     </div>
     <div class="section section_no_padding" >
         <div class="section_title">
-            <div class="col-md-4">商品信息</div>
-            <div class="col-md-2">单价</div>
-            <div class="col-md-2">数量</div>
-            <div class="col-md-2">小计</div>
-            <div class="col-md-2">实付</div>
+            <div class="col-xs-4 col-md-4">商品信息</div>
+            <div class="col-xs-2 col-md-2">单价</div>
+            <div class="col-xs-2 col-md-2">数量</div>
+            <div class="col-xs-2 col-md-2">小计</div>
+            <div class="col-xs-2 col-md-2">实付</div>
         </div>
         <div class="padding15-h ">
             <% goods.forEach(function(item){ %>
             <div class="row padding-v order_item">
-                <div class="col-md-4">
+                <div class="col-xs-4  col-md-4">
                     <div class="row">
-                        <div class="col-md-5">
+                        <div class="col-xs-5 col-md-5">
                             <img src="<%=item.goods.imgTmb%>" style="width:100px;height:100px;" >
                         </div>
-                        <div class="col-md-7">
+                        <div class="col-xs-7 col-md-7">
                            <h5><%=item.goods.name %></h5>
                             <p class="text-muted">
                                 <!--深海蓝 男款45-46码-->
@@ -144,10 +144,10 @@ li.addr_card.active:after {
                         </div>
                     </div>
                 </div>
-                <div class="col-md-2">￥<%=item.goods.sellPrice %></div>
-                <div class="col-md-2"><%=item.num %></div>
-                <div class="col-md-2">￥<%=item.subTotal %></div>
-                <div class="col-md-2">￥<%=item.payTotal%></div>
+                <div class="col-xs-2 col-md-2">￥<%=item.goods.sellPrice %></div>
+                <div class="col-xs-2 col-md-2"><%=item.num %></div>
+                <div class="col-xs-2 col-md-2">￥<%=item.subTotal %></div>
+                <div class="col-xs-2 col-md-2">￥<%=item.payTotal%></div>
             </div>
             <% })%>
         </div>
@@ -188,7 +188,6 @@ li.addr_card.active:after {
       </form>
     </div>
 </div>
-<% block('footer').append('<script src="/js/adChoose.js"></script>') %>
 <% block('footer').append(`<script id="addShowDetailTpl" type="text/template">
 <p><label>收货人：</label><span><@=address.name @></span></p>
 <p><label>联系方式：</label><span><@=address.mobile @></span></p>
@@ -208,174 +207,177 @@ li.addr_card.active:after {
   </div>
 </script>`) %>
 <% block('footer').append(`<script>
-jQuery(function(){
-   var $addressChoose = $('#addressChoose')
-   var $addressWrap = $('#addressWrap')
-   // var $addrAdd = $('.addr_add')
-   // var $addrUpdate = $('.addr_update')
-   // var $addrChange = $('.addr_change')
-   var $showFee = $('#showFee')
-   var $showNeedPrice = $('#showNeedPrice')
-   var $addrShow = $('#addrShow')
-   var $addrForm = $('#addrForm')
-   var $addrCancel =  $('.addr_cancel')
-   var $addrShowDetail = $('#addrShowDetail')
-   var $orderForm = $('#orderForm')
-   var feeDefault = ${feeDf}
-   var address = ${JSON.stringify(address)}
-   var addrList = ${JSON.stringify(addrList)}
-   var totalPrice = ${totalPrice}
-   console.log(address,'address')
-   function init () {
-   	 if (!address) {
-   	 	$addrCancel.hide()
-   	 } else {
-   	 	setfillAddr(address)
-   	 }
-   }
-   function setfillAddr(address) {
-    $orderForm.find('input[name=addressId]').val(address._id)
-    $orderForm.find('input[name=fee]').val(feeDefault) // 重新设置邮费
-   	var tmp = _.template($('#addShowDetailTpl').html())({address:address})
-   	$addrShowDetail.empty().html(tmp)
-   	getRemotePostage({
-   	    area: address.areaId + ',' + address.area,
-   	    city: address.cityId + ',' + address.city,
-   	    province: address.provinceId + ',' + address.province
-   	})
-   }
-   function getRemotePostage (data) {
-   	 data.totalPrice = totalPrice
-     $.post('/order/postage',data).done(function(res) {
-        if(res.code === 0) {
-            var payPrice = $.formatFloat(parseFloat(totalPrice) + parseFloat(res.data.feePrice))
-            $showFee.text(res.data.feePrice)
-            $showNeedPrice.text(payPrice)
-            $orderForm.find('input[name=needPrice]').val(payPrice)
-            $orderForm.find('input[name=fee]').val(res.data.feePrice)
-        }
-     })
-   }
-   init(address)
-    $addressChoose.adChoose({
-      provinceUrl: '/cityAndArea',
-      cityUrl: '/cityAndArea?name=city',
-      areaUrl: '/cityAndArea?name=area',
-      callback: function(data) {
-        console.log(data)
-        getRemotePostage(data)
-      }
-   })
-   // 订单提交
-   $orderForm.on('submit',function(){
-       var $this = $(this)
-       if (!$this.find('input[name=addressId]').val()) {
-        $.Toast('请填写收货地址', 'warning')
-        return false;
-       }
-       return true
-   })
-   // 添加地址
-   $addressWrap.on('click', '.addr_add', function() {
-   	  $addrForm.find('form')[0].reset();
-   	  $addrForm.find('input[name=isUpdate]').val('')
-   	  $addrShow.hide()
-      $addrForm.show()
-   })
-   // 修改地址
-   $addressWrap.on('click', '.addr_update', function() {
-      $addressChoose.adChoose('setDefaultVal',{
-          provinceId: address.provinceId,
-          cityId: address.cityId,
-          areaId: address.areaId,
-      })
-      $addrForm.find('textarea[name=address]').val(address.address)
-      $addrForm.find('input[name=name]').val(address.name)
-      $addrForm.find('input[name=mobile]').val(address.mobile)
-      $addrForm.find('input[name=isUpdate]').val(address._id)
-      $addrShow.hide()
-      $addrForm.show()
-   })
-   // 切换地址
-   var addrChooseTpl = _.template($('#addrChooseTpl').html())
-   $addressWrap.on('click', '.addr_change', function () {
-   	    var choose = ''
-        $.get('/account/getAllAddress').done(function(res) {
-            console.log(res.data.address)
-            addrList = res.data.address
-            var tmp =  addrChooseTpl({address:res.data.address})
-            var div = document.createElement('div')
-            div.innerHTML = tmp
-            BootstrapDialog.show({
-              title:"切换地址",
-              message: div,
-              onshown: function(dialogRef){
-                var $body = dialogRef.getModalBody()
-                $body.css({height: '500px',overflow: 'auto'})
-                $body.on('click','.addr_card',function() {
-                	var $this = $(this)
-                	if($this.hasClass('active')) {
-                		$this.removeClass('active')
-                		choose = ''
-                	} else {
-                		choose = $this.data('id')
-                		$this.addClass('active').siblings().removeClass('active')
-                	}
-                })
-              },
-              buttons: [{
-                label: '取消',
-                action: function(dialog) {
-                  dialog.close();
-                }
-              }, {
-                label: '确定',
-                cssClass:"btn-primary",
-                action: function(dialog) {
-                  if(!choose) {
-                  	$.Toast('请选择你的地址','warning')
-                  } else {
-                  	var newChoose = _.find(addrList,function(item) {
-                  	    return 	item._id === choose
-                  	})
-                  	address = newChoose
-                  	console.log(address , 'address')
-                  	setfillAddr(address)
-                    dialog.close()
-                  }
-                }
-              }]
-            });
-        })
-   })
-   // 取消地址
-   $addressWrap.on('click', '.addr_cancel', function () {
-      $addrForm.hide()
-      $addrShow.show()
-   })
-   var $addressForm = $('#addressForm')
-   var $formErr= $('#form-error');
-   $addressForm.validate({
-      rules:{},
-      messages:{},
-//          showErrors:function(errorMap, errorList){
-//             if (errorList[0]) {
-//                $formErr.empty().append(errorList[0].message);
-//              }else{
-//                $formErr.empty();
-//              }
-//          },
-      submitHandler:function(form){
-        var formParams = $(form).serialize();
-        console.log(formParams)
-        $.post('/account/address', $(form).serialize()).done(function(res){
-            var address = res.data.address
+require(['bootstrap-dialog', 'main', 'adChoose', 'jquery.validate.defaults'], function (BootstrapDialog) {
+  jQuery(function(){
+       var $addressChoose = $('#addressChoose')
+       var $addressWrap = $('#addressWrap')
+       // var $addrAdd = $('.addr_add')
+       // var $addrUpdate = $('.addr_update')
+       // var $addrChange = $('.addr_change')
+       var $showFee = $('#showFee')
+       var $showNeedPrice = $('#showNeedPrice')
+       var $addrShow = $('#addrShow')
+       var $addrForm = $('#addrForm')
+       var $addrCancel =  $('.addr_cancel')
+       var $addrShowDetail = $('#addrShowDetail')
+       var $orderForm = $('#orderForm')
+       var feeDefault = ${feeDf}
+       var address = ${JSON.stringify(address)}
+       var addrList = ${JSON.stringify(addrList)}
+       var totalPrice = ${totalPrice}
+       console.log(address,'address')
+       function init () {
+         if (!address) {
+            $addrCancel.hide()
+         } else {
             setfillAddr(address)
-            $addrForm.hide()
-            $addrShow.show()
+         }
+       }
+       function setfillAddr(address) {
+        $orderForm.find('input[name=addressId]').val(address._id)
+        $orderForm.find('input[name=fee]').val(feeDefault) // 重新设置邮费
+        var tmp = _.template($('#addShowDetailTpl').html())({address:address})
+        $addrShowDetail.empty().html(tmp)
+        getRemotePostage({
+            area: address.areaId + ',' + address.area,
+            city: address.cityId + ',' + address.city,
+            province: address.provinceId + ',' + address.province
         })
-        return false;
-      }
-    });
+       }
+       function getRemotePostage (data) {
+         data.totalPrice = totalPrice
+         $.post('/order/postage',data).done(function(res) {
+            if(res.code === 0) {
+                var payPrice = $.formatFloat(parseFloat(totalPrice) + parseFloat(res.data.feePrice))
+                $showFee.text(res.data.feePrice)
+                $showNeedPrice.text(payPrice)
+                $orderForm.find('input[name=needPrice]').val(payPrice)
+                $orderForm.find('input[name=fee]').val(res.data.feePrice)
+            }
+         })
+       }
+       init(address)
+        $addressChoose.adChoose({
+          provinceUrl: '/cityAndArea',
+          cityUrl: '/cityAndArea?name=city',
+          areaUrl: '/cityAndArea?name=area',
+          callback: function(data) {
+            console.log(data)
+            getRemotePostage(data)
+          }
+       })
+       // 订单提交
+       $orderForm.on('submit',function(){
+           var $this = $(this)
+           if (!$this.find('input[name=addressId]').val()) {
+            $.Toast('请填写收货地址', 'warning')
+            return false;
+           }
+           return true
+       })
+       // 添加地址
+       $addressWrap.on('click', '.addr_add', function() {
+          $addrForm.find('form')[0].reset();
+          $addrForm.find('input[name=isUpdate]').val('')
+          $addrShow.hide()
+          $addrForm.show()
+       })
+       // 修改地址
+       $addressWrap.on('click', '.addr_update', function() {
+          $addressChoose.adChoose('setDefaultVal',{
+              provinceId: address.provinceId,
+              cityId: address.cityId,
+              areaId: address.areaId,
+          })
+          $addrForm.find('textarea[name=address]').val(address.address)
+          $addrForm.find('input[name=name]').val(address.name)
+          $addrForm.find('input[name=mobile]').val(address.mobile)
+          $addrForm.find('input[name=isUpdate]').val(address._id)
+          $addrShow.hide()
+          $addrForm.show()
+       })
+       // 切换地址
+       var addrChooseTpl = _.template($('#addrChooseTpl').html())
+       $addressWrap.on('click', '.addr_change', function () {
+            var choose = ''
+            $.get('/account/getAllAddress').done(function(res) {
+                console.log(res.data.address)
+                addrList = res.data.address
+                var tmp =  addrChooseTpl({address:res.data.address})
+                var div = document.createElement('div')
+                div.innerHTML = tmp
+                BootstrapDialog.show({
+                  title:"切换地址",
+                  message: div,
+                  onshown: function(dialogRef){
+                    var $body = dialogRef.getModalBody()
+                    $body.css({height: '500px',overflow: 'auto'})
+                    $body.on('click','.addr_card',function() {
+                        var $this = $(this)
+                        if($this.hasClass('active')) {
+                            $this.removeClass('active')
+                            choose = ''
+                        } else {
+                            choose = $this.data('id')
+                            $this.addClass('active').siblings().removeClass('active')
+                        }
+                    })
+                  },
+                  buttons: [{
+                    label: '取消',
+                    action: function(dialog) {
+                      dialog.close();
+                    }
+                  }, {
+                    label: '确定',
+                    cssClass:"btn-primary",
+                    action: function(dialog) {
+                      if(!choose) {
+                        $.Toast('请选择你的地址','warning')
+                      } else {
+                        var newChoose = _.find(addrList,function(item) {
+                            return 	item._id === choose
+                        })
+                        address = newChoose
+                        console.log(address , 'address')
+                        setfillAddr(address)
+                        dialog.close()
+                      }
+                    }
+                  }]
+                });
+            })
+       })
+       // 取消地址
+       $addressWrap.on('click', '.addr_cancel', function () {
+          $addrForm.hide()
+          $addrShow.show()
+       })
+       var $addressForm = $('#addressForm')
+       var $formErr= $('#form-error');
+       $addressForm.validate({
+          rules:{},
+          messages:{},
+    //          showErrors:function(errorMap, errorList){
+    //             if (errorList[0]) {
+    //                $formErr.empty().append(errorList[0].message);
+    //              }else{
+    //                $formErr.empty();
+    //              }
+    //          },
+          submitHandler:function(form){
+            var formParams = $(form).serialize();
+            console.log(formParams)
+            $.post('/account/address', $(form).serialize()).done(function(res){
+                var address = res.data.address
+                setfillAddr(address)
+                $addrForm.hide()
+                $addrShow.show()
+            })
+            return false;
+          }
+        });
+  })
 })
+
 </script>`) %>
