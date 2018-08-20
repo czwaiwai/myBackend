@@ -1,28 +1,11 @@
-define(['jquery','underscore','bootstrap-dialog','bootoast'], function ($,_,BootstrapDialog,bootoast) {
+define(['jquery','underscore','bootoast', 'layer'], function ($,_,bootoast, layer) {
+	console.log(layer)
+
+
 	_.templateSettings = {
 		evaluate    : /<@([\s\S]+?)@>/g,
 		interpolate : /<@=([\s\S]+?)@>/g,
 		escape      : /<@-([\s\S]+?)@>/g
-	};
-	BootstrapDialog.DEFAULT_TEXTS[BootstrapDialog.TYPE_PRIMARY] = '提示';
-	BootstrapDialog.DEFAULT_TEXTS['OK'] = '确定'
-	BootstrapDialog.DEFAULT_TEXTS['CANCEL'] = '取消'
-	BootstrapDialog.defaultOptions = {
-		type: BootstrapDialog.TYPE_PRIMARY,
-		size: BootstrapDialog.SIZE_NORMAL,
-		cssClass: '',
-		title: "提示",
-		message: null,
-		nl2br: true,
-		closable: true,
-		closeByBackdrop: true,
-		closeByKeyboard: true,
-		spinicon: BootstrapDialog.ICON_SPINNER,
-		autodestroy: true,
-		draggable: false,
-		animate: false,
-		description: '',
-		tabindex: -1
 	};
 	function guidGenerator() {
 		var S4 = function() {
@@ -30,88 +13,23 @@ define(['jquery','underscore','bootstrap-dialog','bootoast'], function ($,_,Boot
 		};
 		return (S4() + S4() + S4() + S4() + S4() + S4() + S4() + S4());
 	}
-
-	// if(!BootstrapDialog) {
-	// 	var BootstrapDialog = {}
-	// }
-	// console.log(BootstrapDialog, 'BootstrapDialog')
-
-
-	// BootstrapDialog.DEFAULT_TEXTS['CONFIRM'] = '提示'
 	$.extend({
 		guidGenerator:guidGenerator,
-		confirmSubmit:function(message,callback,options){
-			var option=options || {};
-			BootstrapDialog.show({
-				title: option.title || "提示",
-				message: message,
-				buttons: [{
-					label: '取消',
-					action: function(dialog) {
-						dialog.close();
-					}
-				},
-					{
-						label: '确定',
-						cssClass:"btn-primary",
-						action: function(dialog) {
-							var $button = this;
-							$button.spin();
-							$button.disable();
-							callback(function(){
-								dialog.close();
-							},dialog,$button);
-						}
-					}]
-			});
-		},
-		alert:function(msg,title,callback) {
-			var cb = callback
-			if(typeof title === 'function') {
-				cb = title
-				title = '提示'
-			}
-			BootstrapDialog.alert({
-				title: title,
-				message: msg,
-				closable: true, // <-- Default value is false
-				draggable: false, // <-- Default value is false
-				callback: cb
-			}).setSize(BootstrapDialog.SIZE_SMALL)
-		},
-		confirm:function(msg,title,callback) {
-			var cb = callback
-			if(typeof title === 'function') {
-				cb = title
-				title = '提示'
-			}
-			BootstrapDialog.confirm({
-				title: title,
-				message: msg,
-				closable: true, // <-- Default value is false
-				draggable: false, // <-- Default value is false
-				callback:cb
-			}).setSize(BootstrapDialog.SIZE_SMALL)
-		},
 		Toast:function(msg,type){
-			bootoast({
-				message: msg,
-				type:type || 'success',
-				timeout:2,
-				position:'top-center',
+			layer.msg( msg, {
+				time: 2000 //2秒关闭（如果不配置，默认是3秒）
 			});
+			// bootoast({
+			// 	message: msg,
+			// 	type:type || 'success',
+			// 	timeout:2,
+			// 	position:'top-center',
+			// });
 		},
 		formatFloat:  function(f, digit) {
 			return Math.round(f*100)/100
-			// var m = Math.pow(10, digit || 2);
-			// return parseInt(f * m, 10) / m;
 		}
 	})
-
-
-
-	// $.guidGenerator=guidGenerator;
-	// console.log($.guidGenerator(),"-----");
 
 	var $cartBadge = $('#cartBadge')
 	if($cartBadge && $cartBadge[0]) {
@@ -132,30 +50,11 @@ define(['jquery','underscore','bootstrap-dialog','bootoast'], function ($,_,Boot
 			$flashAlert.remove();
 		},2500)
 	}
-	// $.validator.setDefaults({
-	// 	errorLabelContainer:'.form-error',
-	// 	onkeyup: false,
-	// 	rules:{},
-	// 	messages:{},
-	// 	highlight: function ( element, errorClass, validClass ) {
-	// 		$( element ).closest('.form-group').addClass( "has-error" ).removeClass( "has-success" );
-	// 	},
-	// 	unhighlight: function (element, errorClass, validClass) {
-	// 		$( element ).closest('.form-group').addClass( "has-success" ).removeClass( "has-error" );
-	// 	},
-	// 	showErrors:function(errorMap, errorList){
-	// 		this.defaultShowErrors()
-	// 		if($('#back-error')[0]){
-	// 			$('#back-error').hide()
-	// 		}
-	// 	}
-	// })
-
 	$.ajaxSetup({
 		headers: {
 			'X-Requested-With': 'XMLHttpRequest'
 		},
-		error: function (res,body, err) {
+		error: function (res, body, err) {
 			if(res.responseJSON) {
 				console.log(res.responseJSON.message)
 				$.Toast(res.responseJSON.message, 'warning')

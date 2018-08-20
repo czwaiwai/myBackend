@@ -40,6 +40,8 @@
       'underscore': 'lib/underscore.min',
       'bootstrap': 'lib/bootstrap.min',
       'bootstrapDialog': 'lib/bootstrap-dialog.min',
+      'dialog': 'lib/dialog',
+      'layer': 'lib/layer.min',
       'bootoast': 'bootoast',
       'jPager': 'jPager',
       'spinner': 'spinner',
@@ -52,6 +54,10 @@
        },
        'underscore': {
        	  exports: '_'
+       },
+       'layer': {
+       	  deps: ['jquery'],
+          exports: 'layer'
        },
        'jquery.validate': {
        	  deps: ['jquery'],
@@ -96,9 +102,6 @@
        }
     }
   })
-  // require(['$', '_', 'main'], function ($, _ , main) {
-  // 	console.log($, _ , main)
-  // })
 </script>
 </head>
 <body <% if (is_phone){ %>ontouchstart=""<% } %> class="">
