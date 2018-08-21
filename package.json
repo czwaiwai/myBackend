@@ -58,6 +58,7 @@
     "gulp-requirejs": "^1.1.1",
     "gulp-uglify": "^3.0.1",
     "mongodb": "^2.2.30",
-    "socket.io": "^2.0.3"
+    "socket.io": "^2.0.3",
+    "through2": "^2.0.3"
   }
 }

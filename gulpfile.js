@@ -1,4 +1,5 @@
 var gulp = require('gulp')
+var through2 = require('through2')
 var rename = require('gulp-rename')
 var uglify = require('gulp-uglify')
 var concat = require('gulp-concat')
@@ -10,6 +11,24 @@ var rjs = require('gulp-requirejs')
 	// <script src="/js/jquery.validate.js"></script>
 	// <script src="/js/bootoast.js"></script>
 	// <script src="/js/main.js"></script>
+
+gulp.task('rewrite', function () {
+	return gulp.src(['./test.txt', './test1.txt'])
+		.pipe(through2.obj(function(chunk, enc, callback) {
+			console.log(chunk)
+			console.log(chunk.contents)
+			const {contents} = chunk
+			for (var i = 0; i < contents.length; i++) {
+				if (contents[i] === 97) {
+					contents[i] = 122;
+				}
+			}
+			chunk.contents = contents
+			this.push(chunk)
+			callback()
+		}))
+		.pipe(gulp.dest('public/dist/'))
+})
 
 gulp.task('uglifyPC', function () {
 	return gulp.src([
