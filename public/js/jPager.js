@@ -151,10 +151,15 @@
 		return li;
 	}
 	pager.prototype.setParams = function (pageNum){
-		if(this.$el.data('param')) {
-			return "?page="+pageNum + '&' + this.$el.data('param')
-		}else {
-			return "?page="+pageNum;
+		var paramStr = this.$el.data('param')
+		if (paramStr) {
+			if(paramStr.indexOf('page=') > -1) {
+				return '?' + paramStr.replace(/page=[^&]/, 'page='+ pageNum)
+			} else {
+				return "?page="+pageNum + '&' + paramStr
+			}
+		} else {
+			return "?page="+pageNum
 		}
 	}
 	pager.prototype.createBody = function (frag,page,liTxt){
