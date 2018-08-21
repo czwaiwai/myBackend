@@ -7844,10 +7844,10 @@ html #layuicss-layer {
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2); }
 
 .layui-layer-load {
-  background: url(loading-1.gif) center center no-repeat #eee; }
+  background: url(../img/loading-1.gif) center center no-repeat #eee; }
 
 .layui-layer-ico {
-  background: url(icon.png) no-repeat; }
+  background: url(../img/icon.png) no-repeat; }
 
 .layui-layer-btn a, .layui-layer-dialog .layui-layer-ico, .layui-layer-setwin a {
   display: inline-block;
@@ -8275,17 +8275,17 @@ html #layuicss-layer {
 .layui-layer-loading .layui-layer-content {
   width: 60px;
   height: 24px;
-  background: url(loading-0.gif) no-repeat; }
+  background: url(../img/loading-0.gif) no-repeat; }
 
 .layui-layer-loading .layui-layer-loading1 {
   width: 37px;
   height: 37px;
-  background: url(loading-1.gif) no-repeat; }
+  background: url(../img/loading-1.gif) no-repeat; }
 
 .layui-layer-ico16, .layui-layer-loading .layui-layer-loading2 {
   width: 32px;
   height: 32px;
-  background: url(loading-2.gif) no-repeat; }
+  background: url(../img/loading-2.gif) no-repeat; }
 
 .layui-layer-tips {
   background: 0 0;
@@ -8373,7 +8373,7 @@ html #layuicss-layer {
   background: #92B8B1; }
 
 .layui-layer-iconext {
-  background: url(icon-ext.png) no-repeat; }
+  background: url(../img/icon-ext.png) no-repeat; }
 
 .layui-layer-prompt .layui-layer-input {
   display: block;

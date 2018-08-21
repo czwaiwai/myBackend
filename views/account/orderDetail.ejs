@@ -128,7 +128,7 @@
 </div>
 </script>`) %>
 <% block('footer').append(`<script>
-require(['main', 'bootstrap-dialog'], function (noone, BootstrapDialog) {
+require(['main'], function (BootstrapDialog) {
   jQuery(function(){
       var tplComplie = _.template($('#queryPostageTpl')[0].innerHTML)
       $('#applyBackAmt').on('click', function () {

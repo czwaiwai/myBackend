@@ -136,7 +136,7 @@
      </form>
 </script>`) %>
 <% block('footer').append(`<script>
-require(['bootstrap-dialog', 'main', 'adChoose'], function (BootstrapDialog) {
+require(['main', 'adChoose'], function (BootstrapDialog) {
 	jQuery(function() {
       var $addressWrap = $('#addressWrap')
       var addrTpl = _.template($('#addrTpl').html())

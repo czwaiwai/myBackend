@@ -1,7 +1,4 @@
-define(['jquery','underscore','bootoast', 'layer'], function ($,_,bootoast, layer) {
-	console.log(layer)
-
-
+define(['jquery','underscore', 'layer', 'dialog'], function ($,_, layer, BootstrapDialog) {
 	_.templateSettings = {
 		evaluate    : /<@([\s\S]+?)@>/g,
 		interpolate : /<@=([\s\S]+?)@>/g,
@@ -16,15 +13,15 @@ define(['jquery','underscore','bootoast', 'layer'], function ($,_,bootoast, laye
 	$.extend({
 		guidGenerator:guidGenerator,
 		Toast:function(msg,type){
+			// @params  success | warning
+			var icon = 1
+			if (type === 'warning') {
+				icon = 0
+			}
 			layer.msg( msg, {
-				time: 2000 //2秒关闭（如果不配置，默认是3秒）
-			});
-			// bootoast({
-			// 	message: msg,
-			// 	type:type || 'success',
-			// 	timeout:2,
-			// 	position:'top-center',
-			// });
+				icon: icon,
+				time: 2000
+			})
 		},
 		formatFloat:  function(f, digit) {
 			return Math.round(f*100)/100
@@ -61,4 +58,5 @@ define(['jquery','underscore','bootoast', 'layer'], function ($,_,bootoast, laye
 			}
 		}
 	})
+	return BootstrapDialog
 })
