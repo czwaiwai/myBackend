@@ -300,6 +300,7 @@ router.get('/goods/index' , (req, res, next) => {
 		if (req.query.search) {
 			params.name = new RegExp(req.query.search)
 		}
+		console.log(req.query, '-------goods/index-------')
 		Goods.findAllByPage(params, req.query.page, 12, (err, obj) => {
 			let queryStr = qs.stringify(req.query)
 			res.render('goods/index', Object.assign({title: '商品展示', goodTypes: catalogs, queryStr}, obj))

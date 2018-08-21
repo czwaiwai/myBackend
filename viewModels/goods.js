@@ -53,7 +53,7 @@ exports.findAllByPage = function (query = {}, pageNum = 1,pageSize = 10, callbac
 		goods.skip(pageSize*(pageNum-1))
 		goods.limit(pageSize)
 		goods.exec(function(err,res){
-			console.log(err, res, '------res----------')
+			// console.log(err, res, '------res----------')
 			if(err) return callback(err)
 			callback(err,{
 				goods:res,

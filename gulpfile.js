@@ -2,6 +2,7 @@ var gulp = require('gulp')
 var rename = require('gulp-rename')
 var uglify = require('gulp-uglify')
 var concat = require('gulp-concat')
+var rjs = require('gulp-requirejs')
 	// <script src="/js/jquery-1.12.0.min.js"></script>
 	// <script src="/js/bootstrap/js/bootstrap.min.js"></script>
 	// <script src="/js/bootstrap-dialog.min.js"></script>
@@ -31,6 +32,12 @@ gulp.task('uglifyApp', function () {
 		.pipe(uglify())
 		.pipe(concat('app.min.js'))
 		.pipe(gulp.dest('public/dist/'))
+})
+
+gulp.task('rjs', function () {
+	return rjs({
+		baseUrl: '',
+	})
 })
 
 gulp.task('build', function () {
