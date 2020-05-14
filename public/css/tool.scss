@@ -45,7 +45,7 @@
 }
 
 $direction:('top','left','right','bottom');
-$distance:('5','10','15','20');
+$distance:('5','10','15','20', '25', '30');
 $text-position:('left','right','center');
 @mixin distanceBy($dis,$size) {
   @if($size == '10') {
@@ -108,7 +108,7 @@ $text-position:('left','right','center');
   }
 }
 
-@for $i from 10 through 28{
+@for $i from 10 through 48{
   .fs#{$i}{
     font-size:#{$i}px;
   }

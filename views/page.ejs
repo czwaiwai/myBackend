@@ -10,9 +10,11 @@
 }
 .page {
     background-color: #fff;
-    border: 1px #e5e5e5 solid;
     padding: 20px;
     overflow: hidden;
+}
+.top_line {
+    
 }
 </style>`)%>
 
@@ -26,11 +28,7 @@
         </ol>
     </div>
     <div class="row">
-        <div class="col-md-3 col-xs-3">
-            <% include navbar/pageNav %>
-            <% include navbar/addrNav %>
-        </div>
-        <div class="col-md-9  col-xs-9">
+        <div class="col-md-12  col-xs-12">
             <div class="page" >
                 <h2 style="margin-top:0;" class="page-head-title"><%=page.title %></h2>
                 <%- page.content %>

@@ -1,10 +1,271 @@
 <% layout('layout/layout') %>
 <% block('header').append(`<style>
+.tab_link {
+    color:#333;
+    display:block;
+    line-height:64px;
+    text-align:center;
+}
+.tab_link:hover {
+    color:#2685e9;
+}
+.tab_link.active {
+    color:#2685e9;
+}
+.bl_card:hover {
+    box-shadow: 0px 0px 14.25px 0.75px rgba(0, 0, 0, 0.15);
+    transition: all 0.36s ease;
+}
+.parner_card {
+    height:8vw;
+    background:#FFF;
+    min-height:72px;
+    padding-top:15px;
+ 
+}
+.parner_card  img {
+     height:100%;
+    -webkit-filter: grayscale(100%);
+    -moz-filter: grayscale(100%);
+    -ms-filter: grayscale(100%);
+    -o-filter: grayscale(100%);
+    filter: grayscale(100%);
+    filter: gray;
+    opacity: 0.7;
+    transition: all 0.36s ease;
+    transform: scale(0.8)
+}
+.parner_card:hover img {
+    -webkit-filter: none;
+    -moz-filter: none;
+    -ms-filter: none;
+    -o-filter: none;
+    filter: none;
+    transform: scale(1)
+}
+.parner_card:hover {
+    box-shadow: 0px 0px 14.25px 0.75px rgba(0, 0, 0, 0.15);
+    transition: all 0.36s ease;
+}
+.line_bl {
+    height: 3px;
+    background:#000;
+    width:100px;
+    margin: 30px 0 ;
+}
 </style>`)%>
-<div class="container">
-    这里是关于我们
-    <%= title %>
+<div class="container-fluid relative">
+    <div class="container" style="height:26vw">
+        <div class="fs48 light text-center" style="line-height:26vw;">关于我们</div>
+        
+    </div>
+    <div class="img_wrap_bg" >
+        <div class="trans_mask" ></div>
+        <div class="bg" style="background-image:url(/upload/20200505/p3Gk3EW3cDgHRIpn7t0Qt65e_$date20200505_$2000x1313.jpg)"></div>
+    </div>
+</div>
+<div class="container-fluid light_bg">
+    <div class="container light_bg">
+        <div class="row">
+             <%catalogs.filter(function (item) { return item.isValid && item.name === 'company'})[0].childrens.forEach(function(sub){ %>
+                <div class="col-xs-6 col-sm-3 col-md-3" style="height:64px;">
+                    <a href="<%=sub.relativeUrl %>"  class="tab_link fs18 <%= sub.relativeUrl.indexOf(query.name)>-1?'active':''%> "><%= sub.nameCn %></a>
+                </div>
+             <%}) %>
+        </div>
+    </div>
+</div>
+<div >
+    <% if(query.name === 'company') { %>
+        <section >
+            <div  class="container">
+                <div class="big_title" style="padding:6vw 0;">
+                    <div class="text-center h1" >一方云</div>
+                    <div class="text-center h4" ><%=webInfo.webIntro.value %></div>
+                </div>
+            </div>
+            <div class="light_bg">
+                <div  class="container">
+                    <div class="big_title" style="padding:6vw 0;">
+                        <div class="text-center h1" >我们的优势</div>
+                        <div class="text-center h4" >让服务更好地理解和服务人类</div>
+                    </div>
+                </div>
+                <div class="row light_bg" >
+                    <div class="col-xs-12 col-sm-6 col-md-3 " >
+                        <div class="bl_card light_bg" style="margin-bottom:20px;">
+                            <div class="bl_img_wrap">
+                                <img class="img-responsive center-block" src="/upload/20200505/8cJr50aEw1otnC-1F_8llTdC_$date20200505_$580x326.jpg">
+                            </div>
+                            <div style="padding:30px;background:#FFF;">
+                                <div class="fs24" style="line-height:1.5;">文档管理</div>
+                                <div class="fs16" style="color:#808080;">第一款智能处理板卡产品，搭载了MLU100芯片，为云端推理提供强大的运算能力支撑</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-3" >
+                        <div class="bl_card light_bg" style="margin-bottom:20px;">
+                            <div class="bl_img_wrap" >
+                                <img src="/upload/20200505/_zZ067s1HeLLULKCY1biSEqL_$date20200505_$550x300.jpg">
+                            </div>
+                            <div style="padding:30px;background:#FFF;">
+                                <div class="fs24" style="line-height:1.5;">企业网盘</div>
+                                <div class="fs16" style="color:#808080;">第一款智能处理板卡产品，搭载了MLU100芯片，为云端推理提供强大的运算能力支撑</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-3 " >
+                        <div class="bl_card light_bg" style="margin-bottom:20px;">
+                            <div class="bl_img_wrap">
+                                <img src="/upload/20200505/-nmq38deyIi1gYBC2I2M3UGd_$date20200505_$538x285.png">
+                            </div>
+                            <div style="padding:30px;background:#FFF;">
+                                <div class="fs24" style="line-height:1.5;">合同管理</div>
+                                <div class="fs16" style="color:#808080;">第一款智能处理板卡产品，搭载了MLU100芯片，为云端推理提供强大的运算能力支撑</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-3 " >
+                        <div class="bl_card light_bg" style="margin-bottom:20px;">
+                            <div class="bl_img_wrap">
+                                <img src="/upload/20200505/-nmq38deyIi1gYBC2I2M3UGd_$date20200505_$538x285.png">
+                            </div>
+                            <div style="padding:30px;background:#FFF;">
+                                <div class="fs24" style="line-height:1.5;">文控管理</div>
+                                <div class="fs16" style="color:#808080;">第一款智能处理板卡产品，搭载了MLU100芯片，为云端推理提供强大的运算能力支撑</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div  class="container">
+                <div class="big_title" >
+                    <div class="text-center h1" >合作伙伴</div>
+                    <div class="text-center h4" >让服务更好地理解和服务人类</div>
+                </div>
+            </div>
+            <div class="container" style="margin-bottom:4vw;">
+                <div class="col-xs-6 col-sm-3 col-md-3 " >
+                    <div class="parner_card">
+                        <img  class="img-responsive center-block " src="/upload/20200505/IT0A6HNXbWrHZao-OEUzd0Tl_$date20200505_$234x79.png">
+                    </div>
+                </div>
+                <div class="col-xs-6 col-sm-3 col-md-3 " >
+                    <div class="parner_card">
+                        <img  class="img-responsive center-block " src="/upload/20200505/IT0A6HNXbWrHZao-OEUzd0Tl_$date20200505_$234x79.png">
+                    </div>
+                </div>
+                <div class="col-xs-6 col-sm-3 col-md-3 " >
+                    <div class="parner_card">
+                        <img  class="img-responsive center-block " src="/upload/20200505/IT0A6HNXbWrHZao-OEUzd0Tl_$date20200505_$234x79.png">
+                    </div>
+                </div>
+            </div>
+        </section>
+     <% } %>
+        <% if(query.name === 'team') { %>
+        <section>
+            <div class="container">
+                <div class="big_title" >
+                    <div class="text-center h1" >技术团队</div>
+                    <div class="text-center h4" >让机器更好地理解和服务人类</div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-4">
+                    <div class="bl_card light_bg" style="margin-bottom:20px;">
+                        <div class="bl_img_wrap">
+                            <img src="/upload/20200505/Lj0GnbRDuDOf8ObX_lpioVIE_$date20200505_$403x535.png">
+                        </div>
+                        <div style="padding:30px;background:#FFF;">
+                            <div class="fs18" style="line-height:1.5;">名称</div>
+                            <div class="fs14" style="color:#808080;">职位</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-4">
+                    <div class="bl_card light_bg" style="margin-bottom:20px;">
+                        <div class="bl_img_wrap">
+                            <img src="/upload/20200505/Lj0GnbRDuDOf8ObX_lpioVIE_$date20200505_$403x535.png">
+                        </div>
+                        <div style="padding:30px;background:#FFF;">
+                            <div class="fs18" style="line-height:1.5;">名称</div>
+                            <div class="fs14" style="color:#808080;">职位</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-4">
+                    <div class="bl_card light_bg" style="margin-bottom:20px;">
+                        <div class="bl_img_wrap">
+                            <img src="/upload/20200505/Lj0GnbRDuDOf8ObX_lpioVIE_$date20200505_$403x535.png">
+                        </div>
+                        <div style="padding:30px;background:#FFF;">
+                            <div class="fs18" style="line-height:1.5;">名称</div>
+                            <div class="fs14" style="color:#808080;">职位</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <% } %>
+        <% if(query.name === 'service') { %>
+        <section>
+            <div class="container">
+                <div class="big_title" >
+                    <div class="text-center h1" >专业服务</div>
+                    <div class="text-center h4" >我们坚持以创造用户核心价值为导向。技术、产品、设计、服务均致力于理解、满足用户需求，甚至超出用户期望。离用户更近、为用户服务是我们存在的唯一理由，也是公司发展的原动力。</div>
+                </div>
+            </div>
+            <div class="row  light_bg  margin-bottom30">
+                <div class="col-xs-12 col-sm-6 col-md-6">
+                    <img  class="img-responsive" src= "/upload/20200505/ktIyiZbGzJBEmjDYoOspmLAh_$date20200505_$800x450.jpg">
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-6">
+                    <div class="big_title" style="padding:30px" >
+                        <div class="h2">定制化智能方案设计</div>
+                        <div class="line_bl"></div>
+                        <div class="h5">专业的服务团队结合用户的实际需求与布局，为用户提供专属的产品应用方案与设计。如需要上门服务，可便于服务商快速定位问题并解决。</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row  light_bg  margin-bottom30">
+                <div class="col-xs-12 col-sm-6 col-md-6">
+                        <div class="big_title" style="padding:30px" >
+                        <div class="h2">智能售后处理</div>
+                        <div class="line_bl"></div>
+                        <div class="h5">专业的服务团队结合用户的实际需求与布局，为用户提供专属的产品应用方案与设计。如需要上门服务，可便于服务商快速定位问题并解决。</div>
+                            </div>
+                    </div>
+                <div class="col-xs-12 col-sm-6 col-md-6">
+                    <img class="img-responsive" src="/upload/20200505/hHDsXz9wRZ1LS5se813xVIUV_$date20200505_$800x450.jpg">
+                </div>
 
+            </div>
+            <div class="row  light_bg  margin-bottom30">
+                <div class="col-xs-12 col-sm-6 col-md-6">
+                    <img  class="img-responsive" src="/upload/20200505/fFYwje3HDO07Hjm3B8cKcQ7q_$date20200505_$800x450.jpg">
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-6">
+                    <div class="big_title" style="padding:30px" >
+                    <div class="h2">高效的安装服务</div>
+                    <div class="line_bl"></div>
+                    <div class="h5">专业的服务团队结合用户的实际需求与布局，为用户提供专属的产品应用方案与设计。如需要上门服务，可便于服务商快速定位问题并解决。</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row light_bg margin-bottom30">
+
+                <div class="col-xs-12 col-sm-6 col-md-6">
+                    <div class="big_title" style="padding:30px" >
+                    <div class="h2">7X24小时运维</div>
+                    <div class="line_bl"></div>
+                    <div class="h5">专业的服务团队结合用户的实际需求与布局，为用户提供专属的产品应用方案与设计。如需要上门服务，可便于服务商快速定位问题并解决。</div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-6">
+                        <img class="img-responsive" src="/upload/20200505/O1WFQjRdMFY_ZVH_RRybyBA-_$date20200505_$800x450.jpg">
+                    </div>
+            </div>
+        </section>
+        <% } %>
 </div>
 <% block('footer').append(`<script>
 </script>`)%>

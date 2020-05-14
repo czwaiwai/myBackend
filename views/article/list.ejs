@@ -4,42 +4,34 @@
     border-bottom:1px solid #e5e5e5;
 }
 </style>`) %>
-<div class="container">
-    <div style="height: 200px;background: url(<%=navPage.imgUrl || '/upload/banner_other1.jpg' %>) no-repeat center;background-size: cover;" ></div>
-    <ol class="breadcrumb">
-        <li><a href="/">首页</a></li>
-        <li class="active"><%= title %></li>
-    </ol>
+<div class="container-fluid relative">
+    <div class="container" style="height:26vw">
+        <div class="fs48 light text-center" style="line-height:26vw;"><%= title %></div>
+    </div>
+    <div class="img_wrap_bg" >
+        <div class="trans_mask" ></div>
+        <div class="bg" style="background-image:url(<%=navPage.imgUrl%>)"></div>
+    </div>
+</div>
+<div class="container-fluid padding-top30">
     <div class="row">
-        <div class="col-md-3 col-xs-3">
-            <% include ../navbar/hotArtNav %>
-            <% include ../navbar/addrNav %>
-        </div>
-        <div class="col-md-9 col-xs-9">
-            <ul class="media-list">
-                <% articles.forEach(function(item){%>
-                <li class="media">
-                    <% if(item.imgUrl){ %>
-                    <div class="media-left">
-                        <a href="/article/detail/<%=item._id %>">
-                            <img class="media-object" data-src="holder.js/64x64" alt="64x64" src="<%= item.imgUrl%>" data-holder-rendered="true" style="width: 64px; ">
-                        </a>
+        <% articles.forEach(function(item){%>
+            <div class="col-xs-12 col-sm-6 col-md-4 " >
+                <a  href="/article/detail/<%=item._id %>" class="bl_card light_bg" style="display:block;margin-bottom:20px;">
+                    <div class="bl_img_wrap" style="min-height:14vw;">
+                        <img src="<%=(item.imgUrl || '').replace(/(_\$sma[^\.]+)/, '') %>">
                     </div>
-                    <%  } %>
-                    <div class="media-body">
-                        <h4 class="media-heading"><a class="link" href="/article/detail/<%=item._id %>" ><%=item.title %></a></h4>
-                        <p class="text-muted"><%=item.subTitle %></p>
-                        <p class="fs12 text-muted">
-                           <span class="fs12 margin-right20"><i class="iconfont icon-browse  padding-right5 "></i><%=item.read_count %></span>
-                           <span><i class="iconfont icon-history padding-right5 "></i><%=item.update_at_ago()%></span>
-                        </p>
+                    <div style="padding:30px;background:#FFF;">
+                        <div class="fs20 color_333" style="line-height:1.5;"><%=item.title %></div>
+                        <div class="fs14" style="color:#808080;"><%=item.subTitle %></div>
+                        <div class="fs12"><%=item.update_at_ago()%></div>
                     </div>
-                </li>
-                <% })%>
-            </ul>
-            <div class="j_pager" data-page="<%=page %>"  data-param="<%=query.catalog?'catalog='+query.catalog:'' %>"   data-count="<%=count %>"></div>
-        </div>
-
+                </a>
+            </div>
+        <% })%>
+    </div>
+    <div class="container text-center">
+        <div class="j_pager" data-page="<%=page %>"  data-param="<%=query.catalog?'catalog='+query.catalog:'' %>"   data-count="<%=count %>"></div>
     </div>
 </div>
 <% block('footer').append(`<script src="/js/jPager.js" ></script>`); %>

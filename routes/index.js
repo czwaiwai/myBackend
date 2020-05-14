@@ -12,7 +12,7 @@ let {emailCode, validEmailCode, loginValid, submitGoodsValid} = require('../util
 let {queryOnlyCode} = require('../utils/kdniao')
 let WxPay = require('../utils/wxPay')
 let Wechat = require('../utils/wechat')
-const wechat = Wechat.getInstance()
+// const wechat = Wechat.getInstance()
 let EventProxy = require('eventproxy')
 let dictCache = require('../utils/dictCache')
 let cache = require('../utils/cache')
@@ -26,13 +26,15 @@ router.use((req,res,next) => {
 	let ep = EventProxy.create('catalogs', 'dicts', (catalogs, dicts) => {
 		res.locals.catalogs = catalogs
 		let dictObj = _.keyBy(dicts,'name')
+		console.log(dictObj)
 		res.locals.frontInfo = _.keyBy(dictObj,'name')
 		res.locals.webInfo = dictObj.webInfo.value
-		res.locals.feeDf = dictObj.fee.value
+		// res.locals.feeDf = dictObj.fee.value
 		next()
 	})
 	ep.fail(next)
-	Catalog.getFrontCatalog((err,catalogs)=>{
+	Catalog.getFrontCatalog((err,catalogs) => {
+		console.log(err, catalogs, 'hahahahah')
 		if (err) { return ep.emit('error', err) }
 		// cache.set('catalogs', catalogs)
 		ep.emit('catalogs', catalogs);
@@ -48,7 +50,7 @@ router.use((req,res,next) => {
 	// 	})
 	// }
 	// Dict.findByGroup('front',ep.done('dicts'))
-	dictCa.getDicts('front',ep.done('dicts'))
+	dictCa.getDicts('front', ep.done('dicts'))
 })
 router.use((req, res, next) => {
 	var user = req.session.user
@@ -64,27 +66,25 @@ router.use((req, res, next) => {
 // router.get(checkLogin);
 router.get('/', (req, res, next)=> {
     //console.log(req.session.user,"这里可以取到session");
-	let ep = EventProxy.create('goodTypes', 'goods', 'news', 'articles','dicts', (goodTypes, goods, news, articles, dicts) => {
+	let ep = EventProxy.create('news', 'articles','dicts', (news, articles, dicts) => {
 		let info = _.keyBy(dicts,'name')
 		console.log(info, 'info -- - - ----------------------')
-		res.render('index',{title:"首页", info, goodTypes, goods, news, articles,
-			homeCompany: info.companyProfile.value,
-			homeBanner: info.homeBanner.value,
-			homeBlockImgs: info.homeBlockImgs.value
+		res.render('index',{title:"首页", info, news, articles,
+			homeBanner: info.homeBanner.value
 		})
 	})
 	ep.fail(next)
-	Catalog.getChildrenByName('goods',ep.done('goodTypes'))
+	// Catalog.getChildrenByName('goods',ep.done('goodTypes'))
 	Article.findTopArticle('news', 3, ep.done('news'))
 	Article.findTopArticle('articles', 3, ep.done('articles'))
 	Dict.findByGroup('home',ep.done('dicts'))
 	let front =  res.locals.frontInfo
-	if(front && front.notCatalogShow && front.notCatalogShow.value) {
-		let tmpArr = front.notCatalogShow.value.split(',')
-		Goods.getHotGoods ({onSale:1,catalogId: {$nin: [...tmpArr]}}, ep.done('goods'))
-	} else {
-		Goods.getHotGoods ({onSale:1}, ep.done('goods'))
-	}
+	// if(front && front.notCatalogShow && front.notCatalogShow.value) {
+	// 	let tmpArr = front.notCatalogShow.value.split(',')
+	// 	Goods.getHotGoods ({onSale:1,catalogId: {$nin: [...tmpArr]}}, ep.done('goods'))
+	// } else {
+	// 	Goods.getHotGoods ({onSale:1}, ep.done('goods'))
+	// }
 });
 //清空缓存内容
 router.post('/clearCache', (req, res, next) => {
@@ -220,10 +220,18 @@ router.get('/imgCode',(req,res)=>{
 //     console.log(req.path);
 //     res.render('chat',{title:"聊天室"});
 // });
-
-// router.get('/about',(req,res)=>{
-//     res.render('about',{title:"关于我们"});
-// });
+router.get('/productInfo', (req, res) => {
+	let navPage = res.locals.catalogs.find(item => item.relativeUrl ==='/productInfo')
+  res.render('product',{title:'产品信息', navPage});
+})
+router.get('/about',(req,res)=>{
+	let navPage = res.locals.catalogs.find(item => item.relativeUrl ==='/about')
+  res.render('about',{title:"关于我们", navPage});
+});
+router.get('/contact',(req,res)=>{
+	let navPage = res.locals.catalogs.find(item => item.relativeUrl === '/contact')
+  res.render('contact',{title:"联系我们", navPage});
+});
 router.get('/page/:pageName', (req, res, next) => {
 	let nav = res.locals.catalogs.filter(item => item.relativeUrl.indexOf('/page') === 0)
 	let navPage = res.locals.catalogs.find(item => item.relativeUrl === '/page/' + req.params.pageName)

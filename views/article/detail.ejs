@@ -5,40 +5,23 @@
     text-transform: none;
     padding: 0px 0px 15px 0px;
     font-weight: bold;
-    font-size: 22px;
+    font-size: 28px;
     border-bottom: 1px #e5e5e5 solid;
 }
 .page {
-    background-color: #fff;
-    border: 1px #e5e5e5 solid;
-    padding: 20px;
+    padding:60px 20px 20px;
     overflow: hidden;
 }
 </style>`)%>
 <div class="container">
     <% var indexCata =  catalogs.find(item => item.name === article.catalogName)%>
-    <div style="height: 200px;background: url(<%=(indexCata.imgUrl && indexCata.imgUrl.replace(/_\$sma[^.]+/,'')) || '/upload/banner_other.jpg' %>) no-repeat center;background-size: cover;" >
-    </div>
-    <div >
-        <ol class="breadcrumb">
-            <li><a href="/">首页</a></li>
-            <% if(indexCata) {%>
-            <li ><a href="<%=indexCata.relativeUrl %>"><%=indexCata.nameCn %></a></li>
-            <% } %>
-            <li class="active"><%= title %></li>
-        </ol>
-    </div>
     <div class="row">
-        <div class="col-md-3 col-xs-3">
-            <% include ../navbar/hotArtNav %>
-            <% include ../navbar/addrNav %>
-        </div>
-        <div class="col-md-9 col-xs-9">
-            <div class="page" >
+        <div class="col-md-12 col-xs-12">
+            <div class="page " >
                 <article>
                     <h2 style="margin-top:0;" class="page-head-title"><%=article.title %></h2>
-                    <p class="fs12 text-muted text-right no-margin">
-                        <span class="fs12 margin-right20"><i class="iconfont icon-browse  padding-right5 "></i><%=article.read_count %></span>
+                    <p class="fs16 ">
+                        <span class=" margin-right20"><i class="iconfont icon-browse  padding-right5 "></i><%=article.read_count %></span>
                         <span><i class="iconfont icon-history padding-right5 "></i><%=article.update_at_ago()%></span>
                     </p>
                     <blockquote>
@@ -49,7 +32,7 @@
                         <img src="<%=article.bigImg() %>" style="max-width:100%" >
                     </div>
                     <% } %>
-                    <section>
+                    <section class="fs16">
                         <%- article.content %>
                     </section>
                 </article>

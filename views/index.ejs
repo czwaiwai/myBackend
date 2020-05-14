@@ -1,245 +1,127 @@
 <% layout('layout/layout') %>
 <% block('header').append(`<style>
-    .spec_img {
-        overflow:hidden;
-    }
-    .spec_img img {
-        max-width:100%;
-        -webkit-transition: all 0.5s ease-in-out;
-        -moz-transition: all 0.5s ease-in-out;
-        transition: all 0.5s ease-in-out;
-    }
-    .spec_img img:hover {
-        transform: scale(1.08);
-        -ms-transform: scale(1.08);
-        -moz-transform: scale(1.08);
-        -webkit-transform: scale(1.08);
-        -o-transform: scale(1.08);
-    }
-    .list-group-no-border li{
-        border:none;
-    }
-    .list-group li {
-        padding:5px 10px;
-    }
-    .good_type_wrap {
-        list-style: none;
-        margin-top: 20px;
-        margin-right: -15px;
-        padding: 0;
-    }
-    .good_type_wrap li.good_type_item {
-        width: 110px;
-        height: 80px;
-        float: left;
-        margin-right: 8px;
-        font-size: 16px;
-        line-height: 80px;
-        border: 1px solid #e3e3e3;
-        text-align: center;
-    }
-    .good_type_wrap .good_type_item a {
-        width: 100%;
-        display: block;
-        height: 100%;
-        color: #FFF;
-        background: rgba(51, 51, 51, 0.32);
-        -webkit-transition: all 0.3s ease-in-out;
-        -moz-transition: all 0.3s ease-in-out;
-        transition: all 0.3s ease-in-out;
-    }
-    .good_type_wrap .good_type_item a:hover {
-        transform: scale(1.08);
-        -ms-transform: scale(1.08);
-        -moz-transform: scale(1.08);
-        -webkit-transform: scale(1.08);
-        -o-transform: scale(1.08);
-        background: rgba(87, 179, 55, 0.32);
-    }
+
 </style>`)%>
-<div class="container" >
+<div class="container-fluid" >
     <div class="row">
-        <div style="margin-top:-20px;">
-            <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-                <!-- Indicators -->
-                <ol class="carousel-indicators">
-                  <% homeBanner.forEach(function(item,index){ %>
+        <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+                <% homeBanner.forEach(function(item,index){ %>
+                <% if(item.value) { %>
+                <li data-target="#carousel-example-generic" data-slide-to="<%=index %>" class="<%= index===0?' active':'' %>"></li>
+                <% } %>
+                <% }) %>
+            </ol>
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner" role="listbox">
+                <% homeBanner.forEach(function(item,index){ %>
                     <% if(item.value) { %>
-                    <li data-target="#carousel-example-generic" data-slide-to="<%=index %>" class="<%= index===0?' active':'' %>"></li>
+                    <div style="height:calc(100vh - 72px);width:100%;background:#f0f0f0;" class="item <%= index===0?' active':'' %>">
+                        <div style="position:absolute;z-index:1;top:0;bottom:0;left:0;right:0;background:rgba(0, 0, 0, 0.3);"></div>
+                        <div style="width:100%;height:100%;background:url(<%=item.value %>) no-repeat center;background-size:cover;"></div>
+                    </div>
                     <% } %>
-                  <% }) %>
-                </ol>
-                <!-- Wrapper for slides -->
-                <div class="carousel-inner" role="listbox">
-                    <% homeBanner.forEach(function(item,index){ %>
-                        <% if(item.value) { %>
-                        <div style="width:100%;height:450px;background:#f0f0f0;" class="item <%= index===0?' active':'' %>">
-                            <img src="<%=item.value %>" alt="">
-                        </div>
-                        <% } %>
-                    <% }) %>
-                </div>
-                <!-- Controls -->
-                <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
-                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-                    <span class="sr-only">Previous</span>
-                </a>
-                <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
-                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-                    <span class="sr-only">Next</span>
-                </a>
+                <% }) %>
             </div>
-        </div>
-    </div>
-    <div class="clearfix">
-        <!--catalogs, goods-->
-      <ul class="good_type_wrap">
-      <% goodTypes.forEach(function(item) { %>
-        <li class="good_type_item lazy"  data-original="<%=item.imgUrl %>"   style="background-repeat: no-repeat;background-position:center;background-size:cover;">
-            <a href="/goods/index?catalog=<%=item.name %>" ><%=item.nameCn %></a>
-        </li>
-      <% }) %>
-      </ul>
-    </div>
-    <div  class="row  margin-top20">
-        <h3 class="section-title fs20 text-center" style="font-size:25px;">产品展示</h3>
-        <% if(frontInfo.notice && frontInfo.notice.isValid ===1) { %>
-        <div   class="alert alert-warning alert-dismissible" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <%= frontInfo.notice && frontInfo.notice.value %>
-        </div>
-        <% } %>
-        <% goods.forEach(function(item){  %>
-        <div class="col-xs-3 col-md-3">
-            <a  href="/goods/detail/<%=item._id %>" class="thumbnail">
-                <div style="">
-                    <div class="img_bg lazy" data-original="<%=item.imgTmb %>"  style="width:100%;height:222px;background-size:cover;"></div>
-                    <!--<img data-src="holder.js/100%x200" src="<%=item.imgTmb %>" alt="100%x200" style="width: 100%; display: block;" >-->
-                </div>
-                <div class="caption">
-                    <h5 class="dot text-center fs16"><%=item.name%></h5>
-                    <p class="no-margin clearfix">
-                        <span class="price pull-left fs20 text-primary">￥<%=item.sellPriceStr %></span>
-                        <% if (item.stock && item.stock > 0) { %>
-                            <button  data-id="<%=item._id %>" class="add_cart btn btn-primary pull-right" type="button">加入购物车</button>
-                        <% } else { %>
-                            <button  class="add_cart btn btn-warning pull-right" type="button" disabled>已售罄</button>
-                        <% } %>
-                        <!--<button  data-id="<%=item._id %>" class="add_cart btn btn-primary pull-right" type="button">加入购物车</button>-->
-                    </p>
-                </div>
+            <!-- Controls -->
+            <!-- <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
             </a>
-        </div>
-        <%})%>
-    </div>
-    <div class="row margin-top20">
-        <h3 class="section-title text-center" style="font-size:25px;">白石资讯</h3>
-        <div class="col-md-4  col-xs-4">
-            <div class="section  no-padding" style="height: 324px;margin: 0 -10px;">
-                <h3 class="fs20 padding-h clearfix"><%=homeBlockImgs[0].name %><small class="float_right"><a  href="/page/company" >更多 >></a></small></h3>
-                <div class="padding-h">
-                    <div class="spec_img">
-                        <img src="<%=homeBlockImgs[0].value %>">
-                    </div>
-                </div>
-                <div class="padding-v padding15-h" style="padding-top:15px;">
-                    <div style="overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 5;-webkit-box-orient: vertical;height: 98px;">
-                        <%-homeCompany.split("\n").join("<br />") %>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4  col-xs-4">
-            <div class="section  no-padding" style="height: 324px;margin: 0 -10px;">
-                <h3 class="fs20 padding-h clearfix"><%=homeBlockImgs[1].name %><small class="float_right"><a  href="/page/share" >更多 >></a></small></h3>
-                <div class="padding-h">
-                    <div class="spec_img">
-                        <img src="<%=homeBlockImgs[1].value %>">
-                    </div>
-                </div>
-                <div class="padding-v padding15-h" style="padding-top:15px;">
-                    <div style="overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 5;-webkit-box-orient: vertical;height: 98px;" >
-                        <%-info.sharefarm && info.sharefarm.value.split("\n").join("<br />") %>
-                    </div>
-                </div>
-            </div>
-            <!--<div class="section  no-padding" style="height:386px;margin: 0 -10px;">-->
-            <!--<h2 class="fs20 padding-h clearfix">烹调菜谱<small class="float_right"><a href="/article/list/articles" >更多 >></a></small></h2>-->
-            <!--<div class="padding-h">-->
-            <!--<div class="spec_img">-->
-            <!--<img src="<%=homeBlockImgs[2].value %>">-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--<ul class="list-group list-group-no-border margin-top">-->
-            <!--<% articles.forEach(function(item){ %>-->
-            <!--<li class="list-group-item dot"><a  alt="<%=item.title %>"  href="/article/detail/<%=item._id %>" class="normal_link "><i class="iconfont icon-more padding-right5"></i><%=item.title %></a></li>-->
-            <!--<% }) %>-->
-            <!--</ul>-->
-            <!--</div>-->
-        </div>
-        <div class="col-md-4  col-xs-4">
-            <div class="section  no-padding " style="height: 324px;margin: 0 -10px;">
-                <h2 class="fs20 padding-h clearfix"><%=homeBlockImgs[2].name %><small class="float_right"><a  href="/article/list/news" >更多 >></a></small></h2>
-                <div class="padding-h">
-                    <div class="spec_img">
-                        <img src="<%=homeBlockImgs[2].value %>">
-                    </div>
-                </div>
-                <ul class="list-group list-group-no-border margin-top">
-                    <% news.forEach(function(item){ %>
-                        <li class="list-group-item dot"><a  alt="<%=item.title %>"   href="/article/detail/<%=item._id %>" class="normal_link "><i class="iconfont icon-more padding-right5"></i><%=item.title %></a></li>
-                    <% }) %>
-                </ul>
-            </div>
+            <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a> -->
         </div>
     </div>
-    <% if(info.homeOtherRemark && info.homeOtherRemark.isValid === 1){ %>
-    <div class="row margin-top20">
-        <h3 class="section-title text-center" style="font-size:25px;">项目介绍</h3>
-        <div class="col-md-4 col-xs-4 ">
-            <div class="section  no-padding" style="height: 324px;margin: 0 -10px;">
-                <h3 class="fs20 padding-h clearfix"><%=info.homeOtherRemark.value[0].name %><small class="float_right"><a  href="<%=info.homeOtherLinks.value[0].value %>" >更多 >></a></small></h3>
-                <div class="padding-h">
-                    <div class="spec_img">
-                        <img src="<%=info.homeOtherImgs.value[0].value %>">
-                    </div>
+</div>
+<div class="container-fluid" >
+    <div style="padding:6vw 0;">
+        <div class="text-center" style="font-size:42px;line-height:1.5;">智能芯片领域方案专家</div>
+        <div class="text-center" style="font-size:24px;line-height:1.5;">让机器更好地理解和服务人类</div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-3 " >
+            <div class="bl_card light_bg" style="margin-bottom:20px;">
+                <div class="bl_img_wrap">
+                    <img class="img-responsive center-block" src="/upload/20200505/8cJr50aEw1otnC-1F_8llTdC_$date20200505_$580x326.jpg">
                 </div>
-                <div class="padding-v padding15-h">
-                    <%=info.homeOtherRemark.value[0].value%>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4  col-xs-4">
-            <div  class="section  no-padding " style="    height: 324px;margin: 0 -10px;">
-                <h2 class="fs20 padding-h clearfix"><%=info.homeOtherRemark.value[1].name %><small class="float_right"><a  href="<%=info.homeOtherLinks.value[1].value %>" >更多 >></a></small></h2>
-                <div class="padding-h">
-                    <div class="spec_img">
-                        <img src="<%=info.homeOtherImgs.value[1].value %>">
-                    </div>
-                </div>
-                <div class="padding-v padding15-h">
-                    <div>
-                      <%=info.homeOtherRemark.value[1].value%>
-                    </div>
+                <div style="padding:30px;background:#FFF;">
+                    <div class="fs24" style="line-height:1.5;">文档管理</div>
+                    <div class="fs16" style="color:#808080;">第一款智能处理板卡产品，搭载了MLU100芯片，为云端推理提供强大的运算能力支撑</div>
                 </div>
             </div>
         </div>
-        <div class="col-md-4  col-xs-4">
-            <div class="section  no-padding" style="height:240px;margin: 0 -10px;">
-                <h2 class="fs20 padding-h clearfix"><%=info.homeOtherRemark.value[2].name %><small class="float_right"><a href="<%=info.homeOtherLinks.value[2].value %>" >更多 >></a></small></h2>
-                <div class="padding-h">
-                    <div class="spec_img">
-                        <img src="<%=info.homeOtherImgs.value[2].value %>">
-                    </div>
+        <div class="col-xs-12 col-sm-6 col-md-3" >
+            <div class="bl_card light_bg" style="margin-bottom:20px;">
+                <div class="bl_img_wrap" >
+                    <img src="/upload/20200505/_zZ067s1HeLLULKCY1biSEqL_$date20200505_$550x300.jpg">
                 </div>
-                <div class="padding-v padding15-h">
-                    <%=info.homeOtherRemark.value[2].value %>
+                <div style="padding:30px;background:#FFF;">
+                    <div class="fs24" style="line-height:1.5;">企业网盘</div>
+                    <div class="fs16" style="color:#808080;">第一款智能处理板卡产品，搭载了MLU100芯片，为云端推理提供强大的运算能力支撑</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3 " >
+            <div class="bl_card light_bg" style="margin-bottom:20px;">
+                <div class="bl_img_wrap">
+                    <img src="/upload/20200505/-nmq38deyIi1gYBC2I2M3UGd_$date20200505_$538x285.png">
+                </div>
+                <div style="padding:30px;background:#FFF;">
+                    <div class="fs24" style="line-height:1.5;">合同管理</div>
+                    <div class="fs16" style="color:#808080;">第一款智能处理板卡产品，搭载了MLU100芯片，为云端推理提供强大的运算能力支撑</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3 " >
+            <div class="bl_card light_bg" style="margin-bottom:20px;">
+                <div class="bl_img_wrap">
+                    <img src="/upload/20200505/-nmq38deyIi1gYBC2I2M3UGd_$date20200505_$538x285.png">
+                </div>
+                <div style="padding:30px;background:#FFF;">
+                    <div class="fs24" style="line-height:1.5;">文控管理</div>
+                    <div class="fs16" style="color:#808080;">第一款智能处理板卡产品，搭载了MLU100芯片，为云端推理提供强大的运算能力支撑</div>
                 </div>
             </div>
         </div>
     </div>
-    <% } %>
 </div><!-- /.container -->
+<div class="container-fluid" >
+    <div style="padding:6vw 0;">
+        <div class="text-center" style="font-size:42px;line-height:1.5;">解决方案</div>
+        <div class="text-center" style="font-size:24px;line-height:1.5;">让机器更好地理解和服务人类</div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-6 " >
+            <div class="bl_card light_bg relative" style="margin-bottom:20px;height: 30vw;">
+                <div style="padding:6vw 30px;position:relative;z-index:1;">
+                    <div class="fs36 bold light text-center" style="line-height:1.5;">智慧园区</div>
+                    <div class="fs16 light padding-top20" >第一款智能处理板卡产品，搭载了MLU100芯片，为云端推理提供强大的运算能力支撑</div>
+                    <div class="text-center padding-top"><a href="/#" class="light_link">了解详情></a></div>
+                </div>
+                <div style="position:absolute;top:0;right:0;bottom:0;left:0;">
+                    <div class="trans_mask" style="position:absolute;width:100%;height:100%;background:rgba(0,0,0,0.2);"></div>
+                    <div class="bg" style="width:100%;height:100%;background:url(/upload/20200505/iNM8EXHFReiC2ac7NdZpKofF_$date20200505_$1440x387.jpg) no-repeat center;background-size:cover;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-6 " >
+            <div class="bl_card light_bg relative" style="margin-bottom:20px;height: 30vw;">
+                <div style="padding:6vw 30px;position:relative;z-index:1;">
+                    <div class="fs36 bold light text-center" style="line-height:1.5;">工业物联网</div>
+                    <div class="fs16 light padding-top20" >第一款智能处理板卡产品，搭载了MLU100芯片，为云端推理提供强大的运算能力支撑</div>
+                    <div class="text-center padding-top"><a href="/#" class="light_link">了解详情></a></div>
+                </div>
+                <div style="position:absolute;top:0;right:0;bottom:0;left:0;">
+                    <div class="trans_mask" style="position:absolute;width:100%;height:100%;background:rgba(0,0,0,0.2);"></div>
+                    <div class="bg" style="width:100%;height:100%;background:url(/upload/20200505/rH8DfipmGahx7YT7kBXrddWz_$date20200505_$1440x964.jpg) no-repeat center;background-size:cover;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <% block('footer').append(`<script src='/js/jquery.lazyload.min.js'></script>`)%>
 <% //block('footer').append(`<script src='js/iframeDialog.js'></script>`)%>
 <% block('footer').append(`<script>

@@ -1,0 +1,97 @@
+<% layout('layout/layout') %>
+<% block('header').append(`<style>
+.page {
+    background-color: #fff;
+    padding: 20px;
+    overflow: hidden;
+    margin-bottom:60px;
+}
+.top_line {
+    border-top:5px solid #000;
+}
+.myform .form-control {
+  border: none;
+  border-bottom: 1px solid #e3e3e3;
+  box-shadow:none;
+  border-radius:0;
+  margin-bottom:25px;
+}
+.myform .form-control input {
+  font-size:16px;
+}
+.myform .form-control:focus{
+  border-color: #000;
+  outline: 0;
+  box-shadow:none;
+}
+.my_submit {
+  background-color: rgba(51, 51, 51, 1);
+  color: rgba(255, 255, 255, 1);
+  font-size: 16px;
+  border: 1px solid rgba(51, 51, 51, 1);
+  border-radius: 0px 0px 0px 0px;
+  padding: 16px 50px 16px 50px;
+}
+.my_submit:hover {
+  background-color: rgba(51, 51, 51, 1);
+  opacity: .9;
+}
+</style>`)%>
+<div class="container-fluid relative">
+    <div class="container" style="height:26vw">
+        <div class="fs48 light text-center" style="line-height:26vw;"><%= title %></div>
+    </div>
+    <div class="img_wrap_bg" >
+        <div class="trans_mask" ></div>
+        <div class="bg" style="background-image:url(<%=(navPage.imgUrl || '').replace(/_\$sma_[^\.]+/,'')%>)"></div>
+    </div>
+</div>
+<div class="container" style="padding-top:60px;">
+  <div class="page top_line" >
+    <div class="row">
+      <div class="col-xs-12 col-md-5">
+        <div class="fs24">联系我们</div>
+        <div class="fs20">CONTACT US</div>
+        <p class="padding-top20" style="line-height:2;">如果您对我公司有建议或反馈，<br/>
+            请在此页面填写相关信息并提交，<br/>
+            会有工作人员及时与您联系<br/>
+            或请直接拨打我们的电话</p>
+        <div class="padding-top30 fs20">合作热线</div>
+        <div class="fs24 bold padding-top20"><%=webInfo.mobile.value %></div>
+        <div class="fs16"><%=webInfo.address.value %></div>
+      </div>
+      <div class="col-xs-12 col-md-7">
+        <div class="fs24 padding-bottom30">留言</div>
+        <form class="myform form-horizontal">
+            <div class="form-group">
+              <div class="col-sm-12">
+                <input type="text" class="form-control"  placeholder="姓名">
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-12">
+                <input type="text" class="form-control"  placeholder="手机号">
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-12">
+                <input type="text" class="form-control"  placeholder="公司名称">
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-12">
+                <input type="text" class="form-control"  placeholder="内容">
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-12">
+                <button type="submit" class="my_submit btn btn-primary btn-lg btn-block">立即提交</button>
+              </div>
+            </div>
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
+<% block('footer').append(`<script>
+</script>`)%>

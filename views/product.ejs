@@ -1,0 +1,100 @@
+<% layout('layout/layout') %>
+<% block('header').append(`<style>
+.roll_img{
+  background:url(/upload/20200505/OvpmtO9skotM8P3wCmsossOW_$date20200505_$2000x1125.png);
+  background-attachment: fixed;
+  background-size:cover;
+  background-position:center;
+}
+.roll_img1 {
+  background:url(/upload/20200505/SPI463FQG0viFXenkG4IAXsu_$date20200505_$2000x1125.png);
+  background-attachment: fixed;
+  background-size:cover;
+  background-position:center;
+}
+</style>`)%>
+<div class="container-fluid relative fullimg">
+    <div class="container" >
+        <div class="fs48 light text-center" style="line-height:26vw;"><%= title %></div>
+    </div>
+    <div class="img_wrap_bg" >
+        <div class="trans_mask" ></div>
+        <div class="bg" style="background-image:url(/upload/20200505/21BDIRNvZqQz-gvgASskb9I8_$date20200505_$2000x1180.jpg)"></div>
+    </div>
+</div>
+<div class="container-fluid roll_img fullimg" data-stellar-background-ratio="0.5" >
+  <div class="fs30 light padding-bottom30 padding-left20" style="padding-top:35vh;">多种功能优势</div>
+  <div class="fs30 light padding-bottom30 padding-left20">提供更好的生活服务</div>
+</div>
+<div class="container-fluid" >
+    <div style="padding:6vw 0;">
+        <div class="text-center" style="font-size:42px;line-height:1.5;">智能芯片领域方案专家</div>
+        <div class="text-center" style="font-size:24px;line-height:1.5;">让机器更好地理解和服务人类</div>
+    </div>
+    <div class="row padding-bottom30">
+        <div class="col-xs-12 col-sm-6 col-md-3 " >
+            <div class="bl_card light_bg" style="margin-bottom:20px;">
+                <div class="bl_img_wrap">
+                    <img class="img-responsive center-block" src="/upload/20200505/8cJr50aEw1otnC-1F_8llTdC_$date20200505_$580x326.jpg">
+                </div>
+                <div style="padding:30px;background:#FFF;">
+                    <div class="fs24" style="line-height:1.5;">文档管理</div>
+                    <div class="fs16" style="color:#808080;">第一款智能处理板卡产品，搭载了MLU100芯片，为云端推理提供强大的运算能力支撑</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3" >
+            <div class="bl_card light_bg" style="margin-bottom:20px;">
+                <div class="bl_img_wrap" >
+                    <img src="/upload/20200505/_zZ067s1HeLLULKCY1biSEqL_$date20200505_$550x300.jpg">
+                </div>
+                <div style="padding:30px;background:#FFF;">
+                    <div class="fs24" style="line-height:1.5;">企业网盘</div>
+                    <div class="fs16" style="color:#808080;">第一款智能处理板卡产品，搭载了MLU100芯片，为云端推理提供强大的运算能力支撑</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3 " >
+            <div class="bl_card light_bg" style="margin-bottom:20px;">
+                <div class="bl_img_wrap">
+                    <img src="/upload/20200505/-nmq38deyIi1gYBC2I2M3UGd_$date20200505_$538x285.png">
+                </div>
+                <div style="padding:30px;background:#FFF;">
+                    <div class="fs24" style="line-height:1.5;">合同管理</div>
+                    <div class="fs16" style="color:#808080;">第一款智能处理板卡产品，搭载了MLU100芯片，为云端推理提供强大的运算能力支撑</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3 " >
+            <div class="bl_card light_bg" style="margin-bottom:20px;">
+                <div class="bl_img_wrap">
+                    <img src="/upload/20200505/-nmq38deyIi1gYBC2I2M3UGd_$date20200505_$538x285.png">
+                </div>
+                <div style="padding:30px;background:#FFF;">
+                    <div class="fs24" style="line-height:1.5;">文控管理</div>
+                    <div class="fs16" style="color:#808080;">第一款智能处理板卡产品，搭载了MLU100芯片，为云端推理提供强大的运算能力支撑</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div><!-- /.container -->
+<div class="container-fluid relative roll_img01 fullimg"  >
+    <div class="fs30 light text-center"style="padding-top:30vh;">多种功能优势</div>
+    <div class="fs30 light text-center">提供更好的生活服务</div>
+    <div class="img_wrap_bg" >
+        <div class="trans_mask" ></div>
+        <div class="bg roll_img1" data-stellar-background-ratio="0.5"  ></div>
+    </div>
+</div>
+<div class="light_bg container-fluid relative padding-top30 padding-bottom30 margin-bottom30">
+  <div class="fs38 text-center padding-top30">产品介绍</div>
+  <div class="fs18" style="line-height:1.5;"><%=webInfo.webIntro.value %></div>
+</div>
+
+<% block('footer').append(`<script src='/js/jquery.stellar.min.js'></script>`)%>
+<% block('footer').append(`<script>
+  $.stellar({
+    horizontalScrolling: false,
+    responsive: tru
+  });
+</script>`)%>

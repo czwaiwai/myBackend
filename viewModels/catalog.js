@@ -39,16 +39,33 @@ function showByRootTree (catalogs) {
 	}
 	return res
 }
+function getMutiArrTree (catalogs, path) {
+	let res = []
+	for(let i = 0; i<catalogs.length; i++) {
+		let curr = catalogs[i]
+		if(catalogs[i].calPath === path) {
+			curr.childrens = getMutiArrTree(catalogs, curr.calPath+ ','+curr.name)
+			res.push(curr)
+		}
+	}
+	return res
+}
 // 获取前端页面列表
 exports.getFrontCatalog = function (callback) {
-	var catalog = Catalog.find({shopName: 'mShop', calPath: ',root,front' })
-	catalog.sort({calPath: 1,sort:1})
-	catalog.exec(callback)
+	// var catalog = Catalog.find({shopName: 'mShop', calPath: ',root,front' })
+	// catalog.sort({calPath: 1,sort:1})
+	// catalog.exec(callback)
+	exports.getChildrenByNameAll('front', function (err, catalogs) {
+		let arr = getMutiArrTree(catalogs,',root,front')
+		console.log(arr, 'root')
+		callback(err, arr)
+	})
 }
 // 返回当前路径的子目录
 exports.getChildrenByName = function (name,callback) {
 	Catalog.findOne({name:name},function(err,catalog) {
 		if(err) return callback(err)
+		console.log(name, catalog, '====')
 		var catalogs = Catalog.find({calPath:catalog.calPath+','+name})
 		catalogs.sort({sort:1})
 		catalogs.exec(callback)

@@ -16,8 +16,8 @@ var expressValidator = require('express-validator');
 var validatorMethods=require('./utils/validatorMethods');
 var sassMiddleware = require('node-sass-middleware');
 var index = require('./routes/index');
-var wx = require('./routes/wx')
-var mobile = require('./routes/mobile');
+// var wx = require('./routes/wx')
+// var mobile = require('./routes/mobile');
 var tool = require('./routes/tool');
 var admin = require('./admin/app');
 var pathBlack = require('./utils/pathBlack')
@@ -25,7 +25,7 @@ var device = require('express-device');
 var moment = require('moment')
 var config = require('./config')
 var app = express();
-app.set('env', 'production');
+app.set('env', 'development');
 app.engine('ejs',engine);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -36,6 +36,7 @@ app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 var errorLogfile
 var logDirectory = path.join(__dirname, 'log')
 fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory)
+console.log(app.get('env'), 'main')
 if(app.get('env') !== 'production') {
 	app.use(sassMiddleware({
 		src: path.join(__dirname, 'public/css'),
@@ -54,7 +55,6 @@ if(app.get('env') !== 'production') {
 app.use(compression()); // gzip压缩
 app.use(express.static(path.join(__dirname, 'public')));
 // app.use(express.static(path.join(__dirname, 'admin/public')));
-console.log(app.get('env'))
 if (app.get('env') === 'development') {
 	app.use(logger('dev', {stream: process.stdout}));
 } else {
@@ -123,8 +123,8 @@ app.use(function(req,res,next){
 });
 
 app.use('/', index);
-app.use('/wx', wx);
-app.use('/app', mobile);
+// app.use('/wx', wx);
+// app.use('/app', mobile);
 app.use('/tool',tool);
 app.use('/admin',admin);
 

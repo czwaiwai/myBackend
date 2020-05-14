@@ -10,19 +10,21 @@ var index = require('./routes/index');
 // app.locals.resoucePath = "/admin";
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+app.set('env', 'production');
 app.disable('x-powered-by');
-console.log(app.get('env'), '-------------')
-app.use(sassMiddleware({
-	src: path.join(__dirname, '/public/css'),
-	dest: path.join(__dirname, '/public/css'),
-	indentedSyntax: false, // true = .sass and false = .scss
-	sourceMap: false,
-	debug:true,
-	outputStyle: 'compressed',
-	outputStyle: 'extended',
-	prefix:  '/css'
-}));
-
+console.log(app.get('env'), 'admin')
+if (app.get('env')=== 'development') {
+    app.use(sassMiddleware({
+        src: path.join(__dirname, '/public/css'),
+        dest: path.join(__dirname, '/public/css'),
+        indentedSyntax: false, // true = .sass and false = .scss
+        sourceMap: false,
+        debug:true,
+        outputStyle: 'compressed',
+        outputStyle: 'extended',
+        prefix:  '/css'
+    }));
+}
 app.use(express.static(path.join(__dirname, 'public')));
 // app.use(function(req,res,next){ res.locals.staticUrl ='/admin' });
 app.use(function(req,res,next){

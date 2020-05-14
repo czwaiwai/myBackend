@@ -26,6 +26,7 @@ function imgProcess(req,cb){
         maxFilesSize:5*1024*1024,//5M
     });
     form.parse(req,function(err,fields,files){
+        console.log(err,files ,'????')
         if(err){
             req.flash('error',"文件不符合要求");
             return cb && cb(err);
@@ -35,6 +36,7 @@ function imgProcess(req,cb){
             obj[name] = fields[name];
         });
         var file=[]
+        console.log(files, 'files=====================')
         Object.keys(files).forEach(function(name) {  //文件
             file = files[name];
         });
@@ -44,6 +46,7 @@ function imgProcess(req,cb){
         createDir(newPath,function(){
             let imgfiles=[];
             file.forEach(ctx=>{
+                console.log(ctx.path, 'image path')
                 let img= images(ctx.path);
                 let imgType=ctx.path.match(/\.\w+$/ig)[0];
                 let imgName=ctx.path.replace(path.join(uploadPath),"").replace(imgType,"");
@@ -70,9 +73,11 @@ function imgProcess(req,cb){
                 }
                 img.save(newPath+fullName);
                 imgfiles.push(pushObj);
-                fs.unlink(ctx.path);
+                fs.unlink(ctx.path,function () {
+                    cb && cb(null,obj,imgfiles);
+                });
             });
-            cb && cb(null,obj,imgfiles);
+            
         });
     })
 }

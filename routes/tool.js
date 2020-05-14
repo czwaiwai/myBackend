@@ -5,7 +5,7 @@ let qs=require('qs');
 let {succJson,errJson} =require('../utils/sendJson');
 let imgProcess =require('../utils/imgProcess');
 // let Image=require('../models/image');
-let User=require('../models/user');
+// let User=require('../models/user');
 let {Image} = require('../models')
 let {wechat} = require('../utils/wxValid')
 var request = require('request')
@@ -78,8 +78,8 @@ router.post('/upload',(req,res)=>{
         if(err){
             console.log(req.get('X-Requested-With'),'X-Requested-With')
             if((fields && fields.callType=="json") || req.get('X-Requested-With') === 'XMLHttpRequest'){
-                res.json(errJson({},req.flash("error").toString())) ;
-            }else{
+                return res.json(errJson({},req.flash("error").toString())) ;
+            } else{
                 return res.redirect('/tool/upload');
             }
         }
