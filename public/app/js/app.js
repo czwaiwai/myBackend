@@ -4,11 +4,11 @@
 
 (function($) {
 	FastClick.attach(document.body);
-	_.templateSettings = {
-		evaluate    : /<@([\s\S]+?)@>/g,
-		interpolate : /<@=([\s\S]+?)@>/g,
-		escape      : /<@-([\s\S]+?)@>/g
-	}
+	// _.templateSettings = {
+	// 	evaluate    : /<@([\s\S]+?)@>/g,
+	// 	interpolate : /<@=([\s\S]+?)@>/g,
+	// 	escape      : /<@-([\s\S]+?)@>/g
+	// }
 	$.extend({
 		formatFloat:  function(f, digit) {
 			return Math.round(f*100)/100

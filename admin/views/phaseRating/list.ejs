@@ -1,0 +1,99 @@
+<% layout('layout/layout') %>
+<% block('header').append(`<style>
+.j_pager .pagination{
+    margin:0;
+}
+.my_tab {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  height: 40px;
+}
+.my_tab li {
+  float: left;
+  width: 100px;
+  text-align: center;
+  height: 40px;
+  line-height: 40px;
+}
+.my_tab .active {
+  background: #FFF;
+  border-top: 1px solid #e3e3e3;
+  border-left: 1px solid #e3e3e3;
+  border-right: 1px solid #e3e3e3;
+}
+</style>`)%>
+<ul class="my_tab clearfix">
+  <li class="<%=query.step == '01'? 'active': '' %>"><a href="<%=assetsPath %>/phaseRating/list/<%=phaseId %>?step=01" >初评成绩</a></li>
+  <li class="<%=query.step == '02'? 'active': '' %>"><a href="<%=assetsPath %>/phaseRating/list/<%=phaseId %>?step=02">复评成绩</a></li>
+  <li class="<%=query.step== '03'? 'active': '' %>"><a href="<%=assetsPath %>/phaseRating/list/<%=phaseId %>?step=03">半决选成绩</a></li>
+  <li class="<%=query.step == '04'? 'active': '' %>"><a href="<%=assetsPath %>/phaseRating/list/<%=phaseId %>?step=04">总决选成绩</a></li>
+</ul>
+<div id="imageManage" class="row">
+  <div class="col-xs-12">
+    <div class="box">
+      <div class="box-header">
+        <h3 class="box-title"><%= stepStr %>数据</h3>
+        <div class="box-tools">
+          <a id="imgUpload" data-path="/admin/uploadXlsx" data-params='{"phaseId":"<%=phaseId %>","step":"<%=query.step%>"}' class="btn  btn-sm btn-success">xlxs上传<%=stepStr %>数据</a>
+        </div>
+      </div>
+      <!-- /.box-header -->
+      <div class="box-body table-responsive no-padding">
+        <table  class="table table-bordered table-hover">
+          <tbody>
+          <tr>
+            <th>姓名</th>
+            <th>手机号</th>
+            <th>学校</th>
+            <th>初评成绩</th>
+            <th>是否晋级复评</th>
+            <th>复评成绩</th>
+            <th>是否晋级半决选</th>
+            <th>半决选成绩</th>
+            <th>是否晋级总决选</th>
+            <th>总决选成绩</th>
+            <!-- <th>操作</th> -->
+          </tr>
+          <% if(list.length==0){ %>
+          <tr>
+            <td class="text-center" colspan="10" style="padding:30px;">没有导入任何数据</td>
+          </tr>
+          <% }%>
+          <% list.forEach(function(item){ %>
+          <tr>
+            <td><%=item.username %></td>
+            <td><%=item.mobile %></td>
+            <td><%=item.school %></td>
+            <td><%=item.step01  || '' %></td>
+            <td><%=item.isUp01 %></td>
+            <td><%=item.step02  || '' %></td>
+            <td><%=item.isUp02 %></td>
+            <td><%=item.step03  || '' %></td>
+            <td><%=item.isUp03 %></td>
+            <td><%=item.step04 || '' %></td>
+          </tr>
+          <% }) %>
+          </tbody>
+        </table>
+      </div>
+      <!-- /.box-body -->
+    </div>
+    <!-- /.box -->
+    <%=count %> <%=page %>
+    <div class="j_pager" data-param="step=<%=query.step %>" data-page="<%=page || 0 %>"  data-count="<%=count || 1 %>"></div>
+  </div>
+
+</div>
+<% block('footer').append(`<script src="${assetsPath}/js/jPager.js" ></script>`); %>
+<% block('footer').append(`<script src="${assetsPath}/js/uploadFile.js"></script>`); %>
+<% block('footer').append(`<script>
+jQuery(function(){
+    $('.j_pager').pager();
+    $('#imgUpload').uploadFile(function(imgs){
+    	console.log(imgs)
+      // location.reload();
+    });
+
+})
+</script>`)%>

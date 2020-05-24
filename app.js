@@ -90,7 +90,6 @@ app.use(bodyParser.xml({
 		explicitArray: false // Only put nodes in array if >1
 	},
 	verify: function(req, res, buf, encoding) {
-		console.log(buf, '------')
 		if(buf && buf.length) {
 			// Store the raw XML
 			req.rawBody = buf.toString(encoding || "utf8");

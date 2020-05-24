@@ -1,0 +1,85 @@
+<% layout('layout/layout') %>
+<% block('header').append(`<style>
+.show_img{
+    max-height:250px;
+}
+</style>`) %>
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-info">
+            <div class="box-header with-border">
+                <h3 class="box-title">添加单页</h3>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+            <form action="<%=assetsPath %>/phaseRating/add" method="post" class="form-horizontal" novalidate>
+                <div class="box-body">
+                    <div class="form-group">
+                        <label for="title" class="col-sm-2 control-label">活动名称</label>
+                        <div class="col-sm-10">
+                            <input name="title" value="<%=curr.title || ''%>" type="text" class="form-control"  placeholder="赛事活动名称，请保证唯一">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="title" class="col-sm-2 control-label">编号</label>
+                        <div class="col-sm-10">
+                            <input name="no" <%=curr._id?'readonly':'' %> value="<%=curr.no || ''%>" type="text" class="form-control"  placeholder="赛事活动编号，请不要与其他活动重复">
+                        </div>
+                    </div>
+                    <!-- <div class="form-group">
+                        <label for="title" class="col-sm-2 control-label">图片上传</label>
+                        <div class="col-sm-10">
+                            <a id="imgUpload" class="btn  btn-sm btn-success">图片上传</a>
+                            <input id="imgInput" name="imgUrl" type="hidden" value="<%=curr.imgUrl || ''%>">
+                            <div id="showImg" class="show_img" style="width:200px;" >
+                                <% if (curr.imgUrl){ %>
+                                <i class="ionfont "></i>
+                                <img src="<%=curr.imgUrl %>" style="max-height:100%;max-width:100%" >
+                                <% }%>
+                            </div>
+                        </div>
+                    </div> -->
+                    <div class="form-group">
+                        <label for="step" class="col-sm-2 control-label">活动状态</label>
+                        <div class="col-sm-10">
+                            <select name="step" class="form-control">
+                              <option <%=curr.step === '00'? 'selected':'' %>  value="00">赛事准备中</option>
+                              <option <%=curr.step === '01'? 'selected':'' %>  value="01">初评结束</option>
+                              <option <%=curr.step === '02'? 'selected':'' %>  value="02">复评结束</option>
+                              <option <%=curr.step === '03'? 'selected':'' %>  value="03">半决选结束</option>
+                              <option <%=curr.step === '04'? 'selected':'' %>  value="04">总决选结束</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- <div class="form-group">
+                        <label for="content" class="col-sm-2 control-label">正文内容</label>
+                        <div class="col-sm-10">
+                            <div id="editor"><%- curr.content %></div>
+                            <textarea id="content" hidden name="content"><%- curr.content %></textarea>
+                        </div>
+                    </div> -->
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-3">
+                            <div class="checkbox">
+                                <label>
+                                    <input name="status" <%=curr.status==1?'checked':''%> value="1" type="checkbox" > 是否有效
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <% if(curr._id){ %>
+                        <input name="_id" value="<%=curr._id %>" type="hidden">
+                        <% } %>
+                        <button type="submit" class="btn btn-info ">保存</button>
+                        <button type="reset" class="btn btn-default">重置</button>
+                    </div>
+                </div>
+                <!-- /.box-footer -->
+            </form>
+        </div>
+    </div>
+</div>

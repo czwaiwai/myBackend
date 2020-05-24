@@ -1,0 +1,95 @@
+<% layout('layout/layout') %>
+<% block('header').append(`<style>
+.j_pager .pagination{
+    margin:0;
+}
+.box-body canvas{
+  width:100px;
+}
+</style>`)%>
+<div id="tableList" class="row">
+  <div class="col-xs-12">
+    <div class="box">
+      <div class="box-header">
+        <h3 class="box-title">活动期数管理</h3>
+        <div class="box-tools">
+          <a href="add" class="btn  btn-sm btn-success">添加+</a>
+        </div>
+      </div>
+      <!-- /.box-header -->
+      <div class="box-body table-responsive no-padding">
+        <table  class="table table-bordered table-hover">
+          <tbody>
+          <tr>
+            <!--<th><label><input name="checkAll" type="checkbox" value="all>">全选</label></th>-->
+            <th>名称</th>
+            <!--<th style="max-width:150px;">图片名称</th>-->
+            <th style="max-width:150px;">编号</th>
+            <th>扫码url</th>
+            <th>状态</th>
+            <th>是否有效</th>
+            <th>创建时间</th>
+            <th width="220">操作</th>
+          </tr>
+          <% if(list.length==0){ %>
+          <tr>
+            <td class="text-center" colspan="5" style="padding:30px;">没有任何数据</td>
+          </tr>
+          <% }%>
+          <% list.forEach(function(item){ %>
+          <tr>
+            <td><div style="width:100px;height:100px;"><%=item.title %></div></td>
+            <td style="min-width:140px;white-space: normal;"><div style="max-width:150px;word-break:break-all; "><%=item.no %></div></td>
+            <td style="min-width:100px;white-space: normal;">
+              <a style="max-width:100px;word-break:break-all; ">
+                <div class="qrcode" data-url="<%=item.url || ''  %>"></div>
+              </a>
+            </td>
+            <!--<td style="min-width:140px;white-space: normal;"><div style="max-width:150px;word-break:break-all; "><%=item.name %></div></td>-->
+            <td>
+              <% 
+                var stepStr = '赛事准备中';
+                switch(item.step) {
+                  case '00': stepStr = '赛事准备中'; break
+                  case '01': stepStr = '初评结束'; break
+                  case '02': stepStr = '复评结束'; break
+                  case '03': stepStr = '半决选结束'; break
+                  case '04': stepStr = '总决选结束'; break
+                }
+              %>
+              <%=stepStr %>
+            </td>
+            <td><%=item.status==1?'有效':'无效' %></td>
+            <td><%=item.create_at_ago()%></td>
+            <td>
+              <a class="btn btn-sm  btn-primary" data-id="<%=item._id%>" href="<%=assetsPath %>/phaseRating/list/<%=item._id %>?step=01" >录入数据</a>
+              <a class="btn btn-sm  btn-primary" data-id="<%=item._id%>" href="add?update=<%=item._id %>" >修改状态</a>
+              <a class="btn btn-delete btn-sm btn-danger" data-id="<%=item._id%>" data-url="<%=assetsPath %>/phaseRating/delete" href="javascript:void(0)">删除</a>
+            </td>
+          </tr>
+          <% }) %>
+          </tbody>
+        </table>
+      </div>
+      <!-- /.box-body -->
+    </div>
+    <!-- /.box -->
+    <div class="j_pager" data-page="<%=page || '1' %>"  data-count="<%=count || '0' %>"></div>
+  </div>
+</div>
+<% block('footer').append(`<script src="${assetsPath}/js/uploadImg.js"></script>`); %>
+<% block('footer').append(`<script src="${assetsPath}/js/pager.js" ></script>`); %>
+<% block('footer').append(`<script src="${assetsPath}/js/jquery.qrcode.min.js" ></script>`); %>
+<% block('footer').append(`<script>
+jQuery(function(){
+	$('.j_pager').pager();
+  $.delBtn('#tableList','你确定要删掉这赛事么')
+  $('.qrcode').each(function(index, el){
+    var $el = $(el)
+    $el.qrcode({
+      render: "canvas",
+      text: $el.data('url')
+    })
+  });
+})
+</script>`)%>

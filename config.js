@@ -3,6 +3,7 @@ const config = {
 	description: '一个基于nodejs express 的小商城',
 	author: 'czwaiwai',
 	uploadDir: 'public/upload/',
+	domain: 'http://czwaiwai.iok.la',
 	// mongodb 数据库链接
   db: 'mongodb://localhost/waiShop',
   debug: true,

@@ -57,7 +57,6 @@ exports.getFrontCatalog = function (callback) {
 	// catalog.exec(callback)
 	exports.getChildrenByNameAll('front', function (err, catalogs) {
 		let arr = getMutiArrTree(catalogs,',root,front')
-		console.log(arr, 'root')
 		callback(err, arr)
 	})
 }
@@ -65,7 +64,6 @@ exports.getFrontCatalog = function (callback) {
 exports.getChildrenByName = function (name,callback) {
 	Catalog.findOne({name:name},function(err,catalog) {
 		if(err) return callback(err)
-		console.log(name, catalog, '====')
 		var catalogs = Catalog.find({calPath:catalog.calPath+','+name})
 		catalogs.sort({sort:1})
 		catalogs.exec(callback)

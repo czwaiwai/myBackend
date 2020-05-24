@@ -1,0 +1,139 @@
+<% layout('layout/rpLayout') %>
+<% block('header').append(`<style>
+  button.weui-btn {
+    position: relative;
+    display: block;
+    width: 184px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 8px 24px;
+    box-sizing: border-box;
+    font-weight: 700;
+    font-size: 17px;
+    text-align: center;
+    text-decoration: none;
+    color: #fff;
+    line-height: 1.41176471;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+</style>`) %>
+
+<div class="page has_head">
+  <div>
+    <form id="searchForm">
+        <div class="weui-form__control-area">
+            <div class="weui-cells__group weui-cells__group_form">
+                <div class="weui-form__control-area padding15" >
+                  <div class="weui-cells__group weui-cells__group_form">
+                    <div class="weui-cells__title"><%= phase.title %></div>
+                    <div class="weui-cells weui-cells_form">
+                      <div class="weui-cell weui-cell_active">
+                        <div class="weui-cell__hd"><label class="weui-label">用户信息</label></div>
+                        <div class="weui-cell__bd">
+                            <input id="search" name="search" class="weui-input"  placeholder="填写本人姓名或手机号">
+                            <input name="phaseId" type="hidden" value="<%=phase._id %>">
+                        </div>
+                      </div>
+                      <div class="weui-cell weui-cell_active weui-cell_vcode"">
+                        <div class="weui-cell__hd"><label class="weui-label">验证码</label></div>
+                        <div class="weui-cell__bd">
+                            <input id="verifyCode"  name="verifyCode" type="number" class="weui-input" placeholder="填写验证码">
+                        </div>
+                        <div class="weui-cell__ft">
+                            <img id="codeImg" class="weui-btn weui-btn_default weui-vcode-btn" style="padding:0;" src="/imgCode" onclick="this.src='/imgCode?time='+Date.now()" >
+                        </div>
+                      </div>
+                      <!-- <div class="weui-cell weui-cell_active">
+                        <div class="weui-cell__hd"><label class="weui-label">联系电话</label></div>
+                        <div class="weui-cell__bd">
+                            <input id="js_input" class="weui-input" placeholder="填写绑定的电话号码" type="number" pattern="[0-9]*">
+                        </div>
+                      </div> -->
+                    </div>
+                  </div>
+                </div>
+            </div>
+          </div>
+          <div class="weui-form__opr-area">
+            <button class="weui-btn weui-btn_primary " type="submit">查询</button>
+          </div>
+      <!-- <label>
+          查询信息
+          <input id="search" name="search" type="text"  value="">
+          <input name="phaseId" type="hidden" value="<%=phase._id %>">
+        </label>
+        <input id="verifyCode"  name="verifyCode" type="number" placeholder="请输入验证码">
+        <img class="weui-vcode-img padding5" src="/imgCode" onclick="this.src='/imgCode?time='+Date.now()" >
+      <button type="submit">查询</button> -->
+    </form>
+  </div>
+  <div id="rpscoreRes">
+
+  </div>
+</div>
+<% block('footer').append(`<script>
+jQuery(function(){
+  var $searchForm = $('#searchForm')
+  $searchForm.on('submit', function (e) {
+    e.preventDefault()
+    console.log($('#search').val())
+    if(!$('#search').val()) {
+      return $.toast('请输入查询的姓名或者手机号', 'text')
+    }
+    if(!$('#verifyCode').val()) {
+      return $.toast('请输入验证码', 'text')
+    }
+    var params = {}
+    $searchForm.serializeArray().forEach(function (item) {
+      params[item.name] = item.value
+    })
+    var search = params.search.replace(/(^\s*)|(\s*$)/g, '')
+    console.log(search)
+    if(/^[\\u4e00-\\u9fa5a-zA-Z\\s]+$/.test(search)) {
+      params.username = search
+    }
+    if(/^1\\d{10}$/.test(search)) {
+      params.mobile = search
+    }
+    if(!('username' in params) && !('mobile' in params)) {
+      return $.toast('输入的内容有误，请重新输入', 'text')
+    }
+    console.log(params, '-------')
+    $rpscoreRes = $('#rpscoreRes')
+    $.post('/rpscoreres/'+ params.phaseId, params).done(function (res) {
+      console.log(res)
+      $('#codeImg').trigger('click')
+      if(res.code === 0) {
+        if(res.message === 'empty') {
+          return $rpscoreRes.html('<p>没有查询到任何信息</p>')
+        }
+        var rat = res.data.rating
+        var tmp = '' +
+        '<p>姓名：'+rat.username+'</p>' +
+        '<p>联系方式：'+rat.mobile+'</p>' +
+        '<p>学校：'+rat.school+'</p>'
+        if(rat.step01) {
+        tmp += '<p>初评成绩：'+rat.step01+'</p>' +
+            '<p>是否晋级复评：'+rat.isUp01+'</p>'
+        }
+        if(rat.step02) {
+          tmp +='<p>复评成绩：'+rat.step02+'</p>' +
+            '<p>是否晋级半决选：'+rat.isUp02+'</p>'
+        }
+        if(rat.step03) {
+          tmp +='<p>半决选成绩'+rat.step03+'</p>' +
+            '<p>是否晋级总决选：'+rat.isUp03+'</p>'
+        }
+        if(rat.step04) {
+          tmp +='<p>总决选成绩：'+rat.step03+'</p>'
+        }
+        $rpscoreRes.html(tmp)
+      } else {
+        $.toast(res.message, 'text')
+      }
+    })
+    return false
+  })
+})
+</script>`)%>

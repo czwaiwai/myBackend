@@ -10,10 +10,13 @@ let dictCache = require('../../utils/dictCache')
 let dictCa = dictCache.getInstance()
 // let User =require('../../models/user');
 // let Pages =require('../../models/pages');
-let {User, Page, Catalog, Article, Goods, Image, Order, Postage, Dict} = require('../../viewModels/')
+let {User, Page, Catalog, Article, Goods, Image, Order, Postage, Dict, Rating, Phase} = require('../../viewModels/')
 let xss = require('xss')
 let xssConfig = require('../../utils/xssConfig')
 let WxPay = require('../../utils/wxPay')
+let config = require('../../config.js')
+let fileUpload =require('../../utils/fileUpload');
+let xlsx = require('node-xlsx')
 let imgCode="";
 
 function getPageNum(count,pageSize) {
@@ -39,10 +42,8 @@ router.get('/', (req, res, next)=> {
 	User.userCount(ep.done('userCount')) // 注册用户总数
 	User.todayCount(ep.done('todayUserCount')) // 今日新增用户
 });
+
 router.get('/login',(req,res)=>{
-    // req.flash('success',"靠靠靠");
-    console.log(req.session.imgCode,"imgCode");
-    req.session.abc=1;
     res.render('login',{title:"用户登录"});
 })
 router.get('/welcome',(req, res) => {
@@ -84,7 +85,6 @@ router.post('/changePwd', (req, res, next) => {
 })
 
 router.post('/login',(req,res)=>{
-    console.log(req.session,req.session.imgCode,req.body.verifyCode,"imgCode");
     let imgCode=req.session.imgCode;
     req.checkBody('userName',"用户名不能为空").notEmpty()
       .isTooShort(6).withMessage("用户名太短");
@@ -114,7 +114,144 @@ router.get('/logout',(req,res)=>{
     req.session.user=null;
     return res.redirect('./');
 })
+// 排名用户上传()
+router.get('/phaseRating/index', (req, res, next) => {
+	Phase.findAllByPage(req.query.page,10,(err, obj) => {
+		if (err) return next(err)
+		return res.render('phaseRating/index', Object.assign({title:'活动期数管理'}, obj))
+	})
+})
+router.get('/phaseRating/add', (req, res, next) => {
+	let curr = {isNew:true}
+	if (req.query.update) {
+		Phase.findById(req.query.update, (err, user) => {
+			if (err) return  next(err)
+			curr = user
+			return res.render('phaseRating/add', {title: '活动期数添加', curr})
+		})
+	} else {
+		return res.render('phaseRating/add', {title: '活动期数修改', curr})
+	}
+})
+router.post('/phaseRating/add', (req, res, next) => {
+	console.log(req.body, '====================')
+	if(req.body._id) { //更新
+		let params = {
+			status: 'status' in  req.body? 1:0,
+			...req.body
+		}
+		params.url = config.domain + '/rpscore/' + req.body.no
+		Phase.findAndUpdate(req.body._id, params, (err,page) => {
+			if (err) return  next(err)
+			req.flash("success", '更新成功!')
+			return res.redirect('/admin/phaseRating/add?update='+req.body._id)
+		})
+	} else {
+		let params = {
+			...req.body
+		}
+		params.url = config.domain + '/rpscore/' + req.body.no
+		Phase.newModel(params, function (err) {
+			if (err) {
+				req.flash("error",err.message);
+				console.error(err)
+				return res.redirect('/admin/phaseRating/add')
+			}
+			req.flash("success", '操作成功')
+			return res.redirect('/admin/phaseRating/index')
+		})
+	}
+})
+router.post('/phaseRating/delete', (req, res, next) => {
+	if (req.body.id) {
+		Phase.removeById(req.body.id, (err, phase) => {
+			if (err) return next(err)
+			if (phase) {
+				return res.json({
+					code:0,
+					message:'操作成功'
+				})
+			}
+		})
+	} else {
+		return res.json({
+			code:-1,
+			message:'删除失败'
+		})
+	}
+})
 
+router.get('/phaseRating/list/:id', (req,res,next) => {
+	let stepObj = {
+		'01': '初评成绩',
+		'02': '复评成绩',
+		'03': '半决选成绩',
+		'04': '总决选成绩'
+	}
+	Rating.findAllByPage({phaseId: req.params.id,phaseStat: req.query.step},req.query.page,10,(err, obj) => {
+		if (err) return next(err)
+		console.log(obj, 'findAllByPage')
+		return res.render('phaseRating/list', Object.assign({title:'用户数据', stepStr: stepObj[req.query.step] || '', phaseId: req.params.id}, obj))
+	})
+})
+
+// 上传并解析xlsx文件存入数据库中
+router.post('/uploadXlsx', (req,res) => {
+	fileUpload(req,function(err, fields, filePath) {
+    if(err) {
+      return res.json(errJson({},req.flash("error").toString()))
+		}
+		let arr = xlsx.parse(fs.readFileSync(filePath))
+		let [sheet, ]  =  arr
+		let sheetName = sheet.name
+		let obj = {
+			'username':	'姓名',
+			'mobile' :'手机号',
+			'school':'学校',
+			'step01':'初评成绩',
+			'isUp01': '是否晋级复评',
+			'step02': '复评成绩',
+			'isUp02': '是否晋级半决选',
+			'step03': '半决选成绩',
+			'isUp03': '是否晋级总决选',
+			'step04': '总决选成绩' 
+		}
+		let phaseId = fields.phaseId[0]
+		let step = fields.step[0]
+		console.log(sheetName)
+		if(!phaseId) return res.json(errJson({},'没有phaseId'))
+		let props = Object.keys(obj)
+		let strs = Object.values(obj)
+		let insertData = []
+		console.log(strs.join(','))
+		console.log(sheet.data[0].join(','))
+		if((strs.join(',')).indexOf(sheet.data[0].join(',')) > -1) {
+			return res.json(errJson({}, '数据格式顺序不正确'))
+		}
+		function myIsNaN(value) {
+			return typeof value === 'number' && !isNaN(value);
+		}
+		sheet.data.forEach((sub,index) => {
+			if (index !== 0) {
+				let oneObj = {
+					phaseId: phaseId,
+					phaseStat: step
+				}
+				props.forEach((prop,index) =>  {
+					let val = myIsNaN(sub[index])? sub[index]: ''
+					oneObj[prop] = 
+				})
+				insertData.push(oneObj)
+			}
+		})
+		Rating.insertMany(insertData, (err, manyData) => {
+			if(err) return res.json(errJson({},req.flash("error").toString()))
+			console.log(manyData)
+			req.flash('success',"上传成功");
+			res.json(succJson({file:filePath, title: sheetName,list: sheet.data},req.flash("success").toString()));
+		})
+  })
+}) 
 // 用户管理 -----------------------------------------------------------------
 router.get('/users/index', (req, res, next) => {
 	User.findAllByPage(req.query.page,10,(err, obj) => {
@@ -175,7 +312,6 @@ router.get('/goods/add', (req, res, next) => {
 })
 router.post('/goods/add', (req, res, next) => {
 	let params = req.body
-	console.log(params)
 	let tmpArr = req.body.catalogStr.split('|')
 	params.catalogId = tmpArr[0]
 	params.catalogName = tmpArr[1]
@@ -228,17 +364,13 @@ router.get('/dict/index', (req, res, next) => {
 router.get('/dict/field/:name', (req, res, next) => {
 	Dict.findByName(req.params.name, (err, dict) => {
 		if(err) return next(err)
-		console.log(dict, 'dict-----------------------')
 		res.render('dict/update', {title:'属性修改', dict})
 	})
 })
 router.post('/dict/saveField', (req, res, next) => {
-	console.log(req.body, '/dict/saveField - -- - - - -')
 	let valueObj=qs.parse(req.body);
 	Dict.update(req.body._id, valueObj, (err, dict) => {
 		if (err) return next(err)
-		console.log(dict, ' --------')
-		console.log(dict.name)
 		req.flash('success', '保存成功')
 		res.redirect('/admin/dict/field/' + dict.name)
 	})
@@ -662,19 +794,16 @@ router.get('/catalog/add', (req, res ,next) => {
     }
     if (req.query.update) {
       curr = catalogs.find(item => item.id === req.query.update)
-	    console.log(curr,'curr_catalog/add')
     }
 	  return res.render('catalog/add', {title: '添加导航', catalogs, curr} )
   })
 
 })
 router.post('/catalog/add', (req, res, next) => {
-  console.log(req.body)
   let param = req.body
 	param.shopName = 'mShop'
 	param.calPath = param.parent
   param.deep = param.parent.split(',').length -1
-	console.log(req.body.isVaild, 'catalog/add===============================')
 	param.isValid = req.body.isValid?1:0
   if (req.body._id) { //更新
     Catalog.findAndUpdate(req.body._id, param, (err, catalog) => {
@@ -688,12 +817,10 @@ router.post('/catalog/add', (req, res, next) => {
     })
   } else { //创建
 	  Catalog.create(param, (err, catalog) => {
-		  console.log(catalog, 'catalog')
 		  if (err) {
 			  req.flash('error', err.message)
 			  return res.redirect('/admin/catalog/add')
-		  }
-		  console.log(catalog)
+			}
 		  req.flash('success', '目录创建成功')
 		  res.redirect('/admin/catalog/add')
 	  })
@@ -750,7 +877,7 @@ router.get('/image/index', (req, res) => {
 		return res.render('image/index', Object.assign({title:'图片管理'}, obj))
 	})
 })
-router.post('/image/delete', (req, res) => {
+router.post('/image/delete', (req, res, next) => {
 	if (req.body.id) {
 		Image.removeById(req.body.id, (err, image) => {
 			if (err) return next(err)

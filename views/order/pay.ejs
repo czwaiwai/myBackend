@@ -37,7 +37,6 @@
  	  	  type: 'POST',
  	  	  data: 'id='+id+'&orderId='+orderId,
  	  	  success: function (res) {
- 	  	  	console.log(res)
  	  	  	if (res.data.result_code === 'SUCCESS' && 	res.data.trade_state === 'SUCCESS') {
              location.href='/order/success?id='+id
  	  	  	} else {

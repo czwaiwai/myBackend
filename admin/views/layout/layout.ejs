@@ -258,12 +258,12 @@ desired effect
       <ul class="sidebar-menu">
         <li class="header">导航菜单</li>
         <!-- Optionally, you can add icons to the links -->
-
         <li <% if(path=="/"){ %>class="active"<% } %> ><a href="<%=assetsPath %>/"><i class="fa fa-home"></i><span>首页概况</span></a></li>
         <!--<li <% if(path=="/chat"){ %>class="active"<% } %> ><a href="<%=assetsPath %>/chat"><i class="fa fa-comments"></i> <span>聊天室</span></a></li>-->
-        <li <% if(path=="/image/index"){ %>class="active"<% } %> ><a href="<%=assetsPath %>/image/index"><i class="fa fa-image"></i> <span>图片管理</span></a></li>
+        <li <% if(path=="/phaseRating/index"){ %>class="active"<% } %> ><a href="<%=assetsPath %>/phaseRating/index"><i class="fa fa-image"></i> <span>活动期数管理</span></a></li>
+        <!-- <li <% if(path=="/image/index"){ %>class="active"<% } %> ><a href="<%=assetsPath %>/image/index"><i class="fa fa-image"></i> <span>图片管理</span></a></li>
         <li <% if(path=="/catalog"){ %>class="active"<% } %> ><a href="<%=assetsPath %>/catalog/index"><i class="fa fa-sitemap"></i> <span>导航管理</span></a></li>
-        <li <% if(path=="/dict/index"){ %>class="active"<% } %> ><a href="<%=assetsPath %>/dict/index"><i class="fa fa-newspaper-o"></i> <span>字典管理</span></a></li>
+        <li <% if(path=="/dict/index"){ %>class="active"<% } %> ><a href="<%=assetsPath %>/dict/index"><i class="fa fa-newspaper-o"></i> <span>字典管理</span></a></li> -->
         <!--<li <% if(path=="/pages"){ %>class="active"<% } %> ><a href="<%=assetsPath %>/pages/index"><i class="fa fa-file-text-o "></i> <span>单页管理</span></a></li>-->
         <!--<li class="treeview">-->
           <!--<a href="#"><i class="fa fa-gift"></i><span>店铺管理</span>-->
@@ -315,7 +315,7 @@ desired effect
             <li <% if(path=="/users/index"){ %>class="active"<% } %> ><a href="<%=assetsPath %>/users/index">用户列表</a></li>
           </ul>
         </li> -->
-        <li class="treeview  <% if(["/article/index","/pages/index"].indexOf(path) > -1){ %>active<% } %> " >
+        <!-- <li class="treeview  <% if(["/article/index","/pages/index"].indexOf(path) > -1){ %>active<% } %> " >
           <a href="#"><i class="fa fa-newspaper-o"></i><span>资讯管理</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
@@ -323,10 +323,9 @@ desired effect
           </a>
           <ul class="treeview-menu">
             <li <% if(path=="/article/index" && query.catalogName === 'news'){ %>class="active"<% } %> ><a href="<%=assetsPath %>/article/index?catalogName=news"><span>新闻列表</span></a></li>
-            <!-- <li <% if(path=="/article/index" && query.catalogName === 'articles'){ %>class="active"<% } %> ><a href="<%=assetsPath %>/article/index?catalogName=articles"><span>烹调菜谱</span></a></li> -->
             <li <% if(path=="/pages/index"){ %>class="active"<% } %> ><a href="<%=assetsPath %>/pages/index"><span>单页管理</span></a></li>
           </ul>
-        </li>
+        </li> -->
         <!--<li class="treeview">-->
           <!--<a href="#"><i class="fa fa-area-chart"></i><span>数据中心</span>-->
             <!--<span class="pull-right-container">-->

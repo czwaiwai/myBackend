@@ -16,7 +16,7 @@ let Wechat = require('../utils/wechat')
 let EventProxy = require('eventproxy')
 let dictCache = require('../utils/dictCache')
 let cache = require('../utils/cache')
-let {Page, User, Catalog, Goods, Article, Cart, Address, Order, Dict, Postage} = require('../viewModels')
+let {Page, User, Catalog, Goods, Article, Cart, Address, Order, Dict, Postage, Rating, Phase} = require('../viewModels')
 // 对常见字段格式进行校验
 // router.use((req,res,next) => {
 //
@@ -26,7 +26,6 @@ router.use((req,res,next) => {
 	let ep = EventProxy.create('catalogs', 'dicts', (catalogs, dicts) => {
 		res.locals.catalogs = catalogs
 		let dictObj = _.keyBy(dicts,'name')
-		console.log(dictObj)
 		res.locals.frontInfo = _.keyBy(dictObj,'name')
 		res.locals.webInfo = dictObj.webInfo.value
 		// res.locals.feeDf = dictObj.fee.value
@@ -34,7 +33,6 @@ router.use((req,res,next) => {
 	})
 	ep.fail(next)
 	Catalog.getFrontCatalog((err,catalogs) => {
-		console.log(err, catalogs, 'hahahahah')
 		if (err) { return ep.emit('error', err) }
 		// cache.set('catalogs', catalogs)
 		ep.emit('catalogs', catalogs);
@@ -86,6 +84,62 @@ router.get('/', (req, res, next)=> {
 	// 	Goods.getHotGoods ({onSale:1}, ep.done('goods'))
 	// }
 });
+router.get('/rpscore/:no', (req,res, next) => {
+	Phase.findByNo(req.params.no, (err, phase) => {
+		if(err) return next(err)
+		let title = phase && phase.title
+		res.render('app/rpscore',{title:title, phase});
+	})
+})
+router.post('/rpscoreres/:phaseId', (req, res, next) => {
+	let {mobile, username} = req.body
+	req.checkBody('search',"查询内容不能为空").notEmpty()
+	req.checkBody('verifyCode',"验证码不能为空").notEmpty()
+	.isEqual(req.session.imgCode).withMessage("验证码不正确");
+	req.getValidationResult().then(function (result) {
+		if(!result.isEmpty()) {
+			let errMsg = result.array()[0].msg
+			return res.json({
+				data: {},
+				code:-1,
+				message:errMsg
+			})
+		}
+		Phase.findById(req.params.phaseId, (err, phase) => {
+			let params = {
+				phaseId: phase._id,
+				phaseStat: phase.step,
+			}
+			mobile && (params.mobile = mobile)
+			username &&	(params.username = username)
+			Rating.findAll(params, (err, ratings) => {
+				if(!ratings || ratings.length === 0) {
+					return res.json({
+						code:0,
+						message: 'empty',
+						data: {}
+					})
+				}
+				console.log(ratings, '====')
+				if(ratings.length>1) { // 数据过多
+					res.json({
+						code:0,
+						message:username? 'mobile': 'username',
+						data: {}
+					})
+				} else {
+					res.json({
+						code:0,
+						message:'success',
+						data: {
+							rating: ratings[0]
+						}
+					})
+				}
+			})
+		})
+	})
+})
 //清空缓存内容
 router.post('/clearCache', (req, res, next) => {
 
@@ -251,7 +305,6 @@ router.get('/page/:pageName', (req, res, next) => {
 // 文章管理
 router.get('/article/list/:type', (req, res, next) => {
 	let navPage = res.locals.catalogs.find(item => item.relativeUrl === '/article/list/' + req.params.type)
-	console.log(navPage)
 	let ep = EventProxy.create('topArticles', 'obj', (topArticles, obj) => {
 		// res.render('index',{title:"首页", goodTypes, goods});
 		obj.topArticles = topArticles

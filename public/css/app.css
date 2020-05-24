@@ -130,6 +130,50 @@
   padding-top: 20px;
   padding-bottom: 20px; }
 
+.margin25 {
+  margin: 25px; }
+
+.margin25-h {
+  margin-left: 25px;
+  margin-right: 25px; }
+
+.margin25-v {
+  margin-top: 25px;
+  margin-bottom: 25px; }
+
+.padding25 {
+  padding: 25px; }
+
+.padding25-h {
+  padding-left: 25px;
+  padding-right: 25px; }
+
+.padding25-v {
+  padding-top: 25px;
+  padding-bottom: 25px; }
+
+.margin30 {
+  margin: 30px; }
+
+.margin30-h {
+  margin-left: 30px;
+  margin-right: 30px; }
+
+.margin30-v {
+  margin-top: 30px;
+  margin-bottom: 30px; }
+
+.padding30 {
+  padding: 30px; }
+
+.padding30-h {
+  padding-left: 30px;
+  padding-right: 30px; }
+
+.padding30-v {
+  padding-top: 30px;
+  padding-bottom: 30px; }
+
 .text-left {
   text-align: left; }
 
@@ -166,6 +210,18 @@
 .margin-top20 {
   margin-top: 20px; }
 
+.padding-top25 {
+  padding-top: 25px; }
+
+.margin-top25 {
+  margin-top: 25px; }
+
+.padding-top30 {
+  padding-top: 30px; }
+
+.margin-top30 {
+  margin-top: 30px; }
+
 .border-left {
   border-left: 1px solid #e3e3e3; }
 
@@ -192,6 +248,18 @@
 
 .margin-left20 {
   margin-left: 20px; }
+
+.padding-left25 {
+  padding-left: 25px; }
+
+.margin-left25 {
+  margin-left: 25px; }
+
+.padding-left30 {
+  padding-left: 30px; }
+
+.margin-left30 {
+  margin-left: 30px; }
 
 .border-right {
   border-right: 1px solid #e3e3e3; }
@@ -220,6 +288,18 @@
 .margin-right20 {
   margin-right: 20px; }
 
+.padding-right25 {
+  padding-right: 25px; }
+
+.margin-right25 {
+  margin-right: 25px; }
+
+.padding-right30 {
+  padding-right: 30px; }
+
+.margin-right30 {
+  margin-right: 30px; }
+
 .border-bottom {
   border-bottom: 1px solid #e3e3e3; }
 
@@ -246,6 +326,18 @@
 
 .margin-bottom20 {
   margin-bottom: 20px; }
+
+.padding-bottom25 {
+  padding-bottom: 25px; }
+
+.margin-bottom25 {
+  margin-bottom: 25px; }
+
+.padding-bottom30 {
+  padding-bottom: 30px; }
+
+.margin-bottom30 {
+  margin-bottom: 30px; }
 
 .fs10 {
   font-size: 10px; }
@@ -303,6 +395,66 @@
 
 .fs28 {
   font-size: 28px; }
+
+.fs29 {
+  font-size: 29px; }
+
+.fs30 {
+  font-size: 30px; }
+
+.fs31 {
+  font-size: 31px; }
+
+.fs32 {
+  font-size: 32px; }
+
+.fs33 {
+  font-size: 33px; }
+
+.fs34 {
+  font-size: 34px; }
+
+.fs35 {
+  font-size: 35px; }
+
+.fs36 {
+  font-size: 36px; }
+
+.fs37 {
+  font-size: 37px; }
+
+.fs38 {
+  font-size: 38px; }
+
+.fs39 {
+  font-size: 39px; }
+
+.fs40 {
+  font-size: 40px; }
+
+.fs41 {
+  font-size: 41px; }
+
+.fs42 {
+  font-size: 42px; }
+
+.fs43 {
+  font-size: 43px; }
+
+.fs44 {
+  font-size: 44px; }
+
+.fs45 {
+  font-size: 45px; }
+
+.fs46 {
+  font-size: 46px; }
+
+.fs47 {
+  font-size: 47px; }
+
+.fs48 {
+  font-size: 48px; }
 
 .float_left {
   float: left; }
