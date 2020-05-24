@@ -239,7 +239,7 @@ router.post('/uploadXlsx', (req,res) => {
 				}
 				props.forEach((prop,index) =>  {
 					let val = myIsNaN(sub[index])? sub[index]: ''
-					oneObj[prop] = 
+					oneObj[prop] = val
 				})
 				insertData.push(oneObj)
 			}
