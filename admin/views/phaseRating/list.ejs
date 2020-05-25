@@ -43,17 +43,17 @@
         <table  class="table table-bordered table-hover">
           <tbody>
           <tr>
+            <th>学校全称</th>
             <th>姓名</th>
             <th>手机号</th>
-            <th>学校</th>
-            <th>初评成绩</th>
-            <th>是否晋级复评</th>
-            <th>复评成绩</th>
-            <th>是否晋级半决选</th>
-            <th>半决选成绩</th>
-            <th>是否晋级总决选</th>
-            <th>总决选成绩</th>
-            <!-- <th>操作</th> -->
+            <th>年级</th>
+            <th>考号</th>
+            <th><%=stepStr %></th>
+            <% if(upStr) { %>
+            <th>是否晋级<%=upStr %></th>
+            <% } %>
+            <th>指导老师</th>
+            <th>报名方式</th>
           </tr>
           <% if(list.length==0){ %>
           <tr>
@@ -62,16 +62,17 @@
           <% }%>
           <% list.forEach(function(item){ %>
           <tr>
+            <td><%=item.school %></td>
             <td><%=item.username %></td>
             <td><%=item.mobile %></td>
-            <td><%=item.school %></td>
-            <td><%=item.step01  || '' %></td>
-            <td><%=item.isUp01 %></td>
-            <td><%=item.step02  || '' %></td>
-            <td><%=item.isUp02 %></td>
-            <td><%=item.step03  || '' %></td>
-            <td><%=item.isUp03 %></td>
-            <td><%=item.step04 || '' %></td>
+            <td><%=item.grade %></td>
+            <td><%=item.enterNo %></td>
+            <td><%=item.score %></td>
+            <% if(upStr) { %>
+            <td><%=item.isUp %></td>
+            <% } %>
+            <td><%=item.teacher %></td>
+            <td><%=item.joinStat %></td>
           </tr>
           <% }) %>
           </tbody>
@@ -80,7 +81,6 @@
       <!-- /.box-body -->
     </div>
     <!-- /.box -->
-    <%=count %> <%=page %>
     <div class="j_pager" data-param="step=<%=query.step %>" data-page="<%=page || 0 %>"  data-count="<%=count || 1 %>"></div>
   </div>
 

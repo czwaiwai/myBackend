@@ -88,7 +88,14 @@ router.get('/rpscore/:no', (req,res, next) => {
 	Phase.findByNo(req.params.no, (err, phase) => {
 		if(err) return next(err)
 		let title = phase && phase.title
-		res.render('app/rpscore',{title:title, phase});
+		let stepObj = {
+			'01': '初评成绩',
+			'02': '复评成绩',
+			'03': '半决选成绩',
+			'04': '总决选成绩'
+		}
+		let upStr = ['复评', '半决选', '总决选', ''][parseInt(phase.step) - 1]
+		res.render('app/rpscore',{title:title, phase, stepStr: stepObj[phase.step], upStr});
 	})
 })
 router.post('/rpscoreres/:phaseId', (req, res, next) => {
@@ -106,6 +113,13 @@ router.post('/rpscoreres/:phaseId', (req, res, next) => {
 			})
 		}
 		Phase.findById(req.params.phaseId, (err, phase) => {
+			let stepObj = {
+				'01': '初评成绩',
+				'02': '复评成绩',
+				'03': '半决选成绩',
+				'04': '总决选成绩'
+			}
+			let upStr = ['复评', '半决选', '总决选', ''][parseInt(phase.step) - 1]
 			let params = {
 				phaseId: phase._id,
 				phaseStat: phase.step,
@@ -132,6 +146,8 @@ router.post('/rpscoreres/:phaseId', (req, res, next) => {
 						code:0,
 						message:'success',
 						data: {
+							stepStr: stepObj[phase.step],
+							upStr,
 							rating: ratings[0]
 						}
 					})

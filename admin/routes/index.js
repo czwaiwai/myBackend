@@ -182,16 +182,18 @@ router.post('/phaseRating/delete', (req, res, next) => {
 })
 
 router.get('/phaseRating/list/:id', (req,res,next) => {
+	let step  = req.query.step || '01'
 	let stepObj = {
 		'01': '初评成绩',
 		'02': '复评成绩',
 		'03': '半决选成绩',
 		'04': '总决选成绩'
 	}
+	let upStr = ['复评', '半决选', '总决选', ''][parseInt(step) - 1]
 	Rating.findAllByPage({phaseId: req.params.id,phaseStat: req.query.step},req.query.page,10,(err, obj) => {
 		if (err) return next(err)
 		console.log(obj, 'findAllByPage')
-		return res.render('phaseRating/list', Object.assign({title:'用户数据', stepStr: stepObj[req.query.step] || '', phaseId: req.params.id}, obj))
+		return res.render('phaseRating/list', Object.assign({title:'用户数据', upStr, stepStr: stepObj[step] || '', phaseId: req.params.id}, obj))
 	})
 })
 
@@ -204,22 +206,28 @@ router.post('/uploadXlsx', (req,res) => {
 		let arr = xlsx.parse(fs.readFileSync(filePath))
 		let [sheet, ]  =  arr
 		let sheetName = sheet.name
+		let phaseId = fields.phaseId[0]
+		if(!phaseId) return res.json(errJson({},'没有phaseId'))
+		let step = fields.step[0]
+		let stepObj = {
+			'01': '初评成绩',
+			'02': '复评成绩',
+			'03': '半决选成绩',
+			'04': '总决选成绩'
+		}
+		let upStr = ['复评', '半决选', '总决选', ''][parseInt(step) - 1]
 		let obj = {
+			'school':'学校全称',
 			'username':	'姓名',
 			'mobile' :'手机号',
-			'school':'学校',
-			'step01':'初评成绩',
-			'isUp01': '是否晋级复评',
-			'step02': '复评成绩',
-			'isUp02': '是否晋级半决选',
-			'step03': '半决选成绩',
-			'isUp03': '是否晋级总决选',
-			'step04': '总决选成绩' 
+			'grade': '年级',
+			'enterNo': '考号',
+			'score':stepObj[step],
+			'isUp': '是否晋级'+ upStr,
+			'teacher': '指导老师',
+			'joinStat': '报名方式'
 		}
-		let phaseId = fields.phaseId[0]
-		let step = fields.step[0]
 		console.log(sheetName)
-		if(!phaseId) return res.json(errJson({},'没有phaseId'))
 		let props = Object.keys(obj)
 		let strs = Object.values(obj)
 		let insertData = []
@@ -238,9 +246,11 @@ router.post('/uploadXlsx', (req,res) => {
 					phaseStat: step
 				}
 				props.forEach((prop,index) =>  {
-					let val = myIsNaN(sub[index])? sub[index]: ''
-					oneObj[prop] = val
+					oneObj[prop] = sub[index] || ''
 				})
+				if(!oneObj.joinStat) {
+					oneObj.joinStat = '线上'
+				}
 				insertData.push(oneObj)
 			}
 		})
