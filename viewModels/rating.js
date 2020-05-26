@@ -41,3 +41,9 @@ exports.findAndUpdate = function (id, obj, callback) {
 exports.removeById = function (id, callback) {
   Model.findByIdAndRemove(id,callback)
 }
+exports.removeAll = function (id,step,callback) {
+	Model.remove({
+		phaseId: id,
+		phaseStat: step
+	}, callback)
+}

@@ -36,6 +36,7 @@
 				formData.append("file",el.files[i]);
 			}
 			$file[0].value="";
+			var hideMask = mask()
 			$.post({
 				url:path,
 				data:formData,
@@ -45,12 +46,22 @@
 			}).done(function(res){
         console.log(res)
 				$saveIput && $saveIput.val(res.data.file);
+				hideMask()
 				cb && cb(res.data.file);
 			})
 		});
 		$el.on('click',function(){
 			$file[0].click();
 		})
+	}
+	function mask () {
+		var div = document.createElement('div')
+		div.classList.add('mask')
+		div.innerHTML = '<div>上传中...</div>'
+		document.body.appendChild(div)
+		return function () {
+			document.body.removeChild(div)
+		}
 	}
 	$.fn.uploadFile=function(options){
 		var callback=function(){};

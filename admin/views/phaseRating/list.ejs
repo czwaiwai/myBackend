@@ -22,6 +22,23 @@
   border-left: 1px solid #e3e3e3;
   border-right: 1px solid #e3e3e3;
 }
+.mask {
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  background: rgba(0, 0, 0, 0.3);
+}
+.mask > div {
+  color:#FFF;
+  font-size:16px;
+  position:absolute;
+  top:50%;
+  margin-top:-10px;
+  width:100%;
+  text-align:center;
+}
 </style>`)%>
 <ul class="my_tab clearfix">
   <li class="<%=query.step == '01'? 'active': '' %>"><a href="<%=assetsPath %>/phaseRating/list/<%=phaseId %>?step=01" >初评成绩</a></li>
@@ -35,7 +52,8 @@
       <div class="box-header">
         <h3 class="box-title"><%= stepStr %>数据</h3>
         <div class="box-tools">
-          <a id="imgUpload" data-path="/admin/uploadXlsx" data-params='{"phaseId":"<%=phaseId %>","step":"<%=query.step%>"}' class="btn  btn-sm btn-success">xlxs上传<%=stepStr %>数据</a>
+          <a id="clearData" data-id="<%=phaseId %>" data-step="<%=query.step%>" data-str="清空<%= stepStr %>数据" class="btn btn-sm btn-danger">清空<%= stepStr %>数据</a>
+          <a id="imgUpload" data-path="/admin/uploadXlsx" data-params='{"phaseId":"<%=phaseId %>","step":"<%=query.step%>"}' class="btn  btn-sm btn-success">xlxs上传<%=stepStr %>数据</a> 
         </div>
       </div>
       <!-- /.box-header -->
@@ -91,9 +109,21 @@
 jQuery(function(){
     $('.j_pager').pager();
     $('#imgUpload').uploadFile(function(imgs){
-    	console.log(imgs)
-      // location.reload();
+      $.alert('上传成功').then(function (res){
+        location.reload();
+      })
     });
-
+    $('#clearData').on('click',function(){
+      var $clearData = $('#clearData')
+      $.confirm('你确定要'+ $clearData.data('str')+'的数据么？').then(function(val){
+        if(val) {
+          $.post('/admin/phaseRating/clear/'+$clearData.data('id')+'/'+$clearData.data('step')).done(function(res) {
+            $.alert('清空成功，请重新上传数据').then(function (res){
+              location.reload();
+            })
+          })
+        }
+      })
+    })
 })
 </script>`)%>

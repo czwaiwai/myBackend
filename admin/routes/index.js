@@ -133,6 +133,18 @@ router.get('/phaseRating/add', (req, res, next) => {
 		return res.render('phaseRating/add', {title: '活动期数修改', curr})
 	}
 })
+router.post('/phaseRating/clear/:id/:step', (req, res, next) => {
+	if(req.params.id && req.params.step) {
+		Rating.removeAll(req.params.id, req.params.step, (err, dels) => {
+			if (err) return next(err)
+			console.log(dels)
+			return res.json({
+				code:0,
+				message:'操作成功'
+			})
+		})
+	}
+})
 router.post('/phaseRating/add', (req, res, next) => {
 	console.log(req.body, '====================')
 	if(req.body._id) { //更新
