@@ -199,7 +199,9 @@ jQuery(function(){
         }
         tmp += '</div>'
         $rpscoreRes.html(tmp)
-        $('#rpsResLink').show();
+        if(rat.isUp === '是') {
+          $('#rpsResLink').show();
+        }
         $('#searchForm').hide();
       } else {
         $('#codeImg').trigger('click')
