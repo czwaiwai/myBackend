@@ -20,6 +20,12 @@
   .weui-cell__ft{
     color:#333;
   }
+  h1 {
+    font-size:20px;
+  }
+  .color_333 {
+    color:#333;
+  }
 </style>`) %>
 
 <div class="page has_head">
@@ -32,7 +38,7 @@
             <div class="weui-cells__group weui-cells__group_form">
                 <div class="weui-form__control-area padding15" >
                   <div class="weui-cells__group weui-cells__group_form">
-                    <div class="weui-cells__title"><%= stepStr %>查询</div>
+                    <div class="weui-cells__title fs16 color_333"><%= stepStr %>查询</div>
                     <div class="weui-cells weui-cells_form">
                       <div class="weui-cell weui-cell_active">
                         <div class="weui-cell__hd"><label class="weui-label">用户信息</label></div>
@@ -61,7 +67,11 @@
     </form>
   </div>
   <div id="rpscoreRes" style="padding:15px;">
-
+  </div>
+  <div id="rpsResLink" class="text-center hide padding15">
+    <% if(phase.lineShow === 'all' || phase.lineShow === phase.step) { %>
+      <a class="weui-btn weui-btn_mini weui-btn_warn fs16" href="<%=phase.linkUrl %>"><%= phase.linkName %></a>
+    <% } %> 
   </div>
   <!-- <div>
       <div class="weui-form__opr-area">
@@ -107,7 +117,7 @@ jQuery(function(){
       console.log(res)
       if(res.code === 0) {
         if(res.message === 'empty') {
-          return $rpscoreRes.html('<p>没有查询到任何信息</p>')
+          return $rpscoreRes.html('<p class="text-center fs16">没有查询到任何信息</p>')
         }
         if (res.message === 'username') {
           $.prompt('请您输入姓名', '校验', function (val) {
@@ -148,6 +158,7 @@ jQuery(function(){
         }
         tmp += '</div>'
         $rpscoreRes.html(tmp)
+        $('#rpsResLink').show();
         $('#searchForm').hide();
       } else {
         $('#codeImg').trigger('click')

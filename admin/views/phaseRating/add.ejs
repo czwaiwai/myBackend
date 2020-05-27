@@ -3,6 +3,24 @@
 .show_img{
     max-height:250px;
 }
+.myfiedset {
+    min-width: inherit;
+    padding: inherit;
+    margin: inherit;
+    border: 1px solid #c0c0c0;
+}
+.myfiedset legend {
+    display: block;
+    width: auto;
+    padding: 0;
+    margin-bottom: 20px;
+    font-size: 21px;
+    line-height: inherit;
+    padding: 0 10px;
+    color: #333;
+    border: 0;
+    /* border-bottom: 1px solid #e5e5e5; */
+}
 </style>`) %>
 <div class="row">
     <div class="col-md-12">
@@ -51,13 +69,38 @@
                             </select>
                         </div>
                     </div>
-                    <!-- <div class="form-group">
-                        <label for="content" class="col-sm-2 control-label">正文内容</label>
-                        <div class="col-sm-10">
-                            <div id="editor"><%- curr.content %></div>
-                            <textarea id="content" hidden name="content"><%- curr.content %></textarea>
-                        </div>
-                    </div> -->
+
+                    <fieldset class="myfiedset">
+                        <legend>链接设置</legend>
+                        <div class="form-group">
+                                <label for="lineShow" class="col-sm-2 control-label">链接显示位置</label>
+                                <div class="col-sm-10">
+                                    <select name="lineShow" class="form-control">
+                                        <option <%=curr.lineShow === ''? 'selected':'' %>  value="all">不显示</option>
+                                        <option <%=curr.lineShow === 'all'? 'selected':'' %>  value="all">全部显示</option>
+                                        <option <%=curr.lineShow === '00'? 'selected':'' %>  value="00">准备中</option>
+                                        <option <%=curr.lineShow === '01'? 'selected':'' %>  value="01">初评</option>
+                                        <option <%=curr.lineShow === '02'? 'selected':'' %>  value="02">复评</option>
+                                        <option <%=curr.lineShow === '03'? 'selected':'' %>  value="03">半决选</option>
+                                        <option <%=curr.lineShow === '04'? 'selected':'' %>  value="04">总决选</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                    <label for="linkName" class="col-sm-2 control-label">链接标题</label>
+                                    <div class="col-sm-10">
+                                        <input name="linkName" value="<%=curr.linkName || ''%>" type="text" class="form-control"  placeholder="链接标题">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="linkUrl" class="col-sm-2 control-label">链接地址</label>
+                                    <div class="col-sm-10">
+                                        <!-- <div id="editor"><%- curr.content %></div> -->
+                                        <textarea id="linkUrl" style="width:100%;height:60px;" name="linkUrl"><%- curr.linkUrl %></textarea>
+                                    </div>
+                                </div>
+                    </fieldset>
+           
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-3">
                             <div class="checkbox">
