@@ -127,6 +127,12 @@ router.post('/rpscoreres/:phaseId', (req, res, next) => {
 			mobile && (params.mobile = mobile)
 			username &&	(params.username = username)
 			enterNo && (params.enterNo = enterNo)
+			if (params.mobile === '#') {
+				params.mobile = ''
+			}
+			if(params.enterNo === '#') {
+				params.enterNo = ''
+			}
 			Rating.findAll(params, (err, ratings) => {
 				if(!ratings || ratings.length === 0) {
 					return res.json({
