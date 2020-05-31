@@ -99,7 +99,7 @@ router.get('/rpscore/:no', (req,res, next) => {
 	})
 })
 router.post('/rpscoreres/:phaseId', (req, res, next) => {
-	let {mobile, username} = req.body
+	let {mobile, username, enterNo} = req.body
 	req.checkBody('search',"查询内容不能为空").notEmpty()
 	req.checkBody('verifyCode',"验证码不能为空").notEmpty()
 	.isEqual(req.session.imgCode).withMessage("验证码不正确");
@@ -126,6 +126,7 @@ router.post('/rpscoreres/:phaseId', (req, res, next) => {
 			}
 			mobile && (params.mobile = mobile)
 			username &&	(params.username = username)
+			enterNo && (params.enterNo = enterNo)
 			Rating.findAll(params, (err, ratings) => {
 				if(!ratings || ratings.length === 0) {
 					return res.json({
@@ -136,9 +137,17 @@ router.post('/rpscoreres/:phaseId', (req, res, next) => {
 				}
 				console.log(ratings, '====')
 				if(ratings.length>1) { // 数据过多
+					let message = '' // need
+					let str = ('mobile' in params? '1': '0') + ('username' in params? '1': '0') + ('enterNo' in params? '1': '0')
+					switch(str) {
+						case '000': message = 'mobile'; break
+						case '010': message = 'mobile'; break
+						case '100': message = 'username'; break
+						case '110': message = 'enterNo'; break
+					} 
 					res.json({
 						code:0,
-						message:username? 'mobile': 'username',
+						message:message,
 						data: {}
 					})
 				} else {

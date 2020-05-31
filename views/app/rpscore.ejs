@@ -53,6 +53,11 @@
     font-size: 14px;
     color: #888;
   }
+  .weui-dialog__bd .weui-prompt-input{
+    border: 1px solid #e3e3e3;
+    height: 35px;
+    color: #333;
+  }
 </style>`) %>
 
 <div class="page has_head">
@@ -176,6 +181,13 @@ jQuery(function(){
           })
           return
         }
+        if (res.message === 'enterNo') {
+          $.prompt('请输入学号', '校验', function (val) {
+            params.enterNo = val
+            query(params)
+          })
+          return
+        }
         var stepStr = res.data.stepStr
         var upStr = res.data.upStr
         let obj = {
@@ -192,10 +204,12 @@ jQuery(function(){
         var rat = res.data.rating
         var tmp = '<div class="weui-cells">'
         for(var key in obj) {
-          tmp += '<div class="weui-cell weui-cell_example">'+
+          if(rat[key]) {
+            tmp += '<div class="weui-cell weui-cell_example">'+
                   '<div class="weui-cell__bd"><p>'+obj[key]+'</p></div>'+
                     '<div class="weui-cell__ft">'+rat[key]+'</div>'+
                   '</div>'
+          }
         }
         tmp += '</div>'
         $rpscoreRes.html(tmp)

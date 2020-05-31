@@ -263,6 +263,7 @@ router.post('/uploadXlsx', (req,res) => {
 				if(!oneObj.joinStat) {
 					oneObj.joinStat = '线上'
 				}
+				if(!oneObj.username) return
 				insertData.push(oneObj)
 			}
 		})
