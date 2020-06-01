@@ -81,11 +81,6 @@
                 <th>指导老师</th>
                 <th>报名方式</th>
               </tr>
-              <% if(list.length==0){ %>
-              <tr>
-                <td class="text-center" colspan="10" style="padding:30px;">没有导入任何数据</td>
-              </tr>
-              <% }%>
           </thead>
           <tbody id="tbody" data-id="<%=phaseId %>" data-step="<%=query.step %>" >
           <% list.forEach(function(item){ %>
@@ -143,7 +138,7 @@ jQuery(function(){
               '</tr>'
         })
       } else {
-        html +='<tr><td colspan="8">没有查询到数据</td></tr>'
+        html ='<tr><td class="text-center" colspan="10" style="padding:30px;">没有查询到任何数据</td></tr>'
       }
       $('#tbody').html(html)
       cb && cb(res.data)
