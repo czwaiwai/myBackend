@@ -208,6 +208,31 @@ router.get('/phaseRating/list/:id', (req,res,next) => {
 		return res.render('phaseRating/list', Object.assign({title:'用户数据', upStr, stepStr: stepObj[step] || '', phaseId: req.params.id}, obj))
 	})
 })
+router.post('/phaseRating/list/:id', (req,res,next) => {
+	let step  = req.body.step || '01'
+	let page = req.body.page || '1'
+	let search = req.body.search
+	let stepObj = {
+		'01': '初评成绩',
+		'02': '复评成绩',
+		'03': '半决选成绩',
+		'04': '总决选成绩'
+	}
+	let upStr = ['复评', '半决选', '总决选', ''][parseInt(step) - 1]
+	let params = {phaseId: req.params.id,phaseStat: step}
+	if(search && /^[\u4e00-\u9fa5a-zA-Z\s]+$/.test(search)) {
+		params.username = search
+	}
+	if(search && /^1\d{10}$/.test(search)) {
+		params.mobile = search
+	}
+	console.log(params, 'params====')
+	Rating.findAllByPage(params,page,10,(err, obj) => {
+		if (err) return next(err)
+		return res.json(succJson(Object.assign({title:'用户数据', upStr, stepStr: stepObj[step] || '', phaseId: req.params.id}, obj)))
+		// return res.render('phaseRating/list', Object.assign({title:'用户数据', upStr, stepStr: stepObj[step] || '', phaseId: req.params.id}, obj))
+	})
+})
 
 // 上传并解析xlsx文件存入数据库中
 router.post('/uploadXlsx', (req,res) => {

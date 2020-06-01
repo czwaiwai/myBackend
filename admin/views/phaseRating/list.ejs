@@ -56,28 +56,38 @@
           <a id="imgUpload" data-path="/admin/uploadXlsx" data-params='{"phaseId":"<%=phaseId %>","step":"<%=query.step%>"}' class="btn  btn-sm btn-success">xlxs上传<%=stepStr %>数据</a> 
         </div>
       </div>
+      <div class="row" style="padding-left:15px;"> 
+        <div class="col-xs-6">
+          <div class="form-group" >
+            <input type="text" id="searchInput" class="form-control" placeholder="输入姓名查询">
+          </div>
+        </div>      
+        <div class="col-xs-4"><button id="searchBtn" class="btn btn-default">查询</button></div>
+      </div>
       <!-- /.box-header -->
       <div class="box-body table-responsive no-padding">
         <table  class="table table-bordered table-hover">
-          <tbody>
-          <tr>
-            <th>学校全称</th>
-            <th>姓名</th>
-            <th>手机号</th>
-            <th>年级</th>
-            <th>考号</th>
-            <th><%=stepStr %></th>
-            <% if(upStr) { %>
-            <th>是否晋级<%=upStr %></th>
-            <% } %>
-            <th>指导老师</th>
-            <th>报名方式</th>
-          </tr>
-          <% if(list.length==0){ %>
-          <tr>
-            <td class="text-center" colspan="10" style="padding:30px;">没有导入任何数据</td>
-          </tr>
-          <% }%>
+          <thead>
+            <tr>
+                <th>学校全称</th>
+                <th>姓名</th>
+                <th>手机号</th>
+                <th>年级</th>
+                <th>考号</th>
+                <th><%=stepStr %></th>
+                <% if(upStr) { %>
+                <th>是否晋级<%=upStr %></th>
+                <% } %>
+                <th>指导老师</th>
+                <th>报名方式</th>
+              </tr>
+              <% if(list.length==0){ %>
+              <tr>
+                <td class="text-center" colspan="10" style="padding:30px;">没有导入任何数据</td>
+              </tr>
+              <% }%>
+          </thead>
+          <tbody id="tbody" data-id="<%=phaseId %>" data-step="<%=query.step %>" >
           <% list.forEach(function(item){ %>
           <tr>
             <td><%=item.school %></td>
@@ -99,7 +109,7 @@
       <!-- /.box-body -->
     </div>
     <!-- /.box -->
-    <div class="j_pager" data-param="step=<%=query.step %>" data-page="<%=page || 0 %>"  data-count="<%=count || 1 %>"></div>
+    <div class="j_pager" data-ajax="true" data-param="step=<%=query.step %>" data-page="<%=page || 0 %>"  data-count="<%=count || 1 %>"></div>
   </div>
 
 </div>
@@ -107,7 +117,67 @@
 <% block('footer').append(`<script src="${assetsPath}/js/uploadFile.js"></script>`); %>
 <% block('footer').append(`<script>
 jQuery(function(){
-    $('.j_pager').pager();
+  function request(data, cb) {
+    var id = $('#tbody').data('id')
+    var step = $('#tbody').data('step')
+    var params = data || {} 
+    params.step = step
+    $.post('/admin/phaseRating/list/'+id, params).done(function(res) {
+      var upStr = res.data.upStr
+      var list = res.data.list
+      var html = ''
+      if(list && list.length) {
+        list.forEach(function(item) {
+          html += '<tr>' + 
+          '<td>'+item.school+'</td>' +
+          '<td>'+item.username+'</td>' +
+          '<td>'+item.mobile+'</td>' +
+          '<td>'+item.grade+'</td>' +
+          '<td>'+item.enterNo+'</td>' +
+          '<td>'+item.score+'</td>'
+          if (upStr) {
+            html += '<td>'+item.isUp+'</td>'
+          } 
+          html += '<td>'+item.teacher+'</td>' +
+              '<td>'+item.joinStat+'</td>' +
+              '</tr>'
+        })
+      } else {
+        html +='<tr><td colspan="8">没有查询到数据</td></tr>'
+      }
+      $('#tbody').html(html)
+      cb && cb(res.data)
+    })
+  }
+    $('.j_pager').pager({
+      callback:function(page) {
+        var search = $('#searchInput').val()
+        console.log(search)
+        var params = {
+          page:page
+        }
+        if(search) {
+          params.search = search
+        }
+        request(params)
+      }
+    });
+    $('#searchBtn').on('click',function () {
+      var search = $('#searchInput').val()
+      var params = {
+          page:1
+        }
+        if(search) {
+          params.search = search
+        }
+        request(params, function (res) {
+          $('.j_pager').pager('refresh',{
+            pageCount:res.count || 1,
+            page:1,
+            noCb: true
+          })
+        })
+    })
     $('#imgUpload').uploadFile(function(imgs){
       $.alert('上传成功').then(function (res){
         location.reload();

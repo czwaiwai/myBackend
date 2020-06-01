@@ -151,11 +151,23 @@ router.post('/rpscoreres/:phaseId', (req, res, next) => {
 						case '100': message = 'username'; break
 						case '110': message = 'enterNo'; break
 					} 
-					res.json({
-						code:0,
-						message:message,
-						data: {}
-					})
+					if(str === '111') {
+						res.json({
+							code:0,
+							message:'success',
+							data: {
+								stepStr: stepObj[phase.step],
+								upStr,
+								rating: ratings[0]
+							}
+						})
+					} else {
+						res.json({
+							code:0,
+							message:message,
+							data: {}
+						})
+					}
 				} else {
 					res.json({
 						code:0,

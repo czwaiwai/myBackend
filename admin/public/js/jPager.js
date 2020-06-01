@@ -17,6 +17,7 @@
 
 	function pager($el,options){
 		this.$el=$el;
+		this.initOptions = options
 		this.pageCount=parseInt(options.pageCount);
 		this.callback=options.callback || function(){};
 		this.page=parseInt(options.page);
@@ -29,19 +30,31 @@
 		this.init(options.page);
 		return this;
 	}
-	pager.prototype.init = function (page){
+	pager.prototype.init = function (page, noCb){
 		this.page=page;
 		console.log(this.page,"init");
-		var $nav=this.$el.append('<nav><ul class="pagination" ></ul></nav>');
+		var $nav=this.$el.empty().append('<nav><ul class="pagination" ></ul></nav>');
 		$nav.find('ul').append(this.drawFrag(parseInt(page),this.pageCount));
 		if(this.ajax){
-			this.binding();
-			this.callback(page);
+			this.unbind = this.binding();
+			!noCb && this.callback(page);
 		}
+	}
+	pager.prototype.refresh = function (options) {
+		options.page && (this.page=parseInt(options.page));
+		options.ajax && (this.ajax=options.ajax || this.initOptions.ajax);
+		options.pageCount && (this.pageCount=parseInt(options.pageCount));
+		options.callback && (this.callback=options.callback)
+		this.unbind && this.unbind()
+		this.arr = []
+		for(var i=0;i<this.initOptions.pageLen;i++){
+			this.arr.push(i+1);
+		}
+		this.init(this.page, true)
 	}
 	pager.prototype.binding = function (){
 		var that=this;
-		this.$el.on('click','li>a',function(e){
+		var bindFn = function(e){
 			e.preventDefault();
 			var tmp= e.target.innerHTML;
 			if(!isNaN(tmp)){
@@ -55,10 +68,14 @@
 				if(that.page==that.pageCount) return;
 				that.draw(that.page+1);
 			}
-		})
+		}
+		this.$el.on('click','li>a', bindFn)
+		return function () {
+			this.$el.off('click',bindFn)
+		}
 	}
 
-	pager.prototype.draw = function  (page){
+	pager.prototype.draw = function (page){
 		this.page=parseInt(page);
 		var arr=this.getNum(page);
 		this.$el.find('.page_num').removeClass('active').each(function(index,ctx){
@@ -198,11 +215,17 @@
 			if(!instance) {
 				$this.data("instance", new pager($this,option));
 			}
+			if(instance && options === 'refresh') {
+				instance.refresh(cusPage || {})
+				return instance
+			}
 			if(instance && typeof options =="number"){
 				instance.draw(options);
+				return instance
 			}
 			if(instance  && typeof options =="string" && options=="draw"){
 				instance.draw(cusPage);
+				return instance
 			}
 		})
 	}

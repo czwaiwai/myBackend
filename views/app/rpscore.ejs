@@ -89,7 +89,7 @@
                       <div class="weui-cell weui-cell_active">
                         <div class="weui-cell__hd"><label class="weui-label">用户信息</label></div>
                         <div class="weui-cell__bd">
-                            <input id="search" name="search" class="weui-input"  placeholder="填写本人姓名或手机号">
+                            <input id="search" name="search" class="weui-input"  placeholder="输入学生姓名或手机号">
                             <input name="phaseId" type="hidden" value="<%=phase._id %>">
                         </div>
                       </div>
@@ -182,7 +182,7 @@ jQuery(function(){
           return
         }
         if (res.message === 'enterNo') {
-          $.prompt('请输入学号', '校验', function (val) {
+          $.prompt('请输入考号', '校验', function (val) {
             params.enterNo = val
             query(params)
           })
