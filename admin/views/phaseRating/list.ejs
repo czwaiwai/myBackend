@@ -80,6 +80,7 @@
                 <% } %>
                 <th>指导老师</th>
                 <th>报名方式</th>
+                <th>操作</th>
               </tr>
           </thead>
           <tbody id="tbody" data-id="<%=phaseId %>" data-step="<%=query.step %>" >
@@ -135,6 +136,7 @@ jQuery(function(){
           } 
           html += '<td>'+item.teacher+'</td>' +
               '<td>'+item.joinStat+'</td>' +
+              '<td><a class="btn btn-delete  btn-sm btn-danger" data-id="'+item._id+'" data-url="/admin/phaseRating/list/delete" href="javascript:void(0)">删除</a></td>'
               '</tr>'
         })
       } else {
@@ -144,6 +146,7 @@ jQuery(function(){
       cb && cb(res.data)
     })
   }
+  $.delBtn('#imageManage','你确定要删掉这条数据么')
     $('.j_pager').pager({
       callback:function(page) {
         var search = $('#searchInput').val()

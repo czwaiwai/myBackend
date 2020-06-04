@@ -192,7 +192,24 @@ router.post('/phaseRating/delete', (req, res, next) => {
 		})
 	}
 })
-
+router.post('/phaseRating/list/delete', (req, res, next) => {
+	if (req.body.id) {
+		Rating.removeById(req.body.id, (err, Rating) => {
+			if (err) return next(err)
+			if (Rating) {
+				return res.json({
+					code:0,
+					message:'操作成功'
+				})
+			}
+		})
+	} else {
+		return res.json({
+			code:-1,
+			message:'删除失败'
+		})
+	}
+})
 router.get('/phaseRating/list/:id', (req,res,next) => {
 	let step  = req.query.step || '01'
 	let stepObj = {
