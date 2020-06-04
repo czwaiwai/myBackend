@@ -99,7 +99,7 @@ router.get('/rpscore/:no', (req,res, next) => {
 	})
 })
 router.post('/rpscoreres/:phaseId', (req, res, next) => {
-	let {mobile, username, enterNo} = req.body
+	let {mobile, username, enterNo, ratingId} = req.body
 	req.checkBody('search',"查询内容不能为空").notEmpty()
 	req.checkBody('verifyCode',"验证码不能为空").notEmpty()
 	.isEqual(req.session.imgCode).withMessage("验证码不正确");
@@ -127,6 +127,7 @@ router.post('/rpscoreres/:phaseId', (req, res, next) => {
 			mobile && (params.mobile = mobile)
 			username &&	(params.username = username)
 			enterNo && (params.enterNo = enterNo)
+			ratingId && (params._id = ratingId)
 			if (params.mobile === '#') {
 				params.mobile = ''
 			}
@@ -154,11 +155,11 @@ router.post('/rpscoreres/:phaseId', (req, res, next) => {
 					if(str === '111') {
 						res.json({
 							code:0,
-							message:'success',
+							message:'choose',
 							data: {
 								stepStr: stepObj[phase.step],
 								upStr,
-								rating: ratings[0]
+								ratings: ratings
 							}
 						})
 					} else {

@@ -188,6 +188,25 @@ jQuery(function(){
           })
           return
         }
+        if (res.message === 'choose') {
+          var list = res.data.ratings
+          var actions = []
+          list.forEach(function(item) {
+            actions.push({
+              text: item.grade + '【'+item.joinStat+'】',
+              item: item,
+              onClick: function () {
+                console.log(this, 'what')
+                params.ratingId = this.item._id
+                query(params)
+              }
+            })
+          })
+          $.actions({
+            actions:actions
+          })
+          return
+        }
         var stepStr = res.data.stepStr
         var upStr = res.data.upStr
         let obj = {
