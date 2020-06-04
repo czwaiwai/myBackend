@@ -136,7 +136,7 @@ jQuery(function(){
           } 
           html += '<td>'+item.teacher+'</td>' +
               '<td>'+item.joinStat+'</td>' +
-              '<td><a class="btn btn-delete  btn-sm btn-danger" data-id="'+item._id+'" data-url="/admin/phaseRating/list/delete" href="javascript:void(0)">删除</a></td>'
+              '<td><a class="btn btn-sm  btn-primary" data-id="'+item._id+'" href="update?update='+item._id+'" >修改</a> <a class="btn btn-delete  btn-sm btn-danger" data-id="'+item._id+'" data-url="/admin/phaseRating/list/delete" href="javascript:void(0)">删除</a></td>'
               '</tr>'
         })
       } else {

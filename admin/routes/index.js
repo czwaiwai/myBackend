@@ -210,6 +210,37 @@ router.post('/phaseRating/list/delete', (req, res, next) => {
 		})
 	}
 })
+router.get('/phaseRating/list/update', (req, res, next) => {
+	let curr = {isNew:true}
+	if (req.query.update) {
+		Rating.findById(req.query.update, (err, user) => {
+			if (err) return  next(err)
+			curr = user
+			return res.render('phaseRating/update', {title: '活动期数添加', curr})
+		})
+	} else {
+		return res.render('phaseRating/update', {title: '活动期数修改', curr})
+	}
+})
+router.post('/phaseRating/list/update', (req, res, next) => {
+	if(req.body._id) { //更新
+		Rating.findAndUpdate(req.body._id, req.body, (err,page) => {
+			if (err) return  next(err)
+			req.flash("success", '更新成功!')
+			return res.redirect('/admin/phaseRating/list/update?update='+req.body._id)
+		})
+	} else {
+		Rating.newModel(req.body, function (err) {
+			if (err) {
+				req.flash("error",err.message);
+				console.error(err)
+				return res.redirect('/admin/phaseRating/list/update')
+			}
+			req.flash("success", '操作成功')
+			return res.redirect('/admin/phaseRating/list/update')
+		})
+	}
+})
 router.get('/phaseRating/list/:id', (req,res,next) => {
 	let step  = req.query.step || '01'
 	let stepObj = {
