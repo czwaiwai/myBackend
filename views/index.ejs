@@ -1,6 +1,23 @@
 <% layout('layout/layout') %>
 <% block('header').append(`<style>
-
+.bl_card_sp {
+    margin-bottom:20px;
+    height: 30vw;
+}
+@media screen and (max-width:800px) { /*一栏布局*/
+    .fs42 {
+        font-size:26px;
+    }
+    .fs36 {
+        font-size:24px;
+    }
+    .fs24 {
+        font-size:18px;
+    }
+    .bl_card_sp {
+        height:auto;
+    }
+}
 </style>`)%>
 <div class="container-fluid" >
     <div class="row">
@@ -17,7 +34,7 @@
             <div class="carousel-inner" role="listbox">
                 <% homeBanner.forEach(function(item,index){ %>
                     <% if(item.value) { %>
-                    <div style="height:calc(100vh - 72px);width:100%;background:#f0f0f0;" class="item <%= index===0?' active':'' %>">
+                    <div style="height:calc(100vh - 72px);max-height:600px;width:100%;background:#f0f0f0;" class="item <%= index===0?' active':'' %>">
                         <div style="position:absolute;z-index:1;top:0;bottom:0;left:0;right:0;background:rgba(0, 0, 0, 0.3);"></div>
                         <div style="width:100%;height:100%;background:url(<%=item.value %>) no-repeat center;background-size:cover;"></div>
                     </div>
@@ -38,8 +55,8 @@
 </div>
 <div class="container-fluid" >
     <div style="padding:6vw 0;">
-        <div class="text-center" style="font-size:42px;line-height:1.5;">智能芯片领域方案专家</div>
-        <div class="text-center" style="font-size:24px;line-height:1.5;">让机器更好地理解和服务人类</div>
+        <div class="text-center fs42" style="line-height:1.5;">文档管理领域方案专家</div>
+        <div class="text-center fs24" style="line-height:1.5;">为您成就智慧企业</div>
     </div>
     <div class="row">
         <div class="col-xs-12 col-sm-6 col-md-3 " >
@@ -49,7 +66,7 @@
                 </div>
                 <div style="padding:30px;background:#FFF;">
                     <div class="fs24" style="line-height:1.5;">文档管理</div>
-                    <div class="fs16" style="color:#808080;">第一款智能处理板卡产品，搭载了MLU100芯片，为云端推理提供强大的运算能力支撑</div>
+                    <div class="fs16" style="color:#808080;">集中统一管理平台；多地协同办公分享：文件分级安全管理</div>
                 </div>
             </div>
         </div>
@@ -60,7 +77,7 @@
                 </div>
                 <div style="padding:30px;background:#FFF;">
                     <div class="fs24" style="line-height:1.5;">企业网盘</div>
-                    <div class="fs16" style="color:#808080;">第一款智能处理板卡产品，搭载了MLU100芯片，为云端推理提供强大的运算能力支撑</div>
+                    <div class="fs16" style="color:#808080;">个性定制灵活部署；多重防护安全省心；可视化数据报表</div>
                 </div>
             </div>
         </div>
@@ -71,7 +88,7 @@
                 </div>
                 <div style="padding:30px;background:#FFF;">
                     <div class="fs24" style="line-height:1.5;">合同管理</div>
-                    <div class="fs16" style="color:#808080;">第一款智能处理板卡产品，搭载了MLU100芯片，为云端推理提供强大的运算能力支撑</div>
+                    <div class="fs16" style="color:#808080;">统一命名自动生成编码；OCR智能识别对比；快速高效全面检索</div>
                 </div>
             </div>
         </div>
@@ -82,7 +99,7 @@
                 </div>
                 <div style="padding:30px;background:#FFF;">
                     <div class="fs24" style="line-height:1.5;">文控管理</div>
-                    <div class="fs16" style="color:#808080;">第一款智能处理板卡产品，搭载了MLU100芯片，为云端推理提供强大的运算能力支撑</div>
+                    <div class="fs16" style="color:#808080;">ISO全生命周期管理；全程电子化流程审批；规范化标准化信息化</div>
                 </div>
             </div>
         </div>
@@ -90,15 +107,15 @@
 </div><!-- /.container -->
 <div class="container-fluid" >
     <div style="padding:6vw 0;">
-        <div class="text-center" style="font-size:42px;line-height:1.5;">解决方案</div>
-        <div class="text-center" style="font-size:24px;line-height:1.5;">让机器更好地理解和服务人类</div>
+        <div class="text-center fs42" style="line-height:1.5;">解决方案</div>
+        <div class="text-left fs24" style="line-height:1.5;">为客户打一体化贴心服务，旨在为交通、教育、医疗等行业领域为客户提供整体ICT解决方案；与电信运营商合作开展IDC基础数据存储、数据分析等数据服务；5G互联网+应用产品及服务，同时协助政府、电信运营商、现代化企业加速智能化产业链的搭建</div>
     </div>
     <div class="row">
         <div class="col-xs-12 col-sm-6 col-md-6 " >
-            <div class="bl_card light_bg relative" style="margin-bottom:20px;height: 30vw;">
+            <div class="bl_card light_bg relative bl_card_sp" >
                 <div style="padding:6vw 30px;position:relative;z-index:1;">
                     <div class="fs36 bold light text-center" style="line-height:1.5;">智慧园区</div>
-                    <div class="fs16 light padding-top20" >第一款智能处理板卡产品，搭载了MLU100芯片，为云端推理提供强大的运算能力支撑</div>
+                    <div class="fs16 light padding-top20" >集成各种应用系统，打造高效的内部管理，提升园区服务形象，构建智慧人文园区。</div>
                     <div class="text-center padding-top"><a href="/#" class="light_link">了解详情></a></div>
                 </div>
                 <div style="position:absolute;top:0;right:0;bottom:0;left:0;">
@@ -108,10 +125,10 @@
             </div>
         </div>
         <div class="col-xs-12 col-sm-6 col-md-6 " >
-            <div class="bl_card light_bg relative" style="margin-bottom:20px;height: 30vw;">
+            <div class="bl_card light_bg relative bl_card_sp" >
                 <div style="padding:6vw 30px;position:relative;z-index:1;">
                     <div class="fs36 bold light text-center" style="line-height:1.5;">工业物联网</div>
-                    <div class="fs16 light padding-top20" >第一款智能处理板卡产品，搭载了MLU100芯片，为云端推理提供强大的运算能力支撑</div>
+                    <div class="fs16 light padding-top20" >  帮助企业实现智能化生产，提供个性化产品。帮助企业降低成本、提升运营效率、优化客户体验，实现OT与IT完美融合。</div>
                     <div class="text-center padding-top"><a href="/#" class="light_link">了解详情></a></div>
                 </div>
                 <div style="position:absolute;top:0;right:0;bottom:0;left:0;">

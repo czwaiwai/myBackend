@@ -20,6 +20,15 @@ body {
 .navbar-nav li {
   margin: 0 20px;
 }
+.navbar-brand {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+}
+.navbar-brand img{
+  max-height:100%;
+}
 
 .dropdown-menu > li > a {
   color:#FFF;
