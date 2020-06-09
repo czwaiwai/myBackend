@@ -33,89 +33,19 @@
   不好意思，如果你看到这个警告说明你的浏览器已经很古老了，可能会出现访问上会出现许多未知问题或错误，为了提供更好的服务，请您更换新的浏览器。 你们可以使用360浏览器、谷歌浏览器、搜狗浏览器、猎豹浏览器、QQ浏览器、百度浏览器等
 </div>
 <![endif]-->
-  <div class="wrap">
-    <div class="main">
-      <div class="header" style="height:72px;">
-      <nav class="navbar navbar-default" data-spy="affix" data-offset-top="0" style="width: 100%;height: 72px;z-index: 100;" >
-        <div class="container-fluid">
-          <!-- Brand and toggle get grouped for better mobile display -->
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand"  href="/"><%=webInfo.webName.value %></a>
-          </div>
-          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav navbar-right">
-              <% catalogs.filter(function(item) {return item.isValid}).forEach(function(item){ %>
-                <% if(item.childrens.length===0){ %>
-                 <li  <% if(basePath==item.relativeUrl || (item.relativeUrl === '/goods/index' && basePath.indexOf('goods/detail')> -1)){ %>class="active"<% } %>>
-                   <a href="<%=item.relativeUrl %>"><%= item.nameCn %></a>
-                 </li>
-                <% } else { %>
-                  <li class="dropdown">
-                    <a href="<%=item.childrens[0].relativeUrl %>" class="dropdown-toggle" data-hover="dropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><%= item.nameCn %> <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                      <% item.childrens.forEach(function(sub) { %>
-                      <li><a href="<%=sub.relativeUrl %>"><%= sub.nameCn %></a></li>
-                      <% }) %>
-                    </ul>
-                  </li>
-                <% } %>
-              <% }) %>
-            </ul>
-          </div><!-- /.navbar-collapse -->
-        </div><!-- /.container-fluid -->
-      </nav>
-    </div>
-      <div >
-        <div class="container" >
-          <% if(success){  %>
-          <div  id="flashAlert" class="alert alert-success alert-dismissible" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <%=success %>
-          </div>
-          <% } %>
-        </div>
-        <%- body %>
-      </div>
-    </div>
+<div style="display: flex;flex-direction: column;height: 100%;">
+  <div style="flex:1;">
+    <h1 class="text-center" style="padding-top:20%;">网站暂未开放</h1>
   </div>
-
-  <div class="footer">
-    <div class="footer-bottom" style="padding:60px 0;">
-      <div class="container">
-        <div class="row">
-          <div class="col-xs-12 col-sm-3 col-md-3 text-center " style="padding-bottom:20px;">
-            <img src="<%=webInfo.webLogo.value %>">
-          </div>
-          <div class="col-xs-12 col-sm-9 col-md-9">
-            <div class="row">
-              <div class="col-xs-12 col-sm-6 col-md-6" style="padding-left:30px;height:36px;line-height:36px;">名称：<span><%=webInfo.company.value %></span></div>
-              <div class="col-xs-12 col-sm-6 col-md-6" style="padding-left:30px;height:36px;line-height:36px;">地址：<span><%=webInfo.address.value %></span></div>
-            </div>
-            <div class="row">
-              <div class="col-xs-12 col-sm-6 col-md-6" style="padding-left:30px;height:36px;line-height:36px;">电话：<span><%=webInfo.mobile.value %></span></div>
-              <div class="col-xs-12 col-sm-6 col-md-6" style="padding-left:30px;height:36px;line-height:36px;">邮件：<span><%=webInfo.email.value %></span></div>
-            </div>
-          </div>
-          <!-- <div class="fs14 text-center">
-            <i class="fa fa-map-marker "></i> 
-            <i class="fa fa-mobile"></i> 
-            <i class="fa fa-envelope"></i> 
-          </div> -->
-        </div>
-      </div>
-    </div>
+  <div class="footer" style="height:auto;margin-top:0;">
     <div class="copyright-bar">
       <div class="container fs12 text-center">
         <%=webInfo.copyright.value %> | <%=webInfo.record.value %>
       </div>
     </div>
   </div>
+</div>
+
 <script src="/js/ieWarn.js"></script>
 <script src="/js/jquery-1.12.0.min.js"></script>
 <script src="/js/jquery.validate.js"></script>

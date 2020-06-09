@@ -3,14 +3,14 @@ const config = {
 	description: '一个基于nodejs express 的小商城',
 	author: 'czwaiwai',
 	uploadDir: 'public/upload/',
-	domain: 'http://www.szyungu.net',
+	domain: 'http://yg.szyungu.net',
 	// mongodb 数据库链接
   db: 'mongodb://localhost/waiShop',
   debug: true,
 	wxPayKey: '',
 	wxAppId: '',
 	wxMchId: '',
-	wxNotifyUrl: 'http://www.bssfood.com/order/notify'
+	wxNotifyUrl: ''
 }
 module.exports = config
 
