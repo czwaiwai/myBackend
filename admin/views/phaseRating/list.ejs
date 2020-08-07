@@ -176,10 +176,14 @@ jQuery(function(){
           })
         })
     })
-    $('#imgUpload').uploadFile(function(imgs){
-      $.alert('上传成功').then(function (res){
-        location.reload();
-      })
+    $('#imgUpload').uploadFile(function(stat, imgs){
+      if(stat === 'succ') {
+        $.alert('上传成功').then(function (res){
+          location.reload();
+        })
+      } else {
+        $.alert('上传失败：'+ imgs)
+      }
     });
     $('#clearData').on('click',function(){
       var $clearData = $('#clearData')

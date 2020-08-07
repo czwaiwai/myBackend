@@ -44,10 +44,13 @@
 				contentType:false,
 				cache:false,
 			}).done(function(res){
-        console.log(res)
-				$saveIput && $saveIput.val(res.data.file);
 				hideMask()
-				cb && cb(res.data.file);
+				if(res.code === -1) {
+					cb && cb ('error', res.message)
+				} else {
+					$saveIput && $saveIput.val(res.data.file);
+					cb && cb('succ',res.data.file);
+				}
 			})
 		});
 		$el.on('click',function(){

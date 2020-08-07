@@ -313,13 +313,21 @@ router.post('/uploadXlsx', (req,res) => {
 			'joinStat': '报名方式'
 		}
 		console.log(sheetName)
-		let props = Object.keys(obj)
-		let strs = Object.values(obj)
+		let props = ['school', 'username', 'mobile', 'grade', 'enterNo', 'score', 'isUp', 'teacher', 'joinStat']
+		let strs = ['学校全称','姓名','手机号','年级','考号',stepObj[step],'是否晋级'+ upStr,'指导老师','报名方式']
+		let str = strs.join(',')
+		let sheetStr = sheet.data[0].join(',')
 		let insertData = []
 		console.log(strs.join(','))
 		console.log(sheet.data[0].join(','))
-		if((strs.join(',')).indexOf(sheet.data[0].join(',')) > -1) {
-			return res.json(errJson({}, '数据格式顺序不正确'))
+		if((strs.join(',')).indexOf(sheet.data[0].join(',')) === -1) {
+			return res.json(errJson({}, `数据标题名称或顺序不正确<br/>
+			当前上传的文档标题格式为：<br/>
+			${sheetStr} <br />
+			正确的标题名称及顺序为：<br/>
+			${str}<br/>
+			<p class="danger">请认真核对上传标题</p>
+			`))
 		}
 		function myIsNaN(value) {
 			return typeof value === 'number' && !isNaN(value);
@@ -331,7 +339,11 @@ router.post('/uploadXlsx', (req,res) => {
 					phaseStat: step
 				}
 				props.forEach((prop,index) =>  {
-					oneObj[prop] = sub[index] || ''
+					if(prop === 'score') {
+						oneObj[prop] = (sub[index]+'' || '').replace("‘","")
+					} else {
+						oneObj[prop] = sub[index] || ''
+					}
 				})
 				if(!oneObj.joinStat) {
 					oneObj.joinStat = '线上'
@@ -341,8 +353,12 @@ router.post('/uploadXlsx', (req,res) => {
 			}
 		})
 		Rating.insertMany(insertData, (err, manyData) => {
-			if(err) return res.json(errJson({},req.flash("error").toString()))
-			console.log(manyData)
+			if(err) {
+				console.log(err, '=========insertMany====Error')
+				req.flash('error', err.message)
+				return res.json(errJson({},req.flash("error").toString()))
+			} 
+			console.log('=========insertMany====上传成功')
 			req.flash('success',"上传成功");
 			res.json(succJson({file:filePath, title: sheetName,list: sheet.data},req.flash("success").toString()));
 		})
