@@ -85,9 +85,14 @@ router.get('/', (req, res, next)=> {
 	// }
 });
 router.get('/rpscore/:no', (req,res, next) => {
+	if(!req.params.no) {
+		return res.render('app/rpscore404', {title:"404", phase: {title:"404"}})
+	}
 	Phase.findByNo(req.params.no, (err, phase) => {
+		console.log(err)
 		if(err) return next(err)
-		let title = phase && phase.title
+		if(!phase) return res.render('app/rpscore404', {title:"404", phase: {title:"404"}})
+		let title = phase.title
 		let stepObj = {
 			'01': '初评成绩',
 			'02': '复评成绩',
