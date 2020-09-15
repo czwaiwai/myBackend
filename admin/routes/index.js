@@ -249,7 +249,7 @@ router.get('/phaseRating/list/:id', (req,res,next) => {
 		'03': '半决选成绩',
 		'04': '总决选成绩'
 	}
-	let upStr = ['复评', '半决选', '总决选', ''][parseInt(step) - 1]
+	let upStr = ['复评', '半决选', '总决选', '奖项'][parseInt(step) - 1]
 	Rating.findAllByPage({phaseId: req.params.id,phaseStat: req.query.step},req.query.page,10,(err, obj) => {
 		if (err) return next(err)
 		console.log(obj, 'findAllByPage')
@@ -266,7 +266,7 @@ router.post('/phaseRating/list/:id', (req,res,next) => {
 		'03': '半决选成绩',
 		'04': '总决选成绩'
 	}
-	let upStr = ['复评', '半决选', '总决选', ''][parseInt(step) - 1]
+	let upStr = ['复评', '半决选', '总决选', '奖项'][parseInt(step) - 1]
 	let params = {phaseId: req.params.id,phaseStat: step}
 	if(search && /^[\u4e00-\u9fa5a-zA-Z\s]+$/.test(search)) {
 		params.username = search
@@ -300,7 +300,7 @@ router.post('/uploadXlsx', (req,res) => {
 			'03': '半决选成绩',
 			'04': '总决选成绩'
 		}
-		let upStr = ['复评', '半决选', '总决选', ''][parseInt(step) - 1]
+		let upStr = ['复评', '半决选', '总决选', '奖项'][parseInt(step) - 1]
 		let obj = {
 			'school':'学校全称',
 			'username':	'姓名',
@@ -308,13 +308,13 @@ router.post('/uploadXlsx', (req,res) => {
 			'grade': '年级',
 			'enterNo': '考号',
 			'score':stepObj[step],
-			'isUp': '是否晋级'+ upStr,
+			'isUp': upStr === '奖项'? upStr : '是否晋级'+ upStr,
 			'teacher': '指导老师',
 			'joinStat': '报名方式'
 		}
 		console.log(sheetName)
 		let props = ['school', 'username', 'mobile', 'grade', 'enterNo', 'score', 'isUp', 'teacher', 'joinStat']
-		let strs = ['学校全称','姓名','手机号','年级','考号',stepObj[step],'是否晋级'+ upStr,'指导老师','报名方式']
+		let strs = ['学校全称','姓名','手机号','年级','考号',stepObj[step],upStr === '奖项'? upStr : '是否晋级'+ upStr,'指导老师','报名方式']
 		let str = strs.join(',')
 		let sheetStr = sheet.data[0].join(',')
 		let insertData = []

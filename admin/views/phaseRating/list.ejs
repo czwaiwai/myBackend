@@ -75,8 +75,10 @@
                 <th>年级</th>
                 <th>考号</th>
                 <th><%=stepStr %></th>
-                <% if(upStr) { %>
-                <th>是否晋级<%=upStr %></th>
+                <% if(upStr === '奖项') { %>
+                  <th><%=upStr %></th>
+                <% } else { %>
+                  <th>是否晋级<%=upStr %></th>
                 <% } %>
                 <th>指导老师</th>
                 <th>报名方式</th>

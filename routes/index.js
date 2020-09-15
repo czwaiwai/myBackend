@@ -99,7 +99,7 @@ router.get('/rpscore/:no', (req,res, next) => {
 			'03': '半决选成绩',
 			'04': '总决选成绩'
 		}
-		let upStr = ['复评', '半决选', '总决选', ''][parseInt(phase.step) - 1]
+		let upStr = ['复评', '半决选', '总决选', '奖项'][parseInt(phase.step) - 1]
 		res.render('app/rpscore',{title:title, phase, stepStr: stepObj[phase.step], upStr});
 	})
 })
@@ -124,7 +124,7 @@ router.post('/rpscoreres/:phaseId', (req, res, next) => {
 				'03': '半决选成绩',
 				'04': '总决选成绩'
 			}
-			let upStr = ['复评', '半决选', '总决选', ''][parseInt(phase.step) - 1]
+			let upStr = ['复评', '半决选', '总决选', '奖项'][parseInt(phase.step) - 1]
 			let params = {
 				phaseId: phase._id,
 				phaseStat: phase.step,
